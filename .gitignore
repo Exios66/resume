@@ -1,0 +1,15 @@
+# Quarto
+/.quarto/
+_freeze/
+*.quarto_ipynb
+
+# Keep rendered site in docs/ (served by GitHub Pages)
+
+# macOS / Windows / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*~
+
+**/*.quarto_ipynb
