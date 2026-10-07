@@ -1,20 +1,22 @@
 # Jack J. Burleson — Resume
 
-A single-page resume site built with [Quarto](https://quarto.org/) and served by GitHub Pages straight from `docs/` (no GitHub Actions).
+A one-page resume site built with [Quarto](https://quarto.org/). GitHub Pages serves it straight from `docs/`, with no GitHub Actions.
 
-## Edit
+## Files
 
-- `index.qmd` — resume content
-- `styles.css` — look and feel (light/dark aware, print friendly)
-- `assets/Jack_Burleson_Resume.pdf` — the PDF behind the "Download PDF" button
+- `index.qmd` holds the resume text.
+- `styles.css` holds the look: light and dark themes, phone layout, print layout.
+- `assets/Jack_Burleson_Resume.pdf` is the file behind the "Download PDF" button.
+- `docs/` holds the built site. Do not edit it by hand.
 
-## Render and publish
+## Update the site
 
-```bash
-quarto render        # writes the site to docs/
-git add -A && git commit -m "Update resume" && git push
-```
+1. Edit `index.qmd`.
+2. Run `quarto render`. This rebuilds `docs/`.
+3. Commit and push, including `docs/`.
 
-Rendered output in `docs/` is committed on purpose, because Pages serves it directly.
+If you change the resume text, also replace the PDF in `assets/` so the download matches the page.
 
-One-time setup: **Settings → Pages → Build and deployment → Source: Deploy from a branch → `main` / `/docs`**.
+## Publish
+
+Do this once: **Settings → Pages → Build and deployment → Deploy from a branch → `main` / `/docs`**.
