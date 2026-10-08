@@ -36,7 +36,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
@@ -112,18 +111,18 @@ ul.task-list li input[type="checkbox"] {
 <p><a href="../projects/index.html" class="back">← All projects</a></p>
 <h1 class="page-title" id="psychometric-digital-twin">Psychometric Digital Twin</h1>
 <p><span class="kicker">Behavioral ML research · UW–Madison</span></p>
-<h2 id="overview" class="anchored">Overview</h2>
+<h2 id="overview">Overview</h2>
 <p>A study of whether classical machine learning or LLM-driven “digital twin” personas better predict a person’s communication-apprehension score, and where each one is biased.</p>
-<h2 id="what-i-built" class="anchored">What I built</h2>
+<h2 id="what-i-built">What I built</h2>
 <ul>
 <li>A behavioral prediction pipeline on 252 matched survey participants. Ridge, Elastic Net, k-NN, Random Forest, XGBoost, and MLP models predicted communication-apprehension scores from demographic, employment, geographic, and transit features, with cross-validation and SHAP feature importance.</li>
 <li>A check of the PRCA’s psychometric structure with factor analysis.</li>
 <li>LLM “digital twin” personas with tiered embodiment prompts (OpenRouter/vLLM).</li>
 <li>A benchmark of the personas against the ML baselines on shared metrics (MAE, band accuracy, F1), plus an analysis of systematic bias by demographic group.</li>
 </ul>
-<h2 id="stack" class="anchored">Stack</h2>
+<h2 id="stack">Stack</h2>
 <p><span class="tag">Python</span> <span class="tag">scikit-learn</span> <span class="tag">XGBoost</span> <span class="tag">SHAP</span> <span class="tag">Factor analysis</span> <span class="tag">OpenRouter</span> <span class="tag">vLLM</span></p>
-<h2 id="results-and-links" class="anchored">Results and links</h2>
+<h2 id="results-and-links">Results and links</h2>
 <!-- TODO: add the headline comparison (e.g. best baseline MAE vs. best persona MAE), a SHAP summary figure, and the repo or write-up link. -->
 </div>
 
@@ -169,13 +168,6 @@ ul.task-list li input[type="checkbox"] {
     tabsets.forEach(function(tabset) {
       const tabby = new Tabby('#' + tabset.id);
     });
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     

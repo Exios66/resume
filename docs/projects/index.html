@@ -36,7 +36,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
@@ -113,25 +112,25 @@ ul.task-list li input[type="checkbox"] {
 <p>Selected work in document intelligence, model evaluation, and behavioral machine learning.</p>
 <div class="cards cards-wide">
 <section id="digital-mailroom" class="card">
-<h2 class="anchored"><a href="../projects/digital-mailroom.html">Digital-Mailroom</a></h2>
+<h2><a href="../projects/digital-mailroom.html">Digital-Mailroom</a></h2>
 <p><span class="kicker">DSHB capstone · American Family Insurance</span></p>
 <p>10 Python packages for entity extraction, classification, routing, and scalable workflows, joined in one LangGraph pipeline.</p>
 <p><span class="tag">LangGraph</span> <span class="tag">Docker</span> <span class="tag">Prompt experiments</span></p>
 </section>
 <section id="mailroom-ml" class="card">
-<h2 class="anchored"><a href="../projects/mailroom-ml.html">Mailroom-ML</a></h2>
+<h2><a href="../projects/mailroom-ml.html">Mailroom-ML</a></h2>
 <p><span class="kicker">ML training, evaluation &amp; fine-tuning</span></p>
 <p>A ModernBERT document classifier with data lineage, probability calibration, and production routing logic.</p>
 <p><span class="tag">PyTorch</span> <span class="tag">Hugging Face</span> <span class="tag">ONNX</span> <span class="tag">FastAPI</span> <span class="tag">Modal</span></p>
 </section>
 <section id="rvl-cdip-classifier" class="card">
-<h2 class="anchored"><a href="../projects/rvl-cdip-classifier.html">RVL-CDIP-Classifier</a></h2>
+<h2><a href="../projects/rvl-cdip-classifier.html">RVL-CDIP-Classifier</a></h2>
 <p><span class="kicker">Computer vision &amp; prompt engineering</span></p>
 <p>A toolkit that turns TIFF/PDF pages into 300-DPI images, runs OCR, and sorts documents into 16 categories with vision models.</p>
 <p><span class="tag">OCR</span> <span class="tag">OpenRouter</span> <span class="tag">Evaluation</span></p>
 </section>
 <section id="psychometric-digital-twin" class="card">
-<h2 class="anchored"><a href="../projects/psychometric-digital-twin.html">Psychometric Digital Twin</a></h2>
+<h2><a href="../projects/psychometric-digital-twin.html">Psychometric Digital Twin</a></h2>
 <p><span class="kicker">Behavioral ML research · UW–Madison</span></p>
 <p>Six ML models against LLM “digital twin” personas on 252 survey participants, with bias analysis by demographic group.</p>
 <p><span class="tag">scikit-learn</span> <span class="tag">XGBoost</span> <span class="tag">SHAP</span> <span class="tag">vLLM</span></p>
@@ -181,13 +180,6 @@ ul.task-list li input[type="checkbox"] {
     tabsets.forEach(function(tabset) {
       const tabby = new Tabby('#' + tabset.id);
     });
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     

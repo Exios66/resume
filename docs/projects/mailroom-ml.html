@@ -36,7 +36,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
@@ -112,18 +111,18 @@ ul.task-list li input[type="checkbox"] {
 <p><a href="../projects/index.html" class="back">← All projects</a></p>
 <h1 class="page-title" id="mailroom-ml">Mailroom-ML</h1>
 <p><span class="kicker">ML training, evaluation &amp; fine-tuning</span></p>
-<h2 id="overview" class="anchored">Overview</h2>
+<h2 id="overview">Overview</h2>
 <p>The model side of the document-intelligence work: a classifier that decides what kind of document it is looking at, and how confident it should be before a document is routed automatically.</p>
-<h2 id="what-i-built" class="anchored">What I built</h2>
+<h2 id="what-i-built">What I built</h2>
 <ul>
 <li>A ModernBERT document classifier with training, evaluation, and fine-tuning pipelines.</li>
 <li>Data lineage tracking, probability calibration, and production routing logic.</li>
 <li>PyTorch training pipelines using Transformers and Hugging Face datasets, evaluated with scipy.</li>
 <li>ONNX export for FastAPI serving on Modal, with pytest coverage throughout.</li>
 </ul>
-<h2 id="stack" class="anchored">Stack</h2>
+<h2 id="stack">Stack</h2>
 <p><span class="tag">Python</span> <span class="tag">PyTorch</span> <span class="tag">Transformers</span> <span class="tag">Hugging Face datasets</span> <span class="tag">scipy</span> <span class="tag">ONNX</span> <span class="tag">FastAPI</span> <span class="tag">Modal</span> <span class="tag">pytest</span></p>
-<h2 id="results-and-links" class="anchored">Results and links</h2>
+<h2 id="results-and-links">Results and links</h2>
 <!-- TODO: add headline metrics (accuracy, calibration error before/after), a calibration plot, and the repo link. -->
 </div>
 
@@ -169,13 +168,6 @@ ul.task-list li input[type="checkbox"] {
     tabsets.forEach(function(tabset) {
       const tabby = new Tabby('#' + tabset.id);
     });
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     

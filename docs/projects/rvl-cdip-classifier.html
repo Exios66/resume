@@ -36,7 +36,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
@@ -112,17 +111,17 @@ ul.task-list li input[type="checkbox"] {
 <p><a href="../projects/index.html" class="back">← All projects</a></p>
 <h1 class="page-title" id="rvl-cdip-classifier">RVL-CDIP-Classifier</h1>
 <p><span class="kicker">Computer vision &amp; prompt engineering</span></p>
-<h2 id="overview" class="anchored">Overview</h2>
+<h2 id="overview">Overview</h2>
 <p>A toolkit for testing how well general-purpose vision models can sort scanned documents, built so prompts and models can be compared on evidence instead of impressions.</p>
-<h2 id="what-i-built" class="anchored">What I built</h2>
+<h2 id="what-i-built">What I built</h2>
 <ul>
 <li>A Python toolkit that converts TIFF/PDF pages to 300-DPI images, runs OCR, and sorts documents into the 16 RVL-CDIP categories using OpenRouter vision models.</li>
 <li>More than 17 prompt iterations, each evaluated the same way.</li>
 <li>Confusion matrices, misclassification analyses, and cost projections used to choose prompts and models.</li>
 </ul>
-<h2 id="stack" class="anchored">Stack</h2>
+<h2 id="stack">Stack</h2>
 <p><span class="tag">Python</span> <span class="tag">OCR</span> <span class="tag">OpenRouter vision models</span> <span class="tag">Prompt engineering</span> <span class="tag">Error analysis</span></p>
-<h2 id="results-and-links" class="anchored">Results and links</h2>
+<h2 id="results-and-links">Results and links</h2>
 <!-- TODO: add the best prompt/model accuracy, a confusion matrix image, the cost-per-1k-documents projection, and the repo link. -->
 </div>
 
@@ -168,13 +167,6 @@ ul.task-list li input[type="checkbox"] {
     tabsets.forEach(function(tabset) {
       const tabby = new Tabby('#' + tabset.id);
     });
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     

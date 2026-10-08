@@ -36,7 +36,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tabby.min.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
@@ -125,9 +124,9 @@ Jack J. Burleson
 <p><a href="assets/Jack_Burleson_Resume.pdf" class="btn primary" download="Jack_Burleson_Resume.pdf">Download PDF</a> <a href="mailto:jackjburleson@proton.me" class="btn">Email me</a> <a href="#" class="btn print-btn">Print</a></p>
 </div>
 </div>
-<h2 id="professional-summary" class="anchored">Professional Summary</h2>
+<h2 id="professional-summary">Professional Summary</h2>
 <p>M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (expected Dec 2026); B.S. in Psychology (neuroscience concentration, sociology minor) from UW–Parkside. I build AI systems from start to finish: multi-agent document pipelines, transformer fine-tuning and calibration, LLM evaluation, computer vision classification, and behavioral prediction models. My capstone, with industry partner American Family Insurance, looks for ways to cut the cost of AI inference and improve document processing. I also bring five years of high-volume logistics and operations work in quality assurance, documentation, and process improvement.</p>
-<h2 id="technical-skills" class="anchored">Technical Skills</h2>
+<h2 id="technical-skills">Technical Skills</h2>
 <div class="skills">
 <dl>
 <dt><strong>Programming Languages</strong></dt>
@@ -148,7 +147,7 @@ Docker, pytest, Quarto, AWS, Azure
 </dd>
 </dl>
 </div>
-<h2 id="projects" class="anchored">Projects</h2>
+<h2 id="projects">Projects</h2>
 <div class="entry">
 <div class="entry-head">
 <p><strong>Digital-Mailroom</strong> <span class="sub">DSHB Capstone project — American Family Insurance (industry partner)</span></p>
@@ -185,7 +184,7 @@ Docker, pytest, Quarto, AWS, Azure
 <li>Checked the PRCA’s psychometric structure with factor analysis, then built LLM “digital twin” personas with tiered embodiment prompts (OpenRouter/vLLM). Benchmarked them against the ML baselines on shared metrics (MAE, band accuracy, F1) and analyzed systematic bias by demographic group.</li>
 </ul>
 </div>
-<h2 id="education" class="anchored">Education</h2>
+<h2 id="education">Education</h2>
 <div class="entry">
 <div class="entry-head">
 <p><strong>University of Wisconsin–Madison</strong> <span class="sub">Madison, WI</span> <span class="date">Expected Dec 2026</span></p>
@@ -208,7 +207,7 @@ Docker, pytest, Quarto, AWS, Azure
 <li>Minor in Sociology; Provost’s List (7x), Dean’s List (8x), Distinguished Achievement Award (2025), and Psychological Research Certification (300 lab hours).</li>
 </ul>
 </div>
-<h2 id="professional-experience" class="anchored">Professional Experience</h2>
+<h2 id="professional-experience">Professional Experience</h2>
 <div class="entry">
 <div class="entry-head">
 <p><strong>UW–Parkside — Undergraduate Researcher, Cognitive Neuroscience Lab</strong> <span class="sub">Kenosha, WI</span> <span class="date">Jun 2024 – Aug 2025</span></p>
@@ -248,7 +247,7 @@ Docker, pytest, Quarto, AWS, Azure
 <li>Worked with warehouse and transportation teams to find quality problems and resolve logistics exceptions before shipment.</li>
 </ul>
 </div>
-<h2 id="research-training" class="anchored">Research Training</h2>
+<h2 id="research-training">Research Training</h2>
 <div class="training">
 <ul>
 <li><strong>CITI Program:</strong> Conflicts of Interest training <span class="date">2025</span></li>
@@ -302,13 +301,6 @@ Docker, pytest, Quarto, AWS, Azure
     tabsets.forEach(function(tabset) {
       const tabby = new Tabby('#' + tabset.id);
     });
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     
