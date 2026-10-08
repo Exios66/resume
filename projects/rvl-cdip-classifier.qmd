@@ -1,0 +1,32 @@
+---
+pagetitle: "RVL-CDIP-Classifier — Jack J. Burleson"
+description: "A Python toolkit that converts document pages to 300-DPI images, runs OCR, and classifies them into 16 RVL-CDIP categories with vision models, using 17+ prompt iterations."
+---
+
+::: {.page}
+
+[← All projects](index.qmd){.back}
+
+# RVL-CDIP-Classifier {.page-title}
+
+[Computer vision & prompt engineering]{.kicker}
+
+## Overview
+
+A toolkit for testing how well general-purpose vision models can sort scanned documents, built so prompts and models can be compared on evidence instead of impressions.
+
+## What I built
+
+- A Python toolkit that converts TIFF/PDF pages to 300-DPI images, runs OCR, and sorts documents into the 16 RVL-CDIP categories using OpenRouter vision models.
+- More than 17 prompt iterations, each evaluated the same way.
+- Confusion matrices, misclassification analyses, and cost projections used to choose prompts and models.
+
+## Stack
+
+[Python]{.tag} [OCR]{.tag} [OpenRouter vision models]{.tag} [Prompt engineering]{.tag} [Error analysis]{.tag}
+
+## Results and links
+
+<!-- TODO: add the best prompt/model accuracy, a confusion matrix image, the cost-per-1k-documents projection, and the repo link. -->
+
+:::
