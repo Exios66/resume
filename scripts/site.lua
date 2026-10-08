@@ -11,6 +11,8 @@ local NAV = {
   { label = "Résumé",   href = "resume.html",         section = "resume.html" },
 }
 
+--- Compute the current page's HTML path relative to the Quarto project root.
+-- @return string Input path with the project prefix removed and .qmd replaced by .html.
 local function page_path()
   local input = quarto.doc.input_file or ""
   local root = quarto.project.directory or ""
@@ -21,6 +23,10 @@ local function page_path()
   return (rel:gsub("%.qmd$", ".html"))
 end
 
+--- Check whether a page belongs to a navigation item's section.
+-- @param item table Navigation entry whose section is a page or directory path.
+-- @param path string Project-relative HTML page path.
+-- @return boolean Whether the path matches the page or starts with the directory.
 local function is_current(item, path)
   if item.section:sub(-1) == "/" then
     return path:sub(1, #item.section) == item.section
@@ -28,6 +34,10 @@ local function is_current(item, path)
   return path == item.section
 end
 
+--- Wrap the document in the site header, main landmark, and footer.
+-- Navigation links are relative to the page; the current section gets aria-current.
+-- @param doc Pandoc Document whose blocks will be modified in place.
+-- @return Pandoc The modified document.
 function Pandoc(doc)
   local path = page_path()
   local _, depth = path:gsub("/", "")
