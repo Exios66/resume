@@ -13,11 +13,11 @@ website:
   search: false
   open-graph:
     locale: en_US
-    image: assets/og-image.png
+    image: https://exios66.github.io/resume/assets/og-image.png
     image-alt: "Jack J. Burleson — AI / Machine Learning · Data Science"
   twitter-card:
     card-style: summary_large_image
-    image: assets/og-image.png
+    image: https://exios66.github.io/resume/assets/og-image.png
 
 format:
   html:
