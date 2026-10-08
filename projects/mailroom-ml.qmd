@@ -28,6 +28,8 @@ The model side of the document-intelligence work: a classifier that decides what
 
 ## Results and links
 
-<!-- TODO: add headline metrics (accuracy, calibration error before/after), a calibration plot, and the repo link. -->
+Code: [github.com/LLM-Mailroom-Services/mailroom-ml](https://github.com/LLM-Mailroom-Services/mailroom-ml)
+
+<!-- TODO: add headline metrics (accuracy, calibration error before/after) and a calibration plot. -->
 
 :::
