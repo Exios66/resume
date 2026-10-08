@@ -11,6 +11,9 @@ local NAV = {
   { label = "Résumé",   href = "resume.html",         section = "resume.html" },
 }
 
+--- Return the input path with a trailing .qmd replaced by .html.
+-- Strip the project directory and separator when the input starts with it;
+-- otherwise retain the input path. A missing input file yields an empty string.
 local function page_path()
   local input = quarto.doc.input_file or ""
   local root = quarto.project.directory or ""
@@ -21,6 +24,8 @@ local function page_path()
   return (rel:gsub("%.qmd$", ".html"))
 end
 
+--- Return whether the page path matches the navigation item's section.
+-- A section ending in / matches every path with that prefix; others match exactly.
 local function is_current(item, path)
   if item.section:sub(-1) == "/" then
     return path:sub(1, #item.section) == item.section
@@ -28,6 +33,9 @@ local function is_current(item, path)
   return path == item.section
 end
 
+--- Insert the site header, main landmark, and footer into doc and return it.
+-- Mutate doc.blocks with raw HTML, using links relative to the current page's
+-- depth and marking matching navigation sections with aria-current="page".
 function Pandoc(doc)
   local path = page_path()
   local _, depth = path:gsub("/", "")
