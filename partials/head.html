@@ -1,0 +1,29 @@
+<meta name="theme-color" content="#0e6f7a">
+<meta name="author" content="Jack J. Burleson">
+<script>
+  // Apply the saved theme before first paint so there is no light/dark flash.
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Jack J. Burleson",
+  "url": "https://exios66.github.io/resume/",
+  "jobTitle": "AI / Machine Learning and Data Science",
+  "email": "mailto:jackjburleson@proton.me",
+  "address": { "@type": "PostalAddress", "addressLocality": "Madison", "addressRegion": "WI", "addressCountry": "US" },
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Madison" },
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Parkside" }
+  ],
+  "knowsAbout": ["Machine learning", "Natural language processing", "LLM evaluation", "Computer vision", "Behavioral data science"],
+  "sameAs": [
+    "https://www.linkedin.com/in/jackjburleson",
+    "https://github.com/Exios66"
+  ]
+}
+</script>

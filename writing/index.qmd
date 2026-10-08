@@ -1,0 +1,16 @@
+---
+pagetitle: "Writing — Jack J. Burleson"
+description: "Notes on building AI systems: evaluation, calibration, and document intelligence. Coming soon."
+---
+
+::: {.page}
+
+# Writing {.page-title}
+
+::: {.empty}
+No posts yet. I plan to write up what I learn from the projects here: how I evaluate prompts, what calibration changed in a classifier, and what it costs to run these systems.
+
+In the meantime, the best way to follow along is [GitHub](https://github.com/Exios66).
+:::
+
+:::

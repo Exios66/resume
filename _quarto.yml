@@ -1,24 +1,39 @@
 project:
   type: website
   output-dir: docs
+  resources:
+    - assets/**
+  post-render: scripts/post-render.py
 
 website:
   title: "Jack J. Burleson"
-  description: "Resume of Jack J. Burleson — AI / Machine Learning and Data Science."
+  site-url: "https://exios66.github.io/resume"
+  description: "Portfolio of Jack J. Burleson — AI / machine learning and data science. Document-intelligence pipelines, transformer fine-tuning, LLM evaluation, and behavioral ML."
   favicon: assets/favicon.svg
-  open-graph: true
+  search: false
+  open-graph:
+    locale: en_US
+    image: assets/og-image.png
+    image-alt: "Jack J. Burleson — AI / Machine Learning · Data Science"
+  twitter-card:
+    card-style: summary_large_image
+    image: assets/og-image.png
 
 format:
   html:
     theme: none
     css: styles.css
     toc: false
-    page-layout: custom
+    page-layout: full
+    filters:
+      - scripts/site.lua
     title-block-style: none
     minimal: false
+    canonical-url: true
+    anchor-sections: false
     include-in-header:
-      text: |
-        <meta name="theme-color" content="#0e6f7a">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+      - partials/head.html
+    include-before-body:
+      - partials/skip-link.html
+    include-after-body:
+      - partials/scripts.html

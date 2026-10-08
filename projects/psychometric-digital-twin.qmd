@@ -1,0 +1,33 @@
+---
+pagetitle: "Psychometric Digital Twin — Jack J. Burleson"
+description: "Behavioral ML research at UW–Madison: six models and LLM digital-twin personas predicting communication apprehension for 252 survey participants."
+---
+
+::: {.page}
+
+[← All projects](index.qmd){.back}
+
+# Psychometric Digital Twin {.page-title}
+
+[Behavioral ML research · UW–Madison]{.kicker}
+
+## Overview
+
+A study of whether classical machine learning or LLM-driven "digital twin" personas better predict a person's communication-apprehension score, and where each one is biased.
+
+## What I built
+
+- A behavioral prediction pipeline on 252 matched survey participants. Ridge, Elastic Net, k-NN, Random Forest, XGBoost, and MLP models predicted communication-apprehension scores from demographic, employment, geographic, and transit features, with cross-validation and SHAP feature importance.
+- A check of the PRCA's psychometric structure with factor analysis.
+- LLM "digital twin" personas with tiered embodiment prompts (OpenRouter/vLLM).
+- A benchmark of the personas against the ML baselines on shared metrics (MAE, band accuracy, F1), plus an analysis of systematic bias by demographic group.
+
+## Stack
+
+[Python]{.tag} [scikit-learn]{.tag} [XGBoost]{.tag} [SHAP]{.tag} [Factor analysis]{.tag} [OpenRouter]{.tag} [vLLM]{.tag}
+
+## Results and links
+
+<!-- TODO: add the headline comparison (e.g. best baseline MAE vs. best persona MAE), a SHAP summary figure, and the repo or write-up link. -->
+
+:::

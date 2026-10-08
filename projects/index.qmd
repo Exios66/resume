@@ -1,0 +1,50 @@
+---
+pagetitle: "Projects — Jack J. Burleson"
+description: "Selected AI and machine learning projects: a LangGraph document pipeline, a ModernBERT classifier, a vision-model classification toolkit, and a behavioral ML study."
+---
+
+::: {.page}
+
+# Projects {.page-title}
+
+Selected work in document intelligence, model evaluation, and behavioral machine learning.
+
+::: {.cards .cards-wide}
+::: {.card}
+## [Digital-Mailroom](digital-mailroom.qmd)
+[DSHB capstone · American Family Insurance]{.kicker}
+
+10 Python packages for entity extraction, classification, routing, and scalable workflows, joined in one LangGraph pipeline.
+
+[LangGraph]{.tag} [Docker]{.tag} [Prompt experiments]{.tag}
+:::
+
+::: {.card}
+## [Mailroom-ML](mailroom-ml.qmd)
+[ML training, evaluation & fine-tuning]{.kicker}
+
+A ModernBERT document classifier with data lineage, probability calibration, and production routing logic.
+
+[PyTorch]{.tag} [Hugging Face]{.tag} [ONNX]{.tag} [FastAPI]{.tag} [Modal]{.tag}
+:::
+
+::: {.card}
+## [RVL-CDIP-Classifier](rvl-cdip-classifier.qmd)
+[Computer vision & prompt engineering]{.kicker}
+
+A toolkit that turns TIFF/PDF pages into 300-DPI images, runs OCR, and sorts documents into 16 categories with vision models.
+
+[OCR]{.tag} [OpenRouter]{.tag} [Evaluation]{.tag}
+:::
+
+::: {.card}
+## [Psychometric Digital Twin](psychometric-digital-twin.qmd)
+[Behavioral ML research · UW–Madison]{.kicker}
+
+Six ML models against LLM "digital twin" personas on 252 survey participants, with bias analysis by demographic group.
+
+[scikit-learn]{.tag} [XGBoost]{.tag} [SHAP]{.tag} [vLLM]{.tag}
+:::
+:::
+
+:::

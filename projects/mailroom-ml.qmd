@@ -1,0 +1,33 @@
+---
+pagetitle: "Mailroom-ML — Jack J. Burleson"
+description: "A ModernBERT document classifier with training, evaluation, fine-tuning, probability calibration, and ONNX export for FastAPI serving on Modal."
+---
+
+::: {.page}
+
+[← All projects](index.qmd){.back}
+
+# Mailroom-ML {.page-title}
+
+[ML training, evaluation & fine-tuning]{.kicker}
+
+## Overview
+
+The model side of the document-intelligence work: a classifier that decides what kind of document it is looking at, and how confident it should be before a document is routed automatically.
+
+## What I built
+
+- A ModernBERT document classifier with training, evaluation, and fine-tuning pipelines.
+- Data lineage tracking, probability calibration, and production routing logic.
+- PyTorch training pipelines using Transformers and Hugging Face datasets, evaluated with scipy.
+- ONNX export for FastAPI serving on Modal, with pytest coverage throughout.
+
+## Stack
+
+[Python]{.tag} [PyTorch]{.tag} [Transformers]{.tag} [Hugging Face datasets]{.tag} [scipy]{.tag} [ONNX]{.tag} [FastAPI]{.tag} [Modal]{.tag} [pytest]{.tag}
+
+## Results and links
+
+<!-- TODO: add headline metrics (accuracy, calibration error before/after), a calibration plot, and the repo link. -->
+
+:::

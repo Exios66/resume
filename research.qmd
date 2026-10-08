@@ -1,0 +1,34 @@
+---
+pagetitle: "Research — Jack J. Burleson"
+description: "Cognitive neuroscience research on chatbot truth, deception, and cognitive workload, plus EEG analysis, presented at the 2025 Midwestern Psychological Association conference."
+---
+
+::: {.page}
+
+# Research {.page-title}
+
+## Cognitive Neuroscience Lab, UW–Parkside
+
+[Undergraduate Researcher · Jun 2024 – Aug 2025 · Advisor: Dr. Melissa Gregg]{.kicker}
+
+- Designed and pilot-tested a study of perceptions of chatbot truth, deception, and user cognitive workload. Code: [github.com/Exios66/truth-deception-architecture](https://github.com/Exios66/truth-deception-architecture).
+- Ran EEG systems and analyzed neural time-series data to measure brain activity, adding signal-processing and statistical analysis to existing lab research on sleep quality and cognitive load.
+- Presented findings at the 2025 Midwestern Psychological Association conference.
+
+<!-- TODO: add the MPA 2025 poster/abstract title and a link to the poster PDF, if you want it public. -->
+
+## Graduate research, UW–Madison
+
+[M.S. in Psychology: Data Science in Human Behavior · expected Dec 2026]{.kicker}
+
+- The [Psychometric Digital Twin](projects/psychometric-digital-twin.qmd) study compares machine learning models and LLM personas on behavioral prediction.
+- The [Digital-Mailroom](projects/digital-mailroom.qmd) capstone applies applied-AI methods to document processing with an industry partner.
+
+## Research training
+
+::: {.training}
+- **CITI Program:** Conflicts of Interest training [2025]{.date}
+- **CITI Program:** IRB Training for Students and Faculty [2025]{.date}
+:::
+
+:::
