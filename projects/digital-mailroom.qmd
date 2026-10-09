@@ -1,0 +1,36 @@
+---
+pagetitle: "Digital-Mailroom — Jack J. Burleson"
+description: "Capstone with American Family Insurance: a LangGraph pipeline for document routing, prompt experiments, deterministic scoring, and reproducible deployment."
+---
+
+::: {.page}
+
+[← All projects](index.qmd){.back}
+
+# Digital-Mailroom {.page-title}
+
+[DSHB capstone project · American Family Insurance (industry partner)]{.kicker}
+
+## Overview
+
+A capstone with American Family Insurance to improve how documents are read, sorted, and managed. The project looks for ways to cut the cost of AI inference while improving document processing.
+
+<!-- TODO: add a one-sentence problem statement in plain language (what a "mailroom" handles and why cost matters), if cleared by the industry partner. -->
+
+## What I built
+
+- Ten Python packages covering entity extraction, classification, routing, and scalable workflows.
+- One LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, dataset management, and deployment.
+- A reproducible Docker environment so results can be rerun end to end.
+
+## Stack
+
+[Python]{.tag} [LangGraph]{.tag} [Multi-agent pipelines]{.tag} [Prompt engineering]{.tag} [Docker]{.tag}
+
+## Results and links
+
+<!-- TODO: add measured results (accuracy, cost per document, latency) and a public repo or write-up link, only if the industry partner allows it. -->
+
+Details are limited while the capstone is in progress (expected completion Dec 2026). See the [résumé](../resume.qmd) for the summary.
+
+:::

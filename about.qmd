@@ -1,0 +1,65 @@
+---
+pagetitle: "About — Jack J. Burleson"
+description: "Background, skills, and education of Jack J. Burleson, an M.S. candidate in Data Science in Human Behavior at UW–Madison."
+---
+
+::: {.page}
+
+# About {.page-title}
+
+I'm an M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (expected Dec 2026), with a B.S. in Psychology (neuroscience concentration, sociology minor) from UW–Parkside.
+
+I build AI systems from start to finish: multi-agent document pipelines, transformer fine-tuning and calibration, LLM evaluation, computer vision classification, and behavioral prediction models. Before graduate school I spent five years in high-volume logistics and operations, working on quality assurance, documentation, and process improvement. That background is why I care about error rates, reproducibility, and cost as much as accuracy.
+
+## Technical Skills
+
+::: {.skills}
+**Programming Languages**
+: Python (pandas, NumPy, scikit-learn, PyTorch, Hugging Face), R, MATLAB, SQL, Parquet, Git
+
+**Machine Learning**
+: Transformer fine-tuning, model evaluation & calibration, cross-validation, SHAP/feature importance, error analysis, computer vision (OCR-based document classification), experimental design
+
+**AI Engineering & Development**
+: LangGraph, multi-agent pipelines, prompt engineering, LLM eval harnesses & LLM-as-a-judge, model serving (vLLM, Ollama, LM Studio, OpenRouter), ONNX + FastAPI deployment on Modal
+
+**Engineering & Cloud**
+: Docker, pytest, Quarto, AWS, Azure
+:::
+
+## Education
+
+::: {.entry}
+::: {.entry-head}
+**University of Wisconsin–Madison** [Madison, WI]{.sub} [Expected Dec 2026]{.date}
+:::
+
+::: {.degree}
+*M.S. Candidate — Psychology: Data Science in Human Behavior* · **GPA 3.85**
+:::
+
+- Graduate work in machine learning, statistics, behavioral data analysis, predictive modeling, experimental design, and publication-quality visualization.
+:::
+
+::: {.entry}
+::: {.entry-head}
+**University of Wisconsin–Parkside** [Kenosha, WI]{.sub} [Sep 2020 – May 2025]{.date}
+:::
+
+::: {.degree}
+*B.S., Psychology* · Concentration: Neuroscience · **GPA 3.93**
+:::
+
+- Minor in Sociology; Provost's List (7x), Dean's List (8x), Distinguished Achievement Award (2025), and Psychological Research Certification (300 lab hours).
+:::
+
+## Research Training
+
+::: {.training}
+- **CITI Program:** Conflicts of Interest training [2025]{.date}
+- **CITI Program:** IRB Training for Students and Faculty [2025]{.date}
+:::
+
+[Download the full résumé](resume.qmd){.btn .primary}
+
+:::
