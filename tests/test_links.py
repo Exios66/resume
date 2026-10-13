@@ -50,6 +50,7 @@ class PageParser(HTMLParser):
         self.elements = []
 
     def handle_starttag(self, tag, attrs):
+        """Record the tag and its ancestors, then track non-void tags as open elements."""
         attributes = first_attributes(attrs)
         self.elements.append((tag, attributes, tuple(self.open_elements)))
         if tag not in VOID_TAGS:
@@ -59,6 +60,7 @@ class PageParser(HTMLParser):
         self.elements.append((tag, first_attributes(attrs), tuple(self.open_elements)))
 
     def handle_endtag(self, tag):
+        """Close the matching open element and its descendants, ignoring unmatched end tags."""
         for depth in range(len(self.open_elements) - 1, -1, -1):
             if self.open_elements[depth][0] == tag:
                 del self.open_elements[depth:]
