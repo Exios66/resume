@@ -264,3 +264,93 @@ class RenderedSiteTests(unittest.TestCase):
                     line = source.count("\n", 0, source.index(text)) + 1
                     failures.append(f"{rel(page)}:{line} -> {text!r}")
         self.assertFalse(failures, "authoring leftovers in rendered site:\n" + "\n".join(failures))
+
+
+class PortfolioRegressionTests(unittest.TestCase):
+    """Contracts for the case studies, reports, and diagrams introduced by PR #7."""
+
+    REPORT_SLUGS = ("mailroom-ml", "mailroom-reloaded", "rvl-cdip-classifier", "wave-laboratory")
+    STUDY_SLUGS = ("digital-mailroom",) + REPORT_SLUGS
+
+    def test_expected_case_studies_and_reports_are_published(self):
+        # Explicit paths prevent glob-based checks from passing if a whole report
+        # or project disappears from the generated site.
+        pages = [f"projects/{slug}.html" for slug in self.STUDY_SLUGS]
+        pages += [f"projects/{slug}/report.html" for slug in self.REPORT_SLUGS]
+        for name in pages:
+            with self.subTest(page=name):
+                page = DOCS / name
+                self.assertTrue(page.is_file(), f"Missing published page: {name}")
+                elements = parse(page)
+                self.assertEqual(sum(tag == "main" for tag, _, _ in elements), 1)
+                self.assertEqual(sum(tag == "h1" for tag, _, _ in elements), 1)
+
+    def test_project_navigation_links_both_pages_and_marks_only_the_current_page(self):
+        for slug in self.STUDY_SLUGS:
+            study = DOCS / "projects" / f"{slug}.html"
+            report = DOCS / "projects" / slug / "report.html"
+            pages = (study, report) if slug in self.REPORT_SLUGS else (study,)
+            expected = {page.resolve() for page in pages}
+            for page in pages:
+                with self.subTest(page=rel(page)):
+                    links = [attributes for tag, attributes, ancestors in parse(page)
+                             if tag == "a" and any("project-nav" in classes(parent)
+                                                   for _, parent in ancestors)]
+                    current = [attributes for attributes in links
+                               if attr(attributes, "aria-current") == "page"]
+                    self.assertEqual(len(current), 1, f"{rel(page)} needs one current project tab")
+                    current_path = unquote(urlsplit(attr(current[0], "href")).path)
+                    self.assertEqual((page.parent / current_path).resolve(), page.resolve())
+                    destinations = {(page.parent / unquote(urlsplit(attr(attributes, "href")).path)).resolve()
+                                    for attributes in links if not is_external(attr(attributes, "href"))}
+                    self.assertTrue(expected <= destinations, f"{rel(page)} is missing a project tab")
+
+    def test_new_diagrams_have_captions_and_resolvable_svg_references(self):
+        names = ["projects/index.html"] + [f"projects/{slug}.html" for slug in self.STUDY_SLUGS]
+        for name in names:
+            with self.subTest(page=name):
+                elements = parse(DOCS / name)
+                ids = [attr(attributes, "id") for _, attributes, _ in elements if attr(attributes, "id")]
+                self.assertEqual(len(ids), len(set(ids)), "Duplicate ids can break SVG and caption references")
+                diagrams = [attributes for tag, attributes, _ in elements
+                            if tag == "figure" and "diagram" in classes(attributes)]
+                self.assertTrue(diagrams, f"{name} lost its architecture diagram")
+                for diagram in diagrams:
+                    children = [(tag, attributes) for tag, attributes, ancestors in elements
+                                if any(parent is diagram for _, parent in ancestors)]
+                    captions = {attr(attributes, "id") for tag, attributes in children if tag == "figcaption"}
+                    references = set(attr(diagram, "aria-labelledby").split())
+                    self.assertTrue(references and references <= captions, "Diagram must name its caption")
+                    svgs = [attributes for tag, attributes in children if tag == "svg"]
+                    self.assertEqual(len(svgs), 1)
+                    self.assertEqual(attr(svgs[0], "aria-hidden"), "true")
+                    self.assertEqual(attr(svgs[0], "focusable"), "false")
+                    local_ids = {attr(attributes, "id") for _, attributes in children}
+                    for _, attributes in children:
+                        for value in attributes.values():
+                            for reference in re.findall(r"url\(#([^)]+)\)", value or ""):
+                                self.assertIn(reference, local_ids, "SVG marker references must resolve in the diagram")
+
+    def test_new_projects_are_discoverable_from_home_about_and_project_cards(self):
+        featured = {"digital-mailroom", "mailroom-ml", "rvl-cdip-classifier", "wave-laboratory"}
+        for name, slugs in (("index.html", featured), ("projects/index.html", set(self.STUDY_SLUGS))):
+            with self.subTest(page=name):
+                page = DOCS / name
+                destinations = {(page.parent / unquote(urlsplit(attr(attributes, "href")).path)).resolve()
+                                for tag, attributes, ancestors in parse(page)
+                                if tag == "a" and not is_external(attr(attributes, "href"))
+                                and any("card" in classes(parent) for _, parent in ancestors)}
+                expected = {(DOCS / "projects" / f"{slug}.html").resolve() for slug in slugs}
+                self.assertTrue(expected <= destinations, f"{name} is missing project cards")
+        self.assertIn((DOCS / "projects/wave-laboratory.html").resolve(), linked_targets(DOCS / "about.html"))
+
+    def test_report_figures_are_published_without_corruption(self):
+        for slug in self.REPORT_SLUGS:
+            with self.subTest(project=slug):
+                sources = sorted((ROOT / "projects" / slug / "figures").glob("*"))
+                figures = [source for source in sources if source.suffix.lower() in (".svg", ".jpg")]
+                self.assertTrue(figures, f"{slug} lost its report figures")
+                for source in figures:
+                    target = DOCS / source.relative_to(ROOT)
+                    self.assertTrue(target.is_file(), f"Missing published figure: {rel(target)}")
+                    self.assertEqual(target.read_bytes(), source.read_bytes(), f"Figure changed during publishing: {source.name}")

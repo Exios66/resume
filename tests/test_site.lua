@@ -81,8 +81,59 @@ check({ input = "index.qmd", prefix = "", current = "index.html" }, "", false, t
 check({ prefix = "" }, nil, false, true)
 print("Site filter unit tests passed")
 
-assert(#RawBlock({ format = "html", text = "<!-- src: notes.md -->" }) == 0, "Comment block should be removed")
-assert(#RawInline({ format = "html", text = " <!-- a\nb --> " }) == 0, "Comment inline should be removed")
-assert(RawBlock({ format = "html", text = "<div></div>" }) == nil, "Markup should be kept")
-assert(RawBlock({ format = "html", text = "<!-- a --><div></div>" }) == nil, "Mixed markup should be kept")
-print("comment stripping ok")
+-- Both callbacks share the comment policy. Exercise identical cases so an inline
+-- regression cannot hide behind coverage of blocks (or vice versa).
+local comment_cases = {
+  { label = "source note", text = "<!-- src: notes.md -->", remove = true },
+  { label = "empty comment", text = "<!---->", remove = true },
+  { label = "blank comment", text = "<!-- -->", remove = true },
+  { label = "multiline note", text = "<!-- a\nb -->", remove = true },
+  { label = "surrounding whitespace", text = "\t\r\n <!-- a\r\nb --> \n\t", remove = true },
+  { label = "markup inside a note", text = "<!-- <div>not published</div> -->", remove = true },
+  { label = "punctuation and Unicode", text = "<!-- Résumé: 100% [a-b] -->", remove = true },
+  { label = "consecutive notes", text = "<!-- a -->\n<!-- b -->", remove = true },
+  { label = "empty raw element", text = "" },
+  { label = "whitespace only", text = " \t\n" },
+  { label = "ordinary text", text = "Published text" },
+  { label = "HTML block", text = "<div>Published text</div>" },
+  { label = "HTML inline", text = "<span>Published text</span>" },
+  { label = "SVG diagram", text = '<svg><text>Pipeline</text></svg>' },
+  { label = "escaped comment", text = "&lt;!-- example --&gt;" },
+  { label = "unclosed comment", text = "<!-- unfinished" },
+  { label = "closing delimiter only", text = "notes -->" },
+  { label = "invalid opening delimiter", text = "<!- notes -->" },
+  { label = "invalid closing delimiter", text = "<!-- notes ->" },
+  { label = "text before a note", text = "Published <!-- note -->" },
+  { label = "text after a note", text = "<!-- note --> Published" },
+  { label = "markup before a note", text = "<div>Published</div><!-- note -->" },
+  { label = "markup after a note", text = "<!-- note --><div>Published</div>" },
+  -- A raw HTML element can contain both comments and visible content. Removing
+  -- the entire element would silently erase part of the published page.
+  { label = "markup between notes", text = "<!-- before --><div>Published</div><!-- after -->" },
+  { label = "text between notes", text = "<!-- before -->Published<!-- after -->" },
+}
+
+local comment_failures = {}
+local comment_checks = 0
+for _, handler in ipairs({ { name = "RawBlock", callback = RawBlock },
+                           { name = "RawInline", callback = RawInline } }) do
+  local function check_comment(format, case)
+    local element = { format = format, text = case.text }
+    local result = handler.callback(element)
+    comment_checks = comment_checks + 1
+    local removed = type(result) == "table" and next(result) == nil
+    local correct = case.remove and removed or (not case.remove and result == nil)
+    if not correct then
+      comment_failures[#comment_failures + 1] = handler.name .. ": " .. case.label
+        .. (case.remove and " should be removed" or " should be preserved")
+    end
+    assert(element.format == format and element.text == case.text,
+           handler.name .. " must not mutate its input")
+  end
+  for _, case in ipairs(comment_cases) do check_comment("html", case) end
+  for _, format in ipairs({ "latex", "markdown", "org", "HTML", "html5", "" }) do
+    check_comment(format, { label = "comment syntax in " .. format, text = "<!-- keep literally -->" })
+  end
+end
+assert(#comment_failures == 0, "Comment filter failures:\n" .. table.concat(comment_failures, "\n"))
+print("Comment filter unit tests passed (" .. comment_checks .. " cases)")
