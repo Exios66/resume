@@ -1,0 +1,85 @@
+---
+pagetitle: "Mailroom Reloaded — Jack J. Burleson"
+description: "A compressed, deployment-ready Digital Mailroom on CrewAI Flows: a deterministic driver, a ModernBERT fast path, a durable audit trail, and consoles that replay every run."
+---
+
+::: {.page}
+
+[← All projects](index.qmd){.back}
+
+::: {.project-nav}
+[Case study](mailroom-reloaded.qmd){aria-current="page"} [Technical report](mailroom-reloaded/report.qmd) [Code](https://github.com/Exios66/mailroom-reloaded)
+:::
+
+# Mailroom Reloaded {.page-title}
+
+[Agentic document pipeline · deployable rebuild]{.kicker}
+
+## At a glance
+
+::: {.stats}
+::: {.stat}
+[2]{.stat-value} [LLM calls for a clean text-layer document (sort, then extract)]{.stat-label}
+:::
+::: {.stat}
+[1,597]{.stat-value} [tests passed, 3 skipped, in the main-branch verification run (the suite has 1,134 test functions in 83 files by grep)]{.stat-label}
+:::
+:::
+
+## The problem
+
+My Digital Mailroom design routes incoming documents: decide what each one is, pull out the fields that matter, and file it with a record of what happened. Agent frameworks make that easy to prototype and hard to run. If the model decides what happens next, you cannot say in advance how many calls a document will cost, where a crash will leave it, or why it ended up in a given folder.
+
+Mailroom Reloaded is a rebuild of that design as a single deployable service, built around one rule: code owns the control flow, and models are called at fixed points.
+
+## Approach
+
+{{< include ../partials/diagrams/_mailroom-reloaded.qmd >}}
+
+The pipeline is a CrewAI Flow, but a deterministic driver walks it, not CrewAI's event engine. A clean text document goes through local ingest, the ModernBERT fast path from [Mailroom-ML](mailroom-ml.qmd), one sorter call, a gate, one specialist extraction call, a second gate, and then report, catalog and archive. The gates are plain threshold code with zero LLM calls. That is why the cost of a clean document is exactly two calls.
+
+When a gate is not satisfied, the document climbs a fixed ladder:
+
+1. Retry the extraction, up to a configured limit.
+2. Re-sort once, when the fast path and the sorter disagree about the class.
+3. Verify: a judge grades the extraction and an arbiter decides whether to accept, re-extract or escalate.
+4. Escalate to a boss agent that can reassign the class.
+5. Park the document for human review.
+
+The ModernBERT fast path runs first and fails open. If the package or model is missing, the input is oversized, or anything errors, the pipeline falls back to a full LLM sort instead of stopping.
+
+## What I built
+
+- **Durability.** Documents move between bin folders (inbox, processing, review, failed, archive) by atomic rename, with a JSON manifest per document. Every completed node is checkpointed, so a crashed watcher resumes from the last finished node. A SQLite catalog and a hash-chained audit log record what happened; a second chain covers every run, with optional off-host anchoring.
+- **Observability.** OpenTelemetry traces go to Phoenix, metrics to Prometheus, and provisioned Grafana dashboards (Pipeline, Serving & GPU, Quality) sit on top. Spans carry metadata, not document text.
+- **Two consoles.** `/ui` is a plain JavaScript runs page. `/tui` is a browser terminal with a replay viewer that scrubs through a recorded run station by station, shows retries and escalations, and verifies the ledger chain.
+- **Deployment.** One Docker Compose file with profiles for a local llamafile sidecar, a local vLLM server with GPU metrics, and a split watcher. Providers are switchable: a mock for tests, OpenRouter, vLLM, or llamafile. Gmail intake is an optional extra.
+- **An opt-in decision model.** "Jev" is a calibrated, probabilistic decision model, not a chat model: it answers typed questions (a choice, a yes-probability, a score). When enabled and calibrated, it may overrule the gate only inside the medium-confidence band, never a hard rule. It is off by default and the pipeline is unchanged without it.
+- **An evaluation harness.** `mailroom eval` samples a pinned dataset revision with a fixed seed, keeps ground truth away from the pipeline, and fits any learned gate on the training split only.
+
+## Results
+
+I have no accuracy or cost numbers to publish for this service yet. The harness exists and is tested, but I have not committed evaluation results, so I am not quoting any. What I can show is that the machinery runs end to end: the main-branch verification ran four seeded documents through the stack with a mock provider and all four archived, and eleven browser checks of the replay viewer passed.
+
+![The /tui replay viewer paused partway through a recorded demo run, with per-station document counts, a scrub bar and a metrics line.](mailroom-reloaded/figures/replay-viewer.jpg){.fig fig-alt="A dark terminal-style page titled MAILROOM. A replay command is running. Rows for intake, sorter, gate, specialist, judge, boss, review, archive and failed show dotted progress bars with counts, one red marker on specialist and green ticks on review and archive. Below is a green scrub bar and a line of totals for documents, tokens, cost and calls." width="100%"}
+
+![The replay inspector on a document that went through a gate decision and then a retry.](mailroom-reloaded/figures/inspector-retry.jpg){.fig fig-alt="The same terminal with an inspector panel open under the station grid. It lists local links for Phoenix and Grafana, the document's station, status and attempt number, and two events: a gate_decision followed by a retry." width="100%"}
+
+![The ledger command listing six hash-chained entries, followed by a successful chain verification.](mailroom-reloaded/figures/ledger.jpg){.fig fig-alt="A terminal table with columns for sequence, kind, run, document, time and hash. Rows are one pinned entry, one run_opened entry and four doc_closed entries. Below, a green line reports the chain is ok with six entries and the head at number six." width="100%"}
+
+::: {.caveat}
+**Heads up.** The screenshots come from a demo run on a mock LLM provider with seeded documents, so the counts and costs in them describe the demo, not model quality.
+:::
+
+## What I learned
+
+- Fixing the number of model calls at design time made everything else easier to reason about: cost, resume points, and what to log.
+- Fail-open fast paths need to be tested as hard as the fast path itself.
+- A hash chain on one disk detects edits, reordering and middle deletions, but not truncation of the tail. The docs say so, and the optional anchor exists for that reason.
+- A replay viewer paid for itself quickly. Seeing a retry on a timeline beat reading logs.
+
+## Stack
+
+[Python]{.tag} [CrewAI Flows]{.tag} [FastAPI]{.tag} [SQLite]{.tag} [ModernBERT]{.tag} [OpenTelemetry]{.tag} [Phoenix]{.tag} [Prometheus]{.tag} [Grafana]{.tag} [Docker Compose]{.tag} [vLLM]{.tag} [pytest]{.tag}
+
+:::

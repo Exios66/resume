@@ -1,0 +1,6 @@
+confusion.svg <- source repo: mailroom-ml/reports/charts/<run>/confusion.svg
+doc_type_recall.svg <- source repo: mailroom-ml/reports/charts/<run>/doc_type_recall.svg
+head_ece.svg <- source repo: mailroom-ml/reports/charts/<run>/head_ece.svg
+selective_risk.svg <- source repo: mailroom-ml/reports/charts/<run>/selective_risk.svg
+accuracy_by_windows.svg <- source repo: mailroom-ml/reports/charts/<run>/accuracy_by_windows.svg
+subclass_collapse.svg <- source repo: mailroom-ml/reports/charts/<run>/subclass_collapse.svg

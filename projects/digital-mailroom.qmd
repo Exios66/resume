@@ -1,36 +1,143 @@
 ---
 pagetitle: "Digital-Mailroom — Jack J. Burleson"
-description: "Capstone with American Family Insurance: a LangGraph pipeline for document routing, prompt experiments, deterministic scoring, and reproducible deployment."
+description: "Capstone with an industry partner: one LangGraph pipeline for document routing, prompt experiments, deterministic scoring and reproducible deployment, built and tested on a dataset I assembled from public sources."
 ---
 
 ::: {.page}
 
 [← All projects](index.qmd){.back}
 
+::: {.project-nav}
+[Case study](digital-mailroom.qmd){aria-current="page"}
+:::
+
 # Digital-Mailroom {.page-title}
 
 [DSHB capstone project · American Family Insurance (industry partner)]{.kicker}
 
-## Overview
+## At a glance
 
-A capstone with American Family Insurance to improve how documents are read, sorted, and managed. The project looks for ways to cut the cost of AI inference while improving document processing.
+::: {.stats}
+::: {.stat}
+[10]{.stat-value} [Python packages: entity extraction, classification, routing, scalable workflows]{.stat-label}
+:::
+::: {.stat}
+[1]{.stat-value} [LangGraph pipeline joining routing, experiments, scoring, data and deployment]{.stat-label}
+:::
+::: {.stat}
+[Public data only]{.stat-value} [the dataset was built from public sources; no partner data is involved]{.stat-label}
+:::
+::: {.stat}
+[Dec 2026]{.stat-value} [expected completion; results are not public yet]{.stat-label}
+:::
+:::
 
-<!-- TODO: add a one-sentence problem statement in plain language (what a "mailroom" handles and why cost matters), if cleared by the industry partner. -->
+## The problem
+
+A mailroom takes in a stream of documents: contracts, merger agreements, corporate records, letters and emails, insurance claims. Someone, or something, has to read each one, decide what it is, pull out the key facts and send it to the right place. An LLM can do that, but running one on every page is expensive, and the cost grows with volume.
+
+The capstone with American Family Insurance asks how to cut the cost of AI inference while improving document processing. My part is the engineering behind that question: a pipeline that routes each document to the cheapest step that can handle it, and a way to measure whether the routing is any good.
+
+## Approach
+
+The design is one LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, dataset management and deployment in a single graph. The idea behind the cost goal is to send each document to the cheapest step that can handle it, and to reserve an LLM call for documents where that matters.
+
+{{< include ../partials/diagrams/_digital-mailroom.qmd >}}
+
+I split the work into ten packages so each part can be tested and swapped on its own.
 
 ## What I built
 
-- Ten Python packages covering entity extraction, classification, routing, and scalable workflows.
-- One LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, dataset management, and deployment.
-- A reproducible Docker environment so results can be rerun end to end.
+- **Ten Python packages** covering entity extraction, classification, routing and scalable workflows.
+- **One LangGraph pipeline** that joins legal-document routing, prompt experiments, deterministic scoring, dataset management and deployment.
+- **Prompt experiments and deterministic scoring**, so prompt choices are judged by fixed rules against known labels instead of by another model.
+- **Dataset management** for the public-source dataset described below.
+- **A reproducible Docker environment** so results can be rerun end to end.
 
-## Stack
+## The dataset
 
-[Python]{.tag} [LangGraph]{.tag} [Multi-agent pipelines]{.tag} [Prompt engineering]{.tag} [Docker]{.tag}
+The capstone uses a dataset I assembled myself, called mailroom-dataset. It is built entirely from public datasets. None of the industry partner's documents are in it, and none were used to build it.
+
+The public sources fall into three groups.
+
+- **Correspondence.** The public Enron email corpus, deduplicated to unique texts, with labels from a mix of an LLM zero-shot pass, a join to a public email dataset, simple heuristics and manual review.
+- **Contracts, merger agreements and corporate records.** Documents from public SEC filings. These include exhibits from EDGAR, and public contract, merger-agreement and registration-statement collections whose clause labels I mapped onto document types and subclasses.
+- **Insurance claims.** Largely synthetic or rendered from structured public data. Some are rendered from the CMS DE-SynPUF public-use synthetic Medicare files into explanation-of-benefits style documents. Others come from public synthetic claim datasets for property, auto and claim-narrative cases.
+
+The result has 3,302 documents across five types: contract, merger agreement, corporate record, correspondence and insurance claim. A fixed set of 323 documents is held out as the test split and kept out of training and validation. It is not an untouched set: the Mailroom-ML work also ran a routing-cutoff sweep and a decode-setting sweep on this same split (see the [Mailroom-ML case study](mailroom-ml.qmd)). Each type has subclasses, for example whether a piece of correspondence is a letter, an email, a memo or a notice.
+
+Two safeguards matter here. Every source is pinned to an exact revision, so the dataset can be rebuilt byte for byte. And a leak audit checks that file names and titles do not give away the label; it caught exactly that problem in an earlier build, which I describe in the [Mailroom-ML case study](mailroom-ml.qmd).
+
+## Sample documents
+
+I do not publish real documents from the dataset on this site. The three excerpts below are illustrative: I wrote them to show the shape of each kind of source. They are not real records, and every name in them is fictional.
+
+::: {.sample-doc}
+[Illustrative example in the style of a rendered CMS DE-SynPUF claim · synthetic insurance claim · not a real record]{.sample-source}
+```text
+EXPLANATION OF BENEFITS - OUTPATIENT
+Claim ID: 0000-EXAMPLE
+Beneficiary: SYN-00417 (synthetic)
+Service dates: 03/02/2009 - 03/02/2009
+Provider type: Outpatient facility
+Diagnosis codes: 4019, 25000
+Billed amount: 312.00
+Medicare payment: 214.40
+Beneficiary responsibility: 44.00
+Remark: Deductible applied.
+```
+:::
+
+::: {.sample-doc}
+[Illustrative example in the style of an SEC EDGAR corporate-record exhibit · bylaws · not a real filing]{.sample-source}
+```text
+EXHIBIT 3.2
+
+BYLAWS OF EXAMPLE HOLDINGS, INC.
+(a Delaware corporation)
+
+ARTICLE I - OFFICES
+Section 1.1. Registered Office. The registered office of the
+corporation in the State of Delaware shall be located as set
+forth in the certificate of incorporation.
+Section 1.2. Other Offices. The corporation may also have
+offices at such other places as the board of directors may
+from time to time determine.
+```
+:::
+
+::: {.sample-doc}
+[Illustrative example in the style of an SEC EDGAR contract exhibit · license agreement · not a real filing]{.sample-source}
+```text
+EXHIBIT 10.4
+
+SOFTWARE LICENSE AGREEMENT
+
+This Software License Agreement (the "Agreement") is entered
+into as of [DATE] by and between Example Software Corp.
+("Licensor") and Sample Retail LLC ("Licensee").
+
+1. Grant of License. Licensor grants Licensee a non-exclusive,
+non-transferable license to use the Software during the Term.
+```
+:::
 
 ## Results and links
 
-<!-- TODO: add measured results (accuracy, cost per document, latency) and a public repo or write-up link, only if the industry partner allows it. -->
+Measured results from the capstone are not public while the project is running (expected completion December 2026), so I am not publishing numbers here. The classifier work that feeds it is public and fully reported:
 
-Details are limited while the capstone is in progress (expected completion Dec 2026). See the [résumé](../resume.qmd) for the summary.
+- [Mailroom-ML](mailroom-ml.qmd): the ModernBERT classifier, its calibration and its routing gate, with a technical report.
+- [Mailroom Reloaded](mailroom-reloaded.qmd): a related pipeline that uses that classifier as its first stage.
+- [RVL-CDIP classifier study](rvl-cdip-classifier.qmd): a prompt-and-model study on a 16-class public document benchmark, with cost projections.
+
+## What I learned
+
+- A cost question is a measurement question. You cannot cut inference cost safely until you can say, with a held-out set, how often the cheap step is right.
+- Building your own dataset from public sources forces decisions that a ready-made benchmark hides: what counts as a label, what leaks it, and what must stay out of tuning.
+- Deterministic scoring keeps prompt experiments comparable, because the score does not depend on a model that can drift.
+
+## Stack
+
+[Python]{.tag} [LangGraph]{.tag} [Multi-agent pipelines]{.tag} [Prompt engineering]{.tag} [Docker]{.tag} [Dataset design]{.tag}
 
 :::

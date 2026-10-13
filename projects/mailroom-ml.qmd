@@ -1,35 +1,99 @@
 ---
 pagetitle: "Mailroom-ML — Jack J. Burleson"
-description: "A ModernBERT document classifier with training, evaluation, fine-tuning, probability calibration, and ONNX export for FastAPI serving on Modal."
+description: "A ModernBERT document classifier with calibrated confidence, a routing gate that decides which documents can skip an LLM, and a leak audit that caught a label leak in my own training data."
 ---
 
 ::: {.page}
 
 [← All projects](index.qmd){.back}
 
+::: {.project-nav}
+[Case study](mailroom-ml.qmd){aria-current="page"} [Technical report](mailroom-ml/report.qmd) [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml)
+:::
+
 # Mailroom-ML {.page-title}
 
-[ML training, evaluation & fine-tuning]{.kicker}
+[ML training, evaluation & calibration]{.kicker}
 
-## Overview
+## At a glance
 
-The model side of the document-intelligence work: a classifier that decides what kind of document it is looking at, and how confident it should be before a document is routed automatically.
+::: {.stats}
+::: {.stat}
+[95.05%]{.stat-value} [document-type accuracy on the 323-document test split (307 correct)]{.stat-label}
+:::
+::: {.stat}
+[0.0152]{.stat-value} [calibration error (ECE) on the 541 windows of that test split]{.stat-label}
+:::
+::: {.stat}
+[74.3%]{.stat-value} [of test documents (240 of 323) take the fast path, meaning no LLM call; optimistic, see below]{.stat-label}
+:::
+::: {.stat}
+[3 of 4]{.stat-value} [acceptance gates met; contract subclass F1 is still short]{.stat-label}
+:::
+:::
+
+The 74.3% is the share of documents handled without an LLM. By my count from the per-document rows of the evaluation file, none of those 240 had the wrong document type, but 82 had the wrong subclass, so I treat the fast path as a document-type decision only. The gate's 0.97 confidence cutoff is a preset from the project's config, but the sweep that supports it ran on this same split, as did the decode sweep, so read the fast-path and coverage numbers as optimistic. The window-level error rate among accepted windows is in the routing section of the [technical report](mailroom-ml/report.qmd).
+
+## The problem
+
+A mailroom model reads incoming legal and insurance documents and decides what each one is. A large language model (LLM) can do that well, but it costs money on every document. Many documents are easy. A cheap classifier could handle those and pass only the hard or unfamiliar ones to the LLM.
+
+That plan only works if the classifier knows when it is unsure. A model that is 95% accurate overall but wrong with high confidence on some documents would quietly send errors downstream. So the project was less about raw accuracy than about three questions. Are its confidence scores honest? Can I pick a cutoff with a known error rate? Can I trust the training data to measure any of this?
+
+## Approach
+
+I trained one ModernBERT encoder with a document-type head and one subclass head per type. Long documents are cut into overlapping 8,192-token windows, and the windows vote on the answer. Each head gets its own temperature scaling. A routing gate combines calibrated confidence, how much the windows agree, and the margin over the runner-up. A document takes the fast path only if the gate passes. Everything else goes to the LLM.
+
+{{< include ../partials/diagrams/_mailroom-ml.qmd >}}
 
 ## What I built
 
-- A ModernBERT document classifier with training, evaluation, and fine-tuning pipelines.
-- Data lineage tracking, probability calibration, and production routing logic.
-- PyTorch training pipelines using Transformers and Hugging Face datasets, evaluated with scipy.
-- ONNX export for FastAPI serving on Modal, with pytest coverage throughout.
+- **Training and evaluation pipelines** in PyTorch with Transformers and Hugging Face datasets, run on Modal GPUs. Evaluation uses scipy and a paired bootstrap to compare runs.
+- **Calibration and routing.** Per-head temperature scaling, a selective-risk sweep that finds the confidence cutoff for a 2% error budget, and an out-of-distribution flag from an energy probe on the logits.
+- **Data lineage.** Every training set is pinned to a revision. A provenance module writes a byte-reproducible manifest with sha256 hashes and no timestamps, so a rebuild on the same inputs gives the same bytes.
+- **A leak audit.** Early on, the model's insurance subclass score looked too good. The audit showed that titles fell back to filenames, and 42.8% of filenames contained the subclass name. I removed the fallback and added a build-time check that fails if a filename-shaped title returns.
+- **ONNX export for serving.** An exported model is checked against the PyTorch one before it is promoted. In a CPU test on an Apple M2 with the Run 3 checkpoint (an earlier two-epoch run; I did not export the final one), the fp32 export matched PyTorch to within 4.25e-06 per head, and the int8 variant did not (see below).
+- **A test suite.** 485 test functions in 33 test files, plus a shared `conftest.py`, run in CI (ruff and pytest) on pushes to `main` and on pull requests. Tests for the heavy dependencies skip themselves when torch or Modal is absent, so the core suite runs anywhere.
+
+## Results
+
+The numbers below come from my final run. It trained for four epochs and was scored on a test split of 323 documents (541 windows). The test split was not used for training, for choosing the checkpoint epoch or for fitting calibration. It was used for more than one evaluation, though: I compared runs on it, ran a confidence sweep on it and ran the decode sweep described below on it. The 0.97 cutoff itself is a preset from the project's config, and the sweep landed on the same value.
+
+| Measure | Result |
+| --- | --- |
+| Document-type accuracy | 0.9505 (307 of 323) |
+| Subclass accuracy, when the type is right | 0.6287 |
+| Window calibration error (ECE) | 0.0152, down from 0.0259 in the earlier run |
+| Documents passing the routing gate | 74.3% |
+| Out-of-distribution flag rate | 4.0% |
+
+At a confidence cutoff of 0.97, the sweep picks a point that accepts about 80% of windows within the 2% error budget. Scoring on the L4 GPU took 0.575 seconds per document.
+
+::: {.caveat}
+**Heads up.** The sweep that supports the 0.97 cutoff ran over these same test windows, and so did the decode sweep. That makes the fast-path and coverage numbers optimistic: they describe an operating point, not a validated setting. The tool that writes deployment thresholds refuses to run on a pool that contains test documents, so real thresholds are fit on the validation split.
+:::
+
+The subclass heads are the weak part. Insurance claims reach F1 of 1.000, but that class is highly templated (114 test documents), so I would not read it as general skill. Merger-agreement F1 is 0.000 because the model puts all 17 test merger agreements into one rare subclass. Contract subclass F1 is 0.162 against a 0.20 floor, and that is the one acceptance gate still failing. A decode-time adjustment I tried on the finished model did not fix it; the best setting reached 0.170. The next lever is more training data for the contract families that are missing, not more epochs.
+
+The figures are from an earlier 3-epoch run called Arm B, whose document-type accuracy is also 0.9505. "Arm A" and "Arm B" are the project's names for two comparison runs: Arm A was a one-epoch smoke run and Arm B a three-epoch run with a heavier document-type loss weight. "M9b" is the name of the final four-epoch run reported above.
+
+![Which type each test-split document was routed to, from the earlier 3-epoch Arm B run.](mailroom-ml/figures/confusion.svg){.fig fig-alt="Confusion matrix of document type for the 323 test-split documents. Insurance claims and merger agreements are classified 100% correctly. Contracts are 88% correct with most errors going to corporate records. Correspondence is 95% correct." width="100%"}
+
+![Subclass accuracy against how much each head collapses onto a single answer, from the earlier 3-epoch Arm B run.](mailroom-ml/figures/subclass_collapse.svg){.fig fig-alt="Bar chart for each document type showing subclass accuracy next to a collapse signal: the share of predictions landing on one subclass. A 0.75 accuracy gate line is drawn. Contract subclass accuracy is 0.04 and corporate record 0.45, both far below the gate, while insurance claim is 0.99." width="100%"}
+
+The full numbers, the calibration plots and the iteration history are in the [technical report](mailroom-ml/report.qmd).
+
+## What I learned
+
+- A score that looks too good deserves an audit before it earns a headline. The insurance score was inflated by a filename leak, and fixing it made every number I report afterwards believable.
+- Calibration changes what you can promise. Once confidence is honest, "send this to the LLM" becomes a measurable error budget instead of a guess.
+- I rejected the smaller int8 export as the default. It saved time but changed predictions, and the parity check showed it. The fp32 export is what serves.
+- Failing a gate is useful information. The decode sweep ruled out one fix cheaply and pointed at the real cause, which is data for specific contract types.
+
+[Mailroom Reloaded](mailroom-reloaded.qmd) uses this model as its first-stage `bert_primary` step.
 
 ## Stack
 
-[Python]{.tag} [PyTorch]{.tag} [Transformers]{.tag} [Hugging Face datasets]{.tag} [scipy]{.tag} [ONNX]{.tag} [FastAPI]{.tag} [Modal]{.tag} [pytest]{.tag}
-
-## Results and links
-
-Code: [github.com/LLM-Mailroom-Services/mailroom-ml](https://github.com/LLM-Mailroom-Services/mailroom-ml)
-
-<!-- TODO: add headline metrics (accuracy, calibration error before/after) and a calibration plot. -->
+[Python]{.tag} [PyTorch]{.tag} [Transformers]{.tag} [ModernBERT]{.tag} [Hugging Face datasets]{.tag} [scipy]{.tag} [ONNX]{.tag} [FastAPI]{.tag} [Modal]{.tag} [pytest]{.tag} [uv]{.tag}
 
 :::

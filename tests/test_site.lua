@@ -80,3 +80,9 @@ check({ input = "index.qmd", prefix = "", current = "index.html" }, "", false, t
 -- Missing Quarto path values are treated as an unknown root-level page.
 check({ prefix = "" }, nil, false, true)
 print("Site filter unit tests passed")
+
+assert(#RawBlock({ format = "html", text = "<!-- src: notes.md -->" }) == 0, "Comment block should be removed")
+assert(#RawInline({ format = "html", text = " <!-- a\nb --> " }) == 0, "Comment inline should be removed")
+assert(RawBlock({ format = "html", text = "<div></div>" }) == nil, "Markup should be kept")
+assert(RawBlock({ format = "html", text = "<!-- a --><div></div>" }) == nil, "Mixed markup should be kept")
+print("comment stripping ok")

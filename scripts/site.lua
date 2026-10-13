@@ -34,6 +34,19 @@ local function is_current(item, path)
   return path == item.section
 end
 
+-- HTML comments are authoring notes; leave them out of the published pages.
+local function is_comment(el)
+  return el.format == "html" and el.text:match("^%s*<!%-%-.-%-%->%s*$") ~= nil
+end
+
+function RawInline(el)
+  if is_comment(el) then return {} end
+end
+
+function RawBlock(el)
+  if is_comment(el) then return {} end
+end
+
 --- Wrap the document in the site header, main landmark, and footer.
 -- Navigation links are relative to the page; the current section gets aria-current.
 -- @param doc Pandoc Document whose blocks will be modified in place.
