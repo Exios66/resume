@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="A Python toolkit that converts document pages to 300-DPI images, runs OCR, and classifies them into 16 RVL-CDIP categories with vision models, using 17+ prompt iterations.">
+<meta name="description" content="A prompt-engineering study that sorts scanned documents into the 16 RVL-CDIP categories with an off-the-shelf vision model, reporting 82.6% on a larger 1,120-image slice; its overlap with the 160-image tuning slice was not verified.">
 
 <title>RVL-CDIP-Classifier — Jack J. Burleson – Jack J. Burleson</title>
 <style>
@@ -77,13 +77,13 @@ ul.task-list li input[type="checkbox"] {
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="RVL-CDIP-Classifier — Jack J. Burleson">
-<meta property="og:description" content="A Python toolkit that converts document pages to 300-DPI images, runs OCR, and classifies them into 16 RVL-CDIP categories with vision models, using 17+ prompt iterations.">
+<meta property="og:description" content="A prompt-engineering study that sorts scanned documents into the 16 RVL-CDIP categories with an off-the-shelf vision model, reporting 82.6% on a larger 1,120-image slice; its overlap with the 160-image tuning slice was not verified.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta property="og:site_name" content="Jack J. Burleson">
 <meta property="og:image:alt" content="Jack J. Burleson — AI / Machine Learning · Data Science">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="RVL-CDIP-Classifier — Jack J. Burleson">
-<meta name="twitter:description" content="A Python toolkit that converts document pages to 300-DPI images, runs OCR, and classifies them into 16 RVL-CDIP categories with vision models, using 17+ prompt iterations.">
+<meta name="twitter:description" content="A prompt-engineering study that sorts scanned documents into the 16 RVL-CDIP categories with an off-the-shelf vision model, reporting 82.6% on a larger 1,120-image slice; its overlap with the 160-image tuning slice was not verified.">
 <meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://exios66.github.io/resume/projects/rvl-cdip-classifier.html">
@@ -113,21 +113,68 @@ ul.task-list li input[type="checkbox"] {
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <div class="page">
 <p><a href="../projects/index.html" class="back">← All projects</a></p>
+<div class="project-nav">
+<p><a href="../projects/rvl-cdip-classifier.html" aria-current="page">Case study</a> <a href="../projects/rvl-cdip-classifier/report.html">Technical report</a> <a href="https://github.com/Exios66/RVL-CDIP-Classifier">Code</a></p>
+</div>
 <h1 class="page-title" id="rvl-cdip-classifier">RVL-CDIP-Classifier</h1>
-<p><span class="kicker">Computer vision &amp; prompt engineering</span></p>
-<h2 id="overview">Overview</h2>
-<p>A toolkit for testing how well general-purpose vision models can sort scanned documents, built so prompts and models can be compared on evidence instead of impressions.</p>
+<p><span class="kicker">Vision LLMs &amp; prompt engineering</span></p>
+<h2 id="at-a-glance">At a glance</h2>
+<div class="stats">
+<div class="stat">
+<p><span class="stat-value">82.6%</span> <span class="stat-label">accuracy on 1,120 images (a larger slice, overlap with tuning not verified; 925 correct)</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">99.4%</span> <span class="stat-label">on the 160-image slice I tuned against, so an optimistic number</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">29</span> <span class="stat-label">registered prompt versions, v0 to v19</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">≈ $0.0004</span> <span class="stat-label">per image for the main model</span></p>
+</div>
+</div>
+<h2 id="the-problem">The problem</h2>
+<p>RVL-CDIP is the standard benchmark for document-type classification: scanned pages from a tobacco-litigation archive, sorted into 16 classes such as invoice, memo, letter and budget. Models trained for it usually need labeled data and a fine-tuning pipeline. I wanted to know how far a general-purpose vision model could get with no training at all, using only the prompt, and what that would cost.</p>
+<h2 id="approach">Approach</h2>
+<p>The model gets the page image and a long written prompt. The prompt names the 16 classes and then walks through an ordered list of checks, so that a page is judged by what it does rather than what it is about. I changed the prompt one version at a time and scored every version the same way, so each change could be traced to a number.</p>
+<figure class="diagram" role="img" aria-labelledby="rvl-cdip-cap"><svg viewbox="0 0 800 300" aria-hidden="true" focusable="false"><defs><marker id="rvl-cdip-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="5" y="30" width="190" height="70" rx="8"></rect><text x="100.0" y="62" text-anchor="middle" font-weight="600">Balanced slice</text><text x="100.0" y="78" text-anchor="middle">pixel-hash dedup</text><rect class="d-box" x="205" y="30" width="190" height="70" rx="8"></rect><text x="300.0" y="62" text-anchor="middle" font-weight="600">Preprocess</text><text x="300.0" y="78" text-anchor="middle">1024 px grayscale</text><rect class="d-box" x="405" y="30" width="190" height="70" rx="8"></rect><text x="500.0" y="62" text-anchor="middle" font-weight="600">Versioned prompt</text><text x="500.0" y="78" text-anchor="middle">v0 to v19</text><rect class="d-box" x="605" y="30" width="190" height="70" rx="8"></rect><text x="700.0" y="62" text-anchor="middle" font-weight="600">Vision LLM</text><text x="700.0" y="78" text-anchor="middle">via OpenRouter</text><rect class="d-box" x="5" y="170" width="190" height="70" rx="8"></rect><text x="100.0" y="202" text-anchor="middle" font-weight="600">Parse answer</text><text x="100.0" y="218" text-anchor="middle">label + runner-up</text><rect class="d-box" x="205" y="170" width="190" height="70" rx="8"></rect><text x="300.0" y="202" text-anchor="middle" font-weight="600">Score and log</text><text x="300.0" y="218" text-anchor="middle">exact-match scoring</text><rect class="d-box d-accent" x="405" y="170" width="190" height="70" rx="8"></rect><text x="500.0" y="202" text-anchor="middle" font-weight="600">Monte Carlo</text><text x="500.0" y="218" text-anchor="middle">ensembles, routing</text><path class="d-arrow" d="M195 65H203" marker-end="url(#rvl-cdip-ah)"></path><path class="d-arrow" d="M395 65H403" marker-end="url(#rvl-cdip-ah)"></path><path class="d-arrow" d="M595 65H603" marker-end="url(#rvl-cdip-ah)"></path><path class="d-arrow" d="M195 205H203" marker-end="url(#rvl-cdip-ah)"></path><path class="d-arrow" d="M395 205H403" marker-end="url(#rvl-cdip-ah)"></path><path class="d-arrow" d="M700.0 100V134H100.0V168" marker-end="url(#rvl-cdip-ah)"></path></svg><figcaption id="rvl-cdip-cap">The RVL-CDIP prompt study pipeline: a balanced, de-duplicated slice of page images is preprocessed and sent with a versioned prompt to a vision LLM; answers are parsed, scored by exact match, logged, and analysed with Monte Carlo simulation.</figcaption></figure>
 <h2 id="what-i-built">What I built</h2>
 <ul>
-<li>A Python toolkit that converts TIFF/PDF pages to 300-DPI images, runs OCR, and sorts documents into the 16 RVL-CDIP categories using OpenRouter vision models.</li>
-<li>More than 17 prompt iterations, each evaluated the same way.</li>
-<li>Confusion matrices, misclassification analyses, and cost projections used to choose prompts and models.</li>
+<li><strong>Preprocessing tools.</strong> A document processor converts TIFF and PDF pages to 300-DPI grayscale images and runs Tesseract OCR to get text with bounding boxes.</li>
+<li><strong>The classifier path.</strong> The evaluated classifier does not use that OCR output. It sends the vision model only a 1024×1024 grayscale image plus the prompt, through OpenRouter.</li>
+<li><strong>Versioned prompts.</strong> <code>src/prompts.py</code> holds every version, append-only, with a registry I can query by name.</li>
+<li><strong>Evaluation harness.</strong> Balanced, deduplicated slices of the dataset, exact-match scoring, per-class tables, confusion matrices, billed-cost tracking, and a Monte Carlo module that simulates voting and routing on top of the measured results.</li>
+<li><strong>Tests.</strong> 318 test functions across 21 test files.</li>
+</ul>
+<h2 id="results">Results</h2>
+<p>On the 160-image slice, accuracy climbed from 80.1% at v1 to 99.4% at v11.8. That is a tuning-slice number. I read the misses on that slice and wrote rules for them, so it overstates what the prompt can do on pages it has not seen.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="rvl-cdip-classifier/figures/f1_accuracy_arc.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart of exact-match accuracy on the 160-image tuning slice for prompt versions v1, v4, v7, v10, v11 and v11.8, rising from 80.1 percent to 99.4 percent."></p>
+<figcaption>Accuracy of qwen3.7-flash on the 160-image tuning slice across prompt versions, rising from 80.1% at v1 to 99.4% at v11.8.</figcaption>
+</figure>
+</div>
+<p>The honest headline comes from larger slices. The same v11.8 prompt scored 82.6% on a balanced 1,120-image slice. That slice was built from the Hugging Face mirror of RVL-CDIP, with pixel-hash exclusion of the 800-image slice; I did not verify its overlap with the 160-image tuning slice. Across slice sizes it scored 87.2% at 320 images, 89.1% at 476 scored images, and 83.1% at 800. On that 800-image slice, the untuned v0 prompt scored 66.1%, so the prompt work is worth about 17 points on unseen pages.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="rvl-cdip-classifier/figures/f2_generalization_falloff.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart of v11.8 exact-match accuracy against slice size, falling from 99.4 percent at 160 images to 87.2, 89.1, 83.1 and 82.6 percent at 320, 480, 800 and 1,120 images."></p>
+<figcaption>v11.8 accuracy by slice size: 99.4% on the 160-image tuning slice, then 87.2%, 89.1%, 83.1% and 82.6% on larger slices.</figcaption>
+</figure>
+</div>
+<div class="caveat">
+<p><strong>Heads up.</strong> The 160-image points in both charts come from the slice I iterated on. The 1,120-image point is the one to quote. The 1,120-image slice excluded the 800-image slice by pixel hash, but I did not check it against the 160-image tuning slice or the other earlier slices, so it may share images with them. Treat it as a better estimate than the tuning slice, not as a clean test.</p>
+</div>
+<p>Where it fails is consistent. Budget (67.1%), letter (70.0%), presentation (70.0%) and scientific report (71.4%) are the weak classes on the 1,120 run, and the most common single error is letter predicted as memo (16 cases). In 72 of the misses, the correct class was the model’s own runner-up.</p>
+<h2 id="what-i-learned">What I learned</h2>
+<ul>
+<li><strong>Tuning accuracy is not accuracy.</strong> Fixing named misses one by one pushed the tuning slice to 99.4% while larger slices stayed in the low 80s. Later versions made this worse in places: a longer v16 prompt dropped to 96.2% on the tuning slice and scored 83.8% and 79.4% on two fresh slices.</li>
+<li><strong>Simulation needs a measurement behind it.</strong> The Monte Carlo model suggested sending the least-confident pages to a stronger model. When I ran that, accuracy went down slightly (96.2% to 94.3% on the tuning slice) at about 7.5 times the cost.</li>
+<li><strong>More resolution did not help.</strong> Full-size 2550×3300 images doubled prompt tokens and did not improve accuracy in an early comparison.</li>
 </ul>
 <h2 id="stack">Stack</h2>
-<p><span class="tag">Python</span> <span class="tag">OCR</span> <span class="tag">OpenRouter vision models</span> <span class="tag">Prompt engineering</span> <span class="tag">Error analysis</span></p>
-<h2 id="results-and-links">Results and links</h2>
-<p>Code and experiment logs: <a href="https://github.com/Exios66/RVL-CDIP-Classifier">github.com/Exios66/RVL-CDIP-Classifier</a></p>
-<!-- TODO: add the best prompt/model accuracy, a confusion matrix image, and the cost-per-1k-documents projection. -->
+<p><span class="tag">Python</span> <span class="tag">OpenRouter</span> <span class="tag">Vision-language models</span> <span class="tag">Prompt engineering</span> <span class="tag">Tesseract OCR</span> <span class="tag">Monte Carlo simulation</span> <span class="tag">Error analysis</span> <span class="tag">pytest</span></p>
+<h2 id="credits">Credits</h2>
+<p>Built with co-author Grant Mooslin, advised by Siddharth Suresh. The dataset is RVL-CDIP (Harley, Ufkes and Derpanis, 2015).</p>
 </div>
 
 </main>

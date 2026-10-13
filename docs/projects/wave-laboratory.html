@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A real-time 3D ocean-wave and ship-motion sandbox that runs in the browser, built on published wave spectra and checked against analytic results.">
+
+<title>Wave Laboratory — Jack J. Burleson – Jack J. Burleson</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+
+
+<link href="../assets/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<meta name="theme-color" content="#0e6f7a">
+<meta name="author" content="Jack J. Burleson">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image-width" content="1200">
+<meta name="twitter:image-height" content="630">
+<script>
+  // Apply the saved theme before first paint so there is no light/dark flash.
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Jack J. Burleson",
+  "url": "https://exios66.github.io/resume/",
+  "jobTitle": "AI / Machine Learning and Data Science",
+  "email": "mailto:jackjburleson@proton.me",
+  "address": { "@type": "PostalAddress", "addressLocality": "Madison", "addressRegion": "WI", "addressCountry": "US" },
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Madison" },
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Parkside" }
+  ],
+  "knowsAbout": ["Machine learning", "Natural language processing", "LLM evaluation", "Computer vision", "Behavioral data science"],
+  "sameAs": [
+    "https://www.linkedin.com/in/jackjburleson",
+    "https://github.com/Exios66"
+  ]
+}
+</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="Wave Laboratory — Jack J. Burleson">
+<meta property="og:description" content="A real-time 3D ocean-wave and ship-motion sandbox that runs in the browser, built on published wave spectra and checked against analytic results.">
+<meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta property="og:site_name" content="Jack J. Burleson">
+<meta property="og:image:alt" content="Jack J. Burleson — AI / Machine Learning · Data Science">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:title" content="Wave Laboratory — Jack J. Burleson">
+<meta name="twitter:description" content="A real-time 3D ocean-wave and ship-motion sandbox that runs in the browser, built on published wave spectra and checked against analytic results.">
+<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://exios66.github.io/resume/projects/wave-laboratory.html">
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+
+
+
+<header class="site-header">
+  <nav class="site-nav" aria-label="Main">
+    <a class="site-title" href="../index.html">Jack J. Burleson</a>
+    <ul class="nav-list">
+      <li><a class="nav-link" href="../index.html">Home</a></li>
+      <li><a class="nav-link" href="../about.html">About</a></li>
+      <li><a class="nav-link" href="../projects/index.html" aria-current="page">Projects</a></li>
+      <li><a class="nav-link" href="../research.html">Research</a></li>
+      <li><a class="nav-link" href="../writing/index.html">Writing</a></li>
+      <li><a class="nav-link" href="../resume.html">Résumé</a></li>
+      <li><button type="button" class="theme-toggle" aria-label="Switch theme"></button></li>
+    </ul>
+  </nav>
+</header>
+<main id="main"><header id="title-block-header" class="quarto-title-block"></header>
+<div class="page">
+<p><a href="../projects/index.html" class="back">← All projects</a></p>
+<div class="project-nav">
+<p><a href="../projects/wave-laboratory.html" aria-current="page">Case study</a> <a href="../projects/wave-laboratory/report.html">Technical report</a> <a href="https://github.com/Exios66/wave-laboratory">Code</a> <a href="https://exios66.github.io/wave-laboratory/">Live demo</a></p>
+</div>
+<h1 class="page-title" id="wave-laboratory">Wave Laboratory</h1>
+<p><span class="kicker">Side project · simulation &amp; graphics</span></p>
+<div class="actions">
+<p><a href="https://exios66.github.io/wave-laboratory/" class="btn primary">Launch the lab</a></p>
+</div>
+<p>The lab needs a browser with WebGL 2. It runs on desktop and on phones.</p>
+<h2 id="at-a-glance">At a glance</h2>
+<div class="stats">
+<div class="stat">
+<p><span class="stat-value">4</span> <span class="stat-label">FFT cascades, from 1 km swells down to centimetre ripples</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">280</span> <span class="stat-label">water columns sampled under a hull to integrate pressure</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">328 + 25</span> <span class="stat-label">unit and long-running validation tests, counted by grep</span></p>
+</div>
+</div>
+<h2 id="the-problem">The problem</h2>
+<p>I have always liked how much of the sea can be written as a short recipe. A real ocean is not one wave. It is thousands of simple waves of different lengths and directions added together, and oceanographers describe how much energy each one carries with a curve called a spectrum. Ships respond to that sum, not to any single wave.</p>
+<p>I wanted a place to build a sea from those published recipes, drop ships into it, and watch and measure what happens, with the physics honest enough that the numbers mean something and the page still running smoothly in a browser tab.</p>
+<h2 id="approach">Approach</h2>
+<figure class="diagram" role="img" aria-labelledby="wave-lab-cap"><svg viewbox="0 0 800 380" aria-hidden="true" focusable="false"><defs><marker id="wave-lab-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="16" y="30" width="150" height="84" rx="8"></rect><text x="91.0" y="60" text-anchor="middle" font-weight="600">Experiment JSON</text><text x="91.0" y="77" text-anchor="middle">Zod-validated</text><text x="91.0" y="94" text-anchor="middle">schema</text><rect class="d-box" x="222" y="30" width="150" height="84" rx="8"></rect><text x="297.0" y="68" text-anchor="middle" font-weight="600">Zustand store</text><text x="297.0" y="86" text-anchor="middle">React UI</text><rect class="d-box" x="428" y="30" width="150" height="84" rx="8"></rect><text x="503.0" y="60" text-anchor="middle" font-weight="600">SimClient</text><text x="503.0" y="77" text-anchor="middle">one request</text><text x="503.0" y="94" text-anchor="middle">in flight</text><rect class="d-box d-accent" x="428" y="230" width="150" height="84" rx="8"></rect><text x="503.0" y="260" text-anchor="middle" font-weight="600">Three.js WebGL2</text><text x="503.0" y="277" text-anchor="middle">GPU iFFT of h₀</text><text x="503.0" y="294" text-anchor="middle">checked vs CPU</text><rect class="d-box" x="222" y="230" width="150" height="84" rx="8"></rect><text x="297.0" y="260" text-anchor="middle" font-weight="600">Post stack</text><text x="297.0" y="277" text-anchor="middle">bloom, grain,</text><text x="297.0" y="294" text-anchor="middle">ACES tone map</text><rect class="d-muted" fill="none" stroke-dasharray="5 4" stroke-width="1.2" x="624" y="6" width="170" height="368" rx="12"></rect><text class="d-muted" x="636" y="25" font-size="13" font-weight="600">Web Worker</text><rect class="d-box" x="634" y="40" width="150" height="300" rx="8"></rect><text x="709.0" y="110" text-anchor="middle" font-weight="600">Simulation</text><text x="709.0" y="127" text-anchor="middle">fixed time step</text><text x="709.0" y="144" text-anchor="middle"></text><text x="709.0" y="161" text-anchor="middle">wave spectra to</text><text x="709.0" y="178" text-anchor="middle">FFT cascades</text><text x="709.0" y="195" text-anchor="middle"></text><text x="709.0" y="212" text-anchor="middle">6-DOF vessel</text><text x="709.0" y="229" text-anchor="middle">dynamics</text><text x="709.0" y="246" text-anchor="middle"></text><text x="709.0" y="263" text-anchor="middle">weather,</text><text x="709.0" y="280" text-anchor="middle">instruments</text><path class="d-arrow" d="M166 72H220" marker-end="url(#wave-lab-ah)"></path><path class="d-arrow" d="M372 72H426" marker-end="url(#wave-lab-ah)"></path><path class="d-arrow" d="M578 58H632" marker-end="url(#wave-lab-ah)"></path><path class="d-arrow" d="M634 92H580" marker-end="url(#wave-lab-ah)"></path><text class="d-muted" x="606" y="50" text-anchor="middle" font-size="13">step</text><text class="d-muted" x="606" y="110" text-anchor="middle" font-size="13">state</text><path class="d-arrow" d="M503.0 114V228" marker-end="url(#wave-lab-ah)"></path><path class="d-arrow" d="M428 272H374" marker-end="url(#wave-lab-ah)"></path><path class="d-arrow" d="M634 272H580" marker-end="url(#wave-lab-ah)"></path><text class="d-accent" x="606" y="262" text-anchor="middle" font-size="12">same h₀</text></svg><figcaption id="wave-lab-cap">Wave Laboratory architecture: a validated experiment file drives a Zustand store and React UI; SimClient exchanges messages with a simulation worker, one request at a time; the WebGL2 renderer inverse-transforms the same wave amplitudes on the GPU and checks them against the CPU.</figcaption></figure>
+<p>The sea is built from named, published models. The energy curve comes from JONSWAP, Pierson–Moskowitz or Bretschneider spectra, with a depth correction (TMA) for shallow water and Hasselmann’s fetch-limited growth for seas built by wind. Waves are spread over directions, and the speed of each wave follows the dispersion relation, including water depth and surface tension. The surface is then synthesised with an inverse FFT on four grids of different sizes, with a “choppy” sideways displacement that sharpens crests.</p>
+<p>Ships float by pressure integration: for each moment, the simulation sums the water pressure over the part of the hull that is underwater (buoyancy plus the Froude–Krylov wave force), then adds added mass, damping, propulsion, rudder and wind. A freak wave can be placed on purpose using NewWave theory, which lines up many components so their crests meet at one point and time. The Draupner crest, 18.5 m in a sea with a significant height of 11.9 m, is the reference case.</p>
+<h2 id="what-i-built">What I built</h2>
+<ul>
+<li><strong>Deterministic simulation.</strong> The same experiment file always produces the same sea. Physics runs at a fixed time step in a Web Worker, and the main thread keeps at most one request in flight, so a slow machine runs slower than real time rather than building a queue.</li>
+<li><strong>What you see is what the ships feel.</strong> The GPU draws the sea from the same amplitudes the CPU physics uses. On each new sea it compares one texel with the CPU result and logs an error if they disagree. The browser tests fail if that error appears.</li>
+<li><strong>Instruments.</strong> Wave gauges, ship motion recorders, power spectra by Welch’s method, wave statistics, motion-sickness incidence and CSV export.</li>
+<li><strong>Underwater view.</strong> Light fades per colour with depth for the chosen Jerlov water type, and the surface seen from below shows Snell’s window.</li>
+<li><strong>Weather, damage and moorings.</strong> Gusts, squalls, rain and fog; flooding compartments; anchor chains modelled as elastic catenaries.</li>
+<li><strong>Phones and accessibility.</strong> A phone layout with panel switching and touch targets of at least 44 px, except the camera controls drawn on top of the 3D view, which stay shorter so they do not cover the sea (the stylesheet sets them to 32 px). It also has light and dark themes, keyboard operation and WCAG 2.2 AA contrast. Accessibility is checked with axe in the browser tests on desktop and phone-sized viewports.</li>
+</ul>
+<h2 id="results">Results</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="wave-laboratory/figures/overview-light.jpg" class="fig img-fluid" style="width:100.0%" alt="The Wave Laboratory app in its light theme. A container ship leaves a white wake on a blue-green sea in the central 3D view, with a round chart overlay. A scene list is on the left, a sea-state panel with significant wave height, wind and depth is on the right, and playback controls and chart tabs run along the bottom."></p>
+<figcaption>The lab with its default moderate sea: a container ship under way, with scene tree, sea-state readout and instrument dock.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="wave-laboratory/figures/rogue-wave.jpg" class="fig img-fluid" style="width:100.0%" alt="The app in its dark theme following a container ship through a rough blue sea with white wake and rain. The sea-state panel explains a focused wave group with a 12 m crest in an 8 m significant-height sea, peaking at t = 75 seconds."></p>
+<figcaption>The rogue-wave preset: a container ship in a storm sea, with a focused NewWave crest due at a gauge 380 m ahead.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="wave-laboratory/figures/hdr-bloom-on.jpg" class="fig img-fluid" style="width:100.0%" alt="A container ship seen from low over a pink and orange sunset sea. A bright sun glows near the horizon and a column of glare runs down the water toward the viewer. Controls for camera mode and view size sit at the top."></p>
+<figcaption>The lab at sunset: a container ship in a Beaufort 6 sea, HDR bloom on.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="wave-laboratory/figures/hdr-bloom-off.jpg" class="fig img-fluid" style="width:100.0%" alt="The same container ship and sunset sea as the previous view, but the sun is a smaller, crisper disc with no glow spreading across the ship, and the water glints less strongly."></p>
+<figcaption>The same view with bloom off.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="wave-laboratory/figures/underwater-hull.jpg" class="fig img-fluid" style="width:100.0%" alt="A view from under the water. A dark green ship hull runs diagonally across the lower left. Above it, the bright rippled underside of the sea surface shows foam patches against deep blue water. A small round chart sits at the lower right."></p>
+<figcaption>Underwater camera at 6.1 m, looking at a hull from below.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="wave-laboratory/figures/underwater-coastal-9.jpg" class="fig img-fluid" style="width:100.0%" alt="An underwater view in which everything is tinted dark green, with slightly lighter and darker patches. No hull is visible, and a chart panel sits at the lower right."></p>
+<figcaption>Turbid coastal water (Jerlov type 9) at 3.7 m: blue light is absorbed first, so the view is dark green.</figcaption>
+</figure>
+</div>
+<div class="caveat">
+<p><strong>Heads up.</strong> This is a teaching and exploration tool, not a certified seakeeping program. The reference notes list what is not modelled, such as current shear with depth and wave refraction by currents, and floodwater without sloshing. The technical report covers these limits.</p>
+</div>
+<h2 id="what-i-learned">What I learned</h2>
+<ul>
+<li>Putting the sea’s recipe in one place, then reading it from both the CPU and the GPU, made disagreements easy to find and fix.</li>
+<li>A test that fails when the two sides disagree is worth more than careful reading.</li>
+<li>Writing down what a model does not cover, and warning the user when they leave its range, is part of the physics.</li>
+<li>Accessibility checks in the browser tests caught issues I would not have found by eye.</li>
+</ul>
+<h2 id="stack">Stack</h2>
+<p><span class="tag">TypeScript</span> <span class="tag">React</span> <span class="tag">Three.js</span> <span class="tag">WebGL 2</span> <span class="tag">Web Workers</span> <span class="tag">Zod</span> <span class="tag">Zustand</span> <span class="tag">Vite</span> <span class="tag">Vitest</span> <span class="tag">Playwright</span> <span class="tag">axe-core</span></p>
+</div>
+
+</main>
+<footer class="site-footer">
+  <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
+</footer>
+
+<script>
+  // Theme toggle: switches to the opposite of what is currently shown and remembers the choice.
+  // Print button: opens the browser print dialog.
+  (function () {
+    var root = document.documentElement;
+    function current() {
+      var set = root.getAttribute("data-theme");
+      if (set) return set;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    function label(btn) {
+      var dark = current() === "dark";
+      btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+      btn.textContent = dark ? "☀" : "☾";
+    }
+    var toggle = document.querySelector(".theme-toggle");
+    if (toggle) {
+      label(toggle);
+      toggle.addEventListener("click", function () {
+        var next = current() === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+        label(toggle);
+      });
+    }
+    var print = document.querySelector(".print-btn");
+    if (print) {
+      print.addEventListener("click", function (e) { e.preventDefault(); window.print(); });
+    }
+  })();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+    tabsets.forEach(function(tabset) {
+      const tabby = new Tabby('#' + tabset.id);
+    });
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/exios66\.github\.io\/resume");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+
+
+
+
+</body></html>

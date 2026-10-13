@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Selected AI and machine learning projects: a LangGraph document pipeline, a ModernBERT classifier, a vision-model classification toolkit, and a behavioral ML study.">
+<meta name="description" content="Selected work in document intelligence, model evaluation, behavioral machine learning, and browser-based simulation, with a case study and technical report for each project.">
 
 <title>Projects — Jack J. Burleson – Jack J. Burleson</title>
 <style>
@@ -77,13 +77,13 @@ ul.task-list li input[type="checkbox"] {
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Projects — Jack J. Burleson">
-<meta property="og:description" content="Selected AI and machine learning projects: a LangGraph document pipeline, a ModernBERT classifier, a vision-model classification toolkit, and a behavioral ML study.">
+<meta property="og:description" content="Selected work in document intelligence, model evaluation, behavioral machine learning, and browser-based simulation, with a case study and technical report for each project.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta property="og:site_name" content="Jack J. Burleson">
 <meta property="og:image:alt" content="Jack J. Burleson — AI / Machine Learning · Data Science">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="Projects — Jack J. Burleson">
-<meta name="twitter:description" content="Selected AI and machine learning projects: a LangGraph document pipeline, a ModernBERT classifier, a vision-model classification toolkit, and a behavioral ML study.">
+<meta name="twitter:description" content="Selected work in document intelligence, model evaluation, behavioral machine learning, and browser-based simulation, with a case study and technical report for each project.">
 <meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://exios66.github.io/resume/projects/">
@@ -113,31 +113,52 @@ ul.task-list li input[type="checkbox"] {
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <section id="projects" class="page-title page">
 <h1 class="page-title">Projects</h1>
-<p>Selected work in document intelligence, model evaluation, and behavioral machine learning.</p>
+<p>Selected work in document intelligence, model evaluation, behavioral machine learning, and simulation. Each project has a short case study. Most also have a technical report with the full experiment history, metrics, and steps to reproduce the results.</p>
+<h2 class="group-title" id="document-intelligence">Document intelligence</h2>
+<p>Four connected projects about one question: how do you sort and read business documents accurately, at a cost you can defend?</p>
+<figure class="diagram" role="img" aria-labelledby="ecosystem-cap"><svg viewbox="0 0 800 340" aria-hidden="true" focusable="false"><defs><marker id="ecosystem-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="10" y="20" width="200" height="104" rx="8"></rect><text x="110.0" y="60" text-anchor="middle" font-weight="600">RVL-CDIP prompt study</text><text x="110.0" y="77" text-anchor="middle">zero-shot vision LLMs</text><text x="110.0" y="94" text-anchor="middle">on a public benchmark</text><rect class="d-box" x="310" y="20" width="200" height="104" rx="8"></rect><text x="410.0" y="52" text-anchor="middle" font-weight="600">Digital-Mailroom</text><text x="410.0" y="68" text-anchor="middle">capstone: LangGraph</text><text x="410.0" y="86" text-anchor="middle">pipeline built with</text><text x="410.0" y="102" text-anchor="middle">an industry partner</text><rect class="d-box" x="10" y="200" width="200" height="120" rx="8"></rect><text x="110.0" y="231" text-anchor="middle" font-weight="600">mailroom-dataset</text><text x="110.0" y="248" text-anchor="middle">assembled from public</text><text x="110.0" y="265" text-anchor="middle">sources: Enron email,</text><text x="110.0" y="282" text-anchor="middle">SEC filings, largely</text><text x="110.0" y="299" text-anchor="middle">synthetic insurance claims</text><rect class="d-box d-accent" x="310" y="200" width="200" height="120" rx="8"></rect><text x="410.0" y="248" text-anchor="middle" font-weight="600">Mailroom-ML</text><text x="410.0" y="265" text-anchor="middle">ModernBERT fast-path</text><text x="410.0" y="282" text-anchor="middle">classifier, calibrated</text><rect class="d-box" x="610" y="200" width="180" height="120" rx="8"></rect><text x="700.0" y="240" text-anchor="middle" font-weight="600">Mailroom Reloaded</text><text x="700.0" y="256" text-anchor="middle">CrewAI Flows</text><text x="700.0" y="274" text-anchor="middle">pipeline with</text><text x="700.0" y="290" text-anchor="middle">LLM escalation</text><path class="d-arrow" d="M210 260H308" marker-end="url(#ecosystem-ah)"></path><text class="d-muted" x="259" y="250" text-anchor="middle" font-size="13">trains</text><path class="d-arrow" d="M510 260H608" marker-end="url(#ecosystem-ah)"></path><text class="d-muted" x="559" y="244" text-anchor="middle" font-size="13">used as</text><text class="d-muted" x="559" y="278" text-anchor="middle" font-size="13">bert_primary</text></svg><figcaption id="ecosystem-cap">How the document-intelligence projects fit together: the RVL-CDIP prompt study and the Digital-Mailroom capstone are related projects, with no data flow drawn between them; a dataset assembled from public sources trains Mailroom-ML, whose classifier runs as the bert_primary stage of Mailroom Reloaded.</figcaption></figure>
 <div class="cards cards-wide">
 <section id="digital-mailroom" class="card">
-<h2><a href="../projects/digital-mailroom.html">Digital-Mailroom</a></h2>
-<p><span class="kicker">DSHB capstone · American Family Insurance</span></p>
-<p>10 Python packages for entity extraction, classification, routing, and scalable workflows, joined in one LangGraph pipeline.</p>
-<p><span class="tag">LangGraph</span> <span class="tag">Docker</span> <span class="tag">Prompt experiments</span></p>
+<h3><a href="../projects/digital-mailroom.html">Digital-Mailroom</a></h3>
+<p><span class="kicker">Capstone · American Family Insurance</span></p>
+<p>The capstone design: one LangGraph pipeline for document routing, prompt experiments, deterministic scoring, and deployment, trained and tested on a dataset I assembled from public sources.</p>
+<p><span class="tag">LangGraph</span> <span class="tag">Docker</span> <span class="tag">Dataset design</span></p>
 </section>
 <section id="mailroom-ml" class="card">
-<h2><a href="../projects/mailroom-ml.html">Mailroom-ML</a></h2>
-<p><span class="kicker">ML training, evaluation &amp; fine-tuning</span></p>
-<p>A ModernBERT document classifier with data lineage, probability calibration, and production routing logic.</p>
-<p><span class="tag">PyTorch</span> <span class="tag">Hugging Face</span> <span class="tag">ONNX</span> <span class="tag">FastAPI</span> <span class="tag">Modal</span></p>
+<h3><a href="../projects/mailroom-ml.html">Mailroom-ML</a></h3>
+<p><span class="kicker">Training, evaluation &amp; calibration</span></p>
+<p>A ModernBERT classifier that handles the easy documents quickly. It calibrates its own confidence, so it knows when to pass a document to an LLM.</p>
+<p><span class="tag">PyTorch</span> <span class="tag">Calibration</span> <span class="tag">ONNX</span> <span class="tag">Modal</span></p>
+</section>
+<section id="mailroom-reloaded" class="card">
+<h3><a href="../projects/mailroom-reloaded.html">Mailroom Reloaded</a></h3>
+<p><span class="kicker">Agentic pipeline · deployable rebuild</span></p>
+<p>The mailroom as one service you can deploy. A deterministic driver runs CrewAI agents in a fixed order, escalates hard cases step by step, and records every decision in an audit log.</p>
+<p><span class="tag">CrewAI Flows</span> <span class="tag">FastAPI</span> <span class="tag">OpenTelemetry</span></p>
 </section>
 <section id="rvl-cdip-classifier" class="card">
-<h2><a href="../projects/rvl-cdip-classifier.html">RVL-CDIP-Classifier</a></h2>
-<p><span class="kicker">Computer vision &amp; prompt engineering</span></p>
-<p>A toolkit that turns TIFF/PDF pages into 300-DPI images, runs OCR, and sorts documents into 16 categories with vision models.</p>
-<p><span class="tag">OCR</span> <span class="tag">OpenRouter</span> <span class="tag">Evaluation</span></p>
+<h3><a href="../projects/rvl-cdip-classifier.html">RVL-CDIP-Classifier</a></h3>
+<p><span class="kicker">Vision LLMs &amp; prompt engineering</span></p>
+<p>A study of zero-shot document classification with vision LLMs. It covers 29 tracked prompt versions, accuracy checked on larger slices than the tuning set, cost per page, and Monte Carlo analysis of ensembles and routing.</p>
+<p><span class="tag">OpenRouter</span> <span class="tag">Evaluation</span> <span class="tag">Error analysis</span></p>
 </section>
+</div>
+<h2 class="group-title" id="behavioral-machine-learning">Behavioral machine learning</h2>
+<div class="cards cards-wide">
 <section id="psychometric-digital-twin" class="card">
-<h2><a href="../projects/psychometric-digital-twin.html">Psychometric Digital Twin</a></h2>
+<h3><a href="../projects/psychometric-digital-twin.html">Psychometric Digital Twin</a></h3>
 <p><span class="kicker">Behavioral ML research · UW–Madison</span></p>
-<p>Six ML models against LLM “digital twin” personas on 252 survey participants, with bias analysis by demographic group.</p>
+<p>Six ML models compared with LLM “digital twin” personas on 252 survey participants, including an analysis of bias by demographic group.</p>
 <p><span class="tag">scikit-learn</span> <span class="tag">XGBoost</span> <span class="tag">SHAP</span> <span class="tag">vLLM</span></p>
+</section>
+</div>
+<h2 class="group-title" id="side-projects-interests">Side projects &amp; interests</h2>
+<div class="cards cards-wide">
+<section id="wave-laboratory" class="card">
+<h3><a href="../projects/wave-laboratory.html">Wave Laboratory</a></h3>
+<p><span class="kicker">Simulation &amp; graphics · runs in the browser</span></p>
+<p>A real-time 3D ocean you can experiment with. Spectral wave models, rogue waves, and ships that move in all six directions run in a Web Worker and render with WebGL 2.</p>
+<p><span class="tag">TypeScript</span> <span class="tag">Three.js</span> <span class="tag">Physics</span> <span class="tag">Accessibility</span></p>
 </section>
 </div>
 </section>

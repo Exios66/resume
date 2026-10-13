@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Method, iteration history, results and limits of a prompt-only, zero-shot RVL-CDIP classifier built on an off-the-shelf vision model.">
+
+<title>RVL-CDIP-Classifier: technical report — Jack J. Burleson – Jack J. Burleson</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<meta name="theme-color" content="#0e6f7a">
+<meta name="author" content="Jack J. Burleson">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image-width" content="1200">
+<meta name="twitter:image-height" content="630">
+<script>
+  // Apply the saved theme before first paint so there is no light/dark flash.
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Jack J. Burleson",
+  "url": "https://exios66.github.io/resume/",
+  "jobTitle": "AI / Machine Learning and Data Science",
+  "email": "mailto:jackjburleson@proton.me",
+  "address": { "@type": "PostalAddress", "addressLocality": "Madison", "addressRegion": "WI", "addressCountry": "US" },
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Madison" },
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Parkside" }
+  ],
+  "knowsAbout": ["Machine learning", "Natural language processing", "LLM evaluation", "Computer vision", "Behavioral data science"],
+  "sameAs": [
+    "https://www.linkedin.com/in/jackjburleson",
+    "https://github.com/Exios66"
+  ]
+}
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="RVL-CDIP-Classifier: technical report — Jack J. Burleson">
+<meta property="og:description" content="Method, iteration history, results and limits of a prompt-only, zero-shot RVL-CDIP classifier built on an off-the-shelf vision model.">
+<meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta property="og:site_name" content="Jack J. Burleson">
+<meta property="og:image:alt" content="Jack J. Burleson — AI / Machine Learning · Data Science">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:title" content="RVL-CDIP-Classifier: technical report — Jack J. Burleson">
+<meta name="twitter:description" content="Method, iteration history, results and limits of a prompt-only, zero-shot RVL-CDIP classifier built on an off-the-shelf vision model.">
+<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://exios66.github.io/resume/projects/rvl-cdip-classifier/report.html">
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+
+
+
+<header class="site-header">
+  <nav class="site-nav" aria-label="Main">
+    <a class="site-title" href="../../index.html">Jack J. Burleson</a>
+    <ul class="nav-list">
+      <li><a class="nav-link" href="../../index.html">Home</a></li>
+      <li><a class="nav-link" href="../../about.html">About</a></li>
+      <li><a class="nav-link" href="../../projects/index.html" aria-current="page">Projects</a></li>
+      <li><a class="nav-link" href="../../research.html">Research</a></li>
+      <li><a class="nav-link" href="../../writing/index.html">Writing</a></li>
+      <li><a class="nav-link" href="../../resume.html">Résumé</a></li>
+      <li><button type="button" class="theme-toggle" aria-label="Switch theme"></button></li>
+    </ul>
+  </nav>
+</header>
+<main id="main"><header id="title-block-header" class="quarto-title-block"></header>
+<div class="page">
+<p><a href="../../projects/rvl-cdip-classifier.html" class="back">← Case study</a></p>
+<div class="project-nav">
+<p><a href="../../projects/rvl-cdip-classifier.html">Case study</a> <a href="../../projects/rvl-cdip-classifier/report.html" aria-current="page">Technical report</a> <a href="https://github.com/Exios66/RVL-CDIP-Classifier">Code</a></p>
+</div>
+<h1 class="page-title" id="rvl-cdip-classifier-technical-report">RVL-CDIP-Classifier: technical report</h1>
+<p><span class="kicker">Zero-shot document classification · prompt engineering · cost and robustness analysis</span></p>
+<h2 id="summary">Summary</h2>
+<p>I tested how well a general-purpose vision model can classify scanned pages into the 16 RVL-CDIP classes using only a written prompt, with no training or fine-tuning. The main model was <code>qwen/qwen3.7-flash</code> through OpenRouter. I iterated on the prompt across 29 registered versions.</p>
+<p>The number to quote is <strong>82.6% (925 of 1,120)</strong> for prompt v11.8 on a balanced slice of 70 images per class. That slice was built from the Hugging Face mirror of RVL-CDIP with pixel-hash exclusion of the 800-image slice. I did not verify its overlap with the 160-image slice I tuned on. On the tuning slice the same prompt reaches 99.4% (157 of 158), which I treat as an optimistic upper bound because I wrote rules for individual misses on that slice. Cost is about $0.0004 per image. Simulations of voting and routing looked promising, but none of the three routing tests I measured reproduced the gain.</p>
+<h2 id="system-and-data">System and data</h2>
+<p>The pipeline has these stages.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Stage</th>
+<th>What it does</th>
+<th>Module</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Slice building</td>
+<td>Streams a 100-per-class Hugging Face mirror of RVL-CDIP, seeds the sampler, de-duplicates on rendered pixels, writes 1024×1024 grayscale PNGs with white padding</td>
+<td><code>scripts/datasets/</code>, <code>scripts/braintrust/create_braintrust_*_dataset.py</code>, <code>src/image_utils.py</code></td>
+</tr>
+<tr class="even">
+<td>Preprocessing (separate tool)</td>
+<td>Converts TIFF/PDF pages to 300-DPI grayscale images and extracts OCR text with bounding boxes via Tesseract</td>
+<td><code>src/document_processor.py</code></td>
+</tr>
+<tr class="odd">
+<td>Prompting</td>
+<td>Versioned, append-only prompt registry</td>
+<td><code>src/prompts.py</code></td>
+</tr>
+<tr class="even">
+<td>Classification</td>
+<td>Builds a message with the prompt and one image, calls OpenRouter, parses the label and a runner-up</td>
+<td><code>src/openrouter_classifier.py</code>, <code>src/openrouter_utils.py</code></td>
+</tr>
+<tr class="odd">
+<td>Evaluation</td>
+<td>Exact-match scoring, per-class tables, confusion matrices, near-miss counts, billed cost</td>
+<td><code>src/evaluation.py</code>, <code>scripts/braintrust/</code></td>
+</tr>
+<tr class="even">
+<td>Simulation</td>
+<td>Bootstrap analyses of voting, routing and failure handling over a pooled per-image corpus</td>
+<td><code>src/monte_carlo.py</code>, <code>src/routing.py</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>OCR and 300 DPI.</strong> The 300-DPI conversion and OCR live in <code>src/document_processor.py</code>, which is used by the TIFF batch-processing script. The classifier does not call it. <code>classify_image</code> states that it sends only the image to the vision model, with no OCR text, and the message builder attaches the page as a base64 <code>image_url</code> part. The evaluated images are 1024×1024 grayscale PNGs. An early comparison on the 160-image slice found that full-size 2550×3300 inputs roughly doubled prompt tokens (1,637 to 3,701) with no accuracy gain (74.4% against 73.8%) under the baseline prompt.</p>
+<p><strong>Data.</strong> The 160-image slice (10 per class) is the tuning slice. Larger slices come from the Hugging Face mirror, which holds exactly 100 images per class. The 1,120-image run used a dataset built from all three mirror splits (train, test and validation) with the 800-image slice excluded by pixel hash. Slices are class-balanced, seeded, and de-duplicated on rendered pixels, so one slice does not repeat an image from an exclusion set. The dataset is RVL-CDIP (Harley, Ufkes and Derpanis, 2015).</p>
+<h2 id="iteration-history">Iteration history</h2>
+<p>Prompts run from v0, a short baseline, to v19, a variant that tells each call to act as one independent vote in a committee. The default in the code is v17.2. Accuracy below is on the 160-image tuning slice (158 scored rows), which is why it climbs so far.</p>
+<div class="timeline">
+<ul>
+<li><strong>v1</strong> — class definitions only. <em>80.1% (125/156).</em></li>
+<li><strong>v4</strong> — first disambiguation rules for confusable pairs. <em>83.5% (132/158).</em></li>
+<li><strong>v7</strong> — presentation cover and slide rules. <em>91.1% (144/158).</em></li>
+<li><strong>v8.5</strong> — folder-tab rewrite over-corrected cover pages. <em>88.6%, a regression.</em></li>
+<li><strong>v10</strong> — full ordered check cascade covering every earlier miss. <em>97.5% (154/158).</em></li>
+<li><strong>v11</strong> — estimate-versus-bill rule for budget and invoice. <em>98.7% (156/158).</em></li>
+<li><strong>v11.8</strong> — form-versus-budget and memo-versus-letter fixes for the three remaining misses. <em>99.4% (157/158).</em></li>
+<li><strong>v16</strong> — v11.9 plus two worked examples. <em>96.2% on the tuning slice, 83.8% and 79.4% on two fresh slices.</em></li>
+<li><strong>v19</strong> — vote preamble added to v18.1. <em>96.9% (155/160, counting one failed call as a miss).</em></li>
+</ul>
+</div>
+<p>Two things stand out. The v10 jump (+6.4 points over v9’s 91.1%) came from writing rules for every v9 miss, which is tuning in the strict sense. And the last steps to 99.4% fixed three named images. I also kept a harder 56-row evaluation set made from earlier failures, where v11.8 scored 18 of 56 (32.1%), below v11.7’s 20 of 56. I fixed one trade-off and introduced others, so I stopped treating the 160-image slice as evidence of generalization.</p>
+<h2 id="results">Results</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Run</th>
+<th>Prompt</th>
+<th>Eval set</th>
+<th>Held out from tuning?</th>
+<th style="text-align: right;">Exact match</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>qwen3.7-flash</td>
+<td>v11.8</td>
+<td>160 (tuning slice)</td>
+<td>No (tuning slice)</td>
+<td style="text-align: right;">157/158 (99.4%)</td>
+</tr>
+<tr class="even">
+<td>qwen3.7-flash</td>
+<td>v11.8</td>
+<td>320</td>
+<td>No: v10 and v11 failures on this slice informed later rules</td>
+<td style="text-align: right;">279/320 (87.2%)</td>
+</tr>
+<tr class="odd">
+<td>qwen3.7-flash</td>
+<td>v11.8</td>
+<td>480 (476 scored)</td>
+<td>No: superset containing the 160</td>
+<td style="text-align: right;">424/476 (89.1%)</td>
+</tr>
+<tr class="even">
+<td>qwen3.7-flash</td>
+<td>v11.8</td>
+<td>800</td>
+<td>Not the tuning slice</td>
+<td style="text-align: right;">665/800 (83.1%)</td>
+</tr>
+<tr class="odd">
+<td>qwen3.7-flash</td>
+<td><strong>v11.8</strong></td>
+<td><strong>1,120 balanced</strong></td>
+<td><strong>Not the tuning slice; overlap with it not verified</strong></td>
+<td style="text-align: right;"><strong>925/1,120 (82.6%)</strong></td>
+</tr>
+<tr class="even">
+<td>qwen3.7-flash</td>
+<td>v0</td>
+<td>480</td>
+<td>Control</td>
+<td style="text-align: right;">332/480 (69.2%)</td>
+</tr>
+<tr class="odd">
+<td>qwen3.7-flash</td>
+<td>v0</td>
+<td>800</td>
+<td>Control</td>
+<td style="text-align: right;">529/800 (66.1%)</td>
+</tr>
+</tbody>
+</table>
+<p>The like-for-like comparison is the 800-image slice: v0 scored 66.1% and v11.8 scored 83.1%, a gain of 17.0 points on a slice the prompt was not iterated on. Why accuracy falls with slice size is not proven. Larger slices contain noisier scans and more layout variety, and the v16 report found the same prompt scoring about 13 to 17 points lower on mirror slices than on the 160-image slice. I did not test whether the mirror images are intrinsically harder, so that stays a hypothesis.</p>
+<p><strong>Source conflict.</strong> The experiment log gives v11.8 on the 320 slice as 87.2% (279/320). The per-run report gives 87.11% (277/318 scored). I use the log value so the table matches the figures, and the two differ by under 0.1 points.</p>
+<p><strong>Error structure on the 1,120 run.</strong> Per-class accuracy is lowest for budget (67.1%), letter (70.0%), presentation (70.0%) and scientific report (71.4%), and highest for resume (95.7%). The most frequent confusions are letter as memo (16), budget as invoice (12) and specification as form (9). In 72 misses (6.4% of rows, 36.9% of misses) the correct class was the model’s runner-up.</p>
+<p><strong>Other models, 160-image tuning slice.</strong> <code>qwen3.5-35b-a3b</code> scored 155/157 (98.7%) with v11.8, <code>gemini-2.5-flash-lite</code> 86.9%, <code>gemini-2.5-flash</code> 74.4% and <code>kimi-k3</code> 70.0%, though the last two ran with earlier prompts, so this is not a controlled comparison.</p>
+<p><strong>Cost.</strong> The 1,120-image run billed $0.4937 against a list-price projection of $0.6815, because about 61 to 63 percent of prompt tokens were cache hits. That is about $0.00044 per image. The v19 run reports an average of $0.000377 per image. Other models I priced from single-image runs cost $0.0033 to $0.0534 per image.</p>
+<h2 id="figures">Figures</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/f1_accuracy_arc.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart of exact-match accuracy for prompt versions v1, v4, v7, v10, v11 and v11.8 on the 160-image tuning slice, from 80.1 to 99.4 percent."></p>
+<figcaption>Accuracy by prompt version on the 160-image tuning slice (not held out). It rises from 80.1% at v1 to 99.4% at v11.8.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/f2_generalization_falloff.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart of v11.8 accuracy against slice size, from 99.4 percent at 160 images down to 82.6 percent at 1,120 images."></p>
+<figcaption>v11.8 accuracy by slice size. The 160-image point is the tuning slice; the 1,120-image point is 82.6%.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/f3_model_comparison.svg" class="fig img-fluid" style="width:100.0%" alt="Bar chart with error bars of accuracy on the 160-image slice: qwen3.7-flash 98.7 percent, qwen3.5-35b-a3b 98.7, gemini-2.5-flash-lite 86.9, gemini-2.5-flash 74.4 and kimi-k3 70.0, with a dashed line at the 80.1 percent v1 baseline."></p>
+<figcaption>Best accuracy per model on the 160-image tuning slice with 95% intervals. The top qwen3.7-flash bar (98.7%, 157/159) is a temperature 0.3 rerun of v11.8, not the 99.4% run at temperature 0.1.</figcaption>
+</figure>
+</div>
+<p>The 98.7% in the third figure and the 99.4% in the first come from two separate runs of the same prompt on the same slice: temperature 0.3 with 159 scored rows (157 correct), and temperature 0.1 with 158 scored rows (157 correct). The gap is one row that failed to return usable content, so the two are consistent.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/f4_confusion_heatmap.svg" class="fig img-fluid" style="width:100.0%" alt="Heatmap of expected against predicted class for the 16 classes, with nearly every cell on the diagonal at 100 percent and only a few cells at 10 percent off it."></p>
+<figcaption>Row-normalized confusion matrix for qwen3.7-flash with v11.8 on the 160-image tuning slice. This is the temperature 0.3 rerun (157/159, 98.7%), so almost all mass sits on the diagonal.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/f5_per_class_accuracy.svg" class="fig img-fluid" style="width:100.0%" alt="Horizontal bar chart of per-class accuracy sorted from budget at 67.1 percent to resume at 95.7 percent, with a dashed line at the 82.6 percent overall accuracy."></p>
+<figcaption>Per-class accuracy on the 1,120-image run, overall 82.6%. Budget, letter, presentation and scientific report are lowest.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/f6_cost_projections.svg" class="fig img-fluid" style="width:100.0%" alt="Two log-scale bar charts: per-image cost for four models from about 0.003 to 0.053 dollars, and projected total cost at 800, 25,000 and 320,000 images."></p>
+<figcaption>Billed cost per image (left) and linear projection to 800, 25,000 and 320,000 images (right), from single-image runs of four other models.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/f7_ensemble_vs_k.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart of simulated accuracy rising from 82.1 percent with one voter to 86.3 percent with 25 voters, flattening after about K equals 7."></p>
+<figcaption>Simulated majority-vote accuracy against committee size K, from 0.821 at K=1 to 0.863 at K=25, over the pooled corpus.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/f8_routing.svg" class="fig img-fluid" style="width:100.0%" alt="Chart of simulated accuracy and cost factor against the fraction of images escalated to a stronger model, with accuracy peaking at 91.9 percent and cost reaching 2 times at 50 percent."></p>
+<figcaption>Simulated confidence-gated escalation: accuracy peaks at 91.9% at a 40% escalation fraction and 1.8 times the cost.</figcaption>
+</figure>
+</div>
+<h3 id="monte-carlo-analyses">Monte Carlo analyses</h3>
+<p>The simulations bootstrap from a pooled corpus of 5,599 rows covering 1,512 images from 18 experiments. The older manuscript in the repo still cites 4,641 rows and 14 experiments, so I used the corpus summary, which is newer. The corpus mixes prompt versions (1,759 rows are v0, 2,561 are v11.8), so its baseline of 0.821 is a pooled rate and not the best prompt’s accuracy.</p>
+<ul>
+<li><strong>Voting.</strong> Majority vote over K reads lifts simulated accuracy from 0.821 at K=1 to 0.863 at K=25, with most of the gain by K=7 (0.850). The cost multiplier equals K.</li>
+<li><strong>Routing, simulated.</strong> Escalating the lowest-confidence 40% to a model assumed to be 90% accurate at 3 times cost gives 0.919 at 1.8 times total cost.</li>
+<li><strong>Routing, measured.</strong> On a 48-image low-confidence slice, re-running at maximum effort moved accuracy from 0.667 (32 correct) to 0.625 (30). Routing to a different stronger model on the tuning slice also failed to help: v18.1 went from 0.962 to 0.943 and v19 from 0.975 to 0.969, at 7.51 and 7.81 times the cost. The routing check scores only the 159 completed rows, so v19’s base is 155 of 159 (0.975) there and 154 of 159 (0.969) after merging. The 96.9% in the iteration history is the same 155 correct, divided by 160 rows because one failed call counts as a miss. The simulation’s assumption of a genuinely stronger escalator did not hold in practice.</li>
+</ul>
+<h2 id="reproducibility">Reproducibility</h2>
+<p>The environment needs Tesseract and Poppler for the preprocessing tool, plus an OpenRouter key in a local <code>.env</code> file.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env   <span class="co"># add OPENROUTER_API_KEY</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/datasets/create_balanced_dataset.py</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/openrouter/estimate_openrouter_cost.py</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> src/openrouter_classifier.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Slices are rebuilt with fixed seeds (default 42, other slices 1738, 2303 and 9413), so the same source reproduces the same images. Prompt text is versioned in <code>src/prompts.py</code>, and each experiment’s final report, confusion matrix and manifest are committed under <code>reports/</code>. The model runs through a hosted API, so results are point-in-time. A provider-side change could shift them.</p>
+<h2 id="engineering-quality">Engineering quality</h2>
+<p>The test suite has 318 test functions in 21 files, covering the document processor, prompt registry, classifier and message builder, evaluation and report accounting, routing, Monte Carlo code and dataset builders. Evaluation uses exact match, with a failed or empty response counted as a miss, so API failures lower the score and are not hidden. The v16 report attributes 16 of 480 rows to length truncation and provider errors, and the report proposed a higher token cap. Reports record billed cost per row.</p>
+<h2 id="limitations-and-next-steps">Limitations and next steps</h2>
+<ul>
+<li><strong>Tuning contamination.</strong> The 99.4% figure is on the slice I tuned against. I cannot rule out that some mirror images in the larger slices appeared in failure-driven evaluation sets, so 82.6% is a different slice from the tuning slice, not a verified-clean test set. The 1,120 images were built with pixel-hash exclusion of the 800-image slice only.</li>
+<li><strong>Mirror, not the full test set.</strong> All numbers are from small balanced slices of a 100-per-class mirror. They are not the 40,000-image RVL-CDIP test set, and they are not comparable to published supervised results.</li>
+<li><strong>Bundled edits.</strong> Each prompt version changes several things at once, so I cannot attribute gains to individual rules.</li>
+<li><strong>Single main model.</strong> Cross-model results are not controlled, and statistical power on 160 images is low.</li>
+<li><strong>Untested fixes.</strong> Next steps are a prompt-ablation study on the large slices, and testing whether the 13-to-17-point gap between curated and mirror slices comes from image quality or from label noise.</li>
+</ul>
+<h2 id="credits">Credits</h2>
+<p>Built with co-author Grant Mooslin, advised by Siddharth Suresh. Dataset: RVL-CDIP (Harley, Ufkes and Derpanis, 2015).</p>
+</div>
+
+</main>
+<footer class="site-footer">
+  <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
+</footer>
+
+<script>
+  // Theme toggle: switches to the opposite of what is currently shown and remembers the choice.
+  // Print button: opens the browser print dialog.
+  (function () {
+    var root = document.documentElement;
+    function current() {
+      var set = root.getAttribute("data-theme");
+      if (set) return set;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    function label(btn) {
+      var dark = current() === "dark";
+      btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+      btn.textContent = dark ? "☀" : "☾";
+    }
+    var toggle = document.querySelector(".theme-toggle");
+    if (toggle) {
+      label(toggle);
+      toggle.addEventListener("click", function () {
+        var next = current() === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+        label(toggle);
+      });
+    }
+    var print = document.querySelector(".print-btn");
+    if (print) {
+      print.addEventListener("click", function (e) { e.preventDefault(); window.print(); });
+    }
+  })();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+    tabsets.forEach(function(tabset) {
+      const tabby = new Tabby('#' + tabset.id);
+    });
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/exios66\.github\.io\/resume");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+
+
+
+
+</body></html>
