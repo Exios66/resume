@@ -34,15 +34,26 @@ local function is_current(item, path)
   return path == item.section
 end
 
--- HTML comments are authoring notes; leave them out of the published pages.
+--- Check for HTML text bounded by comment delimiters, ignoring surrounding whitespace.
+-- Text between the delimiters may span lines and is not parsed.
+-- @param el Pandoc raw element.
+-- @return boolean Whether the format is "html" and the text starts with <!-- and ends with -->.
 local function is_comment(el)
   return el.format == "html" and el.text:match("^%s*<!%-%-.-%-%->%s*$") ~= nil
 end
 
+--- Remove a raw HTML inline bounded by comment delimiters.
+-- Surrounding whitespace is allowed; other raw inlines are kept.
+-- @param el Pandoc RawInline element.
+-- @return table|nil Empty list to remove the element, or nil to leave it unchanged.
 function RawInline(el)
   if is_comment(el) then return {} end
 end
 
+--- Remove a raw HTML block bounded by comment delimiters.
+-- Surrounding whitespace is allowed; other raw blocks are kept.
+-- @param el Pandoc RawBlock element.
+-- @return table|nil Empty list to remove the element, or nil to leave it unchanged.
 function RawBlock(el)
   if is_comment(el) then return {} end
 end
