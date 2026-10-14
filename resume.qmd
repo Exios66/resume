@@ -13,7 +13,6 @@ description: "Résumé of Jack J. Burleson: M.S. candidate in Data Science in Hu
 ::: {.contact}
 [Madison, WI · Open to relocation]{.chip}
 [jackjburleson@proton.me](mailto:jackjburleson@proton.me){.chip}
-[262-341-1561]{.chip .print-only}
 [linkedin.com/in/jackjburleson](https://www.linkedin.com/in/jackjburleson){.chip}
 [github.com/Exios66](https://github.com/Exios66){.chip}
 :::

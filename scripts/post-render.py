@@ -20,12 +20,11 @@ PDF_NAME = "Jack_Burleson_Resume.pdf"
 
 
 def find_chromium():
-    """Return a Chromium path, or None to use Playwright's managed browser.
+    """Return a Chromium executable path, or None for Playwright's default.
 
-    Prefer an existing CHROMIUM_PATH, then search Linux Chromium layouts under
-    PLAYWRIGHT_BROWSERS_PATH (the filesystem root when unset or empty). Use the
-    lexicographically last match from the first matching layout; executability
-    is not checked.
+    Prefer an existing CHROMIUM_PATH, then search PLAYWRIGHT_BROWSERS_PATH
+    for Chromium builds, choosing the last sorted match of the first pattern
+    that matches.
     """
     env = os.environ.get("CHROMIUM_PATH")
     if env and Path(env).exists():
@@ -41,14 +40,9 @@ def find_chromium():
 def build_pdf():
     """Print docs/resume.html to PDF and copy it to the source assets directory.
 
-    Use print styles and CSS page sizing, with Letter as the default. Return
-    True after writing docs/assets/Jack_Burleson_Resume.pdf and copying it to
-    assets/Jack_Burleson_Resume.pdf. Return False if Playwright cannot be imported
-    or browser-based generation raises an exception. A failed generation does
-    not copy to source assets, but may have modified the output PDF.
-
-    Filesystem errors creating the output directory or copying the finished
-    PDF propagate to the caller.
+    Return True after writing and copying the PDF. Return False with a warning
+    if Playwright is unavailable or browser/PDF generation fails. Errors while
+    creating the output directory or copying the PDF propagate to the caller.
     """
     try:
         from playwright.sync_api import sync_playwright
@@ -87,11 +81,7 @@ def build_pdf():
 
 
 def main():
-    """Prepare docs for GitHub Pages and attempt to refresh the resume PDF.
-
-    Create docs if needed, touch .nojekyll, and remove search.json if present.
-    Ignore a False result from build_pdf; uncaught filesystem errors propagate.
-    """
+    """Prepare docs for GitHub Pages, remove the search index, and build the PDF."""
     DOCS.mkdir(exist_ok=True)
     (DOCS / ".nojekyll").touch()
     (DOCS / "search.json").unlink(missing_ok=True)

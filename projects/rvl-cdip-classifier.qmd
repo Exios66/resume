@@ -27,6 +27,8 @@ A toolkit for testing how well general-purpose vision models can sort scanned do
 
 ## Results and links
 
-<!-- TODO: add the best prompt/model accuracy, a confusion matrix image, the cost-per-1k-documents projection, and the repo link. -->
+Code and experiment logs: [github.com/Exios66/RVL-CDIP-Classifier](https://github.com/Exios66/RVL-CDIP-Classifier)
+
+<!-- TODO: add the best prompt/model accuracy, a confusion matrix image, and the cost-per-1k-documents projection. -->
 
 :::
