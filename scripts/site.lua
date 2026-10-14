@@ -76,7 +76,8 @@ end
 -- @param extra string|nil Extra class names.
 -- @return string HTML for an decorative, aria-hidden <svg>.
 function icon_html(name, extra)
-  return string.format('<svg class="icon%s" aria-hidden="true" focusable="false"><use href="#i-%s"/></svg>',
+  -- width/height baked in: icons stay 1em even if styles.css fails to load.
+  return string.format('<svg class="icon%s" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-%s"/></svg>',
     extra and (" " .. extra) or "", name)
 end
 

@@ -70,6 +70,8 @@ local function check(case, root, absolute, empty)
   contains(header.text, '<button type="button" class="theme-toggle" aria-label="Switch theme">')
   contains(header.text, '<use href="#i-sun"/>')
   contains(header.text, '<use href="#i-moon"/>')
+  -- Icons must carry their 1em size so they stay small even without styles.css.
+  contains(header.text, '<svg class="icon" width="1em" height="1em" aria-hidden="true"')
   contains(header.text, '<symbol id="i-github"')
   local _, sprites = header.text:gsub('<svg width="0" height="0"', "")
   assert(sprites == 1, "Exactly one icon sprite per page")
