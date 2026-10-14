@@ -87,7 +87,7 @@ Four findings stood out.
 
 I also mined the reasoning traces for the words that appear when the model stops checking early. The prompt works through up to 14 checks in order, and the typical trace stops at check 9.4. Words such as "minutes", "routing" and "variance" show up in traces that stop early and are wrong far more often than the 17.1% baseline error rate. Each appears in only 10 or 11 traces, so these are leads to test and not findings.
 
-![Ten trigger words that push the model to commit too early, scored by how much earlier it stops and how much the error rate rises, against a 17.1% baseline error.](rvl-cdip-classifier/figures/f9_hasty_stop.svg){.fig fig-alt="Horizontal bar chart of the ten words with the highest hasty-score, from minutes at 1.89 down to survey at 0.71, with routing, variance, products, addresses, introduction, process, meeting and food between them." width="100%"}
+![Ten words associated with the model stopping earlier and erring more, scored by how much earlier it stops and how much the error rate rises, against a 17.1% baseline error.](rvl-cdip-classifier/figures/f9_hasty_stop.svg){.fig fig-alt="Horizontal bar chart of the ten words with the highest hasty-score, from minutes at 1.89 down to survey at 0.71, with routing, variance, products, addresses, introduction, process, meeting and food between them." width="100%"}
 
 ![Simulated confidence-gated escalation: accuracy peaks at 91.9% at a 40% escalation fraction and 1.8 times the cost.](rvl-cdip-classifier/figures/f8_routing.svg){.fig fig-alt="Chart of simulated accuracy and cost factor against the fraction of images escalated to a stronger model, with accuracy peaking at 91.9 percent and cost reaching 2 times at 50 percent." width="100%"}
 

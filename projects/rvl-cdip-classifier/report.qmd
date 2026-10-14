@@ -115,7 +115,7 @@ The simulations bootstrap from a pooled corpus of 5,599 rows covering 1,512 imag
 - **Reasoning-trace analysis.** Of 1,913 rows with reasoning, 1,832 traces parsed into the prompt's checks and 1,301 stop explicitly. The mean stop is at check 9.4 of 14 and the error rate is 17.1%. Words quoted in the stopping evidence are scored by how much earlier the stop comes and how much the error rate rises, weighted by frequency. "minutes" (11 traces, 82% error), "routing" (10 traces, 90%) and "variance" (10 traces, 100%) score highest. The counts are small, so these are leads and not findings.
 - **Confusion pairs.** In the pooled corpus the largest are budget read as invoice (63), letter as memo (63), specification as form (52), invoice as form (51), budget as form (40) and handwritten as letter (34).
 
-![Ten trigger words that push the model to commit too early, scored by how much earlier it stops and how much the error rate rises, against a 17.1% baseline error.](figures/f9_hasty_stop.svg){.fig fig-alt="Horizontal bar chart of the ten words with the highest hasty-score, from minutes at 1.89 down to survey at 0.71, with routing, variance, products, addresses, introduction, process, meeting and food between them." width="100%"}
+![Ten words associated with the model stopping earlier and erring more, scored by how much earlier it stops and how much the error rate rises, against a 17.1% baseline error.](figures/f9_hasty_stop.svg){.fig fig-alt="Horizontal bar chart of the ten words with the highest hasty-score, from minutes at 1.89 down to survey at 0.71, with routing, variance, products, addresses, introduction, process, meeting and food between them." width="100%"}
 
 ### Data exploration and observability tools
 

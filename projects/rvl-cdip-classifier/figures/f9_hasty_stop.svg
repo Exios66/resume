@@ -325,7 +325,7 @@ z
     <text style="fill: #262626; font: 9px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: start" x="437.305135" y="45.753904" transform="rotate(-0 437.305135 45.753904)">1.89</text>
    </g>
    <g id="text_27">
-    <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="299.608086" y="16.372406" transform="rotate(-0 299.608086 16.372406)">Trigger words that push the model to commit too early (17.1% baseline error)</text>
+    <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="299.608086" y="16.372406" transform="rotate(-0 299.608086 16.372406)">Words associated with earlier stops and more errors (17.1% baseline error)</text>
    </g>
   </g>
  </g>
