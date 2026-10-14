@@ -1,6 +1,6 @@
 ---
 pagetitle: "Projects — Jack J. Burleson"
-description: "Selected work in document intelligence, data engineering, model evaluation, behavioral machine learning, LLM agent design, and browser-based simulation and games, with case studies and selected technical reports."
+description: "Selected work in document intelligence, data engineering, model evaluation, behavioral machine learning, LLM agent design, and simulation, with case studies and selected technical reports."
 ---
 
 ::: {.page}

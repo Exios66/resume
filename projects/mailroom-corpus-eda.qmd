@@ -51,7 +51,7 @@ The design rule that shaped the most work is label separation. The main configur
 
 ## What I built
 
-- **Sources, with licences tracked.** Contracts from CUAD and SEC EDGAR exhibits, merger agreements from MAUD, corporate records from EDGAR filings, correspondence from a deduplicated Enron corpus, and insurance claims from four sources, all recorded as synthetic. I left out some candidate insurance samples because their licence did not allow reuse.
+- **Sources, with licences tracked.** Contracts from CUAD and SEC EDGAR exhibits, merger agreements from MAUD, corporate records from EDGAR filings, correspondence from a deduplicated Enron corpus, and insurance claims from four sources, all recorded as synthetic. I left out three candidate insurance samples because they carry a non-commercial licence.
 - **Identity and provenance.** Each row has a stable document id, derived from its source and filename and not from its row position, plus content hashes. A rebuild changes none of them. Each label also records how it was produced: a verified join, a model, a person, a heuristic, source-native, or synthetic.
 - **Fixing correspondence intent.** Many email rows had no intent label. I hydrated them by an exact match on a hash of the normalised body against a larger Enron corpus and against AESLC, ran a constrained model pass on the rest, and recorded which path produced each label. All 1,000 rows now have one of eight intents.
 - **Hardened export.** The exporter keeps metadata types uniform and handles the Unicode line separators that break JSON Lines readers. A byte-verify script compares a local export against what is on the Hub.
