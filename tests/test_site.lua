@@ -218,6 +218,16 @@ end
 local _, symbols = sprite_html:gsub("<symbol ", "")
 assert(symbols == 20, "Unexpected icon count: " .. symbols)
 
+-- The new database symbol must render a shape, not just resolve to an empty id.
+local database_symbol = sprite_html:match('(<symbol id="i%-database".-</symbol>)')
+assert(database_symbol, "Missing database symbol")
+local _, database_symbols = sprite_html:gsub('<symbol id="i%-database"', "")
+assert(database_symbols == 1, "Database symbol must be defined exactly once")
+contains(database_symbol, 'viewBox="0 0 24 24"')
+contains(database_symbol, 'fill="none" stroke="currentColor"')
+assert(database_symbol:find("<ellipse ", 1, true) and database_symbol:find("<path ", 1, true),
+       "Database icon must contain its cylinder geometry")
+
 -- project-nav labels
 for label, icon in pairs({ ["Case study"] = "book-open", ["Technical report"] = "file-text",
                            ["Code"] = "code", ["Live demo"] = "play" }) do
@@ -301,6 +311,47 @@ local ext_head = decorate_header({ tag = "Header", classes = {}, content = { lin
 assert(#ext_head.content[1].content == 1, "External single-link headings are left alone")
 local text_head = decorate_header({ tag = "Header", classes = {}, content = { str("Plain") } })
 assert(#text_head.content == 1)
+
+-- Data-engineering group names match case-insensitively from the start of the label.
+for _, label in ipairs({ "Data engineering", "DATA ENGINEERING & VISUALIZATION",
+                         "dAtA eNgInEeRiNg & visualization", "Data engineering projects" }) do
+  assert(group_icon_name(label) == "database", "Database icon for " .. label)
+end
+for _, label in ipairs({ "", "Data", "Data engineer", "Data visualization",
+                         "Metadata engineering", "Applied data engineering", "Other" }) do
+  assert(group_icon_name(label) == nil, "No group icon for " .. label)
+end
+assert(group_icon_name(nil) == nil, "Missing group label has no icon")
+
+-- Pandoc splits the real heading into inlines. Preserve their order and the heading's attributes.
+local data_content = { str("Data"), SPACE, str("engineering"), SPACE, str("&"), SPACE, str("visualization") }
+local data_classes = { "wide", "group-title" }
+local data_attributes = { ["data-section"] = "projects" }
+local data_heading = { tag = "Header", level = 2, identifier = "data-engineering-visualization",
+  classes = data_classes, attributes = data_attributes, content = data_content }
+assert(decorate_header(data_heading) == data_heading, "Decoration returns the original heading")
+assert(data_heading.level == 2 and data_heading.identifier == "data-engineering-visualization")
+assert(data_heading.classes == data_classes and data_heading.attributes == data_attributes)
+assert(#data_heading.content == #data_content + 1, "Exactly one icon is prepended")
+assert(data_heading.content[1].tag == "RawInline" and data_heading.content[1].format == "html")
+assert(uses({ data_heading.content[1] }, "database"), "Database icon precedes the label")
+contains(data_heading.content[1].text, 'width="1em" height="1em"')
+contains(data_heading.content[1].text, 'aria-hidden="true" focusable="false"')
+for i, inline in ipairs(data_content) do
+  assert(data_heading.content[i + 1] == inline, "Heading inline preserved at " .. i)
+end
+
+-- Matching words alone must not decorate ordinary headings or partial class names.
+for _, heading_classes in ipairs({ {}, { "group-title-extra" }, { "page-title" } }) do
+  local content = { str("Data engineering & visualization") }
+  local h = { tag = "Header", classes = heading_classes, content = content }
+  assert(decorate_header(h) == h and h.content == content and #h.content == 1,
+         "Only group-title headings get the database icon")
+end
+for _, content in ipairs({ {}, { str("Applied data engineering") } }) do
+  local h = { tag = "Header", classes = { "group-title" }, content = content }
+  assert(decorate_header(h) == h and h.content == content, "Unmatched group headings are unchanged")
+end
 
 -- location chip
 local place = decorate_span({ tag = "Span", classes = { "chip" }, content = { str("Madison, WI") } })
