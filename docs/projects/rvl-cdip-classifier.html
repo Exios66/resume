@@ -171,7 +171,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Where it fails is consistent. Budget (67.1%), letter (70.0%), presentation (70.0%) and scientific report (71.4%) are the weak classes on the 1,120 run, and the most common single error is letter predicted as memo (16 cases). In 72 of the misses, the correct class was the model’s own runner-up.</p>
 <h2 id="what-the-simulations-showed">What the simulations showed</h2>
-<p>The repository’s Monte Carlo scripts treat every recorded run as a draw from a per-image distribution of answers, then resample it to ask “what if” questions without spending any model credits. They work on a pooled corpus of 5,599 rows covering 1,512 images from 18 experiments. The corpus mixes prompt versions and models, so its 82.1% baseline is a pooled rate and not the best prompt’s accuracy.</p>
+<p>The repository’s Monte Carlo scripts treat every recorded run as a draw from a per-image distribution of answers, then resample it to ask “what if” questions without spending any model credits. They work on a pooled corpus of 5,599 rows covering 1,512 images from 18 experiments. The corpus mixes prompt versions and models, so its 82.1% baseline is a pooled rate and not the best prompt’s accuracy. For the same reason, a “read” in the voting forecast is a draw from that mixed pool, not a repeat of one fixed classifier.</p>
 <table class="caption-top">
 <colgroup>
 <col style="width: 33%">
@@ -188,7 +188,7 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td>Would majority voting help?</td>
-<td>7 reads: 85.0%. 25 reads: 86.3%. The cost is the number of reads.</td>
+<td>Forecast from the pooled, mixed-model corpus: 7 reads, 85.0%; 25 reads, 86.3%. Cost assumed to scale with the number of reads.</td>
 <td>Not tested on a live run.</td>
 </tr>
 <tr class="even">
