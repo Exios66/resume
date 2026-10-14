@@ -117,11 +117,11 @@ The changelog later records the TUI Node suite as 300 tests after removing dorma
 
 ## Figures
 
-![Replay viewer paused at 01:30 of a 02:15 demo run.](figures/replay-viewer.jpg){.fig fig-alt="A dark terminal page titled MAILROOM running a replay command. Station rows from intake to failed show dotted progress bars and counts, with a red marker on the specialist row. A scrub bar and a metrics line with documents, tokens, cost and calls sit below." width="100%"}
+![Replay viewer in the cyan theme, paused at 01:30 of a 02:15 demo run.](figures/replay-viewer.jpg){.fig fig-alt="A dark terminal page with a cyan MAILROOM banner, running replay run:7e57d0c0ffee --at 90. Station rows from intake to failed, grouped under intake_sort, extraction, review, reporting and terminal, show dotted progress bars and counts, with a red marker on the specialist row. A scrub bar and a metrics line reading docs 4 of 6, done 3, failed 1, tok 680, $0.0060, calls 4, first-pass 25% sit below." width="100%"}
 
-![Inspector on a document with a gate decision followed by a retry.](figures/inspector-retry.jpg){.fig fig-alt="The replay viewer with its inspector open. It shows local Phoenix and Grafana links, the document's station, status and attempt, and two events: gate_decision then retry." width="100%"}
+![Inspector in the cyan theme, on a document with a gate decision followed by a retry.](figures/inspector-retry.jpg){.fig fig-alt="The cyan replay viewer at the end of the run with its inspector open. It shows the document's station archive, status archived and attempt 1, and two events: 00:30.4 gate_decision gate, then 00:30.7 retry gate." width="100%"}
 
-![The ledger listing and its chain verification.](figures/ledger.jpg){.fig fig-alt="A table of six ledger entries with sequence, kind, run, document, time and hash columns, followed by a green message saying the chain is ok with head number six." width="100%"}
+![The ledger listing and its chain verification, in the cyan theme.](figures/ledger.jpg){.fig fig-alt="A cyan terminal page with a table of six ledger entries with seq, kind, run, doc, ts and hash columns, followed by the ledger verify command and a green line reading chain ok, 6 entries, head #6." width="100%"}
 
 ## Reproducibility
 

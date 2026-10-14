@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A deliberative persona framework that runs engineering decisions as courtroom proceedings, with a rule-bound vote, a written ruling and a saved transcript. It also contains a tamper-evident log library that the runner does not call yet. A design exploration, not an evaluated system.">
+
+<title>MORNINGSTAR — Jack J. Burleson</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+
+
+<link href="../assets/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<meta name="theme-color" content="#0e6f7a">
+<meta name="author" content="Jack J. Burleson">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image-width" content="1200">
+<meta name="twitter:image-height" content="630">
+<script>
+  // Apply the saved theme before first paint so there is no light/dark flash.
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+  // Motion styles apply only when the visitor has not asked for reduced motion.
+  try {
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
+  } catch (e) {}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Jack J. Burleson",
+  "url": "https://exios66.github.io/resume/",
+  "jobTitle": "AI / Machine Learning and Data Science",
+  "email": "mailto:jackjburleson@proton.me",
+  "address": { "@type": "PostalAddress", "addressLocality": "Madison", "addressRegion": "WI", "addressCountry": "US" },
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Madison" },
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Parkside" }
+  ],
+  "knowsAbout": ["Machine learning", "Natural language processing", "LLM evaluation", "Computer vision", "Behavioral data science"],
+  "sameAs": [
+    "https://www.linkedin.com/in/jackjburleson",
+    "https://github.com/Exios66"
+  ]
+}
+</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="MORNINGSTAR — Jack J. Burleson">
+<meta property="og:description" content="A deliberative persona framework that runs engineering decisions as courtroom proceedings, with a rule-bound vote, a written ruling and a saved transcript. It also contains a tamper-evident log library that the runner does not call yet. A design exploration, not an evaluated system.">
+<meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta property="og:site_name" content="Jack J. Burleson">
+<meta property="og:image:alt" content="Jack J. Burleson — AI / Machine Learning · Data Science">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:title" content="MORNINGSTAR — Jack J. Burleson">
+<meta name="twitter:description" content="A deliberative persona framework that runs engineering decisions as courtroom proceedings, with a rule-bound vote, a written ruling and a saved transcript. It also contains a tamper-evident log library that the runner does not call yet. A design exploration, not an evaluated system.">
+<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://exios66.github.io/resume/projects/llm-personas.html">
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+
+
+
+<header class="site-header">
+  <nav class="site-nav" aria-label="Main">
+    <a class="site-title" href="../index.html">Jack J. Burleson</a>
+    <ul class="nav-list">
+      <li><a class="nav-link" href="../index.html">Home</a></li>
+      <li><a class="nav-link" href="../about.html">About</a></li>
+      <li><a class="nav-link" href="../projects/index.html" aria-current="page">Projects</a></li>
+      <li><a class="nav-link" href="../research.html">Research</a></li>
+      <li><a class="nav-link" href="../writing/index.html">Writing</a></li>
+      <li><a class="nav-link" href="../resume.html">Résumé</a></li>
+      <li><button type="button" class="theme-toggle" aria-label="Switch theme"><svg class="icon i-sun" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg><svg class="icon i-moon" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg></button></li>
+    </ul>
+  </nav>
+</header>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-github" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></symbol><symbol id="i-linkedin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></symbol><symbol id="i-mail" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></symbol><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-download" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></symbol><symbol id="i-map-pin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol><symbol id="i-layers" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></symbol><symbol id="i-brain" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M19.938 10.5a4 4 0 0 1 .585.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M19.967 17.484A4 4 0 0 1 18 18"></path></symbol><symbol id="i-scale" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></symbol><symbol id="i-waves" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></symbol><symbol id="i-clock" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol></svg>
+<main id="main"><header id="title-block-header" class="quarto-title-block"></header>
+<div class="page">
+<p><a href="../projects/index.html" class="back"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>All projects</a></p>
+<div class="project-nav">
+<p><a href="../projects/llm-personas.html" aria-current="page"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../projects/llm-personas/report.html"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="https://github.com/Exios66/LLM_Personas"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
+</div>
+<h1 class="page-title" id="morningstar">MORNINGSTAR</h1>
+<p><span class="kicker">LLM agent design · prompt architecture</span></p>
+<p>The repository is called LLM_Personas. MORNINGSTAR is the name of the court inside it.</p>
+<h2 id="at-a-glance">At a glance</h2>
+<div class="stats">
+<div class="stat">
+<p><span class="stat-value">5</span> <span class="stat-label">voting personas, plus a judge who breaks ties and a scribe who records</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">27</span> <span class="stat-label">expert domains (25 can also be seated as specialists; 2 are advisory only)</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">62</span> <span class="stat-label">tests collected by pytest for the Python layer; I did not run them</span></p>
+</div>
+</div>
+<h2 id="the-problem">The problem</h2>
+<p>When I ask a model to choose between two designs, I usually get a smooth answer that agrees with whatever I leaned toward. I wanted a way to make it argue first. I also wanted the decision to leave a record: who said what, how the vote went, what the risk is, and who disagreed.</p>
+<p>MORNINGSTAR is my attempt. A decision about architecture, implementation or debugging is run as a courtroom proceeding with fixed roles, fixed voting rules and a fixed ruling format.</p>
+<h2 id="approach">Approach</h2>
+<figure class="diagram" role="img" aria-labelledby="morningstar-cap"><svg viewbox="0 0 800 362" aria-hidden="true" focusable="false"><defs><marker id="morningstar-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="10" y="36" width="164" height="86" rx="8"></rect><text x="92" y="61" text-anchor="middle" font-weight="600">matter</text><text x="92" y="81" text-anchor="middle">a decision to make</text><rect class="d-box" x="200" y="36" width="164" height="86" rx="8"></rect><text x="282" y="61" text-anchor="middle" font-weight="600">triage</text><text x="282" y="81" text-anchor="middle">feasibility F0-F5</text><rect class="d-box" x="390" y="36" width="164" height="86" rx="8"></rect><text x="472" y="61" text-anchor="middle" font-weight="600">cast</text><text x="472" y="81" text-anchor="middle">judge, voters,</text><text x="472" y="98" text-anchor="middle">and scribe</text><rect class="d-box" x="10" y="146" width="164" height="86" rx="8"></rect><text x="92" y="171" text-anchor="middle" font-weight="600">arguments</text><text x="92" y="191" text-anchor="middle">one per persona</text><rect class="d-box d-accent" x="200" y="146" width="164" height="86" rx="8"></rect><text x="282" y="171" text-anchor="middle" font-weight="600">vote tally</text><text x="282" y="191" text-anchor="middle">YES +1, NO -1</text><rect class="d-box" x="390" y="146" width="164" height="86" rx="8"></rect><text x="472" y="171" text-anchor="middle" font-weight="600">ruling</text><text x="472" y="191" text-anchor="middle">Decision, Vote,</text><text x="472" y="208" text-anchor="middle">Rationale, Risk,</text><text x="472" y="225" text-anchor="middle">Dissent</text><rect class="d-box" x="10" y="256" width="164" height="86" rx="8"></rect><text x="92" y="281" text-anchor="middle" font-weight="600">transcript</text><text x="92" y="301" text-anchor="middle">runner writes it</text><text x="92" y="318" text-anchor="middle">to a markdown file</text><rect class="d-box d-muted" stroke-dasharray="5 4" x="200" y="256" width="164" height="86" rx="8"></rect><text class="d-muted" x="282" y="281" text-anchor="middle" font-weight="600">executive</text><text class="d-muted" x="282" y="301" text-anchor="middle">carries out rulings</text><text class="d-muted" x="282" y="318" text-anchor="middle">library, not yet</text><text class="d-muted" x="282" y="335" text-anchor="middle">called by runner</text><rect class="d-box d-muted" stroke-dasharray="5 4" x="390" y="256" width="164" height="86" rx="8"></rect><text class="d-muted" x="472" y="281" text-anchor="middle" font-weight="600">watchdog</text><text class="d-muted" x="472" y="301" text-anchor="middle">checks the log</text><text class="d-muted" x="472" y="318" text-anchor="middle">library, not yet</text><text class="d-muted" x="472" y="335" text-anchor="middle">called by runner</text><path class="d-arrow" d="M174 79H198" marker-end="url(#morningstar-ah)"></path><path class="d-arrow" d="M364 79H388" marker-end="url(#morningstar-ah)"></path><path class="d-arrow" d="M472 122V134H92V144" marker-end="url(#morningstar-ah)"></path><path class="d-arrow" d="M174 189H198" marker-end="url(#morningstar-ah)"></path><path class="d-arrow" d="M364 189H388" marker-end="url(#morningstar-ah)"></path><path class="d-arrow" d="M472 232V244H92V254" marker-end="url(#morningstar-ah)"></path><rect class="d-muted" fill="none" stroke-dasharray="5 4" stroke-width="1.2" x="596" y="10" width="194" height="342" rx="12"></rect><text class="d-muted" x="608" y="29" font-size="12" font-weight="600">Cast: all one model</text><rect class="d-box" x="606" y="40" width="174" height="50" rx="8"></rect><text x="693" y="61" text-anchor="middle" font-weight="600">Judge</text><text x="693" y="79" text-anchor="middle">breaks ties only</text><rect class="d-box" x="606" y="100" width="174" height="50" rx="8"></rect><text x="693" y="121" text-anchor="middle" font-weight="600">5 voting personas</text><text x="693" y="139" text-anchor="middle">architect to counsel</text><rect class="d-box" x="606" y="160" width="174" height="50" rx="8"></rect><text x="693" y="181" text-anchor="middle" font-weight="600">Scribe</text><text x="693" y="199" text-anchor="middle">records, no vote</text><rect class="d-box" x="606" y="220" width="174" height="50" rx="8"></rect><text x="693" y="241" text-anchor="middle" font-weight="600">Witnesses</text><text x="693" y="259" text-anchor="middle">optional, 0 votes</text><rect class="d-box" x="606" y="280" width="174" height="50" rx="8"></rect><text x="693" y="301" text-anchor="middle" font-weight="600">Specialists</text><text x="693" y="319" text-anchor="middle">1 vote each, F3+</text><path class="d-arrow d-muted" d="M554 79H594" marker-end="url(#morningstar-ah)"></path></svg><figcaption id="morningstar-cap">The MORNINGSTAR flow: a matter is triaged on a feasibility scale, the cast argues and votes, and the ruling goes into a transcript that the runner writes to a file. In the runner, one model call plays every seat in the cast. The executive layer, with its hash-chained log and watchdog, is drawn dashed and detached because it is a separate, tested library that the runner does not call yet.</figcaption></figure>
+<p>A matter is first rated for feasibility, from F0 to F5. F3 and above must be deliberated. F4 requires a transcript and F5 a full record. The court has a judge who votes only to break a tie, five voting personas (Architect, Engineer, Debugger, Prophet and Counsel), a scribe who records and does not vote, and a non-voting consultant persona. Witnesses can be called in with zero votes. For F3 and above the judge may seat specialists with one vote each.</p>
+<p>Each persona argues in turn. Votes are cast in a fixed order, a vote of yes counts +1 and no counts -1, and a motion passes if yes votes exceed no votes. The ruling has five parts: Decision, Vote, Rationale, Risk and Dissent.</p>
+<div class="caveat">
+<p><strong>Heads up.</strong> In the runner, one model plays the whole court. <code>litigation/run.py</code> builds one large prompt and makes one completion call. The judge, the five voters and the scribe are all the same model, in the same pass. This is not a swarm of separate models. I chose it because it is cheap and simple, but it limits what the vote can tell you.</p>
+</div>
+<h2 id="what-i-built">What I built</h2>
+<ul>
+<li><strong>Personas as files.</strong> Most of the repository, about 54,000 lines, is markdown: personas, rules, checklists and templates. About 5,700 lines are Python.</li>
+<li><strong>Two ways to use it.</strong> Five Cursor agent definitions in <code>.cursor/agents/</code> (four are also under <code>agents/</code>), driven by commands such as <code>/morningstar</code>, <code>/summon &lt;domain&gt;-expert</code> and <code>/seat &lt;domain&gt;-specialist</code>. Or a command-line runner that works with Ollama, LM Studio or OpenRouter.</li>
+<li><strong>Four proceeding types.</strong> Standard, expedited, special-interest hearing (findings only, no vote) and contempt hearing.</li>
+<li><strong>A record.</strong> Case IDs look like <code>2026-DEL-005-001</code> (year, category, case number, deliberation number), with the next number kept in a registry file. Session state is a markdown file checked against a written schema.</li>
+<li><strong>An executive layer, not wired in.</strong> A library with tests: a hash-chained, append-only log of rulings, HMAC proofs for overrides, a watchdog that checks actions against approvals, and a small file-based quorum vote. The runner does not call it yet, so its transcripts are not written to the hash-chained log.</li>
+<li><strong>Context controls.</strong> The prompt assembler has nine include toggles, and the runner caps the response length, so a small local model can still take part.</li>
+<li><strong>A browser UI and a proxy.</strong> <code>index.html</code> is a live UI. <code>backend/server.js</code> is an Express proxy that keeps the API key on the server.</li>
+</ul>
+<h2 id="results">Results</h2>
+<p>There are no results to report. I have never compared MORNINGSTAR with a single plain prompt, so I cannot say it gives better decisions. It is a design exploration.</p>
+<p>What I can say is what it produced. The project’s own metrics file reports 13 deliberations and 12 decisions: 8 unanimous, 3 split and no tie-breakers. Those categories add up to 11, not 12, so the file is not fully consistent with itself. A set of July 2026 rulings covered controls for agents that change production systems, export controls on open-weight models, agent-authored legal filings and attribution of agentic cyber attacks. Those numbers are self-reported by the same system, and unanimity from one model voting with itself is a weak signal.</p>
+<p>I have not added screenshots, because there is no interface worth showing in a still.</p>
+<h2 id="what-i-learned">What I learned</h2>
+<ul>
+<li>A written ruling format forces the model to state a risk and a dissent. That is useful even when the vote is not.</li>
+<li>Most of the value I can see is in the structure and the record, not in the vote.</li>
+<li>Saying “one model, one call” plainly changes how much weight the unanimous votes deserve.</li>
+<li>A design with no baseline is easy to like and hard to defend. The next step is a paired comparison, described in the report.</li>
+</ul>
+<h2 id="stack">Stack</h2>
+<p><span class="tag">Markdown</span> <span class="tag">Python</span> <span class="tag">YAML</span> <span class="tag">Ollama</span> <span class="tag">LM Studio</span> <span class="tag">OpenRouter</span> <span class="tag">Node.js</span> <span class="tag">Express</span> <span class="tag">pytest</span></p>
+</div>
+
+</main>
+<footer class="site-footer">
+  <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
+</footer>
+<script src="../assets/js/site.js" defer=""></script>
+
+<script>
+  // Theme toggle: switches to the opposite of what is currently shown and remembers the choice.
+  // Print button: opens the browser print dialog.
+  (function () {
+    var root = document.documentElement;
+    /** Return a nonempty data-theme value, or the system's dark/light preference. */
+    function current() {
+      var set = root.getAttribute("data-theme");
+      if (set) return set;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    /** Set the button's accessible label and icon (via data-mode) to offer the opposite theme. */
+    function label(btn) {
+      var dark = current() === "dark";
+      btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+      btn.setAttribute("data-mode", dark ? "dark" : "light");
+    }
+    var toggle = document.querySelector(".theme-toggle");
+    if (toggle) {
+      label(toggle);
+      toggle.addEventListener("click", function () {
+        var next = current() === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+        label(toggle);
+      });
+    }
+    var print = document.querySelector(".print-btn");
+    if (print) {
+      print.addEventListener("click", function (e) { e.preventDefault(); window.print(); });
+    }
+  })();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+    tabsets.forEach(function(tabset) {
+      const tabby = new Tabby('#' + tabset.id);
+    });
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/exios66\.github\.io\/resume");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+
+
+
+
+</body></html>

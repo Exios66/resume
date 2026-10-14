@@ -1,0 +1,6 @@
+mae-rf-vs-llm.jpg <- source repo: memos/figures/fig_mae_ml_vs_llm.png
+ml-baseline-mae-group.jpg <- source repo: docs/figures/ml_baseline_mae_group.png
+shap-ml-vs-llm.jpg <- source repo: memos/figures/fig_shap_ml_vs_llm_compare.png
+band-discrimination-auc.jpg <- source repo: memos/figures/fig_band_discrimination_auc.png
+ca-by-employment.jpg <- source repo: docs/figures/eda_ca_by_employment.png
+All five are aggregate charts (means, error rates, AUCs, feature importances). None shows participant-level rows, identifiers, free text or coordinates. The latitude/longitude scatter was deliberately not used.
