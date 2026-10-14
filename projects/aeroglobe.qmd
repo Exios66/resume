@@ -1,0 +1,85 @@
+---
+pagetitle: "AeroGlobe — Jack J. Burleson"
+description: "A 3D flight-tracking globe in active development: a React and CesiumJS client over a static data pipeline, with a plan to play back historical flights without an always-on server."
+---
+
+::: {.page}
+
+[← All projects](index.qmd){.back}
+
+::: {.project-nav}
+[Case study](aeroglobe.qmd){aria-current="page"} [Code](https://github.com/Exios66/aeroglobe)
+:::
+
+# AeroGlobe {.page-title}
+
+[In active development · data pipeline & 3D visualization]{.kicker}
+
+A browser-based 3D globe for flight tracking. It is a work in progress: the pieces described here exist today, and the parts marked as planned do not.
+
+::: {.actions}
+[View the code](https://github.com/Exios66/aeroglobe){.btn .primary}
+:::
+
+::: {.caveat}
+**Work in progress.** The repository is being built right now, so this page will change. It describes the state of the code in October 2026. There is no public demo to link to yet.
+:::
+
+## At a glance
+
+::: {.stats}
+::: {.stat}
+[257]{.stat-value} [passing tests in 32 files, with lint, type-checking and the production build all clean]{.stat-label}
+:::
+::: {.stat}
+[4]{.stat-value} [stages in the data pipeline: normalize, segment, chunk, catalog]{.stat-label}
+:::
+::: {.stat}
+[4,900]{.stat-value} [lines of TypeScript across the client, server, pipeline and shared code]{.stat-label}
+:::
+:::
+
+## The problem
+
+Most flight trackers show what is in the air now. I wanted to look at flights that have already happened: where an aircraft went, how a route looked over a day, and what a busy hour of global traffic looks like on a globe. That is a data problem before it is a graphics problem. Bulk historical flight logs are large, free and awkward, and a live API gives you only a short window.
+
+My first version was live-first, polling an API every 15 seconds. Auditing it showed that a historical view needs a different shape: process the data ahead of time, publish it as static files, and let the browser do the rest.
+
+## Approach
+
+{{< include ../partials/diagrams/_aeroglobe.qmd >}}
+
+The client is React and TypeScript with CesiumJS for the globe. State lives in Zustand stores, and search and filtering work on a set derived from the flight store. A small Express server proxies the live feed for local development.
+
+The data side is a Node and TypeScript pipeline. It takes state vectors, turns them into per-aircraft tracks, splits each track into flights, slices the tracks into hourly chunks and writes a catalog. The output is plain JSON that a static host can serve, so there is no database and no always-on API. The pipeline puts a size limit on each hourly chunk and throws an error when a chunk goes over it.
+
+## What I built
+
+- **The globe client.** A Cesium viewer with aircraft markers, search, filters for region, altitude, status and airline, a flight detail card, a flight list and a dark and light skin.
+- **A static data pipeline.** Normalization, flight segmentation, hourly chunking and a catalog, with a snapshot command that writes one OpenSky snapshot and a fixture command that writes a deterministic set of generated traces for offline work.
+- **Reference data.** Airport and airline tables built from public sources, with the source and licence of each recorded next to the file.
+- **Tests and checks.** The repository's continuous integration runs lint, the type-checker, the tests and the build on every push and pull request.
+
+## What is planned
+
+The design spec for the next stage is a draft. In outline:
+
+- a source adapter for bulk historical flight days;
+- a playback engine that interpolates positions in the browser, with a clock and a day picker;
+- flown trails, inferred routes between airports and a time-zone overlay;
+- a per-aircraft history panel;
+- a personal flight logbook kept in the browser.
+
+None of these is built yet, and the spec may change as I build.
+
+## What I'm learning
+
+- Choose where the work happens before choosing the framework. Moving the heavy work into a build step is what makes a historical view possible without running a server.
+- Fixtures are worth building early. Because the pipeline can run on generated traces, every stage has a test that needs no network.
+- An audit of my own first version was more useful than adding features to it.
+
+## Stack
+
+[TypeScript]{.tag} [React]{.tag} [CesiumJS]{.tag} [Zustand]{.tag} [Vite]{.tag} [Node]{.tag} [Express]{.tag} [Vitest]{.tag}
+
+:::

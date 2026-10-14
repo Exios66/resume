@@ -22,6 +22,8 @@ Each project has a case study on the [portfolio](https://exios66.github.io/resum
 - [Mailroom-ML](https://exios66.github.io/resume/projects/mailroom-ml.html): a calibrated ModernBERT classifier that handles routine documents and knows when to hand off to an LLM.
 - [Mailroom Reloaded](https://exios66.github.io/resume/projects/mailroom-reloaded.html): the mailroom rebuilt as one deployable service, with an audit log of every decision.
 - [RVL-CDIP-Classifier](https://exios66.github.io/resume/projects/rvl-cdip-classifier.html): zero-shot document classification with vision LLMs, with tracked prompt versions and cost per page.
+- [Mailroom-Corpus-EDA](https://exios66.github.io/resume/projects/mailroom-corpus-eda.html): the data engineering behind the mailroom dataset: 3,302 documents from public sources, with provenance, label separation and an audit pipeline.
+- [AeroGlobe](https://exios66.github.io/resume/projects/aeroglobe.html): a 3D flight-tracking globe built around a static data pipeline; in active development.
 - [Psychometric Digital Twin](https://exios66.github.io/resume/projects/psychometric-digital-twin.html): LLM "digital twin" personas against seven classical models on 241 survey respondents; the personas did not beat simple baselines.
 - [MORNINGSTAR](https://exios66.github.io/resume/projects/llm-personas.html): a courtroom of LLM personas that argue, vote, and rule on engineering decisions.
 - [Wave Laboratory](https://exios66.github.io/resume/projects/wave-laboratory.html): a real-time 3D ocean and ship-motion sandbox that runs in the browser.
