@@ -22,7 +22,7 @@ An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages
 
 - `_quarto.yml` holds site settings: URL, descriptions, Open Graph/Twitter cards, canonical links, sitemap.
 - `scripts/site.lua` adds the header, `<main>` landmark, and footer to every page, with links that work from any folder depth. It also adds icons from an inline SVG sprite (shapes follow [Lucide](https://lucide.dev/), ISC license); every icon carries `width`/`height="1em"` so it stays small even if `styles.css` fails to load. (Quarto's own navbar needs a Bootstrap theme, which this site doesn't use.)
-- `styles.css` holds the whole design: light/dark themes, mobile layout, print layout. Fonts (Source Serif 4 for headings, Inter for text and UI) are self-hosted in `assets/fonts/`.
+- `styles.css` holds the whole design: light/dark themes, mobile layout, print layout. Fonts (Newsreader for the display headings, Inter for text and UI, JetBrains Mono for code) are self-hosted in `assets/fonts/`.
 - `partials/` holds the head metadata (JSON-LD `Person` schema, theme bootstrapping), skip link, and the small theme-toggle script.
 - `scripts/post-render.py` runs after every render. It recreates `docs/.nojekyll`, removes the repeated site name from page titles, adds a `?v=<hash>` to the `styles.css` links, and prints `resume.html` to `assets/Jack_Burleson_Resume.pdf`. The PDF is refreshed only when that step succeeds; without Playwright or Chromium the committed PDF is kept, so re-check it after editing the résumé.
 - `scripts/og-image.html` + `scripts/make-og.py` regenerate the social preview image `assets/og-image.png`.
