@@ -11,6 +11,13 @@ I'm an M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madi
 
 I build AI systems from start to finish: multi-agent document pipelines, transformer fine-tuning and calibration, LLM evaluation, computer vision classification, and behavioral prediction models. Before graduate school I spent five years in high-volume logistics and operations, working on quality assurance, documentation, and process improvement. That background is why I care about error rates, reproducibility, and cost as much as accuracy.
 
+## Interests
+
+- **Document AI:** reading, sorting, and extracting information from real-world paperwork. See the [document-intelligence projects](projects/index.qmd).
+- **Evaluation and calibration:** held-out testing, confidence that means something, and honest error analysis.
+- **Simulation and graphics:** physics-based, interactive software in the browser. See [Wave Laboratory](projects/wave-laboratory.qmd).
+- **Behavior and cognition:** what predicts how people act, and where models of people go wrong.
+
 ## Technical Skills
 
 ::: {.skills}

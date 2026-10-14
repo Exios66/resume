@@ -1,0 +1,9 @@
+hdr-bloom-off.jpg <- source repo: wave-laboratory/docs/screenshots/hdr-bloom-off.jpg
+hdr-bloom-on.jpg <- source repo: wave-laboratory/docs/screenshots/hdr-bloom-on.jpg
+underwater-coastal-9.jpg <- source repo: wave-laboratory/docs/screenshots/underwater-coastal-9.jpg
+underwater-hull.jpg <- source repo: wave-laboratory/docs/screenshots/underwater-hull.jpg
+underwater-oceanic-i.jpg <- source repo: wave-laboratory/docs/screenshots/underwater-oceanic-i.jpg
+underwater-snells-window.jpg <- source repo: wave-laboratory/docs/screenshots/underwater-snells-window.jpg
+overview-light.jpg <- new capture of the live app (vite preview build of wave-laboratory main, Playwright + SwiftShader, 1200x750)
+overview-dark.jpg <- new capture, same method
+rogue-wave.jpg <- new capture, same method

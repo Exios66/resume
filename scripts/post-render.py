@@ -7,9 +7,13 @@
    résumé always matches the page. Needs `pip install playwright` and a Chromium
    build; if either is missing the step is skipped with a warning and the
    committed PDF is left untouched.
+3. Drops the " – <site title>" suffix Quarto adds to <title> when the page
+   title already names the site, so tabs do not repeat the name.
 """
 import glob
+import html
 import os
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -80,11 +84,45 @@ def build_pdf():
     return True
 
 
+def site_title():
+    """Return website.title from _quarto.yml, or None if it is not set."""
+    try:
+        config = (ROOT / "_quarto.yml").read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return None
+    match = re.search(r"""^website:\n(?:[ \t]+.*\n)*?[ \t]+title:\s*(["']?)(.+?)\1\s*$""", config, re.M)
+    return match.group(2) if match else None
+
+
+def dedupe_title(text, site):
+    """Remove Quarto's site-title suffix from <title> when the page title already contains it."""
+    escaped = re.escape(html.escape(site, quote=False))
+
+    def fix(match):
+        page = match.group(1)
+        return f"<title>{page}</title>" if re.search(escaped, page) else match.group(0)
+
+    return re.sub(r"<title>([^<]*?) – " + escaped + r"</title>", fix, text, count=1)
+
+
+def dedupe_titles():
+    """Apply dedupe_title to every rendered page."""
+    site = site_title()
+    if not site:
+        return
+    for page in DOCS.rglob("*.html"):
+        text = page.read_text(encoding="utf-8")
+        fixed = dedupe_title(text, site)
+        if fixed != text:
+            page.write_text(fixed, encoding="utf-8")
+
+
 def main():
     """Prepare docs for GitHub Pages, remove the search index, and build the PDF."""
     DOCS.mkdir(exist_ok=True)
     (DOCS / ".nojekyll").touch()
     (DOCS / "search.json").unlink(missing_ok=True)
+    dedupe_titles()
     build_pdf()
 
 

@@ -1,32 +1,83 @@
 ---
 pagetitle: "RVL-CDIP-Classifier — Jack J. Burleson"
-description: "A Python toolkit that converts document pages to 300-DPI images, runs OCR, and classifies them into 16 RVL-CDIP categories with vision models, using 17+ prompt iterations."
+description: "A prompt-engineering study that sorts scanned documents into the 16 RVL-CDIP categories with an off-the-shelf vision model, reporting 82.6% on a larger 1,120-image slice that overlaps the 800-image slice; its overlap with the 160-image tuning slice was not verified."
 ---
 
 ::: {.page}
 
 [← All projects](index.qmd){.back}
 
+::: {.project-nav}
+[Case study](rvl-cdip-classifier.qmd){aria-current="page"} [Technical report](rvl-cdip-classifier/report.qmd) [Code](https://github.com/Exios66/RVL-CDIP-Classifier)
+:::
+
 # RVL-CDIP-Classifier {.page-title}
 
-[Computer vision & prompt engineering]{.kicker}
+[Vision LLMs & prompt engineering]{.kicker}
 
-## Overview
+## At a glance
 
-A toolkit for testing how well general-purpose vision models can sort scanned documents, built so prompts and models can be compared on evidence instead of impressions.
+::: {.stats}
+::: {.stat}
+[82.6%]{.stat-value} [accuracy on 1,120 images (925 correct). The slice shares at least 320 images with the 800-image slice; overlap with tuning not verified]{.stat-label}
+:::
+::: {.stat}
+[99.4%]{.stat-value} [on the 160-image slice I tuned against, so an optimistic number]{.stat-label}
+:::
+::: {.stat}
+[29]{.stat-value} [registered prompt versions, v0 to v19]{.stat-label}
+:::
+::: {.stat}
+[≈ $0.0004]{.stat-value} [per image for the main model]{.stat-label}
+:::
+:::
+
+## The problem
+
+RVL-CDIP is the standard benchmark for document-type classification: scanned pages from a tobacco-litigation archive, sorted into 16 classes such as invoice, memo, letter and budget. Models trained for it usually need labeled data and a fine-tuning pipeline. I wanted to know how far a general-purpose vision model could get with no training at all, using only the prompt, and what that would cost.
+
+## Approach
+
+The model gets the page image and a long written prompt. The prompt names the 16 classes and then walks through an ordered list of checks, so that a page is judged by what it does rather than what it is about. I changed the prompt one version at a time and scored every version the same way, so each change could be traced to a number.
+
+{{< include ../partials/diagrams/_rvl-cdip.qmd >}}
 
 ## What I built
 
-- A Python toolkit that converts TIFF/PDF pages to 300-DPI images, runs OCR, and sorts documents into the 16 RVL-CDIP categories using OpenRouter vision models.
-- More than 17 prompt iterations, each evaluated the same way.
-- Confusion matrices, misclassification analyses, and cost projections used to choose prompts and models.
+- **Preprocessing tools.** A document processor converts TIFF and PDF pages to 300-DPI grayscale images and runs Tesseract OCR to get text with bounding boxes.
+- **The classifier path.** The evaluated classifier does not use that OCR output. It sends the vision model only a 1024×1024 grayscale image plus the prompt, through OpenRouter.
+- **Versioned prompts.** `src/prompts.py` holds every version, append-only, with a registry I can query by name.
+- **Evaluation harness.** Balanced, deduplicated slices of the dataset, exact-match scoring, per-class tables, confusion matrices, billed-cost tracking, and a Monte Carlo module that simulates voting and routing on top of the measured results.
+- **Tests.** 318 test functions across 21 test files.
+
+## Results
+
+On the 160-image slice, accuracy climbed from 80.1% at v1 to 99.4% at v11.8. That is a tuning-slice number. I read the misses on that slice and wrote rules for them, so it overstates what the prompt can do on pages it has not seen.
+
+![Accuracy of qwen3.7-flash on the 160-image tuning slice across prompt versions, rising from 80.1% at v1 to 99.4% at v11.8.](rvl-cdip-classifier/figures/f1_accuracy_arc.svg){.fig fig-alt="Line chart of exact-match accuracy on the 160-image tuning slice for prompt versions v1, v4, v7, v10, v11 and v11.8, rising from 80.1 percent to 99.4 percent." width="100%"}
+
+The honest headline comes from larger slices. The same v11.8 prompt scored 82.6% on a balanced 1,120-image slice. That slice is a seeded, class-balanced sample of 70 images per class from the Hugging Face mirror of RVL-CDIP, which holds 100 per class across its three splits. The 800-image slice is the mirror's train split (50 per class), so the two slices share at least 20 images per class, 320 in all, and the 83.1% and 82.6% results are not independent. I did not verify whether the 1,120-image slice shares images with the 160-image tuning slice. Across slice sizes it scored 87.2% at 320 images, 89.1% at 476 scored images, and 83.1% at 800. On that 800-image slice, the untuned v0 prompt scored 66.1%, so the prompt work is worth about 17 points on that slice. I did not check whether the 800-image slice shares images with the 160-image tuning slice either.
+
+![v11.8 accuracy by slice size: 99.4% on the 160-image tuning slice, then 87.2%, 89.1%, 83.1% and 82.6% on larger slices. The 800- and 1,120-image slices overlap.](rvl-cdip-classifier/figures/f2_generalization_falloff.svg){.fig fig-alt="Line chart of v11.8 exact-match accuracy against slice size, falling from 99.4 percent at 160 images to 87.2, 89.1, 83.1 and 82.6 percent at 320, 480, 800 and 1,120 images." width="100%"}
+
+::: {.caveat}
+**Heads up.** The 160-image points in both charts come from the slice I iterated on. The 1,120-image point is the one to quote. The 1,120-image slice shares at least 20 images per class with the 800-image slice, so those two results are not independent evidence. I did not check it against the 160-image tuning slice or the other earlier slices, so it may share images with them. Treat it as a better estimate than the tuning slice, not as a clean test.
+:::
+
+Where it fails is consistent. Budget (67.1%), letter (70.0%), presentation (70.0%) and scientific report (71.4%) are the weak classes on the 1,120 run, and the most common single error is letter predicted as memo (16 cases). In 72 of the misses, the correct class was the model's own runner-up.
+
+## What I learned
+
+- **Tuning accuracy is not accuracy.** Fixing named misses one by one pushed the tuning slice to 99.4% while larger slices stayed in the low 80s. Later versions made this worse in places: a longer v16 prompt dropped to 96.2% on the tuning slice and scored 83.8% and 79.4% on two fresh slices.
+- **Simulation needs a measurement behind it.** The Monte Carlo model suggested sending the least-confident pages to a stronger model. When I ran that, accuracy went down slightly (96.2% to 94.3% on the tuning slice) at about 7.5 times the cost.
+- **More resolution did not help.** Full-size 2550×3300 images doubled prompt tokens and did not improve accuracy in an early comparison.
 
 ## Stack
 
-[Python]{.tag} [OCR]{.tag} [OpenRouter vision models]{.tag} [Prompt engineering]{.tag} [Error analysis]{.tag}
+[Python]{.tag} [OpenRouter]{.tag} [Vision-language models]{.tag} [Prompt engineering]{.tag} [Tesseract OCR]{.tag} [Monte Carlo simulation]{.tag} [Error analysis]{.tag} [pytest]{.tag}
 
-## Results and links
+## Credits
 
-<!-- TODO: add the best prompt/model accuracy, a confusion matrix image, the cost-per-1k-documents projection, and the repo link. -->
+Built with co-author Grant Mooslin, advised by Siddharth Suresh. The dataset is RVL-CDIP (Harley, Ufkes and Derpanis, 2015).
 
 :::

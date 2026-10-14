@@ -205,5 +205,45 @@ class SocialImageTests(BrowserTestCase):
         self.factory.return_value.__exit__.assert_called_once()
 
 
+class TitleTests(unittest.TestCase):
+    dedupe = staticmethod(POST["dedupe_title"])
+
+    def test_drops_suffix_when_page_title_names_site(self):
+        page = "<head><title>Wave Laboratory — Jack J. Burleson – Jack J. Burleson</title></head>"
+        self.assertEqual(self.dedupe(page, "Jack J. Burleson"),
+                         "<head><title>Wave Laboratory — Jack J. Burleson</title></head>")
+
+    def test_keeps_suffix_when_page_title_omits_site(self):
+        page = "<title>Résumé – Jack J. Burleson</title>"
+        self.assertEqual(self.dedupe(page, "Jack J. Burleson"), page)
+
+    def test_is_idempotent(self):
+        once = self.dedupe("<title>A — Jack J. Burleson – Jack J. Burleson</title>", "Jack J. Burleson")
+        self.assertEqual(self.dedupe(once, "Jack J. Burleson"), once)
+
+    def test_reads_site_title_from_config(self):
+        self.assertEqual(POST["site_title"](), "Jack J. Burleson")
+
+    def test_escapes_site_title(self):
+        page = "<title>R&amp;D — A &amp; B – A &amp; B</title>"
+        self.assertEqual(self.dedupe(page, "A & B"), "<title>R&amp;D — A &amp; B</title>")
+
+    def test_rewrites_rendered_pages(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "_quarto.yml").write_text("website:\n  title: 'Site'\n", encoding="utf-8")
+            docs = root / "docs"
+            (docs / "sub").mkdir(parents=True)
+            page = docs / "sub" / "a.html"
+            page.write_text("<title>A — Site – Site</title>", encoding="utf-8")
+            with patch.dict(GLOBALS, {"ROOT": root, "DOCS": docs}):
+                POST["dedupe_titles"]()
+            self.assertEqual(page.read_text(encoding="utf-8"), "<title>A — Site</title>")
+
+    def test_missing_config_skips(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.dict(GLOBALS, {"ROOT": Path(tmp)}):
+            self.assertIsNone(POST["site_title"]())
+
+
 if __name__ == "__main__":
     unittest.main()

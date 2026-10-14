@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published.">
+
+<title>Mailroom Reloaded: technical report — Jack J. Burleson</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<meta name="theme-color" content="#0e6f7a">
+<meta name="author" content="Jack J. Burleson">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image-width" content="1200">
+<meta name="twitter:image-height" content="630">
+<script>
+  // Apply the saved theme before first paint so there is no light/dark flash.
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Jack J. Burleson",
+  "url": "https://exios66.github.io/resume/",
+  "jobTitle": "AI / Machine Learning and Data Science",
+  "email": "mailto:jackjburleson@proton.me",
+  "address": { "@type": "PostalAddress", "addressLocality": "Madison", "addressRegion": "WI", "addressCountry": "US" },
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Madison" },
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Parkside" }
+  ],
+  "knowsAbout": ["Machine learning", "Natural language processing", "LLM evaluation", "Computer vision", "Behavioral data science"],
+  "sameAs": [
+    "https://www.linkedin.com/in/jackjburleson",
+    "https://github.com/Exios66"
+  ]
+}
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Mailroom Reloaded: technical report — Jack J. Burleson">
+<meta property="og:description" content="Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published.">
+<meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta property="og:site_name" content="Jack J. Burleson">
+<meta property="og:image:alt" content="Jack J. Burleson — AI / Machine Learning · Data Science">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:title" content="Mailroom Reloaded: technical report — Jack J. Burleson">
+<meta name="twitter:description" content="Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published.">
+<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://exios66.github.io/resume/projects/mailroom-reloaded/report.html">
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+
+
+
+<header class="site-header">
+  <nav class="site-nav" aria-label="Main">
+    <a class="site-title" href="../../index.html">Jack J. Burleson</a>
+    <ul class="nav-list">
+      <li><a class="nav-link" href="../../index.html">Home</a></li>
+      <li><a class="nav-link" href="../../about.html">About</a></li>
+      <li><a class="nav-link" href="../../projects/index.html" aria-current="page">Projects</a></li>
+      <li><a class="nav-link" href="../../research.html">Research</a></li>
+      <li><a class="nav-link" href="../../writing/index.html">Writing</a></li>
+      <li><a class="nav-link" href="../../resume.html">Résumé</a></li>
+      <li><button type="button" class="theme-toggle" aria-label="Switch theme"></button></li>
+    </ul>
+  </nav>
+</header>
+<main id="main"><header id="title-block-header" class="quarto-title-block"></header>
+<div class="page">
+<p><a href="../../projects/mailroom-reloaded.html" class="back">← Case study</a></p>
+<div class="project-nav">
+<p><a href="../../projects/mailroom-reloaded.html">Case study</a> <a href="../../projects/mailroom-reloaded/report.html" aria-current="page">Technical report</a> <a href="https://github.com/Exios66/mailroom-reloaded">Code</a></p>
+</div>
+<h1 class="page-title" id="mailroom-reloaded-technical-report">Mailroom Reloaded: technical report</h1>
+<p><span class="kicker">Agentic document pipeline · deployable rebuild</span></p>
+<h2 id="summary">Summary</h2>
+<p>Mailroom Reloaded is a single deployable service that ingests documents, classifies them, extracts structured fields and archives them with a verifiable audit trail. It is built on CrewAI Flows, but a deterministic driver, not the framework’s event engine, owns control flow. Agents are called at fixed points, and routing between them is plain threshold code. A clean text-layer document costs exactly two LLM calls.</p>
+<p>The package is version 0.4.2 and requires Python 3.11 or 3.12. No accuracy or cost results are committed to the repository, so this report publishes none. It describes what the system does and the evidence that it runs.</p>
+<h2 id="system-and-data">System and data</h2>
+<p>The canonical main path is <code>ingest</code>, <code>bert_primary</code>, <code>sort</code>, <code>gate_classify</code>, <code>extract</code>, <code>gate_extract</code>, then <code>report_catalog_archive</code> (<code>pipeline/state.py</code>). The two gates are pure route computations. <code>verify</code>, <code>boss</code>, <code>human_review</code> and an evaluation-only <code>grade</code> step are dispatched by the driver outside that tuple.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Node</th>
+<th>Kind</th>
+<th>Module</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ingest</code></td>
+<td>deterministic: text normalisation, PDF text layer, else vision transcription</td>
+<td><code>ingest/clerk.py</code>, <code>ingest/pdf.py</code>, <code>ingest/vision.py</code></td>
+</tr>
+<tr class="even">
+<td><code>bert_primary</code></td>
+<td>local ModernBERT classification plus a handoff policy; fails open</td>
+<td><code>ingest/bert.py</code></td>
+</tr>
+<tr class="odd">
+<td><code>sort</code></td>
+<td>LLM call 1: structured sorter</td>
+<td><code>agents/sorter.py</code></td>
+</tr>
+<tr class="even">
+<td><code>gate_classify</code>, <code>gate_extract</code></td>
+<td>deterministic route decisions, zero LLM calls</td>
+<td><code>agents/gate.py</code>, <code>pipeline/flow.py</code></td>
+</tr>
+<tr class="odd">
+<td><code>extract</code></td>
+<td>LLM call 2: per-class specialist</td>
+<td><code>agents/specialists.py</code></td>
+</tr>
+<tr class="even">
+<td><code>verify</code></td>
+<td>LLM: judge, then arbiter</td>
+<td><code>agents/judge.py</code>, <code>agents/arbiter.py</code></td>
+</tr>
+<tr class="odd">
+<td><code>boss</code></td>
+<td>LLM: escalation and class reassignment</td>
+<td><code>agents/boss.py</code></td>
+</tr>
+<tr class="even">
+<td><code>report_catalog_archive</code></td>
+<td>deterministic: report, move to archive, catalog row</td>
+<td><code>pipeline/report.py</code>, <code>pipeline/archivist.py</code></td>
+</tr>
+<tr class="odd">
+<td><code>human_review</code></td>
+<td>deterministic: park in <code>review/</code></td>
+<td><code>pipeline/flow.py</code>, <code>review.py</code></td>
+</tr>
+</tbody>
+</table>
+<p>The driver is <code>MailroomFlow._drive_nodes</code> in <code>pipeline/flow.py</code>. The decorated <code>@start</code>, <code>@listen</code> and <code>@router</code> methods exist so the class is routable and plottable, and they delegate to the same guarded node implementations. The stated reasons for an explicit driver are that CrewAI rejects the literal self-loop wiring, and that crash resume and deadline enforcement need one deterministic traversal.</p>
+<h3 id="the-fast-path-and-its-failure-mode">The fast path and its failure mode</h3>
+<p><code>ingest</code> and <code>bert_primary</code> are local, so they add no LLM calls. If ModernBERT is flagged off, missing, given an oversized input, or raises, the adapter returns an “unavailable” verdict and the handoff forces a full sort. Classes listed under <code>defer_classes</code> (by default <code>contract</code> and <code>merger_agreement</code>) and multi-window verdicts also fall back to a full sort. The model comes from <a href="../../projects/mailroom-ml.html">Mailroom-ML</a> through the optional <code>bert</code> extra.</p>
+<h3 id="the-gates-and-their-escalation-paths">The gates and their escalation paths</h3>
+<p><code>BandGate</code> applies per-class thresholds from <code>config/taxonomy.yaml</code>. The global defaults are a high band of 0.95, a low band of 0.70, and <code>retry_max</code> of 2. Some classes override them.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Stage</th>
+<th>Condition</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>classify</td>
+<td>BERT and sorter disagree, not yet re-sorted</td>
+<td><code>re_sort</code> (once, as a full sort)</td>
+</tr>
+<tr class="even">
+<td>classify</td>
+<td>confidence at or above the high band</td>
+<td>proceed</td>
+</tr>
+<tr class="odd">
+<td>classify</td>
+<td>below high, retries left</td>
+<td>retry the sort</td>
+</tr>
+<tr class="even">
+<td>classify</td>
+<td>below high, retries spent</td>
+<td><code>human_review</code></td>
+</tr>
+<tr class="odd">
+<td>extract</td>
+<td>length-capped or schema-invalid output</td>
+<td>retry, then <code>human_review</code></td>
+</tr>
+<tr class="even">
+<td>extract</td>
+<td>confidence at or above <code>judge_band_high</code></td>
+<td>proceed</td>
+</tr>
+<tr class="odd">
+<td>extract</td>
+<td>between low and <code>judge_band_high</code></td>
+<td><code>verify</code> (judge, then arbiter)</td>
+</tr>
+<tr class="even">
+<td>extract</td>
+<td>below low, retries left</td>
+<td>retry the extraction</td>
+</tr>
+<tr class="odd">
+<td>extract</td>
+<td>below low, retries spent</td>
+<td><code>boss</code></td>
+</tr>
+</tbody>
+</table>
+<p>The arbiter’s verdict maps <code>accept</code> and <code>accept_with_caveats</code> to report, <code>re_extract</code> to a retry, and <code>escalate</code> to the boss. The boss can reassign the class once, after which the document is extracted again, send the document to human review, or accept it. If the arbiter asks for a re-extraction after the retries are spent, the document goes to human review.</p>
+<p>The gate slot is pluggable. A <code>LearnedGate</code> (logistic model stored as plain JSON) loads when <code>models/route_gate.json</code> exists. It overrides the band only inside the medium band and never a hard rule.</p>
+<h3 id="jev-the-opt-in-decision-model">Jev, the opt-in decision model</h3>
+<p>Jev (the “TypeSafe System One”) is a probabilistic decision model, not a text generator. It returns typed answers: a <code>choice</code> with a probability distribution, a <code>noul</code> (a single probability of yes), or a <code>score</code>. The gate asks it two questions: which route (<code>proceed</code>, <code>retry</code>, <code>verify</code>, <code>boss</code> or <code>human_review</code>) and whether to escalate to a human. Its confidence is derived from the concentration of the probability distribution, so it must be re-scaled by a calibration before the gate trusts it.</p>
+<p>A <code>JevGate</code> is used only when the provider is switched on and <code>models/jev_calibration.json</code> exists. It asks only inside the medium band and never overrides a hard rule. Calibration (<code>mailroom jev calibrate</code>) fits a temperature and thresholds, and refuses any row whose split is not <code>train</code>. When Jev is off, which is the default, the pipeline behaves as it does without it. Its default accept threshold is 0.8.</p>
+<h3 id="durability">Durability</h3>
+<ul>
+<li>Bins are directories under a base directory: <code>inbox</code>, <code>processing/&lt;worker&gt;</code>, <code>classified</code>, <code>review</code>, <code>failed</code>, <code>archive</code> and <code>manifests</code>. A worker claims a file by atomic rename, and a loser of a race gets nothing and moves on (<code>storage/bins.py</code>).</li>
+<li>A manifest records the document id (the first 16 hex characters of the content sha256), filename, status, <code>completed_nodes</code> and serialised state. It is written with a temporary file and <code>os.replace</code>.</li>
+<li>Each node is wrapped by <code>guarded(...)</code>, which on success appends the node to <code>completed_nodes</code>, snapshots state and appends an audit entry (<code>pipeline/guards.py</code>). On startup the watcher re-runs every manifest still in status <code>processing</code> from its first incomplete node (<code>watcher.py</code>).</li>
+<li>The per-document audit log is an append-only SQLite table keyed by document id and sequence. Each entry holds <code>prev_hash</code> and <code>entry_hash</code>, a sha256 over canonical JSON. Appends are resume-safe: a repeated node and event with an identical payload writes nothing (<code>storage/audit_log.py</code>).</li>
+<li>A separate archive ledger is one hash chain over every run (<code>storage/ledger.py</code>), with optional off-host anchoring and <code>mailroom audit verify</code>, <code>anchor</code> and <code>export-head</code> commands.</li>
+<li>An exclusive <code>flock</code> (<code>watcher.lock</code>) admits one draining process, which is why the <code>split-watcher</code> profile requires the embedded watcher to be switched off.</li>
+</ul>
+<h2 id="iteration-history">Iteration history</h2>
+<p>The repository’s changelog is the iteration record (141 commits in the history I could read). Notable recent entries, newest first:</p>
+<div class="timeline">
+<ul>
+<li><strong>0.4.2 (2026-10-11)</strong> — fixed the <code>/ui</code> documents table at phone widths. <em>Verified at 420, 768 and 1280 px with no page-level horizontal overflow.</em></li>
+<li><strong>Unreleased</strong> — accessibility passes on <code>/ui</code> and <code>/tui</code> (a page heading, labelled tables, live regions, keyboard-reachable rows, focus rings, contrast fixes), a real provider probe behind <code>GET /ready</code>, and a fix so <code>mailroom eval</code> no longer drops rows whose filename has no supported suffix. <em>Dormant sandbox deep links removed from <code>/tui</code>.</em></li>
+<li><strong>v1 trim</strong> — an offline ingress simulator was moved off <code>main</code> onto a feature branch, leaving the core pipeline and the replay viewer. <em>Verified on merged <code>main</code>.</em></li>
+</ul>
+</div>
+<h2 id="results">Results</h2>
+<p>There are no committed accuracy, cost or throughput results. The evaluation harness (<code>mailroom eval</code>) exists, but I have not published a run. What follows is verification evidence, not model quality.</p>
+<h3 id="evaluation-harness-design">Evaluation harness design</h3>
+<ul>
+<li>The dataset is loaded at a pinned revision (default <code>ed7576b6</code>) with a blind configuration (text only, no labels) and a separate ground-truth configuration, joined on filename. A sha256 check against the document text raises an error on mismatch.</li>
+<li>Sampling is per class and nested: with the same seed and class, the 20-document draw is a prefix of the 50-document draw. The default seed is 42, the default is 20 documents per class, and the default split is <code>test</code>.</li>
+<li>The learned gate and sorter temperature calibration are fitted on the <code>train</code> split only; the fitting code raises an error for any other split, and KPIs are meant to be reported on <code>test</code>.</li>
+<li>After sampling, the runner checks overlap with the fast-path model’s training manifest and records a warning instead of failing, so overlapping documents can be excluded from reported numbers.</li>
+<li>Metrics cover sorter KPIs (accuracy, confusion matrix, expected calibration error, fast-path rate), specialist KPIs (field precision, recall and F1, schema-valid rate) and gate KPIs.</li>
+</ul>
+<h3 id="verification-run-on-merged-main-2026-10-11">Verification run on merged <code>main</code> (2026-10-11)</h3>
+<p>This used a mock LLM provider with four seeded documents. It tests plumbing, not model quality.</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Check</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ruff check .</code></td>
+<td>all checks passed</td>
+</tr>
+<tr class="even">
+<td><code>uv run pytest -q</code></td>
+<td>1,597 passed, 3 skipped, 3 deselected, 0 failed</td>
+</tr>
+<tr class="odd">
+<td><code>node --test tests/tui/js/*.test.mjs</code></td>
+<td>290 pass, 0 fail</td>
+</tr>
+<tr class="even">
+<td>replay-only subset of those</td>
+<td>96 pass, 0 fail</td>
+</tr>
+<tr class="odd">
+<td><code>GET /v1/documents</code></td>
+<td>4 documents, all archived</td>
+</tr>
+<tr class="even">
+<td>browser replay check script</td>
+<td>11 of 11 checks passed</td>
+</tr>
+</tbody>
+</table>
+<p>The changelog later records the TUI Node suite as 300 tests after removing dormant code, so the 290 above is the verification-time figure and the two differ because the code changed in between.</p>
+<h2 id="figures">Figures</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/replay-viewer.jpg" class="fig img-fluid" style="width:100.0%" alt="A dark terminal page titled MAILROOM running a replay command. Station rows from intake to failed show dotted progress bars and counts, with a red marker on the specialist row. A scrub bar and a metrics line with documents, tokens, cost and calls sit below."></p>
+<figcaption>Replay viewer paused at 01:30 of a 02:15 demo run.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/inspector-retry.jpg" class="fig img-fluid" style="width:100.0%" alt="The replay viewer with its inspector open. It shows local Phoenix and Grafana links, the document's station, status and attempt, and two events: gate_decision then retry."></p>
+<figcaption>Inspector on a document with a gate decision followed by a retry.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/ledger.jpg" class="fig img-fluid" style="width:100.0%" alt="A table of six ledger entries with sequence, kind, run, document, time and hash columns, followed by a green message saying the chain is ok with head number six."></p>
+<figcaption>The ledger listing and its chain verification.</figcaption>
+</figure>
+</div>
+<h2 id="reproducibility">Reproducibility</h2>
+<p>Install and run the tests, with live-provider tests deselected by default:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync <span class="at">--extra</span> dev</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest <span class="at">-q</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run ruff check .</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> <span class="at">--test</span> tests/tui/js/<span class="pp">*</span>.test.mjs</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> <span class="at">--test</span> tests/ui/js/<span class="pp">*</span>.test.mjs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Run one document, then the compose stack. The default provider is a mock that needs a fake OpenAI-compatible server, so set a real provider in <code>.env</code> first (<code>DEFAULT_PROVIDER</code> and its key):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env   <span class="co"># then set DEFAULT_PROVIDER and its credentials</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run mailroom run tests/ingest/fixtures/letter.txt</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> deploy/docker-compose.yml <span class="at">--env-file</span> .env up <span class="at">-d</span> <span class="at">--build</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/smoke.sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Compose profiles: the default stack (API with embedded watcher, OpenTelemetry collector, Phoenix, Prometheus, Grafana), <code>local-llm</code> (llamafile), <code>gpu</code> (local vLLM and a GPU metrics exporter) and <code>split-watcher</code> (a standalone watcher). Observability and engine ports bind to loopback only. Image versions are pinned in the compose file. An evaluation run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync <span class="at">--extra</span> dev <span class="at">--extra</span> eval <span class="at">--extra</span> bert</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run mailroom eval <span class="at">--per-class</span> 20 <span class="at">--seed</span> 42 <span class="at">--split</span> test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<h2 id="engineering-quality">Engineering quality</h2>
+<ul>
+<li><strong>Test suite.</strong> 1,134 <code>def test_</code> functions across 83 test files, counted by grep. The 1,597 in the verification run is higher because of parametrisation and because the Node suites are also wired into pytest.</li>
+<li><strong>Tiers.</strong> Agents, pipeline, eval, observability, API, deploy, intake, ingest, LLM, scoring, schemas, storage, TUI and <code>/ui</code>.</li>
+<li><strong>Dependency fence.</strong> A test fails if any <code>langgraph</code>, <code>langchain*</code>, <code>langfuse</code>, <code>braintrust</code> or <code>litellm</code> import appears under <code>src/</code> or in any dependency.</li>
+<li><strong>Prompt lock.</strong> A test checks the sha256 of every vendored prompt against its lineage file, so frozen prompts cannot drift silently.</li>
+<li><strong>Leak guard.</strong> A helper asserts that no ground-truth value appears in any recorded sorter or specialist request.</li>
+<li><strong>Scoring parity.</strong> The vendored scoring subset is checked against the upstream package on ten fixture pairs when the <code>parity</code> extra is installed.</li>
+<li><strong>Security defaults.</strong> Every <code>/v1</code> route requires a bearer token when one is configured, and the app refuses to start off loopback without one. Uploads are capped at 50 MB.</li>
+<li><strong>No hosted CI.</strong> The repository has no CI workflows; gates are run locally and their output recorded.</li>
+</ul>
+<h2 id="limitations-and-next-steps">Limitations and next steps</h2>
+<ul>
+<li>No published evaluation results, so no claim about accuracy or cost per document.</li>
+<li>The hash chain cannot detect truncation of its tail without an external anchor, and the anchor does not protect the unanchored tail or open runs. The remote anchor’s database grants are documented as unverified until tried on a staging project.</li>
+<li>Gate decisions and thresholds are only as good as the calibration data; Jev’s usefulness depends on a calibration fitted on training rows.</li>
+<li>Deadlines are cooperative: they are checked after a node returns.</li>
+<li>Images and scanned PDFs need a configured vision provider. RTF and HTML are rejected.</li>
+<li>The offline ingress simulator is not on <code>main</code>.</li>
+<li>Next: run and publish a test-split evaluation with the seed, revision and cost card.</li>
+</ul>
+</div>
+
+</main>
+<footer class="site-footer">
+  <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
+</footer>
+
+<script>
+  // Theme toggle: switches to the opposite of what is currently shown and remembers the choice.
+  // Print button: opens the browser print dialog.
+  (function () {
+    var root = document.documentElement;
+    function current() {
+      var set = root.getAttribute("data-theme");
+      if (set) return set;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    function label(btn) {
+      var dark = current() === "dark";
+      btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+      btn.textContent = dark ? "☀" : "☾";
+    }
+    var toggle = document.querySelector(".theme-toggle");
+    if (toggle) {
+      label(toggle);
+      toggle.addEventListener("click", function () {
+        var next = current() === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+        label(toggle);
+      });
+    }
+    var print = document.querySelector(".print-btn");
+    if (print) {
+      print.addEventListener("click", function (e) { e.preventDefault(); window.print(); });
+    }
+  })();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+    tabsets.forEach(function(tabset) {
+      const tabby = new Tabby('#' + tabset.id);
+    });
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/exios66\.github\.io\/resume");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+
+
+
+
+</body></html>

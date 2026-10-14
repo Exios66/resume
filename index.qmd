@@ -38,25 +38,36 @@ M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (ex
 ### [Digital-Mailroom](projects/digital-mailroom.qmd)
 [Capstone · American Family Insurance]{.kicker}
 
-One LangGraph pipeline joining legal-document routing, prompt experiments, deterministic scoring, and deployment, in a reproducible Docker environment.
+One LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, and deployment, in a reproducible Docker environment.
 :::
 
 ::: {.card}
 ### [Mailroom-ML](projects/mailroom-ml.qmd)
-[Training, evaluation & fine-tuning]{.kicker}
+[Training, evaluation & calibration]{.kicker}
 
-A ModernBERT document classifier with calibration and routing logic, exported to ONNX and served with FastAPI on Modal.
+A calibrated ModernBERT classifier that handles routine documents itself and sends uncertain ones to an LLM. Exported to ONNX and served with FastAPI on Modal.
 :::
 
 ::: {.card}
-### [Psychometric Digital Twin](projects/psychometric-digital-twin.qmd)
-[Behavioral ML research · UW–Madison]{.kicker}
+### [RVL-CDIP-Classifier](projects/rvl-cdip-classifier.qmd)
+[Vision LLMs & prompt engineering]{.kicker}
 
-Classical ML models versus LLM "digital twin" personas on 252 survey participants, with bias analysis by demographic group.
+Zero-shot document classification with vision LLMs: 29 tracked prompt versions, accuracy checked on larger slices than the tuning set, and the cost of every page measured.
+:::
+
+::: {.card}
+### [Wave Laboratory](projects/wave-laboratory.qmd)
+[Side project · simulation & graphics]{.kicker}
+
+A real-time 3D ocean and ship-motion sandbox that runs in the browser, built on spectral wave physics.
 :::
 :::
 
 [All projects →](projects/index.qmd){.more}
+
+## What I'm interested in
+
+I'm interested in AI systems that know when they are unsure. That means calibrated classifiers, evaluation you can trust, and pipelines that pass hard cases to a stronger model or a person instead of guessing. Outside of that, I like turning physics into interactive software, and I'm interested in how people think, which is what my psychology training is about.
 
 ## Explore
 
