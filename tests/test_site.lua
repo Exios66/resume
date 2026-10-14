@@ -103,3 +103,66 @@ local prefix = RawBlock({ format = "html", text = "<prefix-el><!-- n --></prefix
 assert(prefix.text == "<prefix-el></prefix-el>", "Tags that only start with pre are not protected")
 assert(RawBlock({ format = "html", text = "<!-- open" }) == nil, "Unclosed comment should be left alone")
 print("comment stripping ok")
+
+-- Both callbacks share the comment policy. Exercise identical cases so an inline
+-- regression cannot hide behind coverage of blocks (or vice versa).
+local comment_cases = {
+  { label = "source note", text = "<!-- src: notes.md -->", remove = true },
+  { label = "empty comment", text = "<!---->", remove = true },
+  { label = "blank comment", text = "<!-- -->", remove = true },
+  { label = "multiline note", text = "<!-- a\nb -->", remove = true },
+  { label = "surrounding whitespace", text = "\t\r\n <!-- a\r\nb --> \n\t", remove = true },
+  { label = "markup inside a note", text = "<!-- <div>not published</div> -->", remove = true },
+  { label = "punctuation and Unicode", text = "<!-- Résumé: 100% [a-b] -->", remove = true },
+  { label = "consecutive notes", text = "<!-- a -->\n<!-- b -->", remove = true },
+  { label = "empty raw element", text = "" },
+  { label = "whitespace only", text = " \t\n" },
+  { label = "ordinary text", text = "Published text" },
+  { label = "HTML block", text = "<div>Published text</div>" },
+  { label = "HTML inline", text = "<span>Published text</span>" },
+  { label = "SVG diagram", text = '<svg><text>Pipeline</text></svg>' },
+  { label = "escaped comment", text = "&lt;!-- example --&gt;" },
+  { label = "unclosed comment", text = "<!-- unfinished" },
+  { label = "closing delimiter only", text = "notes -->" },
+  { label = "invalid opening delimiter", text = "<!- notes -->" },
+  { label = "invalid closing delimiter", text = "<!-- notes ->" },
+  { label = "text before a note", text = "Published <!-- note -->", expect = "Published " },
+  { label = "text after a note", text = "<!-- note --> Published", expect = " Published" },
+  { label = "markup before a note", text = "<div>Published</div><!-- note -->", expect = "<div>Published</div>" },
+  { label = "markup after a note", text = "<!-- note --><div>Published</div>", expect = "<div>Published</div>" },
+  -- A raw HTML element can contain both comments and visible content. Only the
+  -- comment spans are removed; the rest of the element is published.
+  { label = "markup between notes", text = "<!-- before --><div>Published</div><!-- after -->", expect = "<div>Published</div>" },
+  { label = "text between notes", text = "<!-- before -->Published<!-- after -->", expect = "Published" },
+}
+
+local comment_failures = {}
+local comment_checks = 0
+for _, handler in ipairs({ { name = "RawBlock", callback = RawBlock },
+                           { name = "RawInline", callback = RawInline } }) do
+  local function check_comment(format, case)
+    local element = { format = format, text = case.text }
+    local result = handler.callback(element)
+    comment_checks = comment_checks + 1
+    local removed = type(result) == "table" and next(result) == nil
+    local correct
+    if case.expect then
+      correct = result == element and element.text == case.expect
+    else
+      correct = case.remove and removed or (not case.remove and result == nil)
+      assert(element.format == format and element.text == case.text,
+             handler.name .. " must not change an element it removes or keeps")
+    end
+    if not correct then
+      comment_failures[#comment_failures + 1] = handler.name .. ": " .. case.label
+        .. (case.expect and " should keep only its content"
+            or case.remove and " should be removed" or " should be preserved")
+    end
+  end
+  for _, case in ipairs(comment_cases) do check_comment("html", case) end
+  for _, format in ipairs({ "latex", "markdown", "org", "HTML", "html5", "" }) do
+    check_comment(format, { label = "comment syntax in " .. format, text = "<!-- keep literally -->" })
+  end
+end
+assert(#comment_failures == 0, "Comment filter failures:\n" .. table.concat(comment_failures, "\n"))
+print("Comment filter unit tests passed (" .. comment_checks .. " cases)")
