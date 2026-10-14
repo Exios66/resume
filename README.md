@@ -8,6 +8,14 @@ Madison, WI · Open to relocation
 
 ![image](https://github.com/user-attachments/assets/a0d994ed-46e0-4185-886e-5568c9561843)
 
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)
+![Hugging Face](https://img.shields.io/badge/Hugging%20Face-FFD21E?style=flat-square&logo=huggingface&logoColor=black)
+![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?style=flat-square&logo=langchain&logoColor=white)
+![Modal](https://img.shields.io/badge/Modal-GPU-7FEE64?style=flat-square)
+![OpenRouter](https://img.shields.io/badge/OpenRouter-LLM%20eval-6566F1?style=flat-square)
+![Three.js](https://img.shields.io/badge/Three.js-000000?style=flat-square&logo=threedotjs&logoColor=white)
+
 ---
 
 I'm finishing an M.S. in Psychology: Data Science in Human Behavior at UW–Madison (expected December 2026), after a B.S. in Psychology with a neuroscience concentration at UW–Parkside. Before graduate school I spent five years in high-volume logistics and operations, working on quality assurance, documentation, and process improvement. That is why I care about error rates, reproducibility, and cost as much as accuracy.
