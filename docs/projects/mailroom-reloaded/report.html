@@ -358,20 +358,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 id="figures">Figures</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/replay-viewer.jpg" class="fig img-fluid" style="width:100.0%" alt="A dark terminal page titled MAILROOM running a replay command. Station rows from intake to failed show dotted progress bars and counts, with a red marker on the specialist row. A scrub bar and a metrics line with documents, tokens, cost and calls sit below."></p>
-<figcaption>Replay viewer paused at 01:30 of a 02:15 demo run.</figcaption>
+<p><img src="figures/replay-viewer.jpg" class="fig img-fluid" style="width:100.0%" alt="A dark terminal page with a cyan MAILROOM banner, running replay run:7e57d0c0ffee --at 90. Station rows from intake to failed, grouped under intake_sort, extraction, review, reporting and terminal, show dotted progress bars and counts, with a red marker on the specialist row. A scrub bar and a metrics line reading docs 4 of 6, done 3, failed 1, tok 680, $0.0060, calls 4, first-pass 25% sit below."></p>
+<figcaption>Replay viewer in the cyan theme, paused at 01:30 of a 02:15 demo run.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/inspector-retry.jpg" class="fig img-fluid" style="width:100.0%" alt="The replay viewer with its inspector open. It shows local Phoenix and Grafana links, the document's station, status and attempt, and two events: gate_decision then retry."></p>
-<figcaption>Inspector on a document with a gate decision followed by a retry.</figcaption>
+<p><img src="figures/inspector-retry.jpg" class="fig img-fluid" style="width:100.0%" alt="The cyan replay viewer at the end of the run with its inspector open. It shows the document's station archive, status archived and attempt 1, and two events: 00:30.4 gate_decision gate, then 00:30.7 retry gate."></p>
+<figcaption>Inspector in the cyan theme, on a document with a gate decision followed by a retry.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/ledger.jpg" class="fig img-fluid" style="width:100.0%" alt="A table of six ledger entries with sequence, kind, run, document, time and hash columns, followed by a green message saying the chain is ok with head number six."></p>
-<figcaption>The ledger listing and its chain verification.</figcaption>
+<p><img src="figures/ledger.jpg" class="fig img-fluid" style="width:100.0%" alt="A cyan terminal page with a table of six ledger entries with seq, kind, run, doc, ts and hash columns, followed by the ledger verify command and a green line reading chain ok, 6 entries, head #6."></p>
+<figcaption>The ledger listing and its chain verification, in the cyan theme.</figcaption>
 </figure>
 </div>
 <h2 id="reproducibility">Reproducibility</h2>
@@ -422,11 +422,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   // Print button: opens the browser print dialog.
   (function () {
     var root = document.documentElement;
+    /** Return a nonempty data-theme value, or the system's dark/light preference. */
     function current() {
       var set = root.getAttribute("data-theme");
       if (set) return set;
       return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     }
+    /** Set the button's accessible label and icon to offer the opposite theme. */
     function label(btn) {
       var dark = current() === "dark";
       btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");

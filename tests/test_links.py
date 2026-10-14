@@ -269,7 +269,10 @@ class RenderedSiteTests(unittest.TestCase):
 class PortfolioRegressionTests(unittest.TestCase):
     """Contracts for the case studies, reports, and diagrams introduced by PR #7."""
 
-    REPORT_SLUGS = ("mailroom-ml", "mailroom-reloaded", "rvl-cdip-classifier", "wave-laboratory")
+    REPORT_SLUGS = ("mailroom-ml", "mailroom-reloaded", "rvl-cdip-classifier", "wave-laboratory",
+                    "degen-llms", "llm-personas", "psychometric-digital-twin")
+    FIGURE_SLUGS = ("mailroom-ml", "mailroom-reloaded", "rvl-cdip-classifier", "wave-laboratory",
+                    "degen-llms", "psychometric-digital-twin")
     STUDY_SLUGS = ("digital-mailroom",) + REPORT_SLUGS
 
     def test_expected_case_studies_and_reports_are_published(self):
@@ -345,7 +348,7 @@ class PortfolioRegressionTests(unittest.TestCase):
         self.assertIn((DOCS / "projects/wave-laboratory.html").resolve(), linked_targets(DOCS / "about.html"))
 
     def test_report_figures_are_published_without_corruption(self):
-        for slug in self.REPORT_SLUGS:
+        for slug in self.FIGURE_SLUGS:
             with self.subTest(project=slug):
                 sources = sorted((ROOT / "projects" / slug / "figures").glob("*"))
                 figures = [source for source in sources if source.suffix.lower() in (".svg", ".jpg")]

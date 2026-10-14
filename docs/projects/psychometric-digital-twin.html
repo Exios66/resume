@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Behavioral ML research at UW–Madison: six models and LLM digital-twin personas predicting communication apprehension for 252 survey participants.">
+<meta name="description" content="Can an LLM, given a second-person profile (“You are a …”) built from a survey respondent’s attributes, predict that person’s own communication-apprehension scores? A course study of LLM personas against classical ML on 241 respondents.">
 
 <title>Psychometric Digital Twin — Jack J. Burleson</title>
 <style>
@@ -77,13 +77,13 @@ ul.task-list li input[type="checkbox"] {
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Psychometric Digital Twin — Jack J. Burleson">
-<meta property="og:description" content="Behavioral ML research at UW–Madison: six models and LLM digital-twin personas predicting communication apprehension for 252 survey participants.">
+<meta property="og:description" content="Can an LLM, given a second-person profile (“You are a …”) built from a survey respondent’s attributes, predict that person’s own communication-apprehension scores? A course study of LLM personas against classical ML on 241 respondents.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta property="og:site_name" content="Jack J. Burleson">
 <meta property="og:image:alt" content="Jack J. Burleson — AI / Machine Learning · Data Science">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="Psychometric Digital Twin — Jack J. Burleson">
-<meta name="twitter:description" content="Behavioral ML research at UW–Madison: six models and LLM digital-twin personas predicting communication apprehension for 252 survey participants.">
+<meta name="twitter:description" content="Can an LLM, given a second-person profile (“You are a …”) built from a survey respondent’s attributes, predict that person’s own communication-apprehension scores? A course study of LLM personas against classical ML on 241 respondents.">
 <meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://exios66.github.io/resume/projects/psychometric-digital-twin.html">
@@ -113,20 +113,70 @@ ul.task-list li input[type="checkbox"] {
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <div class="page">
 <p><a href="../projects/index.html" class="back">← All projects</a></p>
+<div class="project-nav">
+<p><a href="../projects/psychometric-digital-twin.html" aria-current="page">Case study</a> <a href="../projects/psychometric-digital-twin/report.html">Technical report</a> <a href="https://github.com/Exios66/psych755-jjb">Code</a></p>
+</div>
 <h1 class="page-title" id="psychometric-digital-twin">Psychometric Digital Twin</h1>
 <p><span class="kicker">Behavioral ML research · UW–Madison</span></p>
-<h2 id="overview">Overview</h2>
-<p>A study of whether classical machine learning or LLM-driven “digital twin” personas better predict a person’s communication-apprehension score, and where each one is biased.</p>
+<p>Final project for PSYCH 755 at UW–Madison, taught by Dr.&nbsp;Adam Ross Nelson (Summer 2026).</p>
+<h2 id="at-a-glance">At a glance</h2>
+<div class="stats">
+<div class="stat">
+<p><span class="stat-value">241</span> <span class="stat-label">survey respondents analysed, from 252 matched Prolific and Qualtrics records</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">5.02 vs 4.49</span> <span class="stat-label">group-score error in points on the 6–30 scale: best LLM persona (pooled over tiers) vs best classical model (at the transit tier)</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">0.53 vs 0.72</span> <span class="stat-label">AUC for telling low from high group apprehension at the transit tier: best persona run vs random forest</span></p>
+</div>
+</div>
+<p>In short, the LLM personas did not beat simple models. Most were worse than guessing the average respondent.</p>
+<h2 id="the-problem">The problem</h2>
+<p>Researchers now use LLMs as stand-ins for survey respondents. The idea is to describe a person in a prompt and ask the model to answer as that person. I wanted to test that idea on one validated scale, where the real answer is known.</p>
+<p>The scale is the PRCA-24, a self-report measure of communication apprehension (CA). I used its group-discussion and interpersonal subscales, each scored 6 to 30. The question: when the model is told who a respondent is in the second person (“You are a …”), how close does it get to that respondent’s own scores? And when it is wrong, does the error follow demographic group, which would look like stereotyping?</p>
+<h2 id="approach">Approach</h2>
+<figure class="diagram" role="img" aria-labelledby="psych-twin-cap"><svg viewbox="0 0 800 340" aria-hidden="true" focusable="false"><defs><marker id="psych-twin-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="16" y="30" width="150" height="84" rx="8"></rect><text x="91" y="64" text-anchor="middle" font-weight="600">Survey data</text><text x="91" y="82" text-anchor="middle">241 analysed</text><rect class="d-box" x="222" y="30" width="150" height="84" rx="8"></rect><text x="297" y="60" text-anchor="middle" font-weight="600">Cumulative tiers</text><text x="297" y="78" text-anchor="middle">demos, jobs,</text><text x="297" y="96" text-anchor="middle">place, transit</text><rect class="d-box d-accent" x="428" y="30" width="150" height="84" rx="8"></rect><text x="503" y="60" text-anchor="middle" font-weight="600">LLM personas</text><text x="503" y="78" text-anchor="middle">second-person</text><text x="503" y="96" text-anchor="middle">prompts, vLLM</text><rect class="d-box" x="428" y="230" width="150" height="84" rx="8"></rect><text x="503" y="260" text-anchor="middle" font-weight="600">ML baselines</text><text x="503" y="278" text-anchor="middle">7 models,</text><text x="503" y="296" text-anchor="middle">5-fold CV</text><rect class="d-box" x="634" y="130" width="150" height="84" rx="8"></rect><text x="709" y="160" text-anchor="middle" font-weight="600">Score vs PRCA</text><text x="709" y="178" text-anchor="middle">MAE, bands,</text><text x="709" y="196" text-anchor="middle">F1, AUC</text><rect class="d-box" x="634" y="250" width="150" height="64" rx="8"></rect><text x="709" y="278" text-anchor="middle" font-weight="600">Bias check</text><text x="709" y="296" text-anchor="middle">error by group</text><path class="d-arrow" d="M166 72H220" marker-end="url(#psych-twin-ah)"></path><path class="d-arrow" d="M372 72H426" marker-end="url(#psych-twin-ah)"></path><path class="d-arrow" d="M297 114V272H426" fill="none" marker-end="url(#psych-twin-ah)"></path><path class="d-arrow" d="M578 72H606V160H632" fill="none" marker-end="url(#psych-twin-ah)"></path><path class="d-arrow" d="M578 272H606V184H632" fill="none" marker-end="url(#psych-twin-ah)"></path><path class="d-arrow" d="M709 214V248" marker-end="url(#psych-twin-ah)"></path><text class="d-muted" x="297" y="214" text-anchor="middle" font-size="13">same features</text></svg><figcaption id="psych-twin-cap">Study design: matched survey data feed cumulative information tiers. Each tier becomes a second-person prompt for an LLM and a feature set for seven classical ML models. Both are scored against the respondent's own PRCA subscale scores, then checked for error by group.</figcaption></figure>
+<p>The survey was collected through Prolific and Qualtrics for the course. After matching and dropping respondents with incomplete scale items, 241 were left. For each one I built prompts in cumulative tiers: demographics, then employment, then survey location, then transit and ride-share habits, then (for the LLMs only) two open-text answers.</p>
+<p>I ran open-weight models on a GPU with vLLM: Llama 3.1 8B Instruct, Llama 3.2 3B Instruct, DeepSeek-R1-Distill-Llama-8B and Llama 3.3 70B Instruct (AWQ). The Llama 3.2 3B base model could not follow the output format and is left out of the scores. I compared them with seven classical models on the same tiers: Ridge, Elastic Net, k-NN, random forest, histogram gradient boosting, XGBoost and a small neural net, all with 5-fold cross-validation.</p>
 <h2 id="what-i-built">What I built</h2>
 <ul>
-<li>A behavioral prediction pipeline on 252 matched survey participants. Ridge, Elastic Net, k-NN, Random Forest, XGBoost, and MLP models predicted communication-apprehension scores from demographic, employment, geographic, and transit features, with cross-validation and SHAP feature importance.</li>
-<li>A check of the PRCA’s psychometric structure with factor analysis.</li>
-<li>LLM “digital twin” personas with tiered embodiment prompts (OpenRouter/vLLM).</li>
-<li>A benchmark of the personas against the ML baselines on shared metrics (MAE, band accuracy, F1), plus an analysis of systematic bias by demographic group.</li>
+<li><strong>A cleaning and scoring pipeline.</strong> It joins the two survey exports, scores the scale and checks every tier against the same targets.</li>
+<li><strong>Tiered persona prompts and batch inference.</strong> Three prompt versions, from five to eight tiers, run on a GPU host.</li>
+<li><strong>A shared evaluation.</strong> Error in points, exact match, low/moderate/high band accuracy, F1 and AUC, computed the same way for LLMs and classical models.</li>
+<li><strong>Explanation and bias checks.</strong> SHAP on the models and on a surrogate fit to the LLM’s outputs, plus error by employment, sex, student status and age.</li>
+<li><strong>Secondary studies on public-transit use.</strong> These use random forests only, with no LLM.</li>
+</ul>
+<h2 id="results">Results</h2>
+<p>The classical floor is low but not far below a constant guess. Ridge reaches 4.49 points of group error at the transit tier. The pooled LLM errors run from 5.02 (DeepSeek, second prompt version) to 6.02 (Llama 3.3 70B). By my own calculation from the cohort table, always predicting the cohort mean gives 4.93, so the LLM personas did not beat that.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="psychometric-digital-twin/figures/mae-rf-vs-llm.jpg" class="fig img-fluid" style="width:100.0%" alt="Grouped bar chart of mean absolute error in score points, averaged across both subscales, for four tiers: demos, employment, geo and transit. The random forest falls from about 5.5 at demos to about 4.5 at transit. The LLM persona agent stays near 5.0 to 5.5 across all four tiers and is higher than the forest at every tier except demos."></p>
+<figcaption>Mean error by tier for a random forest and for the best LLM persona run (DeepSeek version 2), averaged across both subscales.</figcaption>
+</figure>
+</div>
+<p>More context helped the classical models and did not help the LLM. The random forest improved at each added tier. DeepSeek’s error stayed flat and got slightly worse at the employment step. At the transit tier the forest separated low from high apprehension with an AUC of 0.72 on the group score. DeepSeek scored 0.53, close to chance, and never predicted the high band for group CA.</p>
+<p>The feature results explain part of it. In the forest, ride-share days (Q28) was the strongest feature by far. In a surrogate model fit to the LLM’s outputs, latitude and age came first.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="psychometric-digital-twin/figures/shap-ml-vs-llm.jpg" class="fig img-fluid" style="width:100.0%" alt="Horizontal paired bars of mean absolute SHAP value for ten features. For the random forest predicting true scores, Q28 ride-share days is by far the longest bar at about 1.9, followed by employment status. For the LLM output surrogate, bars are much shorter, with latitude, age and longitude the longest at about 0.2 to 0.3."></p>
+<figcaption>What drives predictions at the transit tier: a random forest predicting true scores, and a surrogate fit to the LLM’s outputs.</figcaption>
+</figure>
+</div>
+<p>On bias, the clearest pattern was employment. DeepSeek’s group error was about 4.4 points for full-time respondents and about 5.5 to 6.2 for part-time and other. It under-predicted part-time and other respondents by roughly 1.7 to 3.6 points on average. Those groups did score higher on the scale, so the model missed a real difference rather than inventing one. Sex and student-status gaps were small. Group sizes are small too, so I treat all of this as descriptive.</p>
+<div class="caveat">
+<p><strong>Heads up.</strong> This is one cohort of 241 online panel respondents. The classical models are cross-validated, but the LLM runs are single passes, and the constant-guess figure is computed on the same people it is scored on. The transit studies are associations, not causes.</p>
+</div>
+<p>The technical report has the full tables, per-model results, the factor-analysis and secondary results, and the commands to reproduce them.</p>
+<h2 id="what-i-learned">What I learned</h2>
+<ul>
+<li>A model that looks close on average error can still fail at the task. DeepSeek stayed near the mean, so its error was modest and its ranking of people was near chance.</li>
+<li>Report band accuracy and AUC next to error. Error alone hid the failure.</li>
+<li>Adding prompt detail is not a free gain. One bundle of transit text made Llama 3.1’s interpersonal error jump from 4.67 to 8.17 points, and a rewritten prompt did not fix it.</li>
+<li>A simple baseline belongs in every LLM evaluation. Here a ridge model and even a constant guess set a bar the personas did not clear.</li>
 </ul>
 <h2 id="stack">Stack</h2>
-<p><span class="tag">Python</span> <span class="tag">scikit-learn</span> <span class="tag">XGBoost</span> <span class="tag">SHAP</span> <span class="tag">Factor analysis</span> <span class="tag">OpenRouter</span> <span class="tag">vLLM</span></p>
-<h2 id="results-and-links">Results and links</h2>
+<p><span class="tag">Python</span> <span class="tag">scikit-learn</span> <span class="tag">XGBoost</span> <span class="tag">SHAP</span> <span class="tag">Factor analysis</span> <span class="tag">vLLM</span> <span class="tag">Quarto</span> <span class="tag">pytest</span></p>
 </div>
 
 </main>
@@ -139,11 +189,13 @@ ul.task-list li input[type="checkbox"] {
   // Print button: opens the browser print dialog.
   (function () {
     var root = document.documentElement;
+    /** Return a nonempty data-theme value, or the system's dark/light preference. */
     function current() {
       var set = root.getAttribute("data-theme");
       if (set) return set;
       return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     }
+    /** Set the button's accessible label and icon to offer the opposite theme. */
     function label(btn) {
       var dark = current() === "dark";
       btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");

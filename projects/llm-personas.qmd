@@ -1,0 +1,81 @@
+---
+pagetitle: "MORNINGSTAR — Jack J. Burleson"
+description: "A deliberative persona framework that runs engineering decisions as courtroom proceedings, with a rule-bound vote, a written ruling and a saved transcript. It also contains a tamper-evident log library that the runner does not call yet. A design exploration, not an evaluated system."
+---
+
+::: {.page}
+
+[← All projects](index.qmd){.back}
+
+::: {.project-nav}
+[Case study](llm-personas.qmd){aria-current="page"} [Technical report](llm-personas/report.qmd) [Code](https://github.com/Exios66/LLM_Personas)
+:::
+
+# MORNINGSTAR {.page-title}
+
+[LLM agent design · prompt architecture]{.kicker}
+
+The repository is called LLM_Personas. MORNINGSTAR is the name of the court inside it.
+
+## At a glance
+
+::: {.stats}
+::: {.stat}
+[5]{.stat-value} [voting personas, plus a judge who breaks ties and a scribe who records]{.stat-label}
+:::
+::: {.stat}
+[27]{.stat-value} [expert domains (25 can also be seated as specialists; 2 are advisory only)]{.stat-label}
+:::
+::: {.stat}
+[62]{.stat-value} [tests collected by pytest for the Python layer; I did not run them]{.stat-label}
+:::
+:::
+
+## The problem
+
+When I ask a model to choose between two designs, I usually get a smooth answer that agrees with whatever I leaned toward. I wanted a way to make it argue first. I also wanted the decision to leave a record: who said what, how the vote went, what the risk is, and who disagreed.
+
+MORNINGSTAR is my attempt. A decision about architecture, implementation or debugging is run as a courtroom proceeding with fixed roles, fixed voting rules and a fixed ruling format.
+
+## Approach
+
+{{< include ../partials/diagrams/_llm-personas.qmd >}}
+
+A matter is first rated for feasibility, from F0 to F5. F3 and above must be deliberated. F4 requires a transcript and F5 a full record. The court has a judge who votes only to break a tie, five voting personas (Architect, Engineer, Debugger, Prophet and Counsel), a scribe who records and does not vote, and a non-voting consultant persona. Witnesses can be called in with zero votes. For F3 and above the judge may seat specialists with one vote each.
+
+Each persona argues in turn. Votes are cast in a fixed order, a vote of yes counts +1 and no counts -1, and a motion passes if yes votes exceed no votes. The ruling has five parts: Decision, Vote, Rationale, Risk and Dissent.
+
+::: {.caveat}
+**Heads up.** In the runner, one model plays the whole court. `litigation/run.py` builds one large prompt and makes one completion call. The judge, the five voters and the scribe are all the same model, in the same pass. This is not a swarm of separate models. I chose it because it is cheap and simple, but it limits what the vote can tell you.
+:::
+
+## What I built
+
+- **Personas as files.** Most of the repository, about 54,000 lines, is markdown: personas, rules, checklists and templates. About 5,700 lines are Python.
+- **Two ways to use it.** Five Cursor agent definitions in `.cursor/agents/` (four are also under `agents/`), driven by commands such as `/morningstar`, `/summon <domain>-expert` and `/seat <domain>-specialist`. Or a command-line runner that works with Ollama, LM Studio or OpenRouter.
+- **Four proceeding types.** Standard, expedited, special-interest hearing (findings only, no vote) and contempt hearing.
+- **A record.** Case IDs look like `2026-DEL-005-001` (year, category, case number, deliberation number), with the next number kept in a registry file. Session state is a markdown file checked against a written schema.
+- **An executive layer, not wired in.** A library with tests: a hash-chained, append-only log of rulings, HMAC proofs for overrides, a watchdog that checks actions against approvals, and a small file-based quorum vote. The runner does not call it yet, so its transcripts are not written to the hash-chained log.
+- **Context controls.** The prompt assembler has nine include toggles, and the runner caps the response length, so a small local model can still take part.
+- **A browser UI and a proxy.** `index.html` is a live UI. `backend/server.js` is an Express proxy that keeps the API key on the server.
+
+## Results
+
+There are no results to report. I have never compared MORNINGSTAR with a single plain prompt, so I cannot say it gives better decisions. It is a design exploration.
+
+What I can say is what it produced. The project's own metrics file reports 13 deliberations and 12 decisions: 8 unanimous, 3 split and no tie-breakers. Those categories add up to 11, not 12, so the file is not fully consistent with itself. A set of July 2026 rulings covered controls for agents that change production systems, export controls on open-weight models, agent-authored legal filings and attribution of agentic cyber attacks. Those numbers are self-reported by the same system, and unanimity from one model voting with itself is a weak signal.
+
+I have not added screenshots, because there is no interface worth showing in a still.
+
+## What I learned
+
+- A written ruling format forces the model to state a risk and a dissent. That is useful even when the vote is not.
+- Most of the value I can see is in the structure and the record, not in the vote.
+- Saying "one model, one call" plainly changes how much weight the unanimous votes deserve.
+- A design with no baseline is easy to like and hard to defend. The next step is a paired comparison, described in the report.
+
+## Stack
+
+[Markdown]{.tag} [Python]{.tag} [YAML]{.tag} [Ollama]{.tag} [LM Studio]{.tag} [OpenRouter]{.tag} [Node.js]{.tag} [Express]{.tag} [pytest]{.tag}
+
+:::
