@@ -78,7 +78,7 @@ M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (ex
 **Psychometric Digital Twin** [Behavioral ML Research | UW–Madison]{.sub}
 :::
 
-- Built a behavioral prediction pipeline on 252 matched survey participants. Ridge, Elastic Net, k-NN, Random Forest, XGBoost, and MLP models predicted communication-apprehension scores from demographic, employment, geographic, and transit features, with cross-validation and SHAP feature importance.
+- Built a behavioral prediction pipeline on 241 analysed survey respondents (252 matched). Ridge, Elastic Net, k-NN, Random Forest, histogram gradient boosting, XGBoost, and MLP models predicted communication-apprehension scores from demographic, employment, geographic, and transit features, with cross-validation and SHAP feature importance.
 - Checked the PRCA's psychometric structure with factor analysis, then built LLM "digital twin" personas with tiered embodiment prompts (OpenRouter/vLLM). Benchmarked them against the ML baselines on shared metrics (MAE, band accuracy, F1) and analyzed systematic bias by demographic group.
 :::
 

@@ -1,0 +1,5 @@
+casino-floor.jpg <- source repo: degen-llms/wiki/images/casino-floor.png (cropped to the page content, no browser or desktop chrome; mouse pointer retouched out; JPEG quality 82)
+pixel-rpg-overworld.jpg <- source repo: degen-llms/wiki/images/pixel-rpg-overworld.png (cropped to the game canvas, no browser or desktop chrome; JPEG quality 82)
+slot-machines.jpg <- source repo: degen-llms/wiki/images/slot-machines.png (cropped to the page content, no browser or desktop chrome; JPEG quality 82)
+sportsbook.jpg <- source repo: degen-llms/wiki/images/sportsbook.png (cropped to the page content, no browser or desktop chrome; JPEG quality 82)
+table-games.jpg <- source repo: degen-llms/wiki/images/table-games.png (cropped to the page content, no browser or desktop chrome; JPEG quality 82)

@@ -1,13 +1,13 @@
 ---
 pagetitle: "Projects — Jack J. Burleson"
-description: "Selected work in document intelligence, model evaluation, behavioral machine learning, and browser-based simulation, with case studies and selected technical reports."
+description: "Selected work in document intelligence, model evaluation, behavioral machine learning, LLM agent design, and browser-based simulation and games, with case studies and selected technical reports."
 ---
 
 ::: {.page}
 
 # Projects {.page-title}
 
-Selected work in document intelligence, model evaluation, behavioral machine learning, and simulation. Each project has a short case study. Most also have a technical report with the full experiment history, metrics, and steps to reproduce the results.
+Selected work in document intelligence, model evaluation, behavioral machine learning, LLM agent design, and simulation. Each project has a short case study. Most also have a technical report with the full experiment history, metrics, and steps to reproduce the results.
 
 ## Document intelligence {.group-title}
 
@@ -60,9 +60,22 @@ A study of zero-shot document classification with vision LLMs. It covers 29 trac
 ### [Psychometric Digital Twin](psychometric-digital-twin.qmd)
 [Behavioral ML research · UW–Madison]{.kicker}
 
-Six ML models compared with LLM "digital twin" personas on 252 survey participants, including an analysis of bias by demographic group.
+Can an LLM, told about a survey respondent in the first person, predict that person's own communication-apprehension scores? Seven classical models against LLM personas on 241 respondents, with error checked by demographic group. The personas did not beat simple baselines.
 
 [scikit-learn]{.tag} [XGBoost]{.tag} [SHAP]{.tag} [vLLM]{.tag}
+:::
+:::
+
+## LLM agent design {.group-title}
+
+::: {.cards .cards-wide}
+::: {.card}
+### [MORNINGSTAR](llm-personas.qmd)
+[Persona framework · prompt architecture]{.kicker}
+
+A courtroom of LLM personas that argue, vote, and issue a written ruling on engineering decisions, plus a tamper-evident log library the runner does not call yet. One model plays every seat, and it has not yet been tested against a single-prompt baseline.
+
+[Prompt design]{.tag} [Python]{.tag} [Hash chains]{.tag}
 :::
 :::
 
@@ -76,6 +89,15 @@ Six ML models compared with LLM "digital twin" personas on 252 survey participan
 A real-time 3D ocean you can experiment with. Spectral wave models, rogue waves, and ships that move in all six directions run in a Web Worker and render with WebGL 2.
 
 [TypeScript]{.tag} [Three.js]{.tag} [Physics]{.tag} [Accessibility]{.tag}
+:::
+
+::: {.card}
+### [The Mandalay Bay](degen-llms.qmd)
+[Game systems · CLI, browser & pixel RPG]{.kicker}
+
+A satirical casino resort simulator with one chip wallet shared by a Python command-line game, a browser terminal, and a Phaser overworld. Play chips only.
+
+[Python]{.tag} [JavaScript]{.tag} [Phaser]{.tag} [Testing]{.tag}
 :::
 :::
 

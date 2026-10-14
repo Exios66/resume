@@ -1,0 +1,148 @@
+---
+pagetitle: "MORNINGSTAR: technical report — Jack J. Burleson"
+description: "Court structure, voting rules, runner design, executive layer, test counts, limitations and a proposed evaluation for MORNINGSTAR, a deliberative persona framework with no published evaluation."
+---
+
+::: {.page}
+
+[← Case study](../llm-personas.qmd){.back}
+
+::: {.project-nav}
+[Case study](../llm-personas.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/Exios66/LLM_Personas)
+:::
+
+# MORNINGSTAR: technical report {.page-title}
+
+[LLM agent design · prompt architecture]{.kicker}
+
+## Summary
+
+MORNINGSTAR is a deliberative persona framework in the repository LLM_Personas. It runs decisions about architecture, implementation and debugging as courtroom proceedings: a triage step, a cast with fixed roles, arguments, a rule-bound vote and a written ruling. It is mostly prompt and persona markdown, about 54,000 lines, plus a Python layer of about 5,700 lines. The version is 0.0.4. The package metadata says "Internal use", and the repository has no licence file, so it is not open source in the usual sense.
+
+One point matters more than the rest. The runner makes one model call that plays every seat. It is not a multi-model system. There is also no evaluation: no baseline and no comparison with a single prompt. This report describes the design and the evidence that it runs, and it publishes no quality claim.
+
+## System and data
+
+### The cast and the rules
+
+| Role | Votes | Notes |
+| --- | --- | --- |
+| Judge | tie-break only | Presides, seats specialists, casts the deciding vote with an explanation |
+| Architect, Engineer, Debugger, Prophet, Counsel | 1 each | The five standard voters, cast in that order |
+| Scribe | 0 | Records decisions and maintains state |
+| Non-voting consultant persona | 0 | Advisory, invoked by the judge |
+| Witnesses | 0 | Expert domains called with `/summon <domain>-expert` |
+| Specialists | 1 each | Seated by the judge only, F3 and above, up to 2 at a time |
+| Spectators | 0 | Optional commentary; they do not deliberate, testify or vote |
+
+A valid deliberation needs the judge, at least 3 voting members including the Prophet, and the scribe. There are 27 expert domains in `courtroom/domains/experts.yaml` (25 can be called as witnesses or seated as specialists; 2 are advisory only), each with a scope, heuristics, signature questions and a stated failure mode.
+
+**Feasibility triage.** Matters are rated F0 to F5. F3 and above must be deliberated, F4 requires a transcript and F5 a full record. There are four proceeding types: standard, expedited, special-interest hearing (testimony and findings, no final vote) and contempt hearing. One inconsistency: `courtroom/RULES.md` names F0 "Trivial", while `core/MFAF.md` names it "Infrastructural", a currently impossible idea that reveals a missing capability.
+
+**Voting.** A yes vote counts +1, no counts -1, abstain 0, and a recused member is excluded. A motion passes if yes votes exceed no votes. Votes are cast in a canonical order, and the tally must match the individual votes. When votes are tied, the rules say the Prophet loses first, then specialists lose by recency of seating (most recent first), and the judge breaks any remaining tie. The ruling has five parts: Decision, Vote, Rationale, Risk and Dissent.
+
+**Commands.** `/morningstar`, `/update` and `/end` open, checkpoint and close a session. `/aegis` calls a security-focused agent. `/summon <domain>-expert`, `/seat <domain>-specialist`, `/dismiss`, `/sme status` and `/sme domains` manage experts.
+
+### Two ways to run it
+
+First, five Cursor agent definitions in `.cursor/agents/` (four are also under `agents/`), where the model reads the persona files and follows the procedure over a conversation.
+
+Second, `litigation/run.py`. It loads a summary of session state, builds a system prompt and a user prompt from the framework files, and calls `provider.complete` once (around lines 277 to 297). The response is the whole transcript: arguments, vote and ruling, all written by one model. This is a design choice. It keeps cost low and works with small local models. The limitation is that the personas are not independent. A vote among them is one model agreeing or disagreeing with itself.
+
+The prompt assembler has nine `include_*` toggles (best practices, checklists, domain experts, MFAF, personalities, procedures, rules, spectators and templates) to cut context size. The runner caps `max_tokens` at 32,768. Providers sit behind a base class and a factory: Ollama, LM Studio or any OpenAI-compatible server, and OpenRouter. The CLI offers the four proceeding types as `standard`, `expedited`, `special_inquiry` and `contempt`.
+
+### What the prompt contains
+
+The system prompt is assembled from the framework files: procedures, rules, personalities, checklists, the expert registry, the feasibility framework and optionally spectators and templates. A short runner instruction tells the model to produce a complete transcript with all phases and to end with scribe certification. The user prompt carries the matter, the feasibility level, the hearing type and a state summary. The model is told to follow the procedure. Nothing in code checks that it did, apart from the separate transcript audit described below.
+
+### Records and state
+
+| Item | What it does |
+| --- | --- |
+| `state/current.md` | Session state, validated against `core/state-schema.md` |
+| Case IDs | `2026-DEL-005-001` style: year, category, case number, deliberation number |
+| `courtroom/case-registry.yaml` | Holds the next case number per category; `allocate_case_no` in `run.py` increments it |
+| `courtroom/reporter.py` | Audits transcript names and headers, regenerates the portal manifest, prints an integration report |
+| Court Reporter agent | Acts on that report: updates `courtroom/precedents.md` and `state/metrics.md` |
+
+### The executive layer
+
+The `executive/` package has four standard-library modules, about 600 lines in all. By design it executes rulings and does not make decisions.
+
+| Module | Behaviour |
+| --- | --- |
+| `judicial_log.py` | Append-only log. Each entry carries a SHA-256 entry hash and the previous entry's hash, and `verify()` walks the chain |
+| `proof.py` | HMAC-SHA256 proof over ruling ID, reason and timestamp, required to override a ruling. The secret file is gitignored |
+| `watchdog.py` | Flags actions with no logged approval and no override proof, log integrity failures, and more than 5 overrides |
+| `consensus.py` | File-based proposal, vote, quorum (default 3 of 5) and commit |
+
+I found no call from `litigation/run.py` into this package. The executive layer is a library with tests, not yet a step in the runner.
+
+### Web interface
+
+`index.html` is a live UI. It stores an OpenRouter key in the browser's `localStorage`, which is convenient and exposes the key to anything running on that page. `backend/server.js` is an Express proxy that keeps the key in a server environment variable instead. The two are alternatives, and the trade-off is real.
+
+## Iteration history
+
+The changelog runs from 2026-02-15 to 2026-07-25. The changelog and metrics file are my evidence; I did not use commit history, because the clone I read has a single commit.
+
+::: {.timeline}
+- **2026-02-15** — Infrastructure, a framework enhancement analysis (which added the state validation schema), a spectators file and an Aegis security subagent.
+- **2026-02-17** — The expert registry grew by 15 domains, to 27, after a bench trial on the question.
+- **2026-02-19** — A case naming and numbering format, and an executive branch with a log, override proofs, a watchdog and a consensus protocol.
+- **2026-07-25** — A docket of four proceedings: agentic production mutation controls, open-weight model export controls, agent-authored legal filings and agentic cyber attribution. The last was a special-interest hearing, so it produced findings and no vote.
+:::
+
+## Results
+
+There are no benchmark or quality results. The evidence is the record the system produced and the Python tests.
+
+### What the project reports about itself
+
+`state/metrics.md` says 13 deliberations, 12 decisions, 8 unanimous and 3 split, with 0 tie-breakers and 0 deadlocks. The feasibility counts are 2 at F3, 4 at F4 and 7 at F5. These come from the same system that produced the decisions and I did not recompute them. The 8 unanimous votes are a weak signal when one model casts all the votes.
+
+### Test counts
+
+| Suite | Count | Where |
+| --- | --- | --- |
+| pytest collection | 62 tests | `tests/` |
+| Test functions by grep | 59 `def test_` in 13 files | `tests/test_*.py` |
+
+The two numbers differ because parametrised tests expand at collection. I ran collection only. I did not run the suite, so I make no pass-rate claim. The files cover the judicial log, override proof, watchdog, consensus, prompt assembler, runner, transcript viewers and court reporter.
+
+## Reproducibility
+
+```sh
+python litigation/run.py "Should we adopt a new naming convention for API endpoints?"
+python litigation/viewer.py list
+python -m pytest
+```
+
+A run needs a provider: a local Ollama or LM Studio server, or an OpenRouter key. Output varies between runs: the example config sets temperature to 0.7, and hosted models change over time. Nothing here is deterministic the way a simulation is. Python 3.9 or later is required.
+
+## Engineering quality
+
+- **Rules in the open.** Voting, tie-breaking and ruling format are written down in `courtroom/RULES.md`, and the vote must match the tally.
+- **Tamper evidence.** The judicial log detects edits and reordering. Like any chain on one disk, it cannot show that the tail was cut off.
+- **Secrets.** The override secret is gitignored, and the proxy keeps the API key server-side.
+- **Context control.** The include toggles and the token cap let small models run the framework.
+
+## Limitations and next steps
+
+- **One model, one vote.** The runner's court is a single model. Unanimity is a weak signal, and the stated disagreements are performed.
+- **No evaluation.** There is no baseline and no comparison with a plain prompt.
+- **Self-reported metrics.** The dashboard is maintained by the system it measures.
+- **Overdue review.** `state/current.md` marks the F4+ specialist pilot review, due 2026-05-18, as overdue.
+- **A model-list bug.** In `litigation/models.py`, several entries in the free-model list lack a trailing comma, so Python joins neighbouring strings into single, invalid model IDs.
+- **Licence.** There is no open-source licence.
+- **Executive layer not wired in.** The runner does not write to the judicial log.
+- **Prompt compliance is unchecked.** The runner does not parse the transcript to confirm the vote matches the tally or that all five ruling parts are present.
+
+### Proposed evaluation (future work, not done)
+
+1. Fix a set of 30 or more past engineering decisions with a known outcome or an expert-agreed good answer.
+2. For each, get two answers: one from MORNINGSTAR, one from a single plain prompt with the same model and a similar token budget.
+3. Have raters who do not know which is which score both on correctness, risk coverage and usefulness of the dissent.
+4. Compare the pairs, and test whether separate calls per persona beat the single-call court.
+
+:::

@@ -9,11 +9,11 @@
       if (set) return set;
       return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     }
-    /** Set the button's accessible label and icon to offer the opposite theme. */
+    /** Set the button's accessible label and icon (via data-mode) to offer the opposite theme. */
     function label(btn) {
       var dark = current() === "dark";
       btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
-      btn.textContent = dark ? "☀" : "☾";
+      btn.setAttribute("data-mode", dark ? "dark" : "light");
     }
     var toggle = document.querySelector(".theme-toggle");
     if (toggle) {
