@@ -4,6 +4,17 @@ pandoc = {
   RawBlock = function(format, text)
     return { format = format, text = text }
   end,
+  RawInline = function(format, text)
+    return { tag = "RawInline", format = format, text = text }
+  end,
+  Str = function(text) return { tag = "Str", text = text } end,
+  utils = {
+    stringify = function(el)
+      local out = {}
+      for _, item in ipairs(el.content or {}) do out[#out + 1] = item.text or (item.tag == "Space" and " " or "") end
+      return table.concat(out)
+    end,
+  },
 }
 dofile("scripts/site.lua")
 
@@ -57,9 +68,22 @@ local function check(case, root, absolute, empty)
   contains(header.text, '<nav class="site-nav" aria-label="Main">')
   contains(header.text, '<main id="main">')
   contains(header.text, '<button type="button" class="theme-toggle" aria-label="Switch theme">')
+  contains(header.text, '<use href="#i-sun"/>')
+  contains(header.text, '<use href="#i-moon"/>')
+  contains(header.text, '<span class="i-sun" hidden><svg class="icon" width="1em" height="1em"')
+  contains(header.text, '<span class="i-moon"><svg class="icon" width="1em" height="1em"')
+  assert(not header.text:find("<symbol", 1, true), "The sprite is not between the header and <main>")
+  contains(footer.text, '<symbol id="i-github"')
+  local _, sprites = (header.text .. footer.text):gsub('<svg width="0" height="0"', "")
+  assert(sprites == 1, "Exactly one icon sprite per page")
+  assert(not header.text:find("<!--", 1, true), "No HTML comments in output")
+  assert(footer.text:find("</footer>", 1, true) < footer.text:find('id="i-github"', 1, true),
+         "Sprite follows the footer")
+
   contains(header.text, 'class="site-title" href="' .. case.prefix .. 'index.html"')
   contains(footer.text, '</main>')
   contains(footer.text, '<footer class="site-footer">')
+  contains(footer.text, '<script src="' .. case.prefix .. 'assets/js/site.js" defer></script>')
   contains(footer.text, 'href="https://quarto.org"')
   for _, destination in ipairs(destinations) do
     contains(header.text, 'class="nav-link" href="' .. case.prefix .. destination .. '"')
@@ -166,3 +190,125 @@ for _, handler in ipairs({ { name = "RawBlock", callback = RawBlock },
 end
 assert(#comment_failures == 0, "Comment filter failures:\n" .. table.concat(comment_failures, "\n"))
 print("Comment filter unit tests passed (" .. comment_checks .. " cases)")
+
+-- ---------------------------------------------------------------- icon decoration
+local function str(t) return { tag = "Str", text = t } end
+local SPACE = { tag = "Space" }
+local function link(target, classes, ...)
+  return { tag = "Link", target = target, classes = classes or {}, content = { ... } }
+end
+local function html_of(content)
+  local out = {}
+  for _, item in ipairs(content) do out[#out + 1] = item.text or (item.tag == "Space" and " " or "?") end
+  return table.concat(out)
+end
+local function uses(content, name)
+  return html_of(content):find('<use href="#i-' .. name .. '"/>', 1, true) ~= nil
+end
+
+-- Every icon name used by the filter has a symbol in the sprite, and ids are i-prefixed.
+local sprite_html = Pandoc({ blocks = {} }).blocks[2].text
+local used = {}
+for _, name in ipairs({ "book-open", "file-text", "code", "play", "arrow-left", "arrow-right",
+                        "arrow-up-right", "download", "map-pin", "sun", "moon", "layers", "brain",
+                        "scale", "waves", "clock", "github", "linkedin", "mail" }) do
+  contains(sprite_html, '<symbol id="i-' .. name .. '"')
+  used[name] = true
+end
+local _, symbols = sprite_html:gsub("<symbol ", "")
+assert(symbols == 19, "Unexpected icon count: " .. symbols)
+
+-- project-nav labels
+for label, icon in pairs({ ["Case study"] = "book-open", ["Technical report"] = "file-text",
+                           ["Code"] = "code", ["Live demo"] = "play" }) do
+  assert(nav_icon_name(label) == icon, label)
+  assert(nav_icon_name("  " .. label:lower() .. " ") == icon, label .. " is case and space tolerant")
+end
+assert(nav_icon_name("Something else") == nil and nav_icon_name(nil) == nil and nav_icon_name("") == nil)
+local tab = decorate_nav_link(link("x.html", {}, str("Case"), SPACE, str("study")))
+assert(uses(tab.content, "book-open") and html_of(tab.content):find("Case study", 1, true))
+local plain_tab = decorate_nav_link(link("x.html", {}, str("Other")))
+assert(#plain_tab.content == 1, "Unknown tab labels are left alone")
+
+-- back links
+local back = decorate_link(link("index.qmd", { "back" }, str("\u{2190}"), SPACE, str("All"), SPACE, str("projects")))
+assert(uses(back.content, "arrow-left") and html_of(back.content):find("All projects", 1, true))
+assert(not html_of(back.content):find("\u{2190}", 1, true), "Leading arrow is replaced")
+local glued = decorate_link(link("index.qmd", { "back" }, str("\u{2190}All")))
+assert(uses(glued.content, "arrow-left") and html_of(glued.content):find("All", 1, true))
+local no_arrow = decorate_link(link("index.qmd", { "back" }, str("Back")))
+assert(#no_arrow.content == 1, "Back links without an arrow are unchanged")
+local empty_back = decorate_link(link("index.qmd", { "back" }))
+assert(#empty_back.content == 0, "Empty back links do not fail")
+local more = decorate_link(link("p.qmd", { "more" }, str("All"), SPACE, str("projects"), SPACE, str("\u{2192}")))
+assert(uses(more.content, "arrow-right") and not html_of(more.content):find("\u{2192}", 1, true))
+
+-- external links
+local ext = decorate_link(link("https://example.com/x", {}, str("Example")))
+assert(uses(ext.content, "arrow-up-right") and html_of(ext.content):find("icon-ext", 1, true))
+for _, skip in ipairs({ "https://exios66.github.io/resume/about.html", "https://exios66.github.io/resume",
+                        "index.qmd", "#top", "mailto:a@b.co", "" }) do
+  local l = decorate_link(link(skip, {}, str("Text")))
+  assert(#l.content == 1, "No icon for " .. skip)
+end
+assert(is_external_href("https://exios66.github.io/degen-llms/"), "Sibling Pages sites are external")
+assert(not is_external_href(nil))
+local with_image = decorate_link(link("https://example.com", {}, { tag = "Image", text = "img" }))
+assert(#with_image.content == 1, "Links around images are left alone")
+for _, class in ipairs({ "btn", "chip" }) do
+  local l = decorate_link(link("https://example.com/", { class }, str("Go")))
+  assert(#l.content == 1, class .. " links get no external icon")
+end
+assert(decorate_link(nil) == nil, "nil link")
+local no_target = { tag = "Link", classes = {}, content = { str("x") } }
+assert(decorate_link(no_target) == no_target and #no_target.content == 1, "Link without target")
+local lookalike = decorate_link(link("https://exios66.github.io/resumes/", {}, str("x")))
+assert(uses(lookalike.content, "arrow-up-right"), "A sibling path that only starts like /resume is external")
+
+-- contact links
+local cases_contact = {
+  { "https://www.linkedin.com/in/jackjburleson", "linkedin" },
+  { "https://github.com/Exios66", "github" },
+  { "https://github.com/Exios66/", "github" },
+  { "mailto:jackjburleson@proton.me", "mail" },
+  { "assets/Jack_Burleson_Resume.pdf", "download" },
+  { "https://github.com/Exios66/degen-llms", nil },
+  { "https://github.com/Exios66x", nil },
+  { "resume.qmd", nil },
+}
+for _, c in ipairs(cases_contact) do
+  assert(contact_icon_name(c[1]) == c[2], "contact icon for " .. c[1])
+end
+assert(contact_icon_name(nil) == nil)
+local chip = decorate_link(link("https://github.com/Exios66", { "chip" }, str("github.com/Exios66")))
+assert(uses(chip.content, "github"))
+
+-- headings
+local group = decorate_header({ tag = "Header", classes = { "group-title" },
+  content = { str("Document"), SPACE, str("intelligence") } })
+assert(uses(group.content, "layers"))
+for text, icon in pairs({ ["Behavioral machine learning"] = "brain", ["LLM agent design"] = "scale",
+                          ["Side projects & interests"] = "waves" }) do
+  local h = decorate_header({ tag = "Header", classes = { "group-title" }, content = { str(text) } })
+  assert(uses(h.content, icon), text)
+end
+local unmatched = decorate_header({ tag = "Header", classes = { "group-title" }, content = { str("Other") } })
+assert(#unmatched.content == 1)
+local card_head = decorate_header({ tag = "Header", classes = {},
+  content = { link("p.qmd", {}, str("Project")) } })
+assert(uses(card_head.content[1].content, "arrow-right"), "Single-link headings get a nudging arrow")
+local ext_head = decorate_header({ tag = "Header", classes = {}, content = { link("https://example.com", {}, str("X")) } })
+assert(#ext_head.content[1].content == 1, "External single-link headings are left alone")
+local text_head = decorate_header({ tag = "Header", classes = {}, content = { str("Plain") } })
+assert(#text_head.content == 1)
+
+-- location chip
+local place = decorate_span({ tag = "Span", classes = { "chip" }, content = { str("Madison, WI") } })
+assert(uses(place.content, "map-pin"))
+local other_chip = decorate_span({ tag = "Span", classes = { "chip" }, content = { str("Remote") } })
+assert(#other_chip.content == 1)
+-- every icon self-sizes, so a missing stylesheet cannot blow it up to the 300x150 SVG default
+assert(icon_html("code") == '<svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false">'
+  .. '<use href="#i-code"/></svg>', icon_html("code"))
+assert(icon_html("arrow-up-right", "icon-ext"):find('class="icon icon-ext" width="1em" height="1em"', 1, true))
+print("icon decoration ok")

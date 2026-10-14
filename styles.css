@@ -3,8 +3,8 @@
 @font-face { font-family: "Inter"; font-weight: 400; font-style: normal; font-display: swap; src: url("assets/fonts/inter-latin-400-normal.woff2") format("woff2"); }
 @font-face { font-family: "Inter"; font-weight: 600; font-style: normal; font-display: swap; src: url("assets/fonts/inter-latin-600-normal.woff2") format("woff2"); }
 @font-face { font-family: "Inter"; font-weight: 700; font-style: normal; font-display: swap; src: url("assets/fonts/inter-latin-700-normal.woff2") format("woff2"); }
-@font-face { font-family: "Source Serif 4"; font-weight: 600; font-style: normal; font-display: swap; src: url("assets/fonts/source-serif-4-latin-600-normal.woff2") format("woff2"); }
-@font-face { font-family: "Source Serif 4"; font-weight: 700; font-style: normal; font-display: swap; src: url("assets/fonts/source-serif-4-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Newsreader"; font-weight: 200 800; font-style: normal; font-display: swap; src: url("assets/fonts/newsreader-latin-opsz-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "JetBrains Mono"; font-weight: 400; font-style: normal; font-display: swap; src: url("assets/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2"); }
 
 :root {
   --bg: #f4f6f7;
@@ -17,7 +17,8 @@
   --accent-ink: #ffffff;
   --shadow: 0 1px 2px rgba(16, 32, 38, .06), 0 12px 32px rgba(16, 32, 38, .07);
   --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -50,6 +51,12 @@
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
 
+/* Icons carry width/height="1em" in the markup too, so a missing stylesheet cannot enlarge them. */
+.icon { width: 1em; height: 1em; vertical-align: -.125em; flex: none; }
+.icon-ext { width: .75em; height: .75em; margin-left: .2em; vertical-align: -.02em; color: var(--muted); }
+.icon-go { margin-left: .35em; }
+[hidden] { display: none !important; }
+
 body {
   margin: 0;
   background: var(--bg);
@@ -81,7 +88,8 @@ a:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-
 .hero { text-align: center; padding-bottom: 8px; }
 .hero .name {
   margin: 0;
-  font: 700 clamp(2rem, 6vw, 2.9rem)/1.1 var(--serif);
+  font: 600 clamp(2rem, 6vw, 2.9rem)/1.1 var(--serif);
+  font-optical-sizing: auto;
   letter-spacing: .06em;
   text-transform: uppercase;
 }
@@ -98,7 +106,7 @@ a:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-
 .contact { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 8px; margin-top: 20px; }
 .contact p { display: contents; }
 .chip {
-  display: inline-block;
+  display: inline-flex; align-items: center; gap: .4em;
   padding: 3px 12px;
   font-size: .82rem;
   color: var(--muted);
@@ -112,7 +120,7 @@ a.chip:hover { text-decoration: none; filter: brightness(.95); }
 .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; }
 .actions p { display: contents; }
 .btn {
-  display: inline-block;
+  display: inline-flex; align-items: center; justify-content: center; gap: .5em;
   padding: 8px 18px;
   font-size: .88rem;
   font-weight: 600;
@@ -166,7 +174,7 @@ p { margin: 0 0 12px; }
 
 /* ---------- Site chrome ---------- */
 .skip-link {
-  position: absolute; left: 12px; top: -48px; z-index: 10;
+  position: absolute; left: 12px; top: -48px; z-index: 40;
   padding: 8px 14px; border-radius: 8px;
   background: var(--accent); color: var(--accent-ink); font-weight: 600;
 }
@@ -174,7 +182,7 @@ p { margin: 0 0 12px; }
 
 .site-header { max-width: 880px; margin: 22px auto 0; padding: 0 4px; }
 .site-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 20px; }
-.site-title { font: 700 1.05rem/1 var(--serif); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+.site-title { font: 600 1.05rem/1 var(--serif); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
 .site-title:hover { text-decoration: none; color: var(--accent); }
 .nav-list { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 4px; margin: 0; padding: 0; list-style: none; }
 .nav-link { display: block; padding: 6px 12px; border-radius: 8px; font-size: .88rem; font-weight: 600; color: var(--muted); }
@@ -182,27 +190,44 @@ p { margin: 0 0 12px; }
 .nav-link[aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
 .theme-toggle {
   width: 34px; height: 34px; margin-left: 4px;
-  font: inherit; font-size: 1rem; line-height: 1; color: var(--muted);
+  display: grid; place-items: center; padding: 0;
+  font: inherit; font-size: 1.05rem; line-height: 1; color: var(--muted);
   background: none; border: 1.5px solid var(--rule); border-radius: 50%; cursor: pointer;
 }
+.theme-toggle > span { display: contents; }
 .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
 .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.theme-toggle:empty::before { content: "\263E"; }
 
 .site-header + main .page { margin-top: 16px; }
+.page :is(h2, h3, h4, [id]) { scroll-margin-top: 16px; }
+
+/* Wide screens: the header stays at the top while reading. On phones the nav wraps to
+   two rows, so there it scrolls away with the page instead of covering the content. */
+@media (min-width: 721px) {
+  .site-header {
+    position: sticky; top: 0; z-index: 20; max-width: none; margin: 0;
+    padding: 22px max(4px, calc((100% - 880px) / 2 + 4px)) 8px;
+    background: var(--bg); border-bottom: 1px solid transparent;
+    transition: border-color .2s;
+  }
+  .site-header.is-scrolled { border-bottom-color: var(--rule); }
+  .site-nav { max-width: 880px; margin: 0 auto; }
+  .site-header + main .page { margin-top: 8px; }
+  .page :is(h2, h3, h4, [id]) { scroll-margin-top: 84px; }
+}
 .site-footer { max-width: 880px; margin: 28px auto 36px; padding: 0 4px; text-align: center; color: var(--muted); font-size: .8rem; }
 .site-footer p { margin: 0; }
 .site-footer a { color: var(--muted); text-decoration: underline; }
 .print-only { display: none; }
 
 /* ---------- Page content ---------- */
-h1.page-title { margin: 0 0 8px; font: 700 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var(--serif); letter-spacing: .01em; }
+h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var(--serif); font-optical-sizing: auto; letter-spacing: -.01em; }
 .page > h1 + p, .page > .kicker + p { margin-top: 0; }
 .kicker { display: block; margin-bottom: 14px; color: var(--accent); font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
-.back { display: inline-block; margin-bottom: 14px; font-size: .88rem; font-weight: 600; }
+.back { display: inline-flex; align-items: center; gap: .4em; margin-bottom: 14px; font-size: .88rem; font-weight: 600; }
 .lede { max-width: 56ch; margin: 18px auto 0; }
 .lede p { margin: 0; color: var(--muted); font-size: 1.05rem; }
-.more { font-weight: 600; }
+.more { display: inline-flex; align-items: center; font-weight: 600; }
 /* Links inside running text must not rely on color alone */
 .page :is(p, li) a:not(.btn, .chip, .back, .more) { text-decoration: underline; text-decoration-thickness: 1px; }
 .page :is(p, li) a:not(.btn, .chip, .back, .more):hover { text-decoration-thickness: 2px; }
@@ -222,6 +247,7 @@ h1.page-title { margin: 0 0 8px; font: 700 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 .card :is(h2, h3) a { color: var(--ink); }
 .card :is(h2, h3) a::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
 .card :is(h2, h3) a:hover { text-decoration: none; color: var(--accent); }
+.card .icon-go { color: var(--muted); }
 .card .kicker { margin-bottom: 8px; font-size: .7rem; }
 .card p { margin: 0 0 10px; color: var(--muted); font-size: .92rem; }
 .card p:last-child { margin-bottom: 0; }
@@ -259,7 +285,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   .print-only { display: inline-block; }
   .chip { padding: 0 2px; background: none; }
   .contact { gap: 0 10px; margin-top: 10px; }
-  .hero .name { font-size: 24pt; }
+  .hero .name { font-size: 24pt; font-variation-settings: "wght" 600; }
   h2 { margin: 13px 0 8px; padding-bottom: 3px; font-size: 9.5pt; break-after: avoid; }
   .skills dl { gap: 5px 16px; }
   .entry { margin-bottom: 10px; }
@@ -277,7 +303,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .project-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
 .project-nav p { display: contents; }
 .project-nav a {
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+  display: inline-flex; align-items: center; gap: .5em; min-height: 44px; padding: 0 16px;
   font-size: .88rem; font-weight: 600; color: var(--accent);
   border: 1.5px solid var(--rule); border-radius: 999px;
   transition: background .15s, color .15s, border-color .15s;
@@ -293,7 +319,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; break-inside: avoid;
 }
 .stat p { display: contents; }
-.stat-value { display: block; font: 700 clamp(1.6rem, 4vw, 2.1rem)/1.1 var(--serif); color: var(--accent); font-variant-numeric: tabular-nums; }
+.stat-value { display: block; font: 600 clamp(1.6rem, 4vw, 2.1rem)/1.1 var(--serif); font-optical-sizing: auto; color: var(--accent); font-variant-numeric: tabular-nums; }
 .stat-label { display: block; font-size: .82rem; line-height: 1.4; color: var(--muted); }
 
 /* Figures (Quarto: div.quarto-figure > figure.figure > p > img.fig.figure-img + figcaption) */
@@ -365,15 +391,16 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 
 /* Group heading on the projects index */
 h2.group-title, .group-title { display: flex; align-items: baseline; gap: 10px; }
+.group-title > .icon { align-self: center; width: 1.1em; height: 1.1em; color: var(--accent); }
 .group-title .count, .group-title small { font-size: .78rem; font-weight: 600; letter-spacing: .04em; text-transform: none; color: var(--muted); }
 
 /* Code */
-code { font: 400 .88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+code { font: 400 .88em/1.4 var(--mono); }
 :not(pre) > code { padding: 1px 5px; background: var(--accent-soft); border-radius: 4px; overflow-wrap: anywhere; }
 pre, div.sourceCode {
   margin: 14px 0 18px; padding: 12px 14px; overflow-x: auto; color: var(--ink);
   background: var(--bg); border: 1px solid var(--rule); border-radius: 8px;
-  font: 400 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font: 400 13px/1.5 var(--mono);
 }
 div.sourceCode { padding: 0; }
 div.sourceCode pre, div.sourceCode pre.sourceCode { margin: 0; padding: 12px 14px; border: 0; border-radius: 0; background: none; }
@@ -398,6 +425,7 @@ pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* Project pages: print */
 @media print {
+  .icon { display: none !important; }
   .project-nav { display: none; }
   .stats { grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .stat { border: 1px solid #ccc; padding: 6px 8px; }
@@ -409,4 +437,37 @@ pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .sample-doc pre, pre { max-height: none; overflow: visible; white-space: pre-wrap; border-color: #ccc; background: none; }
   .caveat { background: none; }
   .diagram svg { color: #111; }
+}
+
+/* ==========================================================================
+   Motion. Gated on prefers-reduced-motion: no-preference; the hidden state of
+   the card fade also needs html.js-motion (set in the head) and .rv (set by
+   assets/js/site.js only on cards below the fold).
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .card .icon-go, .more .icon-go { transition: transform .2s cubic-bezier(.2, .7, .2, 1); }
+  .card:is(:hover, :focus-within) .icon-go, .more:hover .icon-go { transform: translateX(3px); }
+
+  html.js-motion .rv {
+    opacity: 0; transform: translateY(8px);
+    transition: opacity 420ms cubic-bezier(.2, .7, .2, 1), transform 420ms cubic-bezier(.2, .7, .2, 1);
+    transition-delay: calc(var(--rv-i, 0) * 50ms);
+  }
+  html.js-motion .rv.is-in { opacity: 1; transform: none; }
+
+  /* Reading progress (technical reports) */
+  .read-progress {
+    position: fixed; top: 0; left: 0; z-index: 30; width: 100%; height: 2px;
+    background: var(--accent); transform-origin: 0 50%;
+    transform: scaleX(var(--read, 0)); pointer-events: none;
+  }
+  @supports (animation-timeline: scroll()) {
+    .read-progress { transform: scaleX(0); animation: read-grow linear both; animation-timeline: scroll(root); }
+    @keyframes read-grow { to { transform: scaleX(1); } }
+  }
+}
+
+@media print {
+  .read-progress { display: none !important; }
+  html.js-motion .rv { opacity: 1 !important; transform: none !important; transition: none !important; }
 }

@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Technical report on a PSYCH 755 study of LLM personas against classical ML for predicting PRCA communication apprehension: data, models, per-tier results, bias slices, secondary studies, reproduction and limits.">
+
+<title>Psychometric Digital Twin: technical report — Jack J. Burleson</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<meta name="theme-color" content="#0e6f7a">
+<meta name="author" content="Jack J. Burleson">
+<link rel="preload" href="../../assets/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin="">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image-width" content="1200">
+<meta name="twitter:image-height" content="630">
+<script>
+  // Apply the saved theme before first paint so there is no light/dark flash.
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+  // Motion styles apply only when the visitor has not asked for reduced motion.
+  try {
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
+  } catch (e) {}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Jack J. Burleson",
+  "url": "https://exios66.github.io/resume/",
+  "jobTitle": "AI / Machine Learning and Data Science",
+  "email": "mailto:jackjburleson@proton.me",
+  "address": { "@type": "PostalAddress", "addressLocality": "Madison", "addressRegion": "WI", "addressCountry": "US" },
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Madison" },
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Parkside" }
+  ],
+  "knowsAbout": ["Machine learning", "Natural language processing", "LLM evaluation", "Computer vision", "Behavioral data science"],
+  "sameAs": [
+    "https://www.linkedin.com/in/jackjburleson",
+    "https://github.com/Exios66"
+  ]
+}
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css?v=7bc15133c7">
+<meta property="og:title" content="Psychometric Digital Twin: technical report — Jack J. Burleson">
+<meta property="og:description" content="Technical report on a PSYCH 755 study of LLM personas against classical ML for predicting PRCA communication apprehension: data, models, per-tier results, bias slices, secondary studies, reproduction and limits.">
+<meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta property="og:site_name" content="Jack J. Burleson">
+<meta property="og:image:alt" content="Jack J. Burleson — AI / Machine Learning · Data Science">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:title" content="Psychometric Digital Twin: technical report — Jack J. Burleson">
+<meta name="twitter:description" content="Technical report on a PSYCH 755 study of LLM personas against classical ML for predicting PRCA communication apprehension: data, models, per-tier results, bias slices, secondary studies, reproduction and limits.">
+<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://exios66.github.io/resume/projects/psychometric-digital-twin/report.html">
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+
+
+
+<header class="site-header">
+  <nav class="site-nav" aria-label="Main">
+    <a class="site-title" href="../../index.html">Jack J. Burleson</a>
+    <ul class="nav-list">
+      <li><a class="nav-link" href="../../index.html">Home</a></li>
+      <li><a class="nav-link" href="../../about.html">About</a></li>
+      <li><a class="nav-link" href="../../projects/index.html" aria-current="page">Projects</a></li>
+      <li><a class="nav-link" href="../../research.html">Research</a></li>
+      <li><a class="nav-link" href="../../writing/index.html">Writing</a></li>
+      <li><a class="nav-link" href="../../resume.html">Résumé</a></li>
+      <li><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden=""><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg></span><span class="i-moon"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg></span></button></li>
+    </ul>
+  </nav>
+</header>
+<main id="main"><header id="title-block-header" class="quarto-title-block"></header>
+<div class="page">
+<p><a href="../../projects/psychometric-digital-twin.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>Case study</a></p>
+<div class="project-nav">
+<p><a href="../../projects/psychometric-digital-twin.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/psychometric-digital-twin/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="https://github.com/Exios66/psych755-jjb"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
+</div>
+<h1 class="page-title" id="psychometric-digital-twin-technical-report">Psychometric Digital Twin: technical report</h1>
+<p><span class="kicker">Behavioral ML research · UW–Madison</span></p>
+<h2 id="summary">Summary</h2>
+<p>This is the final project for PSYCH 755 at UW–Madison, taught by Dr.&nbsp;Adam Ross Nelson (Summer 2026). It asks whether an LLM, given a second-person prompt built from a survey respondent’s attributes, can predict that respondent’s own scores on two subscales of the PRCA-24 communication-apprehension measure, and whether its errors follow demographic group.</p>
+<p>On 241 respondents, none of the open-weight models was a close match to the real scores. The best persona run (DeepSeek-R1-Distill-Llama-8B, second prompt version) had a pooled group-score error of 5.02 points on the 6–30 scale. Ridge regression reached 4.49 at the transit tier. By my own calculation, always predicting the cohort mean gives 4.93. At the transit tier the persona’s scores also did not rank people: its low-versus-high AUC was 0.53 on the group score, against 0.72 for a random forest.</p>
+<p>Everything on this page is an aggregate. The survey data are private and are not published.</p>
+<h2 id="system-and-data">System and data</h2>
+<h3 id="data">Data</h3>
+<p>The survey was collected through Prolific and Qualtrics for the course. Two Prolific recruitment waves were stacked (262 unique participants) and joined to 273 Qualtrics rows by the participant identifier the respondents typed into the survey. That gave 252 matches. Eleven had incomplete PRCA items and were dropped, leaving an analytic sample of 241. Both subscales are the sum of six five-point items, with comfort items reverse-coded, so each runs from 6 to 30. The repository states no ethics or consent details, so I make no claim about them here.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Measure</th>
+<th>Group CA</th>
+<th>Interpersonal CA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Mean (SD)</td>
+<td>14.62 (6.03)</td>
+<td>14.31 (5.82)</td>
+</tr>
+<tr class="even">
+<td>Median</td>
+<td>13</td>
+<td>13</td>
+</tr>
+<tr class="odd">
+<td>Low (13 or less) / moderate (14–19) / high (20 or more)</td>
+<td>53.9% / 25.3% / 20.7%</td>
+<td>53.1% / 28.6% / 18.3%</td>
+</tr>
+</tbody>
+</table>
+<p>Group means differ by employment. Full-time (n = 148) is 13.32, part-time (n = 31) is 16.16 and other (n = 62) is 16.95. Mean group CA also falls with public-transit use, from 17.38 for riders who never use transit (n = 50) to 12.84 for those riding eight or more days a month (n = 55).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/ca-by-employment.jpg" class="fig img-fluid" style="width:100.0%" alt="Grouped bar chart of mean group and interpersonal PRCA scores for full-time, part-time and other employment. Full-time is lowest at 13.32 and 12.99. Part-time is 16.16 and 16.10. Other is highest at 16.95 and 16.56."></p>
+<figcaption>Mean PRCA scores by employment status in the analysed cohort.</figcaption>
+</figure>
+</div>
+<h3 id="persona-tiers">Persona tiers</h3>
+<figure class="diagram" role="img" aria-labelledby="psych-twin-cap"><svg viewbox="0 0 800 340" aria-hidden="true" focusable="false"><defs><marker id="psych-twin-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="16" y="30" width="150" height="84" rx="8"></rect><text x="91" y="64" text-anchor="middle" font-weight="600">Survey data</text><text x="91" y="82" text-anchor="middle">241 analysed</text><rect class="d-box" x="222" y="30" width="150" height="84" rx="8"></rect><text x="297" y="60" text-anchor="middle" font-weight="600">Cumulative tiers</text><text x="297" y="78" text-anchor="middle">demos, jobs,</text><text x="297" y="96" text-anchor="middle">place, transit</text><rect class="d-box d-accent" x="428" y="30" width="150" height="84" rx="8"></rect><text x="503" y="60" text-anchor="middle" font-weight="600">LLM personas</text><text x="503" y="78" text-anchor="middle">second-person</text><text x="503" y="96" text-anchor="middle">prompts, vLLM</text><rect class="d-box" x="428" y="230" width="150" height="84" rx="8"></rect><text x="503" y="260" text-anchor="middle" font-weight="600">ML baselines</text><text x="503" y="278" text-anchor="middle">7 models,</text><text x="503" y="296" text-anchor="middle">5-fold CV</text><rect class="d-box" x="634" y="130" width="150" height="84" rx="8"></rect><text x="709" y="160" text-anchor="middle" font-weight="600">Score vs PRCA</text><text x="709" y="178" text-anchor="middle">MAE, bands,</text><text x="709" y="196" text-anchor="middle">F1, AUC</text><rect class="d-box" x="634" y="250" width="150" height="64" rx="8"></rect><text x="709" y="278" text-anchor="middle" font-weight="600">Bias check</text><text x="709" y="296" text-anchor="middle">error by group</text><path class="d-arrow" d="M166 72H220" marker-end="url(#psych-twin-ah)"></path><path class="d-arrow" d="M372 72H426" marker-end="url(#psych-twin-ah)"></path><path class="d-arrow" d="M297 114V272H426" fill="none" marker-end="url(#psych-twin-ah)"></path><path class="d-arrow" d="M578 72H606V160H632" fill="none" marker-end="url(#psych-twin-ah)"></path><path class="d-arrow" d="M578 272H606V184H632" fill="none" marker-end="url(#psych-twin-ah)"></path><path class="d-arrow" d="M709 214V248" marker-end="url(#psych-twin-ah)"></path><text class="d-muted" x="297" y="214" text-anchor="middle" font-size="13">same features</text></svg><figcaption id="psych-twin-cap">Study design: matched survey data feed cumulative information tiers. Each tier becomes a second-person prompt for an LLM and a feature set for seven classical ML models. Both are scored against the respondent's own PRCA subscale scores, then checked for error by group.</figcaption></figure>
+<p>Each tier adds to the one before it.</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Tier</th>
+<th>Adds</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>demos</td>
+<td>Age, sex, country, student status</td>
+</tr>
+<tr class="even">
+<td>employment</td>
+<td>Employment status</td>
+</tr>
+<tr class="odd">
+<td>geo</td>
+<td>Survey latitude and longitude</td>
+</tr>
+<tr class="even">
+<td>transit</td>
+<td>Public-transit, ride-share, licence and car-access answers</td>
+</tr>
+<tr class="odd">
+<td>full</td>
+<td>Two open-text answers (LLM prompts only)</td>
+</tr>
+</tbody>
+</table>
+<p>Prompts are a second-person narrative (“You are a …”) with the request to report one’s own scores as JSON. Version 1 used full-precision coordinates and a soft JSON request. Version 2 rounded coordinates to one decimal, skipped follow-up transit questions when the answer was “never”, asked for the two subscales independently and used guided JSON. Version 3 added three single-cue tiers (ride-share only, public transit only, open text only). The classical models see the first four tiers only.</p>
+<h3 id="models-and-metrics">Models and metrics</h3>
+<p>I ran Llama 3.1 8B Instruct, Llama 3.2 3B Instruct, DeepSeek-R1-Distill-Llama-8B and Llama 3.3 70B Instruct (AWQ) with vLLM. Version 1 used greedy decoding, a maximum of 256 new tokens and an 8,192-token context. Version 2 used temperature 0.3, seed 42 and guided JSON. Llama 3.2 3B base is left out of all scores, because it produced valid output for 7.1% of version 1 prompts and 0% of version 3. DeepSeek parsed 1,203 of 1,205 version 2 prompts.</p>
+<p>The classical suite is Ridge, Elastic Net, k-NN (k = 3), random forest (200 trees), histogram gradient boosting, XGBoost and a small neural net, scored with shuffled 5-fold cross-validation at seed 42. Metrics are mean absolute error (MAE) in score points, exact-match rate, band accuracy and per-band F1 for the low, moderate and high bands, and AUC for low versus high.</p>
+<h2 id="results">Results</h2>
+<h3 id="classical-baselines">Classical baselines</h3>
+<p>Group-score MAE by model and tier, lower is better:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>demos</th>
+<th>employment</th>
+<th>geo</th>
+<th>transit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ridge</td>
+<td>4.97</td>
+<td>4.66</td>
+<td>4.68</td>
+<td><strong>4.49</strong></td>
+</tr>
+<tr class="even">
+<td>Elastic Net</td>
+<td>4.94</td>
+<td><strong>4.65</strong></td>
+<td>4.69</td>
+<td>4.51</td>
+</tr>
+<tr class="odd">
+<td>Neural net</td>
+<td><strong>4.90</strong></td>
+<td>4.78</td>
+<td>4.82</td>
+<td>4.59</td>
+</tr>
+<tr class="even">
+<td>Random forest</td>
+<td>5.72</td>
+<td>5.59</td>
+<td>5.05</td>
+<td>4.68</td>
+</tr>
+<tr class="odd">
+<td>Histogram gradient boosting</td>
+<td>5.15</td>
+<td>5.05</td>
+<td>5.01</td>
+<td>4.87</td>
+</tr>
+<tr class="even">
+<td>XGBoost</td>
+<td>5.81</td>
+<td>5.90</td>
+<td>5.26</td>
+<td>4.99</td>
+</tr>
+<tr class="odd">
+<td>k-NN</td>
+<td>5.83</td>
+<td>5.84</td>
+<td>5.74</td>
+<td>5.21</td>
+</tr>
+</tbody>
+</table>
+<p>Linear models were the strongest floor. Boosting did not win, which fits a small sample with few features. The best transit-tier band accuracy for group CA was 0.481, and R-squared peaked at only about 0.13 to 0.15 at transit for the best models. The classical models explain a small share of individual differences. The interpersonal table is in the repository; its best transit MAE is 4.25 (Elastic Net).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/ml-baseline-mae-group.jpg" class="fig img-fluid" style="width:100.0%" alt="Line chart of mean absolute error by tier for seven models. Ridge, Elastic Net and the neural net sit lowest, near 4.9 at demos and about 4.5 to 4.6 at transit. The random forest, highlighted, falls from about 5.7 to 4.7. k-NN is highest throughout, ending near 5.2."></p>
+<figcaption>Group-score MAE across the seven classical models by tier.</figcaption>
+</figure>
+</div>
+<p>A constant guess is a useful reference. From the committed cohort table I computed the MAE of always predicting the cohort mean, which is 4.93 for group CA and 4.63 for interpersonal CA, and of always predicting the median, 4.74 and 4.51. This is my own calculation and is in-sample, so it flatters the constant guess a little. It still shows the room above the floor is small.</p>
+<h3 id="llm-personas">LLM personas</h3>
+<p>Pooled over the five tiers of version 1 (1,205 prompts per model):</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Group MAE</th>
+<th>Interpersonal MAE</th>
+<th>Group band accuracy</th>
+<th>Interpersonal band accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DeepSeek-R1-Distill-Llama-8B</td>
+<td>5.22</td>
+<td>5.73</td>
+<td>33.4%</td>
+<td>35.4%</td>
+</tr>
+<tr class="even">
+<td>Llama 3.2 3B Instruct</td>
+<td>5.51</td>
+<td>5.35</td>
+<td>52.7%</td>
+<td>30.0%</td>
+</tr>
+<tr class="odd">
+<td>Llama 3.1 8B Instruct</td>
+<td>5.92</td>
+<td>5.82</td>
+<td>28.8%</td>
+<td>40.2%</td>
+</tr>
+<tr class="even">
+<td>Llama 3.3 70B Instruct</td>
+<td>6.02</td>
+<td>4.65</td>
+<td>26.3%</td>
+<td>52.0%</td>
+</tr>
+</tbody>
+</table>
+<p>Exact-match rates were 6.1% to 9.1% for group CA. The 70B model’s good interpersonal numbers are a failure. By the project’s count about 93% of its outputs were the same pair of scores, 18 and 12, so it is not tracking individuals. Llama 3.2 3B Instruct’s 52.7% group band accuracy is close to the cohort’s 53.9% share of low-band respondents. At the transit tier its band F1 was 0.68 for low, 0.11 for moderate and 0 for high, so it looks like a model that mostly says “low”.</p>
+<p>Version 2 improved DeepSeek (group 5.02, interpersonal 5.26) and made the others worse. Llama 3.1 went to 5.99 and 7.63, and Llama 3.2 3B Instruct to 5.73 and 6.07. Version 3, greedy and eight tiers, left Llama 3.1 at 5.99 and 5.76, Llama 3.2 3B Instruct at 5.72 and 6.81, and the 70B model at 6.01 and 4.61, again as a constant prior. The enhanced-decode rerun of version 3 is still pending in the repository.</p>
+<h3 id="per-tier-results">Per-tier results</h3>
+<p>Group-score MAE by tier, with the best classical value and the persona runs:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Run</th>
+<th>demos</th>
+<th>employment</th>
+<th>geo</th>
+<th>transit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Best classical</td>
+<td>4.90</td>
+<td>4.65</td>
+<td>4.68</td>
+<td>4.49</td>
+</tr>
+<tr class="even">
+<td>Random forest</td>
+<td>5.72</td>
+<td>5.59</td>
+<td>5.05</td>
+<td>4.68</td>
+</tr>
+<tr class="odd">
+<td>DeepSeek, v2</td>
+<td>5.05</td>
+<td>5.15</td>
+<td>4.89</td>
+<td>4.97</td>
+</tr>
+<tr class="even">
+<td>DeepSeek, v1</td>
+<td>5.12</td>
+<td>5.16</td>
+<td>5.30</td>
+<td>5.15</td>
+</tr>
+<tr class="odd">
+<td>Llama 3.2 3B Instruct, v1</td>
+<td>5.59</td>
+<td>5.59</td>
+<td>5.63</td>
+<td>5.47</td>
+</tr>
+<tr class="even">
+<td>Llama 3.1 8B Instruct, v1</td>
+<td>6.05</td>
+<td>6.03</td>
+<td>6.02</td>
+<td>5.68</td>
+</tr>
+<tr class="odd">
+<td>Llama 3.3 70B Instruct, v1</td>
+<td>6.05</td>
+<td>6.07</td>
+<td>6.07</td>
+<td>6.08</td>
+</tr>
+</tbody>
+</table>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/mae-rf-vs-llm.jpg" class="fig img-fluid" style="width:100.0%" alt="Grouped bar chart of mean absolute error by tier. The random forest falls from about 5.5 at demos to about 4.5 at transit. The LLM persona agent stays between about 5.0 and 5.5 and is higher than the forest at employment, geo and transit."></p>
+<figcaption>Mean error by tier for the random forest and for DeepSeek version 2, averaging both subscales.</figcaption>
+</figure>
+</div>
+<p>The random forest improved at each step in the averaged view, from 5.47 at demos to 4.48 at transit. DeepSeek version 2 went 5.08, 5.47, 5.05 and 5.03, so employment was its worst tier. DeepSeek version 2 beats the random forest at demos, but not the best classical model. The open-text tier had mixed effects. It gave Llama 3.2 3B Instruct its best group MAE (5.29) and DeepSeek version 1 its best interpersonal MAE (5.42), while Llama 3.1’s interpersonal error at that tier (6.92) stayed above its demos value.</p>
+<p>One failure is large. Llama 3.1’s interpersonal MAE rose from 4.67 at demos to 8.17 at transit, its band accuracy fell from 51.9% to 15.4%, and its mean signed error went from -2.21 to +6.52. It began predicting high apprehension for people whose transit answers were added. Version 2’s rewrite did not remove it (transit 8.23). In the version 3 ablations the bundled transit tier gave 7.77, while public transit alone gave 4.85, open text alone 5.82 and ride-share alone 5.92. Only the combined bundle triggered it. I do not know why, and I did not test an explanation.</p>
+<h3 id="band-discrimination">Band discrimination</h3>
+<p>Error in points hid how poorly the personas ranked people. At the transit tier:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Agent</th>
+<th>Target</th>
+<th>Band accuracy</th>
+<th>Low-vs-high AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Random forest</td>
+<td>Group</td>
+<td>0.481</td>
+<td>0.717</td>
+</tr>
+<tr class="even">
+<td>Random forest</td>
+<td>Interpersonal</td>
+<td>0.531</td>
+<td>0.738</td>
+</tr>
+<tr class="odd">
+<td>DeepSeek v2</td>
+<td>Group</td>
+<td>0.358</td>
+<td>0.527</td>
+</tr>
+<tr class="even">
+<td>DeepSeek v2</td>
+<td>Interpersonal</td>
+<td>0.363</td>
+<td>0.488</td>
+</tr>
+</tbody>
+</table>
+<p>DeepSeek version 2 made no group-CA predictions in the high band (0 of 240). The forest made 12, and only 25% of them were truly high. Both did best on the low band. DeepSeek’s scores stayed close to the cohort mean, which keeps the MAE reasonable and leaves the ranking near chance.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/band-discrimination-auc.jpg" class="fig img-fluid" style="width:100.0%" alt="Two line charts, for group and interpersonal CA, of low-versus-high ROC-AUC across four tiers. The random forest rises from about 0.5 at demos to about 0.72 and 0.74 at transit. DeepSeek version 2 stays between about 0.42 and 0.61, near the 0.5 chance line."></p>
+<figcaption>Low-versus-high AUC by tier for the random forest and DeepSeek version 2.</figcaption>
+</figure>
+</div>
+<h3 id="features">Features</h3>
+<p>In a forest predicting true group CA at the transit tier, mean absolute SHAP values were highest for ride-share days (Q28, 1.93), then employment (0.83), public-transit days (0.58), latitude (0.57), longitude (0.54) and age (0.53). I also fit a surrogate forest to DeepSeek’s outputs (R-squared 0.74). Its top features were latitude (0.27), age (0.21), longitude (0.21) and Q28 (0.19), with magnitudes about seven times smaller. The persona leaned on place and age, while the real signal was in ride-share use and employment. Permutation importance on the full cohort agrees that Q28 comes first (1.518), but ranks age second.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/shap-ml-vs-llm.jpg" class="fig img-fluid" style="width:100.0%" alt="Paired horizontal bars of mean absolute SHAP value for ten features. For the forest predicting true scores, Q28 is longest at about 1.9, then employment status at about 0.8. For the surrogate of the LLM's outputs, all bars are short, with latitude, age and longitude longest at about 0.2 to 0.3."></p>
+<figcaption>Mean SHAP values at the transit tier for a forest predicting true scores and for a surrogate fit to DeepSeek’s outputs.</figcaption>
+</figure>
+</div>
+<p>Factor analysis of the scored PRCA items supports treating the group and interpersonal subscales as related but separable, so I report them separately. The repository describes this in words and gives no loadings table, so I report none.</p>
+<h3 id="bias-by-group">Bias by group</h3>
+<p>I sliced DeepSeek version 2’s group-score error by group. These are descriptive MAE and signed-error gaps. I did not run formal association tests on the LLM exports.</p>
+<table class="caption-top" style="width:100%;">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Group</th>
+<th>n</th>
+<th>MAE at demos</th>
+<th>Mean signed error at demos</th>
+<th>MAE at transit</th>
+<th>Mean signed error at transit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Full-time</td>
+<td>148</td>
+<td>4.37</td>
+<td>-0.01</td>
+<td>4.39</td>
+<td>+0.43</td>
+</tr>
+<tr class="even">
+<td>Part-time</td>
+<td>31</td>
+<td>6.06</td>
+<td>-2.00</td>
+<td>5.55</td>
+<td>-1.68</td>
+</tr>
+<tr class="odd">
+<td>Other employment</td>
+<td>62</td>
+<td>6.16</td>
+<td>-3.58</td>
+<td>6.07</td>
+<td>-3.61</td>
+</tr>
+<tr class="even">
+<td>Female</td>
+<td>120</td>
+<td>4.93</td>
+<td>-1.47</td>
+<td>4.73</td>
+<td>-0.97</td>
+</tr>
+<tr class="odd">
+<td>Male</td>
+<td>121</td>
+<td>5.17</td>
+<td>-0.90</td>
+<td>5.20</td>
+<td>-0.77</td>
+</tr>
+</tbody>
+</table>
+<p>Employment is the clear gap. Errors were about 1.2 to 1.8 points larger for part-time and other respondents, and the model under-predicted them. Those groups did score higher in the survey (16.16 and 16.95 against 13.32), so this is a calibration miss on real differences, and the model did not invent a stereotype. Sex gaps were under 0.5 points. Student-status slices were small (34 students) and noisy. Tier-by-tier values for the employment slices are in the repository’s export tables. Different tiers moved them by up to about 1.6 points, so I would not read the second decimal.</p>
+<h3 id="secondary-studies-regular-public-transit-use">Secondary studies: regular public-transit use</h3>
+<p>These use no LLM. “Regular” means Q26 answers of four or more days a month, which is 101 regular and 140 non-regular respondents (41.9%). AUCs are from stratified 5-fold random forests at seed 42.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Question</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Do regular riders differ in CA?</td>
+<td>Group CA 13.04 against 15.76 (difference -2.72, d = -0.46, Welch p &lt; .001, bootstrap 95% CI -4.15 to -1.28). Interpersonal 13.31 against 15.04 (difference -1.73, d = -0.30, p = .020, CI -3.12 to -0.25).</td>
+</tr>
+<tr class="even">
+<td>Does location predict regular use?</td>
+<td>Latitude and longitude: AUC 0.551. Country alone: 0.549. Near chance.</td>
+</tr>
+<tr class="odd">
+<td>Do CA scores predict it?</td>
+<td>Group plus interpersonal: 0.590. Group only 0.555, interpersonal only 0.507.</td>
+</tr>
+<tr class="even">
+<td>Do Q27 and Q28?</td>
+<td>Q28 (ride-share days) 0.762, Q27 (rides per day) 0.589, both together 0.761.</td>
+</tr>
+<tr class="odd">
+<td>Follow-ups</td>
+<td>Q28 after conditioning on car access (n = 149): 0.730. Age, sex and student status (n = 224): 0.618. Holding all transit questions out, demographics plus employment and location: 0.662, or 0.672 with CA.</td>
+</tr>
+</tbody>
+</table>
+<p>Ride-share use was the dominant signal, and CA added little once it was known. Riders had lower CA, but I cannot say which way any link runs. These are same-wave associations.</p>
+<h2 id="reproducibility">Reproducibility</h2>
+<p>The repository exposes a <code>ca-personas</code> command-line tool. From the README:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-e</span> <span class="st">".[dev]"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">ca-personas</span> prepare <span class="at">--join</span> inner</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">ca-personas</span> ml-baseline <span class="at">--join</span> inner <span class="at">--seed</span> 42</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">ca-personas</span> compare <span class="at">--provider</span> mock <span class="at">--join</span> inner</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">ca-personas</span> shap-eval <span class="at">--join</span> inner <span class="at">--provider</span> mock <span class="at">--shap-tier</span> transit</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">ca-personas</span> stereotype-eval <span class="at">--join</span> inner <span class="at">--provider</span> mock</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">ca-personas</span> transit-ca <span class="at">--join</span> inner</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">ca-personas</span> geo-transit-rf <span class="at">--join</span> inner</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">ca-personas</span> ca-transit-rf <span class="at">--join</span> inner</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">ca-personas</span> covariate-transit-rf <span class="at">--join</span> inner <span class="at">--seed</span> 42</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">ca-personas</span> followup-experiments <span class="at">--join</span> inner <span class="at">--seed</span> 42</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> inference.export_prompts <span class="at">--tiers</span> demos employment geo transit full</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The private survey exports are not in the repository, so a full rerun needs the data staged separately. The mock provider is for offline checks only. No mock predictions appear in the reported results, which come from the committed GPU exports and seeded runs. The repository has 114 test functions in 27 test files, counted by grep. I could not run them here because a clean environment lacked some dependencies.</p>
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li><strong>One small cohort.</strong> 241 online panel respondents, with some small subgroups (34 students, 31 part-time). Gaps of a few tenths of a point are noise.</li>
+<li><strong>Single LLM passes.</strong> Each model and prompt version was run once, and I report no confidence intervals for the persona errors.</li>
+<li><strong>A weak ceiling.</strong> The best classical models explain little variance, so “worse than ML” means worse than a modest bar.</li>
+<li><strong>Models and versions.</strong> Results are tied to specific checkpoints and prompt versions. Packaging changed results in different directions for different models.</li>
+<li><strong>Pending runs.</strong> The enhanced-decode rerun of version 3, a base 3B run and larger-model decoding fixes remain to do.</li>
+<li><strong>Associations only.</strong> The transit results do not show cause, and my explanation for the Llama 3.1 collapse is untested.</li>
+<li><strong>Reference figure.</strong> The mean-guess MAE is my own in-sample calculation.</li>
+</ul>
+</div>
+
+</main>
+<footer class="site-footer">
+  <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
+</footer>
+<script src="../../assets/js/site.js?v=857c7d4672" defer=""></script>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-github" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></symbol><symbol id="i-linkedin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></symbol><symbol id="i-mail" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></symbol><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-download" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></symbol><symbol id="i-map-pin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol><symbol id="i-layers" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></symbol><symbol id="i-brain" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M19.938 10.5a4 4 0 0 1 .585.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M19.967 17.484A4 4 0 0 1 18 18"></path></symbol><symbol id="i-scale" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></symbol><symbol id="i-waves" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></symbol><symbol id="i-clock" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol></svg>
+
+<script>
+  // Theme toggle: switches to the opposite of what is currently shown and remembers the choice.
+  // Print button: opens the browser print dialog.
+  (function () {
+    var root = document.documentElement;
+    /** Return a nonempty data-theme value, or the system's dark/light preference. */
+    function current() {
+      var set = root.getAttribute("data-theme");
+      if (set) return set;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    /** Set the button's accessible label and icon to offer the opposite theme. */
+    function label(btn) {
+      var dark = current() === "dark";
+      btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+      btn.setAttribute("data-mode", dark ? "dark" : "light");
+      // The hidden attribute, not CSS, picks the icon, so only one shows even without styles.css.
+      var sun = btn.querySelector && btn.querySelector(".i-sun");
+      var moon = btn.querySelector && btn.querySelector(".i-moon");
+      if (sun && moon) { sun.hidden = !dark; moon.hidden = dark; }
+    }
+    var toggle = document.querySelector(".theme-toggle");
+    if (toggle) {
+      label(toggle);
+      toggle.addEventListener("click", function () {
+        var next = current() === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+        label(toggle);
+      });
+    }
+    var print = document.querySelector(".print-btn");
+    if (print) {
+      print.addEventListener("click", function (e) { e.preventDefault(); window.print(); });
+    }
+  })();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+    tabsets.forEach(function(tabset) {
+      const tabby = new Tabby('#' + tabset.id);
+    });
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/exios66\.github\.io\/resume");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+
+
+
+
+</body></html>

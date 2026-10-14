@@ -245,5 +245,38 @@ class TitleTests(unittest.TestCase):
             self.assertIsNone(POST["site_title"]())
 
 
+class CacheBustTests(unittest.TestCase):
+    bust = staticmethod(POST["cache_bust"])
+
+    def test_versions_links_at_any_depth(self):
+        page = '<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="../../styles.css">'
+        self.assertEqual(self.bust(page, {"styles.css": "abc123"}),
+                         '<link rel="stylesheet" href="styles.css?v=abc123">'
+                         '<link rel="stylesheet" href="../../styles.css?v=abc123">')
+
+    def test_replaces_an_old_version_and_is_idempotent(self):
+        page = '<script src="../assets/js/site.js?v=0aa" defer></script>'
+        once = self.bust(page, {"assets/js/site.js": "f00"})
+        self.assertEqual(once, '<script src="../assets/js/site.js?v=f00" defer></script>')
+        self.assertEqual(self.bust(once, {"assets/js/site.js": "f00"}), once)
+
+    def test_leaves_other_links_alone(self):
+        page = '<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet"><a href="mystyles.css">x</a>'
+        self.assertEqual(self.bust(page, {"styles.css": "abc"}), page)
+
+    def test_rewrites_rendered_pages_with_content_hash(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp)
+            (docs / "styles.css").write_text("body{}", encoding="utf-8")
+            (docs / "sub").mkdir()
+            page = docs / "sub" / "a.html"
+            page.write_text('<link rel="stylesheet" href="../styles.css">', encoding="utf-8")
+            with patch.dict(GLOBALS, {"DOCS": docs}):
+                POST["cache_bust_pages"]()
+            version = POST["hashlib"].sha256(b"body{}").hexdigest()[:10]
+            self.assertEqual(page.read_text(encoding="utf-8"),
+                             f'<link rel="stylesheet" href="../styles.css?v={version}">')
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,66 +1,43 @@
-# Jack J. Burleson — Portfolio & Résumé
+# Jack J. Burleson
 
-An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages serves it straight from `docs/`, with no GitHub Actions. Live at <https://exios66.github.io/resume/>.
+**AI / Machine Learning · Data Science** — I build AI systems from start to finish: multi-agent document pipelines, fine-tuned and calibrated transformers, LLM evaluation, and behavioral prediction models.
 
-## Pages
+Madison, WI · Open to relocation
 
-| Source | Page |
-| --- | --- |
-| `index.qmd` | Home: intro, current work, featured projects |
-| `about.qmd` | Background, skills, education, research training |
-| `projects/index.qmd` | Project list, grouped by theme, with a diagram showing how the projects connect |
-| `projects/<slug>.qmd` | One case study per project |
-| `projects/<slug>/report.qmd` | Technical report: iteration history, metrics tables, figures, reproduction steps |
-| `projects/<slug>/figures/` | Figures copied from each project repo; `MANIFEST.txt` records where each one came from |
-| `research.qmd` | Cognitive neuroscience and graduate research |
-| `writing/index.qmd` | Blog stub ("coming soon") |
-| `resume.qmd` | Two-page résumé, also the source of the PDF |
+## About me
 
-## How it fits together
+I'm finishing an M.S. in Psychology: Data Science in Human Behavior at UW–Madison (expected December 2026), after a B.S. in Psychology with a neuroscience concentration at UW–Parkside. Before graduate school I spent five years in high-volume logistics and operations, working on quality assurance, documentation, and process improvement. That is why I care about error rates, reproducibility, and cost as much as accuracy.
 
-- `_quarto.yml` holds site settings: URL, descriptions, Open Graph/Twitter cards, canonical links, sitemap.
-- `scripts/site.lua` adds the header, `<main>` landmark, and footer to every page, with links that work from any folder depth. (Quarto's own navbar needs a Bootstrap theme, which this site doesn't use.)
-- `styles.css` holds the whole design: light/dark themes, mobile layout, print layout. Fonts (Inter, Source Serif 4) are self-hosted in `assets/fonts/`.
-- `partials/` holds the head metadata (JSON-LD `Person` schema, theme bootstrapping), skip link, and the small theme-toggle script.
-- `scripts/post-render.py` runs after every render. It recreates `docs/.nojekyll`, removes the repeated site name from page titles, and prints `resume.html` to `assets/Jack_Burleson_Resume.pdf`. The PDF is refreshed only when that step succeeds; without Playwright or Chromium the committed PDF is kept, so re-check it after editing the résumé.
-- `scripts/og-image.html` + `scripts/make-og.py` regenerate the social preview image `assets/og-image.png`.
-- `partials/diagrams/_*.qmd` are inline SVG architecture diagrams. Pages pull them in with `{{< include >}}`. They draw with `currentColor` and CSS classes, so they follow the light/dark theme. The leading underscore stops Quarto from rendering them as pages.
-- `docs/` holds the built site. Do not edit it by hand.
+I'm interested in AI systems that know when they are unsure: calibrated classifiers, evaluation you can trust, and pipelines that pass hard cases to a stronger model or a person instead of guessing. Outside of that, I like turning physics into interactive software, and I'm curious about how people think and act, which is what my psychology training is about.
 
-## Adding a project
+## Selected work
 
-1. Write `projects/<slug>.qmd` (case study) and, if there is enough material, `projects/<slug>/report.qmd`. Copy the structure of an existing project: back link, `.project-nav`, `.stats` tiles, figures with `fig-alt`.
-2. Copy figures into `projects/<slug>/figures/` and add a line to its `MANIFEST.txt` naming the source file.
-3. Check every number against the source repo before publishing. HTML comments are removed from the rendered pages, but they stay visible in this public source, so don't use them for private notes.
-4. Add a card to `projects/index.qmd`, and to `index.qmd` if the project should be featured.
+Each project has a case study on the [portfolio](https://exios66.github.io/resume/).
 
-## Update the site
+- [Digital-Mailroom](https://exios66.github.io/resume/projects/digital-mailroom.html): my capstone with American Family Insurance, one LangGraph pipeline for document routing, prompt experiments, scoring, and deployment.
+- [Mailroom-ML](https://exios66.github.io/resume/projects/mailroom-ml.html): a calibrated ModernBERT classifier that handles routine documents and knows when to hand off to an LLM.
+- [Mailroom Reloaded](https://exios66.github.io/resume/projects/mailroom-reloaded.html): the mailroom rebuilt as one deployable service, with an audit log of every decision.
+- [RVL-CDIP-Classifier](https://exios66.github.io/resume/projects/rvl-cdip-classifier.html): zero-shot document classification with vision LLMs, with tracked prompt versions and cost per page.
+- [Psychometric Digital Twin](https://exios66.github.io/resume/projects/psychometric-digital-twin.html): LLM "digital twin" personas against seven classical models on 241 survey respondents; the personas did not beat simple baselines.
+- [MORNINGSTAR](https://exios66.github.io/resume/projects/llm-personas.html): a courtroom of LLM personas that argue, vote, and rule on engineering decisions.
+- [Wave Laboratory](https://exios66.github.io/resume/projects/wave-laboratory.html): a real-time 3D ocean and ship-motion sandbox that runs in the browser.
+- [The Mandalay Bay](https://exios66.github.io/resume/projects/degen-llms.html): a satirical casino resort simulator, play chips only.
 
-One-time setup for the PDF step (skip it and the render still works; the existing PDF is kept):
+## Background
 
-```sh
-pip install playwright
-playwright install chromium
-```
+- **Education:** M.S. candidate, Psychology: Data Science in Human Behavior, UW–Madison (expected Dec 2026). B.S. Psychology, UW–Parkside (2020–2025).
+- **Now:** building services at UW–Madison Recreation & Wellbeing and driving for Avis Budget Group in Madison, alongside my capstone.
+- **Research:** undergraduate researcher in a cognitive neuroscience lab at UW–Parkside (2024–2025), working with EEG and presenting at the 2025 Midwestern Psychological Association conference.
+- **Before that:** logistics coordinator at Meijer Distribution (2020–2025), promoted from Retail Loader.
 
-Then:
+## Elsewhere
 
-1. Edit the `.qmd` files.
-2. Run `quarto render`. This rebuilds `docs/` and the PDF.
-3. Commit and push, including `docs/` and the refreshed `assets/Jack_Burleson_Resume.pdf`.
+- Portfolio: <https://exios66.github.io/resume/>
+- Résumé (PDF): <https://exios66.github.io/resume/assets/Jack_Burleson_Resume.pdf>
+- LinkedIn: <https://www.linkedin.com/in/jackjburleson>
+- GitHub: <https://github.com/Exios66>
+- Email: jackjburleson@proton.me
 
-Use `quarto preview` while writing. The header and footer appear there too, but the PDF is only rebuilt by `quarto render`.
+---
 
-Run the checks with `lua tests/test_site.lua`, `node tests/theme.test.cjs`, and `python -m pytest tests`. `tests/test_links.py` checks the rendered `docs/` for broken internal links, images without alt text, and strings that must never be published.
-
-To refresh the social image after changing the tagline, run `python scripts/make-og.py`.
-
-## Things to fill in
-
-Each case study has `<!-- TODO: ... -->` comments (invisible on the site) marking missing results, figures, and repo links. Search with `grep -rn TODO projects research.qmd`.
-
-## Publish
-
-Do this once: **Settings → Pages → Build and deployment → Deploy from a branch → `main` / `/docs`**.
-
-If you move to a custom domain, change `site-url` in `_quarto.yml`, the URL in `partials/head.html`, and the text in `scripts/og-image.html`.
+This repository is the source for the site — see [how it's built](.github/BUILDING.md).

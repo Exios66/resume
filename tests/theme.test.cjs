@@ -19,8 +19,10 @@ const controls = script('scripts.html');
 function element() {
   const attributes = new Map();
   const listeners = new Map();
+  const classes = new Set();
   return {
     textContent: '',
+    classList: { add: (name) => classes.add(name), contains: (name) => classes.has(name) },
     getAttribute: (name) => attributes.get(name) ?? null,
     setAttribute: (name, value) => attributes.set(name, value),
     addEventListener(name, callback) {
@@ -35,9 +37,12 @@ function element() {
 }
 
 function environment({ saved = null, dark = false, storageFails = false,
-                       togglePresent = true, printPresent = true } = {}) {
+                       togglePresent = true, printPresent = true, reduced = false } = {}) {
   const root = element();
   const toggle = element();
+  const sun = { hidden: true };
+  const moon = { hidden: false };
+  toggle.querySelector = (selector) => ({ '.i-sun': sun, '.i-moon': moon })[selector] ?? null;
   const print = element();
   const writes = [];
   let printCalls = 0;
@@ -63,6 +68,7 @@ function environment({ saved = null, dark = false, storageFails = false,
     },
     window: {
       matchMedia(query) {
+        if (query === '(prefers-reduced-motion: reduce)') return { matches: reduced };
         assert.equal(query, '(prefers-color-scheme: dark)');
         return { matches: dark };
       },
@@ -76,7 +82,12 @@ function assertTheme(ui, theme) {
   assert.equal(ui.root.getAttribute('data-theme'), theme);
   assert.equal(ui.toggle.getAttribute('aria-label'),
     theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
-  assert.equal(ui.toggle.textContent, theme === 'dark' ? '☀' : '☾');
+  // The button shows the icon of the theme it offers: sun while dark, moon while light.
+  assert.equal(ui.toggle.getAttribute('data-mode'), theme);
+  const sun = ui.toggle.querySelector('.i-sun');
+  const moon = ui.toggle.querySelector('.i-moon');
+  assert.equal(sun.hidden, theme !== 'dark');
+  assert.equal(moon.hidden, theme === 'dark');
 }
 
 for (const saved of ['light', 'dark']) {
@@ -103,7 +114,7 @@ for (const saved of [null, '', 'sepia', 'DARK', ' light ']) {
       vm.runInContext(controls, ui.context);
       assert.equal(ui.toggle.getAttribute('aria-label'),
         dark ? 'Switch to light theme' : 'Switch to dark theme');
-      assert.equal(ui.toggle.textContent, dark ? '☀' : '☾');
+      assert.equal(ui.toggle.getAttribute('data-mode'), dark ? 'dark' : 'light');
       assert.deepEqual(ui.writes, []);
       ui.toggle.click();
       assertTheme(ui, dark ? 'light' : 'dark');
@@ -157,4 +168,25 @@ test('pages without either control initialize safely', () => {
   assert.equal(ui.root.getAttribute('data-theme'), null);
   assert.equal(ui.printCalls(), 0);
   assert.deepEqual(ui.writes, []);
+});
+
+for (const reduced of [false, true]) {
+  test(`motion class is set only without a reduced-motion preference, reduced=${reduced}`, () => {
+    const ui = environment({ reduced });
+    vm.runInContext(bootstrap, ui.context);
+    assert.equal(ui.root.classList.contains('js-motion'), !reduced);
+  });
+}
+
+test('a failing media query does not stop the saved theme or the toggle', () => {
+  const ui = environment({ saved: 'dark' });
+  ui.context.window.matchMedia = (query) => {
+    if (query === '(prefers-reduced-motion: reduce)') throw new Error('unsupported');
+    return { matches: false };
+  };
+  vm.runInContext(bootstrap, ui.context);
+  assert.equal(ui.root.getAttribute('data-theme'), 'dark');
+  assert.equal(ui.root.classList.contains('js-motion'), false);
+  vm.runInContext(controls, ui.context);
+  assertTheme(ui, 'dark');
 });
