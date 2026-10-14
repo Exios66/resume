@@ -6,6 +6,12 @@ Madison, WI · Open to relocation
 
 ## About me
 
+---
+
+![image](https://github.com/user-attachments/assets/a0d994ed-46e0-4185-886e-5568c9561843)
+
+---
+
 I'm finishing an M.S. in Psychology: Data Science in Human Behavior at UW–Madison (expected December 2026), after a B.S. in Psychology with a neuroscience concentration at UW–Parkside. Before graduate school I spent five years in high-volume logistics and operations, working on quality assurance, documentation, and process improvement. That is why I care about error rates, reproducibility, and cost as much as accuracy.
 
 I'm interested in AI systems that know when they are unsure: calibrated classifiers, evaluation you can trust, and pipelines that pass hard cases to a stronger model or a person instead of guessing. Outside of that, I like turning physics into interactive software, and I'm curious about how people think and act, which is what my psychology training is about.
