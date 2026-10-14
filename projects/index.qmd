@@ -1,13 +1,13 @@
 ---
 pagetitle: "Projects — Jack J. Burleson"
-description: "Selected work in document intelligence, model evaluation, behavioral machine learning, LLM agent design, and browser-based simulation and games, with case studies and selected technical reports."
+description: "Selected work in document intelligence, data engineering, model evaluation, behavioral machine learning, LLM agent design, and browser-based simulation and games, with case studies and selected technical reports."
 ---
 
 ::: {.page}
 
 # Projects {.page-title}
 
-Selected work in document intelligence, model evaluation, behavioral machine learning, LLM agent design, and simulation. Each project has a short case study. Most also have a technical report with the full experiment history, metrics, and steps to reproduce the results.
+Selected work in document intelligence, data engineering, model evaluation, behavioral machine learning, LLM agent design, and simulation. Each project has a short case study. Most also have a technical report with the full experiment history, metrics, and steps to reproduce the results.
 
 ## Document intelligence {.group-title}
 
@@ -50,6 +50,28 @@ The mailroom as one service you can deploy. A deterministic driver runs CrewAI a
 A study of zero-shot document classification with vision LLMs. It covers 29 tracked prompt versions, accuracy checked on larger slices than the tuning set, cost per page, and Monte Carlo analysis of ensembles and routing.
 
 [OpenRouter]{.tag} [Evaluation]{.tag} [Error analysis]{.tag}
+:::
+:::
+
+## Data engineering & visualization {.group-title}
+
+::: {.cards .cards-wide}
+::: {.card}
+### [Mailroom-Corpus-EDA](mailroom-corpus-eda.qmd)
+[Data engineering · dataset build, audit & publishing]{.kicker}
+
+The data work behind the mailroom projects: 3,302 documents assembled from public sources, with stable identifiers, a record of how each label was made, and labels kept out of the text a model reads. An audit pipeline checks every number it publishes, and once caught itself reporting a false failure.
+
+[Python]{.tag} [pandas]{.tag} [Hugging Face Hub]{.tag} [Provenance]{.tag}
+:::
+
+::: {.card}
+### [AeroGlobe](aeroglobe.qmd)
+[In active development · 3D flight data on a globe]{.kicker}
+
+A browser globe for flight tracking, being built around a static data pipeline so that historical flights can be replayed without an always-on server. It is a work in progress: the globe client and pipeline exist, and playback is planned.
+
+[TypeScript]{.tag} [CesiumJS]{.tag} [React]{.tag} [Data pipeline]{.tag}
 :::
 :::
 

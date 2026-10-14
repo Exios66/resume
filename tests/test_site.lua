@@ -211,12 +211,12 @@ local sprite_html = Pandoc({ blocks = {} }).blocks[2].text
 local used = {}
 for _, name in ipairs({ "book-open", "file-text", "code", "play", "arrow-left", "arrow-right",
                         "arrow-up-right", "download", "map-pin", "sun", "moon", "layers", "brain",
-                        "scale", "waves", "clock", "github", "linkedin", "mail" }) do
+                        "scale", "waves", "database", "clock", "github", "linkedin", "mail" }) do
   contains(sprite_html, '<symbol id="i-' .. name .. '"')
   used[name] = true
 end
 local _, symbols = sprite_html:gsub("<symbol ", "")
-assert(symbols == 19, "Unexpected icon count: " .. symbols)
+assert(symbols == 20, "Unexpected icon count: " .. symbols)
 
 -- project-nav labels
 for label, icon in pairs({ ["Case study"] = "book-open", ["Technical report"] = "file-text",
@@ -288,7 +288,7 @@ local group = decorate_header({ tag = "Header", classes = { "group-title" },
   content = { str("Document"), SPACE, str("intelligence") } })
 assert(uses(group.content, "layers"))
 for text, icon in pairs({ ["Behavioral machine learning"] = "brain", ["LLM agent design"] = "scale",
-                          ["Side projects & interests"] = "waves" }) do
+                          ["Side projects & interests"] = "waves", ["Data engineering & visualization"] = "database" }) do
   local h = decorate_header({ tag = "Header", classes = { "group-title" }, content = { str(text) } })
   assert(uses(h.content, icon), text)
 end

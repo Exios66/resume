@@ -1,0 +1,2 @@
+doc-types-and-subclasses.jpg <- source repo: Mailroom-Corpus-EDA/reports/figures/01_type_and_subclass_distribution.png (unchanged apart from downscaling to 1400 px wide; JPEG quality 82)
+test-share-per-stratum.jpg <- source repo: Mailroom-Corpus-EDA/reports/figures/24_strata_imbalance_ratio.png (unchanged apart from downscaling to 1100 px wide; JPEG quality 82)

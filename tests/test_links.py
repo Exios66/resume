@@ -270,10 +270,10 @@ class PortfolioRegressionTests(unittest.TestCase):
     """Contracts for the case studies, reports, and diagrams introduced by PR #7."""
 
     REPORT_SLUGS = ("mailroom-ml", "mailroom-reloaded", "rvl-cdip-classifier", "wave-laboratory",
-                    "degen-llms", "llm-personas", "psychometric-digital-twin")
+                    "degen-llms", "llm-personas", "psychometric-digital-twin", "mailroom-corpus-eda")
     FIGURE_SLUGS = ("mailroom-ml", "mailroom-reloaded", "rvl-cdip-classifier", "wave-laboratory",
-                    "degen-llms", "psychometric-digital-twin")
-    STUDY_SLUGS = ("digital-mailroom",) + REPORT_SLUGS
+                    "degen-llms", "psychometric-digital-twin", "mailroom-corpus-eda")
+    STUDY_SLUGS = ("digital-mailroom", "aeroglobe") + REPORT_SLUGS
 
     def test_expected_case_studies_and_reports_are_published(self):
         # Explicit paths prevent glob-based checks from passing if a whole report
