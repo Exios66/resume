@@ -157,20 +157,20 @@ ul.task-list li input[type="checkbox"] {
 <p>I have no accuracy or cost numbers to publish for this service yet. The harness exists and is tested, but I have not committed evaluation results, so I am not quoting any. What I can show is that the machinery runs end to end: the main-branch verification ran four seeded documents through the stack with a mock provider and all four archived, and eleven browser checks of the replay viewer passed.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="mailroom-reloaded/figures/replay-viewer.jpg" class="fig img-fluid" style="width:100.0%" alt="A dark terminal-style page titled MAILROOM. A replay command is running. Rows for intake, sorter, gate, specialist, judge, boss, review, archive and failed show dotted progress bars with counts, one red marker on specialist and green ticks on review and archive. Below is a green scrub bar and a line of totals for documents, tokens, cost and calls."></p>
-<figcaption>The /tui replay viewer paused partway through a recorded demo run, with per-station document counts, a scrub bar and a metrics line.</figcaption>
+<p><img src="mailroom-reloaded/figures/replay-viewer.jpg" class="fig img-fluid" style="width:100.0%" alt="A dark terminal-style page with a large cyan MAILROOM banner and the status bar showing theme dark/cyan. The command replay run:7e57d0c0ffee --at 90 is running, paused at 01:30.0 of 02:15.0. Station rows are grouped under intake_sort, extraction, review, reporting and terminal, each with a dotted progress bar and a count. Sorter, specialist, judge and review are cyan, gate and archive are green, boss and failed are red, intake is grey, and a red marker sits on specialist. A scrub bar and a line reading docs 4 of 6, done 3, failed 1, tok 680, $0.0060, calls 4, first-pass 25% sit below, followed by a row of key hints."></p>
+<figcaption>The /tui replay viewer in the cyan theme, paused partway through a recorded demo run, with per-station document counts, a scrub bar and a metrics line.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="mailroom-reloaded/figures/inspector-retry.jpg" class="fig img-fluid" style="width:100.0%" alt="The same terminal with an inspector panel open under the station grid. It lists local links for Phoenix and Grafana, the document's station, status and attempt number, and two events: a gate_decision followed by a retry."></p>
-<figcaption>The replay inspector on a document that went through a gate decision and then a retry.</figcaption>
+<p><img src="mailroom-reloaded/figures/inspector-retry.jpg" class="fig img-fluid" style="width:100.0%" alt="The same cyan terminal page at the end of the run, 02:15.0 of 02:15.0, with an inspector panel open under the station grid and metrics line. It shows the document's station archive, status archived and attempt 1, then an event table with two rows: 00:30.4 gate_decision gate and 00:30.7 retry gate, with cyan event names."></p>
+<figcaption>The replay inspector in the cyan theme, on a document that went through a gate decision and then a retry.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="mailroom-reloaded/figures/ledger.jpg" class="fig img-fluid" style="width:100.0%" alt="A terminal table with columns for sequence, kind, run, document, time and hash. Rows are one pinned entry, one run_opened entry and four doc_closed entries. Below, a green line reports the chain is ok with six entries and the head at number six."></p>
-<figcaption>The ledger command listing six hash-chained entries, followed by a successful chain verification.</figcaption>
+<p><img src="mailroom-reloaded/figures/ledger.jpg" class="fig img-fluid" style="width:100.0%" alt="A cyan terminal page with a table with columns seq, kind, run, doc, ts and hash, with cyan column headings. Rows are one pinned entry, one run_opened entry and four doc_closed entries. Below the table, the text 6 entries, then the command ledger verify, then a green line reading chain ok, 6 entries, head #6, and a grey line reading merkle: run not closed."></p>
+<figcaption>The ledger command in the cyan theme, listing six hash-chained entries, followed by a successful chain verification.</figcaption>
 </figure>
 </div>
 <div class="caveat">

@@ -108,8 +108,6 @@ CI (`.github/workflows/checks.yml`) runs pytest on Python 3.11. A second job run
 
 ![The terminal front page with floor chips and a numbered menu.](figures/casino-floor.jpg){.fig fig-alt="A dark browser terminal page titled The Mandalay Bay with a floor chip balance, a list of five venues and a numbered Choose your adventure menu." width="100%"}
 
-![The pixel RPG overworld.](figures/pixel-rpg-overworld.jpg){.fig fig-alt="A pixel-art plaza with sand-coloured tiles and small trees. A cyan player character stands near characters labelled Shop, Chip and Cashier, below a purple wall of lit squares. A top bar shows the balance and key hints." width="100%"}
-
 ![The table games menu.](figures/table-games.jpg){.fig fig-alt="A terminal menu headed Table Games listing Blackjack, Texas Hold'em and Mandalay Roulette, each with a minimum bet and a one-line description." width="100%"}
 
 ![The slot machines menu.](figures/slot-machines.jpg){.fig fig-alt="A terminal menu headed Slot Machines with one entry, Mandalay Bay Slots, minimum 1 chip, and a Back option." width="100%"}

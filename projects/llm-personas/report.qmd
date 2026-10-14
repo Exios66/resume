@@ -99,7 +99,7 @@ There are no benchmark or quality results. The evidence is the record the system
 
 ### What the project reports about itself
 
-`state/metrics.md` says 13 deliberations, 12 decisions, 8 unanimous and 3 split, with 0 tie-breakers and 0 deadlocks. The feasibility counts are 2 at F3, 4 at F4 and 7 at F5. These come from the same system that produced the decisions and I did not recompute them. The 8 unanimous votes are a weak signal when one model casts all the votes.
+`state/metrics.md` says 13 deliberations, 12 decisions, 8 unanimous and 3 split, with 0 tie-breakers and 0 deadlocks. The feasibility counts are 2 at F3, 4 at F4 and 7 at F5. These come from the same system that produced the decisions and I did not recompute them. The vote categories add up to 11 rather than the 12 decisions it reports, so the file is not fully consistent with itself. The 8 unanimous votes are a weak signal when one model casts all the votes.
 
 ### Test counts
 

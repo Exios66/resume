@@ -65,8 +65,6 @@ The pixel RPG follows one rule: it never rebuilds a game screen. Each screen is 
 
 ![The terminal's front page: floor chips, the games on the floor today and a numbered menu.](degen-llms/figures/casino-floor.jpg){.fig fig-alt="A dark browser terminal page titled The Mandalay Bay. It shows a floor chip balance, a list of venues such as Table Games, Slot Machines and Sports Book, and a numbered Choose your adventure menu." width="100%"}
 
-![The pixel RPG overworld, with a guest at a plaza and non-player characters labelled Shop, Chip and Cashier.](degen-llms/figures/pixel-rpg-overworld.jpg){.fig fig-alt="A pixel-art overworld in a browser. A cyan-clad player stands on a sandy tiled plaza with small trees. Characters labelled Shop, Chip and Cashier stand nearby, under a purple wall of lit squares. A bar at the top shows the chip balance and controls." width="100%"}
-
 ![The table games menu: blackjack, Texas hold'em and roulette, each with a minimum bet.](degen-llms/figures/table-games.jpg){.fig fig-alt="A dark terminal menu headed Table Games listing Blackjack, Texas Hold'em and Mandalay Roulette with minimum chips and a one-line description for each, plus a Back option." width="100%"}
 
 These captures come from an earlier build, when the front page listed five venues. The live demo has more.

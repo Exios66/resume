@@ -1,3 +1,3 @@
-replay-viewer.jpg <- source repo: mailroom-reloaded/docs/demo/02-replay-viewer.png
-inspector-retry.jpg <- source repo: mailroom-reloaded/docs/demo/08-inspector-retry.png
-ledger.jpg <- source repo: mailroom-reloaded/docs/demo/14-ledger.png
+replay-viewer.jpg <- captured from mailroom-reloaded @ 545d8b7 (main), /tui with `theme cyan`: `replay run:7e57d0c0ffee --at 90`, mock provider, seeded demo run, 1200x900
+inspector-retry.jpg <- captured from mailroom-reloaded @ 545d8b7 (main), /tui with `theme cyan`: `replay run:7e57d0c0ffee --at 135`, keys i, j, j; outbound link rows left out
+ledger.jpg <- captured from mailroom-reloaded @ 545d8b7 (main), /tui with `theme cyan`: `ledger` then `ledger verify`

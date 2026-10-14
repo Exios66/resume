@@ -17,7 +17,7 @@ description: "Technical report on a PSYCH 755 study of LLM personas against clas
 
 ## Summary
 
-This is the final project for PSYCH 755 at UW–Madison, taught by Dr. Adam Ross Nelson (Summer 2026). It asks whether an LLM, given a first-person prompt built from a survey respondent's attributes, can predict that respondent's own scores on two subscales of the PRCA-24 communication-apprehension measure, and whether its errors follow demographic group.
+This is the final project for PSYCH 755 at UW–Madison, taught by Dr. Adam Ross Nelson (Summer 2026). It asks whether an LLM, given a second-person prompt built from a survey respondent's attributes, can predict that respondent's own scores on two subscales of the PRCA-24 communication-apprehension measure, and whether its errors follow demographic group.
 
 On 241 respondents, none of the open-weight models was a close match to the real scores. The best persona run (DeepSeek-R1-Distill-Llama-8B, second prompt version) had a pooled group-score error of 5.02 points on the 6–30 scale. Ridge regression reached 4.49 at the transit tier. By my own calculation, always predicting the cohort mean gives 4.93. At the transit tier the persona's scores also did not rank people: its low-versus-high AUC was 0.53 on the group score, against 0.72 for a random forest.
 

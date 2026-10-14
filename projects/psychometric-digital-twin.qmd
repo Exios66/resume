@@ -1,6 +1,6 @@
 ---
 pagetitle: "Psychometric Digital Twin — Jack J. Burleson"
-description: "Can an LLM, given a first-person profile built from a survey respondent's attributes, predict that person's own communication-apprehension scores? A course study of LLM personas against classical ML on 241 respondents."
+description: "Can an LLM, given a second-person profile (\"You are a ...\") built from a survey respondent's attributes, predict that person's own communication-apprehension scores? A course study of LLM personas against classical ML on 241 respondents."
 ---
 
 ::: {.page}
@@ -37,7 +37,7 @@ In short, the LLM personas did not beat simple models. Most were worse than gues
 
 Researchers now use LLMs as stand-ins for survey respondents. The idea is to describe a person in a prompt and ask the model to answer as that person. I wanted to test that idea on one validated scale, where the real answer is known.
 
-The scale is the PRCA-24, a self-report measure of communication apprehension (CA). I used its group-discussion and interpersonal subscales, each scored 6 to 30. The question: when the model is told about a respondent in the first person, how close does it get to that respondent's own scores? And when it is wrong, does the error follow demographic group, which would look like stereotyping?
+The scale is the PRCA-24, a self-report measure of communication apprehension (CA). I used its group-discussion and interpersonal subscales, each scored 6 to 30. The question: when the model is told who a respondent is in the second person ("You are a ..."), how close does it get to that respondent's own scores? And when it is wrong, does the error follow demographic group, which would look like stereotyping?
 
 ## Approach
 
