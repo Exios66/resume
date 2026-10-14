@@ -276,6 +276,7 @@ class PortfolioRegressionTests(unittest.TestCase):
     STUDY_SLUGS = ("digital-mailroom", "aeroglobe", *REPORT_SLUGS)
 
     def test_expected_case_studies_and_reports_are_published(self):
+        """Verify every expected case study and report is published with one main landmark and heading."""
         # Explicit paths prevent glob-based checks from passing if a whole report
         # or project disappears from the generated site.
         pages = [f"projects/{slug}.html" for slug in self.STUDY_SLUGS]
