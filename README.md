@@ -22,7 +22,7 @@ An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages
 - `scripts/site.lua` adds the header, `<main>` landmark, and footer to every page, with links that work from any folder depth. (Quarto's own navbar needs a Bootstrap theme, which this site doesn't use.)
 - `styles.css` holds the whole design: light/dark themes, mobile layout, print layout. Fonts (Inter, Source Serif 4) are self-hosted in `assets/fonts/`.
 - `partials/` holds the head metadata (JSON-LD `Person` schema, theme bootstrapping), skip link, and the small theme-toggle script.
-- `scripts/post-render.py` runs after every render. It recreates `docs/.nojekyll`, removes the repeated site name from page titles, and prints `resume.html` to `assets/Jack_Burleson_Resume.pdf`, so the download always matches the page.
+- `scripts/post-render.py` runs after every render. It recreates `docs/.nojekyll`, removes the repeated site name from page titles, and prints `resume.html` to `assets/Jack_Burleson_Resume.pdf`. The PDF is refreshed only when that step succeeds; without Playwright or Chromium the committed PDF is kept, so re-check it after editing the résumé.
 - `scripts/og-image.html` + `scripts/make-og.py` regenerate the social preview image `assets/og-image.png`.
 - `partials/diagrams/_*.qmd` are inline SVG architecture diagrams. Pages pull them in with `{{< include >}}`. They draw with `currentColor` and CSS classes, so they follow the light/dark theme. The leading underscore stops Quarto from rendering them as pages.
 - `docs/` holds the built site. Do not edit it by hand.

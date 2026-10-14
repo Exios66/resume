@@ -34,20 +34,62 @@ local function is_current(item, path)
   return path == item.section
 end
 
+local PROTECTED = { "script", "style", "pre" }
+
+--- Find the next protected open tag (<script>, <style>, <pre>) at or after pos.
+-- @param lower string Lowercased element text.
+-- @param pos integer Search start.
+-- @return integer|nil, string|nil Start of the tag and its name.
+local function next_protected(lower, pos)
+  local best, name
+  for _, tag in ipairs(PROTECTED) do
+    local s = pos
+    while true do
+      local found = lower:find("<" .. tag, s, true)
+      if not found then break end
+      local after = lower:sub(found + #tag + 1, found + #tag + 1)
+      if after == "" or after:match("[%s>/]") then
+        if not best or found < best then best, name = found, tag end
+        break
+      end
+      s = found + 1
+    end
+  end
+  return best, name
+end
+
 --- Remove HTML comments from raw HTML; comments are authoring notes, not page content.
 -- Each <!-- ... --> span is removed on its own, so markup between two comments is kept.
+-- Text inside <script>, <style> and <pre> is copied unchanged, since comment-like text
+-- there is content; comments outside those elements are still removed.
 -- @param el Pandoc raw element.
--- Raw <script>, <style> and <pre> blocks are left alone, since comment-like text there is content.
 -- @return table|nil Empty list when only whitespace remains, the element with its comments
 -- removed, or nil to leave the element unchanged.
 local function strip_comments(el)
   if el.format ~= "html" then return nil end
-  local lower = el.text:lower()
-  if lower:find("<script", 1, true) or lower:find("<style", 1, true) or lower:find("<pre", 1, true) then
-    return nil
+  local src, lower = el.text, el.text:lower()
+  local out, pos, count = {}, 1, 0
+  while pos <= #src do
+    local c = src:find("<!--", pos, true)
+    local p, tag = next_protected(lower, pos)
+    if p and (not c or p < c) then
+      local close = lower:find("</" .. tag, p, true)
+      local stop = close and (lower:find(">", close, true) or #src) or #src
+      out[#out + 1] = src:sub(pos, stop)
+      pos = stop + 1
+    elseif c then
+      local e = src:find("-->", c + 4, true)
+      if not e then break end
+      out[#out + 1] = src:sub(pos, c - 1)
+      count = count + 1
+      pos = e + 3
+    else
+      break
+    end
   end
-  local text, count = el.text:gsub("<!%-%-.-%-%->", "")
   if count == 0 then return nil end
+  out[#out + 1] = src:sub(pos)
+  local text = table.concat(out)
   if text:match("^%s*$") then return {} end
   el.text = text
   return el
