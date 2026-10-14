@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Technical report on a ModernBERT document classifier: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits.">
+
+<title>Mailroom-ML: technical report — Jack J. Burleson</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<meta name="theme-color" content="#0e6f7a">
+<meta name="author" content="Jack J. Burleson">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image-width" content="1200">
+<meta name="twitter:image-height" content="630">
+<script>
+  // Apply the saved theme before first paint so there is no light/dark flash.
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Jack J. Burleson",
+  "url": "https://exios66.github.io/resume/",
+  "jobTitle": "AI / Machine Learning and Data Science",
+  "email": "mailto:jackjburleson@proton.me",
+  "address": { "@type": "PostalAddress", "addressLocality": "Madison", "addressRegion": "WI", "addressCountry": "US" },
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Madison" },
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Parkside" }
+  ],
+  "knowsAbout": ["Machine learning", "Natural language processing", "LLM evaluation", "Computer vision", "Behavioral data science"],
+  "sameAs": [
+    "https://www.linkedin.com/in/jackjburleson",
+    "https://github.com/Exios66"
+  ]
+}
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Mailroom-ML: technical report — Jack J. Burleson">
+<meta property="og:description" content="Technical report on a ModernBERT document classifier: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits.">
+<meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta property="og:site_name" content="Jack J. Burleson">
+<meta property="og:image:alt" content="Jack J. Burleson — AI / Machine Learning · Data Science">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:title" content="Mailroom-ML: technical report — Jack J. Burleson">
+<meta name="twitter:description" content="Technical report on a ModernBERT document classifier: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits.">
+<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://exios66.github.io/resume/projects/mailroom-ml/report.html">
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+
+
+
+<header class="site-header">
+  <nav class="site-nav" aria-label="Main">
+    <a class="site-title" href="../../index.html">Jack J. Burleson</a>
+    <ul class="nav-list">
+      <li><a class="nav-link" href="../../index.html">Home</a></li>
+      <li><a class="nav-link" href="../../about.html">About</a></li>
+      <li><a class="nav-link" href="../../projects/index.html" aria-current="page">Projects</a></li>
+      <li><a class="nav-link" href="../../research.html">Research</a></li>
+      <li><a class="nav-link" href="../../writing/index.html">Writing</a></li>
+      <li><a class="nav-link" href="../../resume.html">Résumé</a></li>
+      <li><button type="button" class="theme-toggle" aria-label="Switch theme"></button></li>
+    </ul>
+  </nav>
+</header>
+<main id="main"><header id="title-block-header" class="quarto-title-block"></header>
+<div class="page">
+<p><a href="../../projects/mailroom-ml.html" class="back">← Case study</a></p>
+<div class="project-nav">
+<p><a href="../../projects/mailroom-ml.html">Case study</a> <a href="../../projects/mailroom-ml/report.html" aria-current="page">Technical report</a> <a href="https://github.com/LLM-Mailroom-Services/mailroom-ml">Code</a></p>
+</div>
+<h1 class="page-title" id="mailroom-ml-technical-report">Mailroom-ML: technical report</h1>
+<p><span class="kicker">ModernBERT ingest classifier · training, calibration, routing</span></p>
+<h2 id="summary">Summary</h2>
+<p>Mailroom-ML trains a hierarchical ModernBERT-base classifier for legal and insurance documents. It has one document-type head and one subclass head per type. Its job is to give a calibrated answer and a routing decision: either “this is safe to accept” or “send it to the LLM sorter”.</p>
+<p>On the final run, scored on the 323-document test split (541 windows), document-type accuracy is 0.9505 and window ECE is 0.0152. Under the routing gate, 74.3% of documents take the fast path, meaning they are handled without an LLM call. The fast-path and coverage numbers are optimistic, because the sweep that supports the 0.97 routing cutoff and the decode sweep both ran on this same split (see Routing and selective risk). Three of four acceptance gates are met. Contract subclass F1 is 0.162 against a floor of 0.20, so the subclass heads are not ready to act without the LLM.</p>
+<p>Numbers on this page labelled “test split” come from those 323 documents. The split was kept out of training, out of checkpoint selection (done on validation) and out of calibration fitting. It is not untouched, though. I used it to compare runs, to run the selective-risk sweep that supports the 0.97 cutoff, and to run the decode sweep. The 0.97 value itself is a preset in the project’s config, and the sweep recommended the same value. I name the project’s runs as follows: Run 3 is an early two-epoch run, Arm A and Arm B are two comparison runs (a one-epoch smoke run and a three-epoch run), and M9b is the final four-epoch run. The six figures are from Arm B, not from the final run. Where the two differ I say so.</p>
+<h2 id="system-and-data">System and data</h2>
+<h3 id="stages-and-modules">Stages and modules</h3>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Stage</th>
+<th>What it does</th>
+<th>Module</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Configuration</td>
+<td>One file holds the pinned data revisions, taxonomy, window sizes and routing thresholds that every other module imports</td>
+<td><code>src/mailroom_ml/config.py</code></td>
+</tr>
+<tr class="even">
+<td>Normalisation</td>
+<td>A deterministic text clerk that runs before training and before inference, so the two see the same bytes</td>
+<td><code>src/mailroom_ml/normalize.py</code></td>
+</tr>
+<tr class="odd">
+<td>Windowing</td>
+<td>Token-level windows of 8,192 tokens with 512 tokens of overlap, plurality vote across windows</td>
+<td><code>src/mailroom_ml/windows.py</code></td>
+</tr>
+<tr class="even">
+<td>Dataset build</td>
+<td>Stages the training set, splits it, and runs the leak audits</td>
+<td><code>src/mailroom_ml/dataset.py</code></td>
+</tr>
+<tr class="odd">
+<td>Provenance</td>
+<td>sha256 helpers and a byte-deterministic build manifest</td>
+<td><code>src/mailroom_ml/provenance.py</code></td>
+</tr>
+<tr class="even">
+<td>Training</td>
+<td>PyTorch training with checkpoint selection on validation</td>
+<td><code>training/train/train_modernbert.py</code></td>
+</tr>
+<tr class="odd">
+<td>Calibration</td>
+<td>Per-head temperature scaling, ECE, Wilson bounds, selective-risk sweep</td>
+<td><code>src/mailroom_ml/calibration.py</code></td>
+</tr>
+<tr class="even">
+<td>Out-of-distribution</td>
+<td>Energy probe on the document-type logits, fit on validation</td>
+<td><code>src/mailroom_ml/ood.py</code></td>
+</tr>
+<tr class="odd">
+<td>Routing</td>
+<td>Fast-path gate over calibrated confidence, agreement and margin</td>
+<td><code>src/mailroom_ml/routing.py</code></td>
+</tr>
+<tr class="even">
+<td>Evaluation</td>
+<td>Test-split scoring, cohorts, selective risk, paired bootstrap comparison</td>
+<td><code>training/eval/eval_modernbert.py</code>, <code>training/eval/compare_runs.py</code></td>
+</tr>
+<tr class="odd">
+<td>Deployment</td>
+<td>ONNX export, parity check, Modal train and serve apps</td>
+<td><code>deploy/onnx_export.py</code>, <code>deploy/onnx_parity_check.py</code>, <code>deploy/modal_app.py</code>, <code>deploy/serve_app.py</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="data">Data</h3>
+<p>The corpus has 3,302 documents in 55 document-type by subclass strata. The test split holds 323 of them, and the other 2,979 are split 90/10 into train and validation (2,680 and 299 documents; 5,068 windows in total). Splits are stratified by document type with a fixed seed. There are five trained document types: contract, merger agreement, corporate record, correspondence and insurance claim. A sixth label, <code>unknown</code>, exists only at inference as an abstention. The corpus was built from public sources; <a href="../../projects/digital-mailroom.html">the Digital-Mailroom case study</a> describes how.</p>
+<p>The test split contains 60 contracts, 47 corporate records, 85 pieces of correspondence, 114 insurance claims and 17 merger agreements. Several subclass cells have only a handful of examples, which limits what the subclass numbers can show.</p>
+<h3 id="data-lineage">Data lineage</h3>
+<p>Every source in the build is pinned to an exact revision, never a floating tip. The build manifest records the source revision, split rule, label-normalisation rules, and leak-audit counts. It contains no timestamps, so rebuilding from the same inputs gives the same bytes, and the publish step checks each file’s sha256 against what was uploaded. A test module covers the provenance code.</p>
+<h2 id="iteration-history">Iteration history</h2>
+<div class="timeline">
+<ul>
+<li><strong>Run 3</strong> — Two epochs, class weights, leak-fixed and clerk-normalised data. <em>Test-split document-type accuracy 0.8947, window ECE 0.0203. Contract and correspondence heads close to useless.</em></li>
+<li><strong>Arm A</strong> — One epoch with document-type loss weight 0.50, a short smoke run. <em>Accuracy 0.8638; under-trained.</em></li>
+<li><strong>Arm B</strong> — Three epochs, document-type loss weight 0.65. <em>Accuracy 0.9505, window ECE 0.0259, subclass accuracy given a correct type 0.5831. Chosen as the candidate release.</em></li>
+<li><strong>Final run (M9b)</strong> — Four epochs, same loss weight, logit-adjusted subclass loss with no class weights. <em>Accuracy 0.9505, ECE 0.0152, subclass accuracy 0.6287, fast-path rate 0.743 (up from 0.303). Contract F1 rose from 0.020 to 0.162; merger agreement fell from 0.238 to 0.000.</em></li>
+<li><strong>Decode sweep</strong> — Four values of a decode-time prior adjustment on the finished checkpoint. <em>Best contract F1 0.170. No setting reached 0.20, so no retrain on that recipe. The adjustment did lift the other heads: merger-agreement F1 rose from 0 to about 0.16 and correspondence F1 from 0.351 to between 0.41 and 0.44.</em></li>
+</ul>
+</div>
+<p>The early lesson came before Run 3. An earlier build used the filename as a fallback title. In that data, 42.8% of filenames carried the subclass name, and the insurance subclass F1 was a suspicious 1.0. I removed the fallback, republished the training set, and added a check to the build that fails if a filename-shaped title comes back.</p>
+<h2 id="results">Results</h2>
+<h3 id="final-run-test-split-323-documents-541-windows">Final run, test split (323 documents, 541 windows)</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Measure</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Document-type accuracy</td>
+<td>0.9505 (307 of 323)</td>
+</tr>
+<tr class="even">
+<td>Subclass accuracy, document type correct</td>
+<td>0.6287 (193 of 307)</td>
+</tr>
+<tr class="odd">
+<td>Window ECE, document type, calibrated</td>
+<td>0.0152</td>
+</tr>
+<tr class="even">
+<td>Window ECE, banded</td>
+<td>0.0682</td>
+</tr>
+<tr class="odd">
+<td>Fast-path rate (documents)</td>
+<td>0.743 (240 of 323)</td>
+</tr>
+<tr class="even">
+<td>Out-of-distribution flag rate</td>
+<td>0.0402 (13 of 323)</td>
+</tr>
+<tr class="odd">
+<td>Single-window documents (274) accuracy</td>
+<td>0.9489</td>
+</tr>
+<tr class="even">
+<td>Multi-window documents (49) accuracy</td>
+<td>0.9592</td>
+</tr>
+<tr class="odd">
+<td>Scoring latency, L4 GPU, PyTorch</td>
+<td>0.575 s per document</td>
+</tr>
+</tbody>
+</table>
+<h3 id="run-comparison-test-split">Run comparison, test split</h3>
+<table class="caption-top">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Run</th>
+<th style="text-align: right;">Epochs</th>
+<th style="text-align: right;">Doc-type acc.</th>
+<th style="text-align: right;">Subclass acc. (type correct)</th>
+<th style="text-align: right;">Window ECE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Run 3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.8947</td>
+<td style="text-align: right;">0.526</td>
+<td style="text-align: right;">0.0203</td>
+</tr>
+<tr class="even">
+<td>Arm A</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.8638</td>
+<td style="text-align: right;">0.4839</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr class="odd">
+<td>Arm B</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.9505</td>
+<td style="text-align: right;">0.5831</td>
+<td style="text-align: right;">0.0259</td>
+</tr>
+<tr class="even">
+<td>Final (M9b)</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.9505</td>
+<td style="text-align: right;">0.6287</td>
+<td style="text-align: right;">0.0152</td>
+</tr>
+</tbody>
+</table>
+<p>On the 323 paired documents, the paired bootstrap gives a document-type difference of exactly 0.0000 between the final run and Arm B (all differences on this page are final minus Arm B), so the accuracy did not change. What changed is calibration and how many documents clear the gate. The fast-path rate rose by 0.44 (0.743 against 0.303), with a 95% interval of 0.38 to 0.50, which excludes zero. The comparison tool prints the opposite order, Arm B minus final, so its interval reads -0.50 to -0.38.</p>
+<h3 id="per-head-macro-f1-test-split">Per-head macro-F1, test split</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Head</th>
+<th style="text-align: right;">Arm B</th>
+<th style="text-align: right;">Final</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>contract</td>
+<td style="text-align: right;">0.0195</td>
+<td style="text-align: right;">0.162</td>
+</tr>
+<tr class="even">
+<td>corporate_record</td>
+<td style="text-align: right;">0.2485</td>
+<td style="text-align: right;">0.904</td>
+</tr>
+<tr class="odd">
+<td>correspondence</td>
+<td style="text-align: right;">0.1289</td>
+<td style="text-align: right;">0.351</td>
+</tr>
+<tr class="even">
+<td>insurance_claim</td>
+<td style="text-align: right;">0.9889</td>
+<td style="text-align: right;">1.000</td>
+</tr>
+<tr class="odd">
+<td>merger_agreement</td>
+<td style="text-align: right;">0.2381</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+</tbody>
+</table>
+<p>The insurance score is high because that class is templated and has only six subclasses. Given the earlier leak, I treat a 1.000 as a prompt to keep looking, not as evidence of general skill. At the default decode, the merger-agreement result is a collapse: all 17 test merger agreements were assigned to one rare subclass that had 13 training windows, against 450 for the largest. Contract errors are different. The model spreads its answers over many subclasses and gets 14 of 53 right where the type was right, and services and supply contracts, with real support in training, are never recovered.</p>
+<h3 id="acceptance-gates-test-split">Acceptance gates, test split</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Gate</th>
+<th style="text-align: right;">Result</th>
+<th style="text-align: right;">Threshold</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Document-type accuracy</td>
+<td style="text-align: right;">0.9505</td>
+<td style="text-align: right;">at least 0.89</td>
+<td>met</td>
+</tr>
+<tr class="even">
+<td>Window ECE</td>
+<td style="text-align: right;">0.0152</td>
+<td style="text-align: right;">at most 0.05</td>
+<td>met</td>
+</tr>
+<tr class="odd">
+<td>Correspondence macro-F1</td>
+<td style="text-align: right;">0.351</td>
+<td style="text-align: right;">at least 0.25</td>
+<td>met</td>
+</tr>
+<tr class="even">
+<td>Contract macro-F1</td>
+<td style="text-align: right;">0.162</td>
+<td style="text-align: right;">at least 0.20</td>
+<td>not met</td>
+</tr>
+</tbody>
+</table>
+<h3 id="routing-and-selective-risk">Routing and selective risk</h3>
+<p>The selective-risk sweep looks for the lowest confidence cutoff whose accepted set has a Wilson error bound within a 2% budget and a band calibration error under 0.05, with at least 30 observations. Lower cutoffs (0.87 to 0.96) met the error budget but failed the calibration check. On the final run it picks 0.97, accepts about 80% of windows (431 of 541) and reports a Wilson upper bound of 0.013 on the window error (1 miss in 431). That is a window-level figure. At the document level, I counted the per-document rows in the evaluation file: of the 240 documents on the fast path, none had the wrong document type, and 82 had the wrong subclass. Subclass labels on the fast path are therefore not reliable, and I treat the fast path as a document-type decision only.</p>
+<div class="caveat">
+<p><strong>Heads up.</strong> That sweep ran over the test-split windows themselves, and so did the decode sweep. The gate’s 0.97 confidence cutoff is a preset in the config (inherited from an earlier pipeline’s confidence bands), and the sweep landed on the same value. So the sweep describes the operating point; it is not an independent validation of the cutoff, and the 74.3% fast-path rate and the 0.013 error bound are optimistic. The evaluation tool refuses to write routing thresholds from any pool containing test documents, so shipped thresholds are fit on the validation split.</p>
+</div>
+<h3 id="serving">Serving</h3>
+<p>I tested the ONNX path on the earlier Run 3 checkpoint, on an Apple M2 CPU. The fp32 export matched PyTorch within 4.25e-06 per head, against a gate of 1e-4. The int8 variant agreed on only 0.8, 0.2 and 0.6 of predictions for three heads, so I rejected it as the default and serve fp32. CPU p50 latency in fp32 was 75 ms at 64 tokens, 308 ms at 256 tokens and 1.63 s at 1,024 tokens. A bug I found in that work: the bundled tokenizer padded every window to 8,192 tokens and silently truncated longer documents. The loader now disables both. Warm latency for a short document dropped to about 0.03 s. I did not export ONNX for the final run, so these timings describe the earlier checkpoint.</p>
+<h3 id="cost">Cost</h3>
+<p>Training cost on Modal was estimated at about $6.0 for three epochs and $7.79 for four. A scoring pass over the 323 test documents on an L4 cost about $0.04.</p>
+<h2 id="figures">Figures</h2>
+<p>All six figures come from the earlier 3-epoch Arm B run. Its document-type accuracy matches the final run, but its calibration and fast-path numbers do not.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/confusion.svg" class="fig img-fluid" style="width:100.0%" alt="Confusion matrix for the 323 test-split documents. Insurance claims and merger agreements are all correct. Contracts 88% correct, mostly misrouted to corporate record. Corporate records 89% correct. Correspondence 95% correct."></p>
+<figcaption>Which type each test-split document was routed to, from the earlier 3-epoch Arm B run.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/doc_type_recall.svg" class="fig img-fluid" style="width:100.0%" alt="Grouped bars of recall per document type for three runs. Contract recall is 0.83, 0.68 and 0.88; corporate record 0.57, 0.81 and 0.89; correspondence 0.95, 0.88 and 0.95; insurance claim and merger agreement near 1.0 throughout."></p>
+<figcaption>Recall per document type for Run 3, Arm A and Arm B, from the earlier 3-epoch Arm B run and its predecessors.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/head_ece.svg" class="fig img-fluid" style="width:100.0%" alt="Bar chart of expected calibration error per head with a line at 0.05. Document type 0.020, contract 0.033, corporate record 0.071, insurance claim 0.003, merger agreement 0.108 and correspondence 0.138; correspondence, corporate record and merger agreement sit above the line."></p>
+<figcaption>Calibration error for each head, from the earlier 3-epoch Arm B run.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/selective_risk.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart over confidence thresholds from 0.60 to 0.90 showing accuracy of accepted windows rising and coverage falling, with a Wilson lower bound. The pick at 0.90 accepts 87% of windows at 99.4% accuracy."></p>
+<figcaption>Accuracy of accepted windows against share accepted as the confidence cutoff changes, from the earlier 3-epoch Arm B run.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/accuracy_by_windows.svg" class="fig img-fluid" style="width:100.0%" alt="Bar chart of document-type accuracy by window count: 94.9% for single-window documents (274), 92.0% for 2 to 3 windows (25), 100% for 4 to 8 (9) and 100% for 9 or more (15)."></p>
+<figcaption>Document-type accuracy by number of 8k-token windows, from the earlier 3-epoch Arm B run.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/subclass_collapse.svg" class="fig img-fluid" style="width:100.0%" alt="Bar chart per document type with subclass accuracy and the share of predictions on one subclass, plus a 0.75 gate line. Contract subclass accuracy is 0.04 and corporate record 0.45; insurance claim is 0.99."></p>
+<figcaption>Subclass accuracy and the collapse signal for each head, from the earlier 3-epoch Arm B run.</figcaption>
+</figure>
+</div>
+<h2 id="reproducibility">Reproducibility</h2>
+<p>The project uses <code>uv</code> with a lockfile, and the pins live in <code>pyproject.toml</code> and <code>uv.lock</code>. The core test suite needs neither torch, onnxruntime nor Modal.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/LLM-Mailroom-Services/mailroom-ml.git</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> mailroom-ml</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync <span class="at">--extra</span> dev</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest <span class="at">-m</span> <span class="st">"not fullcorpus"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run ruff check src tests training deploy</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Training and evaluation commands, from the README. The training command is the README’s example, which uses three epochs. It is not the command of the final run, whose exact command I could not find recorded. The final run (M9b) trained for four epochs with no class weights, a separate learning rate for the subclass heads and a logit-adjusted subclass loss; the repository’s <code>training/run_m9a_local.sh --arm=m9b</code> sets <code>--weight-mode none --subclass-head-lr 1e-3 --subclass-logit-adjust 1.0</code> for these.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync <span class="at">--extra</span> train</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python training/train/train_modernbert.py <span class="dt">\</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--epochs</span> 3 <span class="at">--select-on-subclass</span> <span class="dt">\</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--label-smoothing</span> 0.05 <span class="at">--subclass-label-smoothing</span> 0.0 <span class="dt">\</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input-construction</span> v1</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python training/eval/eval_modernbert.py <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--checkpoint</span> artifacts/pytorch/model <span class="at">--sample</span> 0 <span class="at">--json</span> <span class="at">--selective-risk</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python training/eval/compare_runs.py <span class="at">--a</span> <span class="op">&lt;</span>run_a.json<span class="op">&gt;</span> --b <span class="op">&lt;</span>run_b.json<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Seeds and pins: every split and shuffle uses seed 42; the final run’s recorded settings were 4 epochs, batch 4 with 8 gradient-accumulation steps, learning rate 2e-5, subclass head learning rate 1e-3, label smoothing 0.05, and maximum length 8,192. The paired bootstrap uses 2,000 resamples at seed 42. Data sources are pinned to revisions in <code>src/mailroom_ml/config.py</code>. Cloud training needs a Hugging Face token and a Modal account and is gated on an explicit budget flag.</p>
+<h2 id="engineering-quality">Engineering quality</h2>
+<ul>
+<li>485 test functions in 33 test files, plus a shared <code>conftest.py</code>, covering calibration, windowing, routing, provenance, OOD, dataset build, evaluation CLI, training and deployment code.</li>
+<li>CI on pushes to <code>main</code> and on pull requests: <code>ruff</code> and <code>pytest -m "not fullcorpus"</code>, with strict markers.</li>
+<li>Deploy-layer tests skip themselves when heavy extras are missing and never touch the network.</li>
+<li>Failure behaviour is explicit: if the model is missing, fails to load, or has a label mismatch, the document goes to the LLM path instead of getting a guess. Flagged out-of-distribution documents fail the fast path, and so do catch-all <code>other</code> predictions and subclasses with fewer than 5 training rows.</li>
+<li>A non-smoke Modal run exports ONNX and runs the parity check, and promotes the checkpoint only if both pass.</li>
+</ul>
+<h2 id="limitations-and-next-steps">Limitations and next steps</h2>
+<ul>
+<li>The test split is small. With 323 documents, and single digits in many subclass cells, subclass F1 is noisy.</li>
+<li>The gate cutoff (0.97) is a config preset that the sweep over the test windows then agreed with, so it needs an independent check on fresh data.</li>
+<li>Contract and merger-agreement subclass heads are not fit for acting alone. Contract families such as services and supply are never recovered, and the merger head collapses onto a rare class.</li>
+<li>Insurance claims come largely from synthetic or rendered sources and are very regular. Real claims will be messier.</li>
+<li>The ONNX timings are from an earlier checkpoint on a laptop CPU. The final run was not re-exported.</li>
+<li>The next step is more training data for the contract families that fail, then one training run with a gentler prior correction. More epochs on the current recipe will not help, because validation contract F1 had already flattened.</li>
+<li><a href="../../projects/mailroom-reloaded.html">Mailroom Reloaded</a> uses this model as its <code>bert_primary</code> stage, which will show how the gate behaves inside a full pipeline.</li>
+</ul>
+</div>
+
+</main>
+<footer class="site-footer">
+  <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
+</footer>
+
+<script>
+  // Theme toggle: switches to the opposite of what is currently shown and remembers the choice.
+  // Print button: opens the browser print dialog.
+  (function () {
+    var root = document.documentElement;
+    function current() {
+      var set = root.getAttribute("data-theme");
+      if (set) return set;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    function label(btn) {
+      var dark = current() === "dark";
+      btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+      btn.textContent = dark ? "☀" : "☾";
+    }
+    var toggle = document.querySelector(".theme-toggle");
+    if (toggle) {
+      label(toggle);
+      toggle.addEventListener("click", function () {
+        var next = current() === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+        label(toggle);
+      });
+    }
+    var print = document.querySelector(".print-btn");
+    if (print) {
+      print.addEventListener("click", function (e) { e.preventDefault(); window.print(); });
+    }
+  })();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+    tabsets.forEach(function(tabset) {
+      const tabby = new Tabby('#' + tabset.id);
+    });
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/exios66\.github\.io\/resume");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+
+
+
+
+</body></html>

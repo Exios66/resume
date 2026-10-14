@@ -13,3 +13,7 @@ Thumbs.db
 *~
 
 **/*.quarto_ipynb
+
+# Python
+__pycache__/
+.pytest_cache/

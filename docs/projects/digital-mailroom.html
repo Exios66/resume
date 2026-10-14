@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Capstone with American Family Insurance: a LangGraph pipeline for document routing, prompt experiments, deterministic scoring, and reproducible deployment.">
+<meta name="description" content="Capstone with an industry partner: one LangGraph pipeline for document routing, prompt experiments, deterministic scoring and reproducible deployment, built and tested on a dataset I assembled from public sources.">
 
-<title>Digital-Mailroom — Jack J. Burleson – Jack J. Burleson</title>
+<title>Digital-Mailroom — Jack J. Burleson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -77,13 +77,13 @@ ul.task-list li input[type="checkbox"] {
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Digital-Mailroom — Jack J. Burleson">
-<meta property="og:description" content="Capstone with American Family Insurance: a LangGraph pipeline for document routing, prompt experiments, deterministic scoring, and reproducible deployment.">
+<meta property="og:description" content="Capstone with an industry partner: one LangGraph pipeline for document routing, prompt experiments, deterministic scoring and reproducible deployment, built and tested on a dataset I assembled from public sources.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta property="og:site_name" content="Jack J. Burleson">
 <meta property="og:image:alt" content="Jack J. Burleson — AI / Machine Learning · Data Science">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="Digital-Mailroom — Jack J. Burleson">
-<meta name="twitter:description" content="Capstone with American Family Insurance: a LangGraph pipeline for document routing, prompt experiments, deterministic scoring, and reproducible deployment.">
+<meta name="twitter:description" content="Capstone with an industry partner: one LangGraph pipeline for document routing, prompt experiments, deterministic scoring and reproducible deployment, built and tested on a dataset I assembled from public sources.">
 <meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://exios66.github.io/resume/projects/digital-mailroom.html">
@@ -113,22 +113,109 @@ ul.task-list li input[type="checkbox"] {
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <div class="page">
 <p><a href="../projects/index.html" class="back">← All projects</a></p>
+<div class="project-nav">
+<p><a href="../projects/digital-mailroom.html" aria-current="page">Case study</a></p>
+</div>
 <h1 class="page-title" id="digital-mailroom">Digital-Mailroom</h1>
 <p><span class="kicker">DSHB capstone project · American Family Insurance (industry partner)</span></p>
-<h2 id="overview">Overview</h2>
-<p>A capstone with American Family Insurance to improve how documents are read, sorted, and managed. The project looks for ways to cut the cost of AI inference while improving document processing.</p>
-<!-- TODO: add a one-sentence problem statement in plain language (what a "mailroom" handles and why cost matters), if cleared by the industry partner. -->
+<h2 id="at-a-glance">At a glance</h2>
+<div class="stats">
+<div class="stat">
+<p><span class="stat-value">10</span> <span class="stat-label">Python packages: entity extraction, classification, routing, scalable workflows</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">1</span> <span class="stat-label">LangGraph pipeline joining routing, experiments, scoring, data and deployment</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">Public data only</span> <span class="stat-label">the dataset was built from public sources; no partner data is involved</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">Dec 2026</span> <span class="stat-label">expected completion; results are not public yet</span></p>
+</div>
+</div>
+<h2 id="the-problem">The problem</h2>
+<p>A mailroom takes in a stream of documents: contracts, merger agreements, corporate records, letters and emails, insurance claims. Someone, or something, has to read each one, decide what it is, pull out the key facts and send it to the right place. An LLM can do that, but running one on every page is expensive, and the cost grows with volume.</p>
+<p>The capstone with American Family Insurance asks how to cut the cost of AI inference while improving document processing. My part is the engineering behind that question: a pipeline that routes each document to the cheapest step that can handle it, and a way to measure whether the routing is any good.</p>
+<h2 id="approach">Approach</h2>
+<p>The design is one LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, dataset management and deployment in a single graph. The idea behind the cost goal is to send each document to the cheapest step that can handle it, and to reserve an LLM call for documents where that matters.</p>
+<figure class="diagram" role="img" aria-labelledby="digital-mailroom-cap"><svg viewbox="0 0 800 316" aria-hidden="true" focusable="false"><rect class="d-muted" fill="none" stroke-dasharray="5 4" stroke-width="1.2" x="0" y="6" width="800" height="150" rx="12"></rect><text class="d-muted" x="12" y="25" font-size="13" font-weight="600">One LangGraph pipeline joins these parts</text><rect class="d-box d-accent" x="10" y="50" width="148" height="90" rx="8"></rect><text x="84.0" y="74" text-anchor="middle" font-weight="600">Routing</text><text x="84.0" y="91" text-anchor="middle">legal documents to</text><text x="84.0" y="108" text-anchor="middle">the cheapest step</text><text x="84.0" y="125" text-anchor="middle">that can handle them</text><rect class="d-box" x="166" y="50" width="148" height="90" rx="8"></rect><text x="240.0" y="83" text-anchor="middle" font-weight="600">Prompt experiments</text><text x="240.0" y="100" text-anchor="middle">compare prompt</text><text x="240.0" y="117" text-anchor="middle">versions</text><rect class="d-box" x="322" y="50" width="148" height="90" rx="8"></rect><text x="396.0" y="74" text-anchor="middle" font-weight="600">Deterministic</text><text x="396.0" y="91" text-anchor="middle" font-weight="600">scoring</text><text x="396.0" y="108" text-anchor="middle">fixed rules against</text><text x="396.0" y="125" text-anchor="middle">known labels</text><rect class="d-box" x="478" y="50" width="148" height="90" rx="8"></rect><text x="552.0" y="83" text-anchor="middle" font-weight="600">Dataset management</text><text x="552.0" y="100" text-anchor="middle">public-source</text><text x="552.0" y="117" text-anchor="middle">dataset</text><rect class="d-box" x="634" y="50" width="148" height="90" rx="8"></rect><text x="708.0" y="92" text-anchor="middle" font-weight="600">Docker environment</text><text x="708.0" y="108" text-anchor="middle">reproducible runs</text><rect class="d-muted" fill="none" stroke-dasharray="5 4" stroke-width="1.2" x="0" y="186" width="800" height="120" rx="12"></rect><text class="d-muted" x="12" y="205" font-size="13" font-weight="600">Ten Python packages cover</text><rect class="d-box" x="10" y="226" width="184" height="56" rx="8"></rect><text x="102" y="259" text-anchor="middle" font-weight="600">Entity extraction</text><rect class="d-box" x="206" y="226" width="184" height="56" rx="8"></rect><text x="298" y="259" text-anchor="middle" font-weight="600">Classification</text><rect class="d-box" x="402" y="226" width="184" height="56" rx="8"></rect><text x="494" y="259" text-anchor="middle" font-weight="600">Routing</text><rect class="d-box" x="598" y="226" width="184" height="56" rx="8"></rect><text x="690" y="259" text-anchor="middle" font-weight="600">Scalable workflows</text></svg><figcaption id="digital-mailroom-cap">The parts of Digital-Mailroom as the case study names them: the five components joined in one LangGraph pipeline, and the four areas the ten Python packages cover. The diagram lists components; it does not show the order data moves through them.</figcaption></figure>
+<p>I split the work into ten packages so each part can be tested and swapped on its own.</p>
 <h2 id="what-i-built">What I built</h2>
 <ul>
-<li>Ten Python packages covering entity extraction, classification, routing, and scalable workflows.</li>
-<li>One LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, dataset management, and deployment.</li>
-<li>A reproducible Docker environment so results can be rerun end to end.</li>
+<li><strong>Ten Python packages</strong> covering entity extraction, classification, routing and scalable workflows.</li>
+<li><strong>One LangGraph pipeline</strong> that joins legal-document routing, prompt experiments, deterministic scoring, dataset management and deployment.</li>
+<li><strong>Prompt experiments and deterministic scoring</strong>, so prompt choices are judged by fixed rules against known labels instead of by another model.</li>
+<li><strong>Dataset management</strong> for the public-source dataset described below.</li>
+<li><strong>A reproducible Docker environment</strong> so results can be rerun end to end.</li>
+</ul>
+<h2 id="the-dataset">The dataset</h2>
+<p>The capstone uses a dataset I assembled myself, called mailroom-dataset. It is built entirely from public datasets. None of the industry partner’s documents are in it, and none were used to build it.</p>
+<p>The public sources fall into three groups.</p>
+<ul>
+<li><strong>Correspondence.</strong> The public Enron email corpus, deduplicated to unique texts, with labels from a mix of an LLM zero-shot pass, a join to a public email dataset, simple heuristics and manual review.</li>
+<li><strong>Contracts, merger agreements and corporate records.</strong> Documents from public SEC filings. These include exhibits from EDGAR, and public contract, merger-agreement and registration-statement collections whose clause labels I mapped onto document types and subclasses.</li>
+<li><strong>Insurance claims.</strong> Largely synthetic or rendered from structured public data. Some are rendered from the CMS DE-SynPUF public-use synthetic Medicare files into explanation-of-benefits style documents. Others come from public synthetic claim datasets for property, auto and claim-narrative cases.</li>
+</ul>
+<p>The result has 3,302 documents across five types: contract, merger agreement, corporate record, correspondence and insurance claim. A fixed set of 323 documents is held out as the test split and kept out of training and validation. It is not an untouched set: the Mailroom-ML work also ran a routing-cutoff sweep and a decode-setting sweep on this same split (see the <a href="../projects/mailroom-ml.html">Mailroom-ML case study</a>). Each type has subclasses, for example whether a piece of correspondence is a letter, an email, a memo or a notice.</p>
+<p>Two safeguards matter here. Every source is pinned to an exact revision, so the dataset can be rebuilt byte for byte. And a leak audit checks that file names and titles do not give away the label; it caught exactly that problem in an earlier build, which I describe in the <a href="../projects/mailroom-ml.html">Mailroom-ML case study</a>.</p>
+<h2 id="sample-documents">Sample documents</h2>
+<p>I do not publish real documents from the dataset on this site. The three excerpts below are illustrative: I wrote them to show the shape of each kind of source. They are not real records, and every name in them is fictional.</p>
+<div class="sample-doc">
+<p><span class="sample-source">Illustrative example in the style of a rendered CMS DE-SynPUF claim · synthetic insurance claim · not a real record</span></p>
+<pre class="text"><code>EXPLANATION OF BENEFITS - OUTPATIENT
+Claim ID: 0000-EXAMPLE
+Beneficiary: SYN-00417 (synthetic)
+Service dates: 03/02/2009 - 03/02/2009
+Provider type: Outpatient facility
+Diagnosis codes: 4019, 25000
+Billed amount: 312.00
+Medicare payment: 214.40
+Beneficiary responsibility: 44.00
+Remark: Deductible applied.</code></pre>
+</div>
+<div class="sample-doc">
+<p><span class="sample-source">Illustrative example in the style of an SEC EDGAR corporate-record exhibit · bylaws · not a real filing</span></p>
+<pre class="text"><code>EXHIBIT 3.2
+
+BYLAWS OF EXAMPLE HOLDINGS, INC.
+(a Delaware corporation)
+
+ARTICLE I - OFFICES
+Section 1.1. Registered Office. The registered office of the
+corporation in the State of Delaware shall be located as set
+forth in the certificate of incorporation.
+Section 1.2. Other Offices. The corporation may also have
+offices at such other places as the board of directors may
+from time to time determine.</code></pre>
+</div>
+<div class="sample-doc">
+<p><span class="sample-source">Illustrative example in the style of an SEC EDGAR contract exhibit · license agreement · not a real filing</span></p>
+<pre class="text"><code>EXHIBIT 10.4
+
+SOFTWARE LICENSE AGREEMENT
+
+This Software License Agreement (the "Agreement") is entered
+into as of [DATE] by and between Example Software Corp.
+("Licensor") and Sample Retail LLC ("Licensee").
+
+1. Grant of License. Licensor grants Licensee a non-exclusive,
+non-transferable license to use the Software during the Term.</code></pre>
+</div>
+<h2 id="results-and-links">Results and links</h2>
+<p>Measured results from the capstone are not public while the project is running (expected completion December 2026), so I am not publishing numbers here. The classifier work that feeds it is public and fully reported:</p>
+<ul>
+<li><a href="../projects/mailroom-ml.html">Mailroom-ML</a>: the ModernBERT classifier, its calibration and its routing gate, with a technical report.</li>
+<li><a href="../projects/mailroom-reloaded.html">Mailroom Reloaded</a>: a related pipeline that uses that classifier as its first stage.</li>
+<li><a href="../projects/rvl-cdip-classifier.html">RVL-CDIP classifier study</a>: a prompt-and-model study on a 16-class public document benchmark, with cost projections.</li>
+</ul>
+<h2 id="what-i-learned">What I learned</h2>
+<ul>
+<li>A cost question is a measurement question. You cannot cut inference cost safely until you can say, with a held-out set, how often the cheap step is right.</li>
+<li>Building your own dataset from public sources forces decisions that a ready-made benchmark hides: what counts as a label, what leaks it, and what must stay out of tuning.</li>
+<li>Deterministic scoring keeps prompt experiments comparable, because the score does not depend on a model that can drift.</li>
 </ul>
 <h2 id="stack">Stack</h2>
-<p><span class="tag">Python</span> <span class="tag">LangGraph</span> <span class="tag">Multi-agent pipelines</span> <span class="tag">Prompt engineering</span> <span class="tag">Docker</span></p>
-<h2 id="results-and-links">Results and links</h2>
-<!-- TODO: add measured results (accuracy, cost per document, latency) and a public repo or write-up link, only if the industry partner allows it. -->
-<p>Details are limited while the capstone is in progress (expected completion Dec 2026). See the <a href="../resume.html">résumé</a> for the summary.</p>
+<p><span class="tag">Python</span> <span class="tag">LangGraph</span> <span class="tag">Multi-agent pipelines</span> <span class="tag">Prompt engineering</span> <span class="tag">Docker</span> <span class="tag">Dataset design</span></p>
 </div>
 
 </main>

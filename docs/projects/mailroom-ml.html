@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="A ModernBERT document classifier with training, evaluation, fine-tuning, probability calibration, and ONNX export for FastAPI serving on Modal.">
+<meta name="description" content="A ModernBERT document classifier with calibrated confidence, a routing gate that decides which documents can skip an LLM, and a leak audit that caught a label leak in my own training data.">
 
-<title>Mailroom-ML — Jack J. Burleson – Jack J. Burleson</title>
+<title>Mailroom-ML — Jack J. Burleson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -77,13 +77,13 @@ ul.task-list li input[type="checkbox"] {
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Mailroom-ML — Jack J. Burleson">
-<meta property="og:description" content="A ModernBERT document classifier with training, evaluation, fine-tuning, probability calibration, and ONNX export for FastAPI serving on Modal.">
+<meta property="og:description" content="A ModernBERT document classifier with calibrated confidence, a routing gate that decides which documents can skip an LLM, and a leak audit that caught a label leak in my own training data.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta property="og:site_name" content="Jack J. Burleson">
 <meta property="og:image:alt" content="Jack J. Burleson — AI / Machine Learning · Data Science">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="Mailroom-ML — Jack J. Burleson">
-<meta name="twitter:description" content="A ModernBERT document classifier with training, evaluation, fine-tuning, probability calibration, and ONNX export for FastAPI serving on Modal.">
+<meta name="twitter:description" content="A ModernBERT document classifier with calibrated confidence, a routing gate that decides which documents can skip an LLM, and a leak audit that caught a label leak in my own training data.">
 <meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://exios66.github.io/resume/projects/mailroom-ml.html">
@@ -113,22 +113,107 @@ ul.task-list li input[type="checkbox"] {
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <div class="page">
 <p><a href="../projects/index.html" class="back">← All projects</a></p>
+<div class="project-nav">
+<p><a href="../projects/mailroom-ml.html" aria-current="page">Case study</a> <a href="../projects/mailroom-ml/report.html">Technical report</a> <a href="https://github.com/LLM-Mailroom-Services/mailroom-ml">Code</a></p>
+</div>
 <h1 class="page-title" id="mailroom-ml">Mailroom-ML</h1>
-<p><span class="kicker">ML training, evaluation &amp; fine-tuning</span></p>
-<h2 id="overview">Overview</h2>
-<p>The model side of the document-intelligence work: a classifier that decides what kind of document it is looking at, and how confident it should be before a document is routed automatically.</p>
+<p><span class="kicker">ML training, evaluation &amp; calibration</span></p>
+<h2 id="at-a-glance">At a glance</h2>
+<div class="stats">
+<div class="stat">
+<p><span class="stat-value">95.05%</span> <span class="stat-label">document-type accuracy on the 323-document test split (307 correct)</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">0.0152</span> <span class="stat-label">calibration error (ECE) on the 541 windows of that test split</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">74.3%</span> <span class="stat-label">of test documents (240 of 323) take the fast path, meaning no LLM call; optimistic, see below</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">3 of 4</span> <span class="stat-label">acceptance gates met; contract subclass F1 is still short</span></p>
+</div>
+</div>
+<p>The 74.3% is the share of documents handled without an LLM. By my count from the per-document rows of the evaluation file, none of those 240 had the wrong document type, but 82 had the wrong subclass, so I treat the fast path as a document-type decision only. The gate’s 0.97 confidence cutoff is a preset from the project’s config, but the sweep that supports it ran on this same split, as did the decode sweep, so read the fast-path and coverage numbers as optimistic. The window-level error rate among accepted windows is in the routing section of the <a href="../projects/mailroom-ml/report.html">technical report</a>.</p>
+<h2 id="the-problem">The problem</h2>
+<p>A mailroom model reads incoming legal and insurance documents and decides what each one is. A large language model (LLM) can do that well, but it costs money on every document. Many documents are easy. A cheap classifier could handle those and pass only the hard or unfamiliar ones to the LLM.</p>
+<p>That plan only works if the classifier knows when it is unsure. A model that is 95% accurate overall but wrong with high confidence on some documents would quietly send errors downstream. So the project was less about raw accuracy than about three questions. Are its confidence scores honest? Can I pick a cutoff with a known error rate? Can I trust the training data to measure any of this?</p>
+<h2 id="approach">Approach</h2>
+<p>I trained one ModernBERT encoder with a document-type head and one subclass head per type. Long documents are cut into overlapping 8,192-token windows, and the windows vote on the answer. Each head gets its own temperature scaling. A routing gate combines calibrated confidence, how much the windows agree, and the margin over the runner-up. A document takes the fast path only if the gate passes. Everything else goes to the LLM.</p>
+<figure class="diagram" role="img" aria-labelledby="mailroom-ml-cap"><svg viewbox="0 0 800 440" aria-hidden="true" focusable="false"><defs><marker id="mailroom-ml-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="10" y="20" width="216" height="84" rx="8"></rect><text x="118.0" y="50" text-anchor="middle" font-weight="600">1. Normalize</text><text x="118.0" y="67" text-anchor="middle">clerk-normalized</text><text x="118.0" y="84" text-anchor="middle">text</text><rect class="d-box" x="291" y="20" width="216" height="84" rx="8"></rect><text x="399.0" y="50" text-anchor="middle" font-weight="600">2. Window</text><text x="399.0" y="67" text-anchor="middle">8,192 tokens,</text><text x="399.0" y="84" text-anchor="middle">512-token overlap</text><rect class="d-box" x="572" y="20" width="216" height="84" rx="8"></rect><text x="680.0" y="50" text-anchor="middle" font-weight="600">3. Encode</text><text x="680.0" y="67" text-anchor="middle">ModernBERT</text><text x="680.0" y="84" text-anchor="middle">shared encoder</text><rect class="d-box" x="10" y="150" width="216" height="84" rx="8"></rect><text x="118.0" y="172" text-anchor="middle" font-weight="600">4. Heads</text><text x="118.0" y="188" text-anchor="middle">doc_type head plus</text><text x="118.0" y="206" text-anchor="middle">conditional subclass</text><text x="118.0" y="222" text-anchor="middle">heads</text><rect class="d-box" x="291" y="150" width="216" height="84" rx="8"></rect><text x="399.0" y="180" text-anchor="middle" font-weight="600">5. Calibrate</text><text x="399.0" y="197" text-anchor="middle">per-head temperature</text><text x="399.0" y="214" text-anchor="middle">scaling</text><rect class="d-box" x="572" y="150" width="216" height="84" rx="8"></rect><text x="680.0" y="180" text-anchor="middle" font-weight="600">6. OOD probe</text><text x="680.0" y="197" text-anchor="middle">energy score on</text><text x="680.0" y="214" text-anchor="middle">doc_type logits</text><path class="d-arrow" d="M226 62H289" marker-end="url(#mailroom-ml-ah)"></path><path class="d-arrow" d="M507 62H570" marker-end="url(#mailroom-ml-ah)"></path><path class="d-arrow" d="M226 192H289" marker-end="url(#mailroom-ml-ah)"></path><path class="d-arrow" d="M507 192H570" marker-end="url(#mailroom-ml-ah)"></path><path class="d-arrow" d="M680.0 104V127H118.0V150" marker-end="url(#mailroom-ml-ah)"></path><path class="d-arrow" d="M680.0 234V257H118.0V280" marker-end="url(#mailroom-ml-ah)"></path><rect class="d-box d-accent" x="10" y="280" width="216" height="84" rx="8"></rect><text x="118.0" y="310" text-anchor="middle" font-weight="600">7. Routing score</text><text x="118.0" y="327" text-anchor="middle">S = p · agreement</text><text x="118.0" y="344" text-anchor="middle">· margin</text><rect class="d-box d-accent" x="291" y="280" width="216" height="84" rx="8"></rect><text x="399.0" y="318" text-anchor="middle" font-weight="600">Fast path</text><text x="399.0" y="336" text-anchor="middle">accepted automatically</text><rect class="d-box" x="572" y="280" width="216" height="84" rx="8"></rect><text x="680.0" y="318" text-anchor="middle" font-weight="600">LLM sorter</text><text x="680.0" y="336" text-anchor="middle">ambiguous or odd input</text><path class="d-arrow" d="M226 322H289" marker-end="url(#mailroom-ml-ah)"></path><text class="d-muted" x="258" y="312" text-anchor="middle" font-size="13">high S</text><path class="d-arrow" d="M118.0 364V400H680.0V366" marker-end="url(#mailroom-ml-ah)"></path><text class="d-muted" x="399.0" y="392" text-anchor="middle" font-size="13">low S, OOD flag, or catch-all class</text></svg><figcaption id="mailroom-ml-cap">The Mailroom-ML inference path: normalize, window, encode, classify with conditional heads, calibrate, flag out-of-distribution input, then route on a composite score either to the fast path or to the LLM sorter.</figcaption></figure>
 <h2 id="what-i-built">What I built</h2>
 <ul>
-<li>A ModernBERT document classifier with training, evaluation, and fine-tuning pipelines.</li>
-<li>Data lineage tracking, probability calibration, and production routing logic.</li>
-<li>PyTorch training pipelines using Transformers and Hugging Face datasets, evaluated with scipy.</li>
-<li>ONNX export for FastAPI serving on Modal, with pytest coverage throughout.</li>
+<li><strong>Training and evaluation pipelines</strong> in PyTorch with Transformers and Hugging Face datasets, run on Modal GPUs. Evaluation uses scipy and a paired bootstrap to compare runs.</li>
+<li><strong>Calibration and routing.</strong> Per-head temperature scaling, a selective-risk sweep that finds the confidence cutoff for a 2% error budget, and an out-of-distribution flag from an energy probe on the logits.</li>
+<li><strong>Data lineage.</strong> Every training set is pinned to a revision. A provenance module writes a byte-reproducible manifest with sha256 hashes and no timestamps, so a rebuild on the same inputs gives the same bytes.</li>
+<li><strong>A leak audit.</strong> Early on, the model’s insurance subclass score looked too good. The audit showed that titles fell back to filenames, and 42.8% of filenames contained the subclass name. I removed the fallback and added a build-time check that fails if a filename-shaped title returns.</li>
+<li><strong>ONNX export for serving.</strong> An exported model is checked against the PyTorch one before it is promoted. In a CPU test on an Apple M2 with the Run 3 checkpoint (an earlier two-epoch run; I did not export the final one), the fp32 export matched PyTorch to within 4.25e-06 per head, and the int8 variant did not (see below).</li>
+<li><strong>A test suite.</strong> 485 test functions in 33 test files, plus a shared <code>conftest.py</code>, run in CI (ruff and pytest) on pushes to <code>main</code> and on pull requests. Tests for the heavy dependencies skip themselves when torch or Modal is absent, so the core suite runs anywhere.</li>
 </ul>
+<h2 id="results">Results</h2>
+<p>The numbers below come from my final run. It trained for four epochs and was scored on a test split of 323 documents (541 windows). The test split was not used for training, for choosing the checkpoint epoch or for fitting calibration. It was used for more than one evaluation, though: I compared runs on it, ran a confidence sweep on it and ran the decode sweep described below on it. The 0.97 cutoff itself is a preset from the project’s config, and the sweep landed on the same value.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Measure</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Document-type accuracy</td>
+<td>0.9505 (307 of 323)</td>
+</tr>
+<tr class="even">
+<td>Subclass accuracy, when the type is right</td>
+<td>0.6287</td>
+</tr>
+<tr class="odd">
+<td>Window calibration error (ECE)</td>
+<td>0.0152, down from 0.0259 in the earlier run</td>
+</tr>
+<tr class="even">
+<td>Documents passing the routing gate</td>
+<td>74.3%</td>
+</tr>
+<tr class="odd">
+<td>Out-of-distribution flag rate</td>
+<td>4.0%</td>
+</tr>
+</tbody>
+</table>
+<p>The sweep looks for the lowest confidence cutoff whose accepted windows have an error bound under 2% and a band calibration error under 0.05. Lower cutoffs (0.87 to 0.96) met the error budget but failed the calibration check, so on the final run it comes out at 0.97, which accepts about 80% of windows (431 of 541). Scoring on the L4 GPU took 0.575 seconds per document.</p>
+<div class="caveat">
+<p><strong>Heads up.</strong> The sweep that supports the 0.97 cutoff ran over these same test windows, and so did the decode sweep. That makes the fast-path and coverage numbers optimistic: they describe an operating point, not a validated setting. The tool that writes deployment thresholds refuses to run on a pool that contains test documents, so real thresholds are fit on the validation split.</p>
+</div>
+<p>The subclass heads are the weak part. Insurance claims reach F1 of 1.000, but that class is highly templated (114 test documents), so I would not read it as general skill. Merger-agreement F1 is 0.000 because the model puts all 17 test merger agreements into one rare subclass. Contract subclass F1 is 0.162 against a 0.20 floor, and that is the one acceptance gate still failing. A decode-time adjustment I tried on the finished model did not fix it; the best setting reached 0.170. The next lever is more training data for the contract families that are missing, not more epochs.</p>
+<p>The figures are from an earlier 3-epoch run called Arm B, whose document-type accuracy is also 0.9505. “Arm A” and “Arm B” are the project’s names for two comparison runs: Arm A was a one-epoch smoke run and Arm B a three-epoch run with a heavier document-type loss weight. “M9b” is the name of the final four-epoch run reported above.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="mailroom-ml/figures/confusion.svg" class="fig img-fluid" style="width:100.0%" alt="Confusion matrix of document type for the 323 test-split documents. Insurance claims and merger agreements are classified 100% correctly. Contracts are 88% correct with most errors going to corporate records. Corporate records are 89% correct. Correspondence is 95% correct."></p>
+<figcaption>Which type each test-split document was routed to, from the earlier 3-epoch Arm B run.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="mailroom-ml/figures/subclass_collapse.svg" class="fig img-fluid" style="width:100.0%" alt="Bar chart for each document type showing subclass accuracy next to a collapse signal: the share of predictions landing on one subclass. A 0.75 accuracy gate line is drawn. Contract subclass accuracy is 0.04 and corporate record 0.45, both far below the gate, while insurance claim is 0.99."></p>
+<figcaption>Subclass accuracy against how much each head collapses onto a single answer, from the earlier 3-epoch Arm B run.</figcaption>
+</figure>
+</div>
+<p>The full numbers, the calibration plots and the iteration history are in the <a href="../projects/mailroom-ml/report.html">technical report</a>.</p>
+<h2 id="what-i-learned">What I learned</h2>
+<ul>
+<li>A score that looks too good deserves an audit before it earns a headline. The insurance score was inflated by a filename leak, and fixing it made every number I report afterwards believable.</li>
+<li>Calibration changes what you can promise. Once confidence is honest, “send this to the LLM” becomes a measurable error budget instead of a guess.</li>
+<li>I rejected the smaller int8 export as the default. It saved time but changed predictions, and the parity check showed it. The fp32 export is what serves.</li>
+<li>Failing a gate is useful information. The decode sweep ruled out one fix cheaply and pointed at the real cause, which is data for specific contract types.</li>
+</ul>
+<p><a href="../projects/mailroom-reloaded.html">Mailroom Reloaded</a> uses this model as its first-stage <code>bert_primary</code> step.</p>
 <h2 id="stack">Stack</h2>
-<p><span class="tag">Python</span> <span class="tag">PyTorch</span> <span class="tag">Transformers</span> <span class="tag">Hugging Face datasets</span> <span class="tag">scipy</span> <span class="tag">ONNX</span> <span class="tag">FastAPI</span> <span class="tag">Modal</span> <span class="tag">pytest</span></p>
-<h2 id="results-and-links">Results and links</h2>
-<p>Code: <a href="https://github.com/LLM-Mailroom-Services/mailroom-ml">github.com/LLM-Mailroom-Services/mailroom-ml</a></p>
-<!-- TODO: add headline metrics (accuracy, calibration error before/after) and a calibration plot. -->
+<p><span class="tag">Python</span> <span class="tag">PyTorch</span> <span class="tag">Transformers</span> <span class="tag">ModernBERT</span> <span class="tag">Hugging Face datasets</span> <span class="tag">scipy</span> <span class="tag">ONNX</span> <span class="tag">FastAPI</span> <span class="tag">Modal</span> <span class="tag">pytest</span> <span class="tag">uv</span></p>
 </div>
 
 </main>
