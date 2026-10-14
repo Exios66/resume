@@ -373,7 +373,9 @@ function Pandoc(doc)
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
+<script src="%sassets/js/site.js" defer></script>
 ]] .. sprite()
+  footer = string.format(footer, prefix)
 
   table.insert(doc.blocks, 1, pandoc.RawBlock("html", header))
   table.insert(doc.blocks, pandoc.RawBlock("html", footer))

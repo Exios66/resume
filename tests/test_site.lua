@@ -83,6 +83,7 @@ local function check(case, root, absolute, empty)
   contains(header.text, 'class="site-title" href="' .. case.prefix .. 'index.html"')
   contains(footer.text, '</main>')
   contains(footer.text, '<footer class="site-footer">')
+  contains(footer.text, '<script src="' .. case.prefix .. 'assets/js/site.js" defer></script>')
   contains(footer.text, 'href="https://quarto.org"')
   for _, destination in ipairs(destinations) do
     contains(header.text, 'class="nav-link" href="' .. case.prefix .. destination .. '"')

@@ -52,3 +52,10 @@ test('the site stylesheet link is cache-busted', () => {
     assert.doesNotMatch(html, /href="(?:\.\.\/)*styles\.css"/, file);
   }
 });
+
+test('the site script is loaded once per page and cache-busted', () => {
+  for (const { file, html } of built) {
+    const scripts = html.match(/<script src="(?:\.\.\/)*assets\/js\/site\.js\?v=[0-9a-f]{10}" defer(?:="")?><\/script>/g) ?? [];
+    assert.equal(scripts.length, 1, file);
+  }
+});

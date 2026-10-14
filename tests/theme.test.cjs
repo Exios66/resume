@@ -19,8 +19,10 @@ const controls = script('scripts.html');
 function element() {
   const attributes = new Map();
   const listeners = new Map();
+  const classes = new Set();
   return {
     textContent: '',
+    classList: { add: (name) => classes.add(name), contains: (name) => classes.has(name) },
     getAttribute: (name) => attributes.get(name) ?? null,
     setAttribute: (name, value) => attributes.set(name, value),
     addEventListener(name, callback) {
@@ -35,7 +37,7 @@ function element() {
 }
 
 function environment({ saved = null, dark = false, storageFails = false,
-                       togglePresent = true, printPresent = true } = {}) {
+                       togglePresent = true, printPresent = true, reduced = false } = {}) {
   const root = element();
   const toggle = element();
   const sun = { hidden: true };
@@ -66,6 +68,7 @@ function environment({ saved = null, dark = false, storageFails = false,
     },
     window: {
       matchMedia(query) {
+        if (query === '(prefers-reduced-motion: reduce)') return { matches: reduced };
         assert.equal(query, '(prefers-color-scheme: dark)');
         return { matches: dark };
       },
@@ -165,4 +168,25 @@ test('pages without either control initialize safely', () => {
   assert.equal(ui.root.getAttribute('data-theme'), null);
   assert.equal(ui.printCalls(), 0);
   assert.deepEqual(ui.writes, []);
+});
+
+for (const reduced of [false, true]) {
+  test(`motion class is set only without a reduced-motion preference, reduced=${reduced}`, () => {
+    const ui = environment({ reduced });
+    vm.runInContext(bootstrap, ui.context);
+    assert.equal(ui.root.classList.contains('js-motion'), !reduced);
+  });
+}
+
+test('a failing media query does not stop the saved theme or the toggle', () => {
+  const ui = environment({ saved: 'dark' });
+  ui.context.window.matchMedia = (query) => {
+    if (query === '(prefers-reduced-motion: reduce)') throw new Error('unsupported');
+    return { matches: false };
+  };
+  vm.runInContext(bootstrap, ui.context);
+  assert.equal(ui.root.getAttribute('data-theme'), 'dark');
+  assert.equal(ui.root.classList.contains('js-motion'), false);
+  vm.runInContext(controls, ui.context);
+  assertTheme(ui, 'dark');
 });
