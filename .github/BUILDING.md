@@ -21,10 +21,10 @@ An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages
 ## How it fits together
 
 - `_quarto.yml` holds site settings: URL, descriptions, Open Graph/Twitter cards, canonical links, sitemap.
-- `scripts/site.lua` adds the header, `<main>` landmark, and footer to every page, with links that work from any folder depth. (Quarto's own navbar needs a Bootstrap theme, which this site doesn't use.)
+- `scripts/site.lua` adds the header, `<main>` landmark, and footer to every page, with links that work from any folder depth. It also adds icons from an inline SVG sprite (shapes follow [Lucide](https://lucide.dev/), ISC license); every icon carries `width`/`height="1em"` so it stays small even if `styles.css` fails to load. (Quarto's own navbar needs a Bootstrap theme, which this site doesn't use.)
 - `styles.css` holds the whole design: light/dark themes, mobile layout, print layout. Fonts (Source Serif 4 for headings, Inter for text and UI) are self-hosted in `assets/fonts/`.
 - `partials/` holds the head metadata (JSON-LD `Person` schema, theme bootstrapping), skip link, and the small theme-toggle script.
-- `scripts/post-render.py` runs after every render. It recreates `docs/.nojekyll`, removes the repeated site name from page titles, and prints `resume.html` to `assets/Jack_Burleson_Resume.pdf`. The PDF is refreshed only when that step succeeds; without Playwright or Chromium the committed PDF is kept, so re-check it after editing the résumé.
+- `scripts/post-render.py` runs after every render. It recreates `docs/.nojekyll`, removes the repeated site name from page titles, adds a `?v=<hash>` to the `styles.css` links, and prints `resume.html` to `assets/Jack_Burleson_Resume.pdf`. The PDF is refreshed only when that step succeeds; without Playwright or Chromium the committed PDF is kept, so re-check it after editing the résumé.
 - `scripts/og-image.html` + `scripts/make-og.py` regenerate the social preview image `assets/og-image.png`.
 - `partials/diagrams/_*.qmd` are inline SVG architecture diagrams. Pages pull them in with `{{< include >}}`. They draw with `currentColor` and CSS classes, so they follow the light/dark theme. The leading underscore stops Quarto from rendering them as pages.
 - `docs/` holds the built site. Do not edit it by hand.
@@ -53,7 +53,7 @@ Then:
 
 Use `quarto preview` while writing. The header and footer appear there too, but the PDF is only rebuilt by `quarto render`.
 
-Run the checks with `lua tests/test_site.lua`, `node tests/theme.test.cjs`, and `python -m pytest tests`. `tests/test_links.py` checks the rendered `docs/` for broken internal links, images without alt text, and strings that must never be published.
+Run the checks with `lua tests/test_site.lua`, `node --test tests/theme.test.cjs tests/icons.test.cjs`, and `python -m pytest tests`. `tests/icons.test.cjs` reads the rendered `docs/` and checks that every icon sizes itself and the stylesheet link is cache-busted. `tests/test_links.py` checks the rendered `docs/` for broken internal links, images without alt text, and strings that must never be published.
 
 To refresh the social image after changing the tagline, run `python scripts/make-og.py`.
 

@@ -13,7 +13,11 @@
     function label(btn) {
       var dark = current() === "dark";
       btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
-      btn.textContent = dark ? "☀" : "☾";
+      btn.setAttribute("data-mode", dark ? "dark" : "light");
+      // The hidden attribute, not CSS, picks the icon, so only one shows even without styles.css.
+      var sun = btn.querySelector && btn.querySelector(".i-sun");
+      var moon = btn.querySelector && btn.querySelector(".i-moon");
+      if (sun && moon) { sun.hidden = !dark; moon.hidden = dark; }
     }
     var toggle = document.querySelector(".theme-toggle");
     if (toggle) {
