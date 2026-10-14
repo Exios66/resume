@@ -8,7 +8,7 @@
 
 <meta name="description" content="Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published.">
 
-<title>Mailroom Reloaded: technical report — Jack J. Burleson – Jack J. Burleson</title>
+<title>Mailroom Reloaded: technical report — Jack J. Burleson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -222,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The driver is <code>MailroomFlow._drive_nodes</code> in <code>pipeline/flow.py</code>. The decorated <code>@start</code>, <code>@listen</code> and <code>@router</code> methods exist so the class is routable and plottable, and they delegate to the same guarded node implementations. The stated reasons for an explicit driver are that CrewAI rejects the literal self-loop wiring, and that crash resume and deadline enforcement need one deterministic traversal.</p>
 <h3 id="the-fast-path-and-its-failure-mode">The fast path and its failure mode</h3>
 <p><code>ingest</code> and <code>bert_primary</code> are local, so they add no LLM calls. If ModernBERT is flagged off, missing, given an oversized input, or raises, the adapter returns an “unavailable” verdict and the handoff forces a full sort. Classes listed under <code>defer_classes</code> (by default <code>contract</code> and <code>merger_agreement</code>) and multi-window verdicts also fall back to a full sort. The model comes from <a href="../../projects/mailroom-ml.html">Mailroom-ML</a> through the optional <code>bert</code> extra.</p>
-<h3 id="the-gate-and-the-escalation-ladder">The gate and the escalation ladder</h3>
+<h3 id="the-gates-and-their-escalation-paths">The gates and their escalation paths</h3>
 <p><code>BandGate</code> applies per-class thresholds from <code>config/taxonomy.yaml</code>. The global defaults are a high band of 0.95, a low band of 0.70, and <code>retry_max</code> of 2. Some classes override them.</p>
 <table class="caption-top">
 <colgroup>
@@ -285,7 +285,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>The arbiter’s verdict maps <code>accept</code> and <code>accept_with_caveats</code> to report, <code>re_extract</code> to a retry, and <code>escalate</code> to the boss.</p>
+<p>The arbiter’s verdict maps <code>accept</code> and <code>accept_with_caveats</code> to report, <code>re_extract</code> to a retry, and <code>escalate</code> to the boss. The boss can reassign the class once, after which the document is extracted again, send the document to human review, or accept it. If the arbiter asks for a re-extraction after the retries are spent, the document goes to human review.</p>
 <p>The gate slot is pluggable. A <code>LearnedGate</code> (logistic model stored as plain JSON) loads when <code>models/route_gate.json</code> exists. It overrides the band only inside the medium band and never a hard rule.</p>
 <h3 id="jev-the-opt-in-decision-model">Jev, the opt-in decision model</h3>
 <p>Jev (the “TypeSafe System One”) is a probabilistic decision model, not a text generator. It returns typed answers: a <code>choice</code> with a probability distribution, a <code>noul</code> (a single probability of yes), or a <code>score</code>. The gate asks it two questions: which route (<code>proceed</code>, <code>retry</code>, <code>verify</code>, <code>boss</code> or <code>human_review</code>) and whether to escalate to a human. Its confidence is derived from the concentration of the probability distribution, so it must be re-scaled by a calibration before the gate trusts it.</p>

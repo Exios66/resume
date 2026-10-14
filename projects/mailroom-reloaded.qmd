@@ -38,13 +38,10 @@ Mailroom Reloaded is a rebuild of that design as a single deployable service, bu
 
 The pipeline is a CrewAI Flow, but a deterministic driver walks it, not CrewAI's event engine. A clean text document goes through local ingest, the ModernBERT fast path from [Mailroom-ML](mailroom-ml.qmd), one sorter call, a gate, one specialist extraction call, a second gate, and then report, catalog and archive. The gates are plain threshold code with zero LLM calls. That is why the cost of a clean document is exactly two calls.
 
-When a gate is not satisfied, the document climbs a fixed ladder:
+When a gate is not satisfied, fixed rules pick the next step, and the two gates have different branches:
 
-1. Retry the extraction, up to a configured limit.
-2. Re-sort once, when the fast path and the sorter disagree about the class.
-3. Verify: a judge grades the extraction and an arbiter decides whether to accept, re-extract or escalate.
-4. Escalate to a boss agent that can reassign the class.
-5. Park the document for human review.
+- **Classify gate:** re-sort once, as a full pass, if the fast path and the sorter disagree about the class; retry a low-confidence sort, up to a configured limit; after the retries, park the document for human review.
+- **Extract gate:** send a middling-confidence result to verification, where a judge grades the extraction and an arbiter decides whether to accept, re-extract or escalate; retry a low-confidence extraction, up to the limit; after the retries, escalate to a boss agent that can reassign the class or send the document to human review. An extraction that is invalid or cut off by the length limit is retried, then parked for human review.
 
 The ModernBERT fast path runs first and fails open. If the package or model is missing, the input is oversized, or anything errors, the pipeline falls back to a full LLM sort instead of stopping.
 

@@ -67,7 +67,7 @@ The numbers below come from my final run. It trained for four epochs and was sco
 | Documents passing the routing gate | 74.3% |
 | Out-of-distribution flag rate | 4.0% |
 
-At a confidence cutoff of 0.97, the sweep picks a point that accepts about 80% of windows within the 2% error budget. Scoring on the L4 GPU took 0.575 seconds per document.
+The sweep looks for the lowest confidence cutoff whose accepted windows have an error bound under 2% and a band calibration error under 0.05. Lower cutoffs (0.87 to 0.96) met the error budget but failed the calibration check, so on the final run it comes out at 0.97, which accepts about 80% of windows (431 of 541). Scoring on the L4 GPU took 0.575 seconds per document.
 
 ::: {.caveat}
 **Heads up.** The sweep that supports the 0.97 cutoff ran over these same test windows, and so did the decode sweep. That makes the fast-path and coverage numbers optimistic: they describe an operating point, not a validated setting. The tool that writes deployment thresholds refuses to run on a pool that contains test documents, so real thresholds are fit on the validation split.
@@ -77,7 +77,7 @@ The subclass heads are the weak part. Insurance claims reach F1 of 1.000, but th
 
 The figures are from an earlier 3-epoch run called Arm B, whose document-type accuracy is also 0.9505. "Arm A" and "Arm B" are the project's names for two comparison runs: Arm A was a one-epoch smoke run and Arm B a three-epoch run with a heavier document-type loss weight. "M9b" is the name of the final four-epoch run reported above.
 
-![Which type each test-split document was routed to, from the earlier 3-epoch Arm B run.](mailroom-ml/figures/confusion.svg){.fig fig-alt="Confusion matrix of document type for the 323 test-split documents. Insurance claims and merger agreements are classified 100% correctly. Contracts are 88% correct with most errors going to corporate records. Correspondence is 95% correct." width="100%"}
+![Which type each test-split document was routed to, from the earlier 3-epoch Arm B run.](mailroom-ml/figures/confusion.svg){.fig fig-alt="Confusion matrix of document type for the 323 test-split documents. Insurance claims and merger agreements are classified 100% correctly. Contracts are 88% correct with most errors going to corporate records. Corporate records are 89% correct. Correspondence is 95% correct." width="100%"}
 
 ![Subclass accuracy against how much each head collapses onto a single answer, from the earlier 3-epoch Arm B run.](mailroom-ml/figures/subclass_collapse.svg){.fig fig-alt="Bar chart for each document type showing subclass accuracy next to a collapse signal: the share of predictions landing on one subclass. A 0.75 accuracy gate line is drawn. Contract subclass accuracy is 0.04 and corporate record 0.45, both far below the gate, while insurance claim is 0.99." width="100%"}
 

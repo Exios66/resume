@@ -1,6 +1,6 @@
 ---
 pagetitle: "Projects — Jack J. Burleson"
-description: "Selected work in document intelligence, model evaluation, behavioral machine learning, and browser-based simulation, with a case study and technical report for each project."
+description: "Selected work in document intelligence, model evaluation, behavioral machine learning, and browser-based simulation, with case studies and selected technical reports."
 ---
 
 ::: {.page}
@@ -38,7 +38,7 @@ A ModernBERT classifier that handles the easy documents quickly. It calibrates i
 ### [Mailroom Reloaded](mailroom-reloaded.qmd)
 [Agentic pipeline · deployable rebuild]{.kicker}
 
-The mailroom as one service you can deploy. A deterministic driver runs CrewAI agents in a fixed order, escalates hard cases step by step, and records every decision in an audit log.
+The mailroom as one service you can deploy. A deterministic driver runs CrewAI agents in a fixed order, escalates hard cases by fixed rules, and records every decision in an audit log.
 
 [CrewAI Flows]{.tag} [FastAPI]{.tag} [OpenTelemetry]{.tag}
 :::

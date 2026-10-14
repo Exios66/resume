@@ -8,7 +8,7 @@
 
 <meta name="description" content="Method, iteration history, results and limits of a prompt-only, zero-shot RVL-CDIP classifier built on an off-the-shelf vision model.">
 
-<title>RVL-CDIP-Classifier: technical report — Jack J. Burleson – Jack J. Burleson</title>
+<title>RVL-CDIP-Classifier: technical report — Jack J. Burleson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -155,7 +155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><span class="kicker">Zero-shot document classification · prompt engineering · cost and robustness analysis</span></p>
 <h2 id="summary">Summary</h2>
 <p>I tested how well a general-purpose vision model can classify scanned pages into the 16 RVL-CDIP classes using only a written prompt, with no training or fine-tuning. The main model was <code>qwen/qwen3.7-flash</code> through OpenRouter. I iterated on the prompt across 29 registered versions.</p>
-<p>The number to quote is <strong>82.6% (925 of 1,120)</strong> for prompt v11.8 on a balanced slice of 70 images per class. That slice was built from the Hugging Face mirror of RVL-CDIP with pixel-hash exclusion of the 800-image slice. I did not verify its overlap with the 160-image slice I tuned on. On the tuning slice the same prompt reaches 99.4% (157 of 158), which I treat as an optimistic upper bound because I wrote rules for individual misses on that slice. Cost is about $0.0004 per image. Simulations of voting and routing looked promising, but none of the three routing tests I measured reproduced the gain.</p>
+<p>The number to quote is <strong>82.6% (925 of 1,120)</strong> for prompt v11.8 on a balanced slice of 70 images per class. That slice is a seeded, class-balanced sample of the Hugging Face mirror of RVL-CDIP, which holds 100 images per class across its three splits. It shares at least 20 images per class (320 in all) with the 800-image slice, so those two results are not independent. I did not verify its overlap with the 160-image slice I tuned on. On the tuning slice the same prompt reaches 99.4% (157 of 158), which I treat as an optimistic upper bound because I wrote rules for individual misses on that slice. Cost is about $0.0004 per image. Simulations of voting and routing looked promising, but none of the three routing tests I measured reproduced the gain.</p>
 <h2 id="system-and-data">System and data</h2>
 <p>The pipeline has these stages.</p>
 <table class="caption-top">
@@ -174,7 +174,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td>Slice building</td>
-<td>Streams a 100-per-class Hugging Face mirror of RVL-CDIP, seeds the sampler, de-duplicates on rendered pixels, writes 1024×1024 grayscale PNGs with white padding</td>
+<td>Streams a 100-per-class Hugging Face mirror of RVL-CDIP, seeds the sampler, can skip images whose rendered pixels match an exclusion set, writes 1024×1024 grayscale PNGs with white padding</td>
 <td><code>scripts/datasets/</code>, <code>scripts/braintrust/create_braintrust_*_dataset.py</code>, <code>src/image_utils.py</code></td>
 </tr>
 <tr class="even">
@@ -205,7 +205,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p><strong>OCR and 300 DPI.</strong> The 300-DPI conversion and OCR live in <code>src/document_processor.py</code>, which is used by the TIFF batch-processing script. The classifier does not call it. <code>classify_image</code> states that it sends only the image to the vision model, with no OCR text, and the message builder attaches the page as a base64 <code>image_url</code> part. The evaluated images are 1024×1024 grayscale PNGs. An early comparison on the 160-image slice found that full-size 2550×3300 inputs roughly doubled prompt tokens (1,637 to 3,701) with no accuracy gain (74.4% against 73.8%) under the baseline prompt.</p>
-<p><strong>Data.</strong> The 160-image slice (10 per class) is the tuning slice. Larger slices come from the Hugging Face mirror, which holds exactly 100 images per class. The 1,120-image run used a dataset built from all three mirror splits (train, test and validation) with the 800-image slice excluded by pixel hash. Slices are class-balanced, seeded, and de-duplicated on rendered pixels, so one slice does not repeat an image from an exclusion set. The dataset is RVL-CDIP (Harley, Ufkes and Derpanis, 2015).</p>
+<p><strong>Data.</strong> The 160-image slice (10 per class) is the tuning slice. Larger slices come from the Hugging Face mirror, which holds exactly 100 images per class. The 1,120-image run used a 70-per-class sample, drawn with a fixed seed, from a 1,600-image dataset built from all three mirror splits (train, test and validation). The 800-image slice is the train split, so the two share at least 20 images per class (at least 320). The 1,120-image dataset was not built with an exclusion set, because only 50 images per class lie outside the train split. Slices are class-balanced and seeded. The dataset is RVL-CDIP (Harley, Ufkes and Derpanis, 2015).</p>
 <h2 id="iteration-history">Iteration history</h2>
 <p>Prompts run from v0, a short baseline, to v19, a variant that tells each call to act as one independent vote in a committee. The default in the code is v17.2. Accuracy below is on the 160-image tuning slice (158 scored rows), which is why it climbs so far.</p>
 <div class="timeline">
@@ -273,7 +273,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>qwen3.7-flash</td>
 <td><strong>v11.8</strong></td>
 <td><strong>1,120 balanced</strong></td>
-<td><strong>Not the tuning slice; overlap with it not verified</strong></td>
+<td><strong>Not the tuning slice; overlap with it not verified. Shares at least 20 images per class (320 in all) with the 800 slice</strong></td>
 <td style="text-align: right;"><strong>925/1,120 (82.6%)</strong></td>
 </tr>
 <tr class="even">
@@ -292,7 +292,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>The like-for-like comparison is the 800-image slice: v0 scored 66.1% and v11.8 scored 83.1%, a gain of 17.0 points on a slice the prompt was not iterated on. Why accuracy falls with slice size is not proven. Larger slices contain noisier scans and more layout variety, and the v16 report found the same prompt scoring about 13 to 17 points lower on mirror slices than on the 160-image slice. I did not test whether the mirror images are intrinsically harder, so that stays a hypothesis.</p>
+<p>The like-for-like comparison is the 800-image slice: v0 scored 66.1% and v11.8 scored 83.1%, a gain of 17.0 points on a slice the prompt was not iterated on. Because the 1,120-image slice shares at least 320 images with the 800-image slice, those two results are not independent. Why accuracy falls with slice size is not proven. Larger slices contain noisier scans and more layout variety, and the v16 report found the same prompt scoring about 13 to 17 points lower on mirror slices than on the 160-image slice. I did not test whether the mirror images are intrinsically harder, so that stays a hypothesis.</p>
 <p><strong>Source conflict.</strong> The experiment log gives v11.8 on the 320 slice as 87.2% (279/320). The per-run report gives 87.11% (277/318 scored). I use the log value so the table matches the figures, and the two differ by under 0.1 points.</p>
 <p><strong>Error structure on the 1,120 run.</strong> Per-class accuracy is lowest for budget (67.1%), letter (70.0%), presentation (70.0%) and scientific report (71.4%), and highest for resume (95.7%). The most frequent confusions are letter as memo (16), budget as invoice (12) and specification as form (9). In 72 misses (6.4% of rows, 36.9% of misses) the correct class was the model’s runner-up.</p>
 <p><strong>Other models, 160-image tuning slice.</strong> <code>qwen3.5-35b-a3b</code> scored 155/157 (98.7%) with v11.8, <code>gemini-2.5-flash-lite</code> 86.9%, <code>gemini-2.5-flash</code> 74.4% and <code>kimi-k3</code> 70.0%, though the last two ran with earlier prompts, so this is not a controlled comparison.</p>
@@ -307,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img src="figures/f2_generalization_falloff.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart of v11.8 accuracy against slice size, from 99.4 percent at 160 images down to 82.6 percent at 1,120 images."></p>
-<figcaption>v11.8 accuracy by slice size. The 160-image point is the tuning slice; the 1,120-image point is 82.6%.</figcaption>
+<figcaption>v11.8 accuracy by slice size. The 160-image point is the tuning slice; the 1,120-image point is 82.6%. The 800- and 1,120-image slices overlap.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
@@ -366,7 +366,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The test suite has 318 test functions in 21 files, covering the document processor, prompt registry, classifier and message builder, evaluation and report accounting, routing, Monte Carlo code and dataset builders. Evaluation uses exact match, with a failed or empty response counted as a miss, so API failures lower the score and are not hidden. The v16 report attributes 16 of 480 rows to length truncation and provider errors, and the report proposed a higher token cap. Reports record billed cost per row.</p>
 <h2 id="limitations-and-next-steps">Limitations and next steps</h2>
 <ul>
-<li><strong>Tuning contamination.</strong> The 99.4% figure is on the slice I tuned against. I cannot rule out that some mirror images in the larger slices appeared in failure-driven evaluation sets, so 82.6% is a different slice from the tuning slice, not a verified-clean test set. The 1,120 images were built with pixel-hash exclusion of the 800-image slice only.</li>
+<li><strong>Tuning contamination.</strong> The 99.4% figure is on the slice I tuned against. I cannot rule out that some mirror images in the larger slices appeared in failure-driven evaluation sets, so 82.6% is a different slice from the tuning slice, not a verified-clean test set. The 1,120-image slice was not built with an exclusion set: it is a 70-per-class sample of the 100-per-class mirror, so it shares at least 20 images per class with the 800-image slice. I did not check it against the 160-image tuning slice.</li>
 <li><strong>Mirror, not the full test set.</strong> All numbers are from small balanced slices of a 100-per-class mirror. They are not the 40,000-image RVL-CDIP test set, and they are not comparable to published supervised results.</li>
 <li><strong>Bundled edits.</strong> Each prompt version changes several things at once, so I cannot attribute gains to individual rules.</li>
 <li><strong>Single main model.</strong> Cross-model results are not controlled, and statistical power on 160 images is low.</li>

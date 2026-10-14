@@ -28,7 +28,7 @@ The lab needs a browser with WebGL 2. It runs on desktop and on phones.
 [4]{.stat-value} [FFT cascades, from 1 km swells down to centimetre ripples]{.stat-label}
 :::
 ::: {.stat}
-[280]{.stat-value} [water columns sampled under a hull to integrate pressure]{.stat-label}
+[280]{.stat-value} [water columns, at most, sampled under a hull to integrate pressure]{.stat-label}
 :::
 ::: {.stat}
 [328 + 25]{.stat-value} [unit and long-running validation tests, counted by grep]{.stat-label}
@@ -73,7 +73,7 @@ Ships float by pressure integration: for each moment, the simulation sums the wa
 ![Turbid coastal water (Jerlov type 9) at 3.7 m: blue light is absorbed first, so the view is dark green.](wave-laboratory/figures/underwater-coastal-9.jpg){.fig fig-alt="An underwater view in which everything is tinted dark green, with slightly lighter and darker patches. No hull is visible, and a chart panel sits at the lower right." width="100%"}
 
 ::: {.caveat}
-**Heads up.** This is a teaching and exploration tool, not a certified seakeeping program. The reference notes list what is not modelled, such as current shear with depth and wave refraction by currents, and floodwater without sloshing. The technical report covers these limits.
+**Heads up.** This is a teaching and exploration tool, not a certified seakeeping program. The reference notes list what is not modelled, such as current shear with depth, wave refraction by currents, and floodwater sloshing. The technical report covers these limits.
 :::
 
 ## What I learned

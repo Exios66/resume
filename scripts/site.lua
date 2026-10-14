@@ -34,28 +34,37 @@ local function is_current(item, path)
   return path == item.section
 end
 
---- Check for HTML text bounded by comment delimiters, ignoring surrounding whitespace.
--- Text between the delimiters may span lines and is not parsed.
+--- Remove HTML comments from raw HTML; comments are authoring notes, not page content.
+-- Each <!-- ... --> span is removed on its own, so markup between two comments is kept.
 -- @param el Pandoc raw element.
--- @return boolean Whether the format is "html" and the text starts with <!-- and ends with -->.
-local function is_comment(el)
-  return el.format == "html" and el.text:match("^%s*<!%-%-.-%-%->%s*$") ~= nil
+-- Raw <script>, <style> and <pre> blocks are left alone, since comment-like text there is content.
+-- @return table|nil Empty list when only whitespace remains, the element with its comments
+-- removed, or nil to leave the element unchanged.
+local function strip_comments(el)
+  if el.format ~= "html" then return nil end
+  local lower = el.text:lower()
+  if lower:find("<script", 1, true) or lower:find("<style", 1, true) or lower:find("<pre", 1, true) then
+    return nil
+  end
+  local text, count = el.text:gsub("<!%-%-.-%-%->", "")
+  if count == 0 then return nil end
+  if text:match("^%s*$") then return {} end
+  el.text = text
+  return el
 end
 
---- Remove a raw HTML inline bounded by comment delimiters.
--- Surrounding whitespace is allowed; other raw inlines are kept.
+--- Remove HTML comments from a raw HTML inline.
 -- @param el Pandoc RawInline element.
--- @return table|nil Empty list to remove the element, or nil to leave it unchanged.
+-- @return table|nil See strip_comments.
 function RawInline(el)
-  if is_comment(el) then return {} end
+  return strip_comments(el)
 end
 
---- Remove a raw HTML block bounded by comment delimiters.
--- Surrounding whitespace is allowed; other raw blocks are kept.
+--- Remove HTML comments from a raw HTML block.
 -- @param el Pandoc RawBlock element.
--- @return table|nil Empty list to remove the element, or nil to leave it unchanged.
+-- @return table|nil See strip_comments.
 function RawBlock(el)
-  if is_comment(el) then return {} end
+  return strip_comments(el)
 end
 
 --- Wrap the document in the site header, main landmark, and footer.

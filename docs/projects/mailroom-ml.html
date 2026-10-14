@@ -8,7 +8,7 @@
 
 <meta name="description" content="A ModernBERT document classifier with calibrated confidence, a routing gate that decides which documents can skip an LLM, and a leak audit that caught a label leak in my own training data.">
 
-<title>Mailroom-ML — Jack J. Burleson – Jack J. Burleson</title>
+<title>Mailroom-ML — Jack J. Burleson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -185,7 +185,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<p>At a confidence cutoff of 0.97, the sweep picks a point that accepts about 80% of windows within the 2% error budget. Scoring on the L4 GPU took 0.575 seconds per document.</p>
+<p>The sweep looks for the lowest confidence cutoff whose accepted windows have an error bound under 2% and a band calibration error under 0.05. Lower cutoffs (0.87 to 0.96) met the error budget but failed the calibration check, so on the final run it comes out at 0.97, which accepts about 80% of windows (431 of 541). Scoring on the L4 GPU took 0.575 seconds per document.</p>
 <div class="caveat">
 <p><strong>Heads up.</strong> The sweep that supports the 0.97 cutoff ran over these same test windows, and so did the decode sweep. That makes the fast-path and coverage numbers optimistic: they describe an operating point, not a validated setting. The tool that writes deployment thresholds refuses to run on a pool that contains test documents, so real thresholds are fit on the validation split.</p>
 </div>
@@ -193,7 +193,7 @@ ul.task-list li input[type="checkbox"] {
 <p>The figures are from an earlier 3-epoch run called Arm B, whose document-type accuracy is also 0.9505. “Arm A” and “Arm B” are the project’s names for two comparison runs: Arm A was a one-epoch smoke run and Arm B a three-epoch run with a heavier document-type loss weight. “M9b” is the name of the final four-epoch run reported above.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="mailroom-ml/figures/confusion.svg" class="fig img-fluid" style="width:100.0%" alt="Confusion matrix of document type for the 323 test-split documents. Insurance claims and merger agreements are classified 100% correctly. Contracts are 88% correct with most errors going to corporate records. Correspondence is 95% correct."></p>
+<p><img src="mailroom-ml/figures/confusion.svg" class="fig img-fluid" style="width:100.0%" alt="Confusion matrix of document type for the 323 test-split documents. Insurance claims and merger agreements are classified 100% correctly. Contracts are 88% correct with most errors going to corporate records. Corporate records are 89% correct. Correspondence is 95% correct."></p>
 <figcaption>Which type each test-split document was routed to, from the earlier 3-epoch Arm B run.</figcaption>
 </figure>
 </div>

@@ -136,7 +136,7 @@ L 477.902052 22.372406
     <g id="xtick_11"/>
     <g id="xtick_12"/>
     <g id="text_10">
-     <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="274.992961" y="312.175312" transform="rotate(-0 274.992961 312.175312)">Slice size (images per-class x 16)</text>
+     <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="274.992961" y="312.175312" transform="rotate(-0 274.992961 312.175312)">Slice size (images)</text>
     </g>
    </g>
    <g id="matplotlib.axis_2">

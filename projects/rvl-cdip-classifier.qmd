@@ -1,6 +1,6 @@
 ---
 pagetitle: "RVL-CDIP-Classifier — Jack J. Burleson"
-description: "A prompt-engineering study that sorts scanned documents into the 16 RVL-CDIP categories with an off-the-shelf vision model, reporting 82.6% on a larger 1,120-image slice; its overlap with the 160-image tuning slice was not verified."
+description: "A prompt-engineering study that sorts scanned documents into the 16 RVL-CDIP categories with an off-the-shelf vision model, reporting 82.6% on a larger 1,120-image slice that overlaps the 800-image slice; its overlap with the 160-image tuning slice was not verified."
 ---
 
 ::: {.page}
@@ -19,7 +19,7 @@ description: "A prompt-engineering study that sorts scanned documents into the 1
 
 ::: {.stats}
 ::: {.stat}
-[82.6%]{.stat-value} [accuracy on 1,120 images (a larger slice, overlap with tuning not verified; 925 correct)]{.stat-label}
+[82.6%]{.stat-value} [accuracy on 1,120 images (925 correct). The slice shares at least 320 images with the 800-image slice; overlap with tuning not verified]{.stat-label}
 :::
 ::: {.stat}
 [99.4%]{.stat-value} [on the 160-image slice I tuned against, so an optimistic number]{.stat-label}
@@ -56,12 +56,12 @@ On the 160-image slice, accuracy climbed from 80.1% at v1 to 99.4% at v11.8. Tha
 
 ![Accuracy of qwen3.7-flash on the 160-image tuning slice across prompt versions, rising from 80.1% at v1 to 99.4% at v11.8.](rvl-cdip-classifier/figures/f1_accuracy_arc.svg){.fig fig-alt="Line chart of exact-match accuracy on the 160-image tuning slice for prompt versions v1, v4, v7, v10, v11 and v11.8, rising from 80.1 percent to 99.4 percent." width="100%"}
 
-The honest headline comes from larger slices. The same v11.8 prompt scored 82.6% on a balanced 1,120-image slice. That slice was built from the Hugging Face mirror of RVL-CDIP, with pixel-hash exclusion of the 800-image slice; I did not verify its overlap with the 160-image tuning slice. Across slice sizes it scored 87.2% at 320 images, 89.1% at 476 scored images, and 83.1% at 800. On that 800-image slice, the untuned v0 prompt scored 66.1%, so the prompt work is worth about 17 points on unseen pages.
+The honest headline comes from larger slices. The same v11.8 prompt scored 82.6% on a balanced 1,120-image slice. That slice is a seeded, class-balanced sample of 70 images per class from the Hugging Face mirror of RVL-CDIP, which holds 100 per class across its three splits. The 800-image slice is the mirror's train split (50 per class), so the two slices share at least 20 images per class, 320 in all, and the 83.1% and 82.6% results are not independent. I did not verify whether the 1,120-image slice shares images with the 160-image tuning slice. Across slice sizes it scored 87.2% at 320 images, 89.1% at 476 scored images, and 83.1% at 800. On that 800-image slice, the untuned v0 prompt scored 66.1%, so the prompt work is worth about 17 points on unseen pages.
 
-![v11.8 accuracy by slice size: 99.4% on the 160-image tuning slice, then 87.2%, 89.1%, 83.1% and 82.6% on larger slices.](rvl-cdip-classifier/figures/f2_generalization_falloff.svg){.fig fig-alt="Line chart of v11.8 exact-match accuracy against slice size, falling from 99.4 percent at 160 images to 87.2, 89.1, 83.1 and 82.6 percent at 320, 480, 800 and 1,120 images." width="100%"}
+![v11.8 accuracy by slice size: 99.4% on the 160-image tuning slice, then 87.2%, 89.1%, 83.1% and 82.6% on larger slices. The 800- and 1,120-image slices overlap.](rvl-cdip-classifier/figures/f2_generalization_falloff.svg){.fig fig-alt="Line chart of v11.8 exact-match accuracy against slice size, falling from 99.4 percent at 160 images to 87.2, 89.1, 83.1 and 82.6 percent at 320, 480, 800 and 1,120 images." width="100%"}
 
 ::: {.caveat}
-**Heads up.** The 160-image points in both charts come from the slice I iterated on. The 1,120-image point is the one to quote. The 1,120-image slice excluded the 800-image slice by pixel hash, but I did not check it against the 160-image tuning slice or the other earlier slices, so it may share images with them. Treat it as a better estimate than the tuning slice, not as a clean test.
+**Heads up.** The 160-image points in both charts come from the slice I iterated on. The 1,120-image point is the one to quote. The 1,120-image slice shares at least 20 images per class with the 800-image slice, so those two results are not independent evidence. I did not check it against the 160-image tuning slice or the other earlier slices, so it may share images with them. Treat it as a better estimate than the tuning slice, not as a clean test.
 :::
 
 Where it fails is consistent. Budget (67.1%), letter (70.0%), presentation (70.0%) and scientific report (71.4%) are the weak classes on the 1,120 run, and the most common single error is letter predicted as memo (16 cases). In 72 of the misses, the correct class was the model's own runner-up.

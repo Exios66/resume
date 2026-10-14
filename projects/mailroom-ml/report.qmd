@@ -88,7 +88,7 @@ The early lesson came before Run 3. An earlier build used the filename as a fall
 | Arm B | 3 | 0.9505 | 0.5831 | 0.0259 |
 | Final (M9b) | 4 | 0.9505 | 0.6287 | 0.0152 |
 
-On the 323 paired documents, the paired bootstrap gives a document-type difference of exactly 0.0000 between Arm B and the final run, so the accuracy did not change. What changed is calibration and how many documents clear the gate. The fast-path difference has a 95% interval of about -0.50 to -0.38, which excludes zero.
+On the 323 paired documents, the paired bootstrap gives a document-type difference of exactly 0.0000 between the final run and Arm B (all differences on this page are final minus Arm B), so the accuracy did not change. What changed is calibration and how many documents clear the gate. The fast-path rate rose by 0.44 (0.743 against 0.303), with a 95% interval of 0.38 to 0.50, which excludes zero. The comparison tool prints the opposite order, Arm B minus final, so its interval reads -0.50 to -0.38.
 
 ### Per-head macro-F1, test split
 
@@ -113,10 +113,10 @@ The insurance score is high because that class is templated and has only six sub
 
 ### Routing and selective risk
 
-The selective-risk sweep looks for the lowest confidence cutoff whose accepted set stays within a 2% error budget, using a minimum of 30 observations and a Wilson lower bound. On the final run it picks 0.97, accepts about 80% of windows (431 of 541) and reports an error rate of 0.013 among those. That is a window-level figure. At the document level, I counted the per-document rows in the evaluation file: of the 240 documents on the fast path, none had the wrong document type, and 82 had the wrong subclass. Subclass labels on the fast path are therefore not reliable, and I treat the fast path as a document-type decision only.
+The selective-risk sweep looks for the lowest confidence cutoff whose accepted set has a Wilson error bound within a 2% budget and a band calibration error under 0.05, with at least 30 observations. Lower cutoffs (0.87 to 0.96) met the error budget but failed the calibration check. On the final run it picks 0.97, accepts about 80% of windows (431 of 541) and reports a Wilson upper bound of 0.013 on the window error (1 miss in 431). That is a window-level figure. At the document level, I counted the per-document rows in the evaluation file: of the 240 documents on the fast path, none had the wrong document type, and 82 had the wrong subclass. Subclass labels on the fast path are therefore not reliable, and I treat the fast path as a document-type decision only.
 
 ::: {.caveat}
-**Heads up.** That sweep ran over the test-split windows themselves, and so did the decode sweep. The gate's 0.97 confidence cutoff is a preset in the config (inherited from an earlier pipeline's confidence bands), and the sweep landed on the same value. So the sweep describes the operating point; it is not an independent validation of the cutoff, and the 74.3% fast-path rate and the 0.013 error rate are optimistic. The evaluation tool refuses to write routing thresholds from any pool containing test documents, so shipped thresholds are fit on the validation split.
+**Heads up.** That sweep ran over the test-split windows themselves, and so did the decode sweep. The gate's 0.97 confidence cutoff is a preset in the config (inherited from an earlier pipeline's confidence bands), and the sweep landed on the same value. So the sweep describes the operating point; it is not an independent validation of the cutoff, and the 74.3% fast-path rate and the 0.013 error bound are optimistic. The evaluation tool refuses to write routing thresholds from any pool containing test documents, so shipped thresholds are fit on the validation split.
 :::
 
 ### Serving
@@ -155,7 +155,7 @@ uv run pytest -m "not fullcorpus"
 uv run ruff check src tests training deploy
 ```
 
-Training and evaluation commands, from the README:
+Training and evaluation commands, from the README. The training command is the README's example, which uses three epochs. It is not the command of the final run, whose exact command I could not find recorded. The final run (M9b) trained for four epochs with no class weights, a separate learning rate for the subclass heads and a logit-adjusted subclass loss; the repository's `training/run_m9a_local.sh --arm=m9b` sets `--weight-mode none --subclass-head-lr 1e-3 --subclass-logit-adjust 1.0` for these.
 
 ```sh
 uv sync --extra train

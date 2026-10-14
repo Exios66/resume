@@ -8,7 +8,7 @@
 
 <meta name="description" content="Technical report on a ModernBERT document classifier: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits.">
 
-<title>Mailroom-ML: technical report — Jack J. Burleson – Jack J. Burleson</title>
+<title>Mailroom-ML: technical report — Jack J. Burleson</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -343,7 +343,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>On the 323 paired documents, the paired bootstrap gives a document-type difference of exactly 0.0000 between Arm B and the final run, so the accuracy did not change. What changed is calibration and how many documents clear the gate. The fast-path difference has a 95% interval of about -0.50 to -0.38, which excludes zero.</p>
+<p>On the 323 paired documents, the paired bootstrap gives a document-type difference of exactly 0.0000 between the final run and Arm B (all differences on this page are final minus Arm B), so the accuracy did not change. What changed is calibration and how many documents clear the gate. The fast-path rate rose by 0.44 (0.743 against 0.303), with a 95% interval of 0.38 to 0.50, which excludes zero. The comparison tool prints the opposite order, Arm B minus final, so its interval reads -0.50 to -0.38.</p>
 <h3 id="per-head-macro-f1-test-split">Per-head macro-F1, test split</h3>
 <table class="caption-top">
 <thead>
@@ -420,9 +420,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <h3 id="routing-and-selective-risk">Routing and selective risk</h3>
-<p>The selective-risk sweep looks for the lowest confidence cutoff whose accepted set stays within a 2% error budget, using a minimum of 30 observations and a Wilson lower bound. On the final run it picks 0.97, accepts about 80% of windows (431 of 541) and reports an error rate of 0.013 among those. That is a window-level figure. At the document level, I counted the per-document rows in the evaluation file: of the 240 documents on the fast path, none had the wrong document type, and 82 had the wrong subclass. Subclass labels on the fast path are therefore not reliable, and I treat the fast path as a document-type decision only.</p>
+<p>The selective-risk sweep looks for the lowest confidence cutoff whose accepted set has a Wilson error bound within a 2% budget and a band calibration error under 0.05, with at least 30 observations. Lower cutoffs (0.87 to 0.96) met the error budget but failed the calibration check. On the final run it picks 0.97, accepts about 80% of windows (431 of 541) and reports a Wilson upper bound of 0.013 on the window error (1 miss in 431). That is a window-level figure. At the document level, I counted the per-document rows in the evaluation file: of the 240 documents on the fast path, none had the wrong document type, and 82 had the wrong subclass. Subclass labels on the fast path are therefore not reliable, and I treat the fast path as a document-type decision only.</p>
 <div class="caveat">
-<p><strong>Heads up.</strong> That sweep ran over the test-split windows themselves, and so did the decode sweep. The gate’s 0.97 confidence cutoff is a preset in the config (inherited from an earlier pipeline’s confidence bands), and the sweep landed on the same value. So the sweep describes the operating point; it is not an independent validation of the cutoff, and the 74.3% fast-path rate and the 0.013 error rate are optimistic. The evaluation tool refuses to write routing thresholds from any pool containing test documents, so shipped thresholds are fit on the validation split.</p>
+<p><strong>Heads up.</strong> That sweep ran over the test-split windows themselves, and so did the decode sweep. The gate’s 0.97 confidence cutoff is a preset in the config (inherited from an earlier pipeline’s confidence bands), and the sweep landed on the same value. So the sweep describes the operating point; it is not an independent validation of the cutoff, and the 74.3% fast-path rate and the 0.013 error bound are optimistic. The evaluation tool refuses to write routing thresholds from any pool containing test documents, so shipped thresholds are fit on the validation split.</p>
 </div>
 <h3 id="serving">Serving</h3>
 <p>I tested the ONNX path on the earlier Run 3 checkpoint, on an Apple M2 CPU. The fp32 export matched PyTorch within 4.25e-06 per head, against a gate of 1e-4. The int8 variant agreed on only 0.8, 0.2 and 0.6 of predictions for three heads, so I rejected it as the default and serve fp32. CPU p50 latency in fp32 was 75 ms at 64 tokens, 308 ms at 256 tokens and 1.63 s at 1,024 tokens. A bug I found in that work: the bundled tokenizer padded every window to 8,192 tokens and silently truncated longer documents. The loader now disables both. Warm latency for a short document dropped to about 0.03 s. I did not export ONNX for the final run, so these timings describe the earlier checkpoint.</p>
@@ -473,7 +473,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync <span class="at">--extra</span> dev</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest <span class="at">-m</span> <span class="st">"not fullcorpus"</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run ruff check src tests training deploy</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Training and evaluation commands, from the README:</p>
+<p>Training and evaluation commands, from the README. The training command is the README’s example, which uses three epochs. It is not the command of the final run, whose exact command I could not find recorded. The final run (M9b) trained for four epochs with no class weights, a separate learning rate for the subclass heads and a logit-adjusted subclass loss; the repository’s <code>training/run_m9a_local.sh --arm=m9b</code> sets <code>--weight-mode none --subclass-head-lr 1e-3 --subclass-logit-adjust 1.0</code> for these.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync <span class="at">--extra</span> train</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python training/train/train_modernbert.py <span class="dt">\</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--epochs</span> 3 <span class="at">--select-on-subclass</span> <span class="dt">\</span></span>

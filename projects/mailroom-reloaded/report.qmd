@@ -43,7 +43,7 @@ The driver is `MailroomFlow._drive_nodes` in `pipeline/flow.py`. The decorated `
 
 `ingest` and `bert_primary` are local, so they add no LLM calls. If ModernBERT is flagged off, missing, given an oversized input, or raises, the adapter returns an "unavailable" verdict and the handoff forces a full sort. Classes listed under `defer_classes` (by default `contract` and `merger_agreement`) and multi-window verdicts also fall back to a full sort. The model comes from [Mailroom-ML](../mailroom-ml.qmd) through the optional `bert` extra.
 
-### The gate and the escalation ladder
+### The gates and their escalation paths
 
 `BandGate` applies per-class thresholds from `config/taxonomy.yaml`. The global defaults are a high band of 0.95, a low band of 0.70, and `retry_max` of 2. Some classes override them.
 
@@ -59,7 +59,7 @@ The driver is `MailroomFlow._drive_nodes` in `pipeline/flow.py`. The decorated `
 | extract | below low, retries left | retry the extraction |
 | extract | below low, retries spent | `boss` |
 
-The arbiter's verdict maps `accept` and `accept_with_caveats` to report, `re_extract` to a retry, and `escalate` to the boss.
+The arbiter's verdict maps `accept` and `accept_with_caveats` to report, `re_extract` to a retry, and `escalate` to the boss. The boss can reassign the class once, after which the document is extracted again, send the document to human review, or accept it. If the arbiter asks for a re-extraction after the retries are spent, the document goes to human review.
 
 The gate slot is pluggable. A `LearnedGate` (logistic model stored as plain JSON) loads when `models/route_gate.json` exists. It overrides the band only inside the medium band and never a hard rule.
 
