@@ -40,6 +40,9 @@ function environment({ saved = null, dark = false, storageFails = false,
                        togglePresent = true, printPresent = true, reduced = false } = {}) {
   const root = element();
   const toggle = element();
+  const sun = { hidden: true };
+  const moon = { hidden: false };
+  toggle.querySelector = (selector) => ({ '.i-sun': sun, '.i-moon': moon })[selector] ?? null;
   const print = element();
   const writes = [];
   let printCalls = 0;
@@ -81,6 +84,10 @@ function assertTheme(ui, theme) {
     theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
   // The button shows the icon of the theme it offers: sun while dark, moon while light.
   assert.equal(ui.toggle.getAttribute('data-mode'), theme);
+  const sun = ui.toggle.querySelector('.i-sun');
+  const moon = ui.toggle.querySelector('.i-moon');
+  assert.equal(sun.hidden, theme !== 'dark');
+  assert.equal(moon.hidden, theme === 'dark');
 }
 
 for (const saved of ['light', 'dark']) {

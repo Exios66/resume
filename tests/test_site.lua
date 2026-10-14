@@ -70,12 +70,15 @@ local function check(case, root, absolute, empty)
   contains(header.text, '<button type="button" class="theme-toggle" aria-label="Switch theme">')
   contains(header.text, '<use href="#i-sun"/>')
   contains(header.text, '<use href="#i-moon"/>')
-  contains(header.text, '<symbol id="i-github"')
-  local _, sprites = header.text:gsub('<svg width="0" height="0"', "")
+  contains(header.text, '<span class="i-sun" hidden><svg class="icon" width="1em" height="1em"')
+  contains(header.text, '<span class="i-moon"><svg class="icon" width="1em" height="1em"')
+  assert(not header.text:find("<symbol", 1, true), "The sprite is not between the header and <main>")
+  contains(footer.text, '<symbol id="i-github"')
+  local _, sprites = (header.text .. footer.text):gsub('<svg width="0" height="0"', "")
   assert(sprites == 1, "Exactly one icon sprite per page")
   assert(not header.text:find("<!--", 1, true), "No HTML comments in output")
-  assert(header.text:find("</header>", 1, true) < header.text:find('id="i-github"', 1, true),
-         "Sprite follows the header")
+  assert(footer.text:find("</footer>", 1, true) < footer.text:find('id="i-github"', 1, true),
+         "Sprite follows the footer")
 
   contains(header.text, 'class="site-title" href="' .. case.prefix .. 'index.html"')
   contains(footer.text, '</main>')
@@ -204,7 +207,7 @@ local function uses(content, name)
 end
 
 -- Every icon name used by the filter has a symbol in the sprite, and ids are i-prefixed.
-local sprite_html = Pandoc({ blocks = {} }).blocks[1].text
+local sprite_html = Pandoc({ blocks = {} }).blocks[2].text
 local used = {}
 for _, name in ipairs({ "book-open", "file-text", "code", "play", "arrow-left", "arrow-right",
                         "arrow-up-right", "download", "map-pin", "sun", "moon", "layers", "brain",
@@ -304,4 +307,8 @@ local place = decorate_span({ tag = "Span", classes = { "chip" }, content = { st
 assert(uses(place.content, "map-pin"))
 local other_chip = decorate_span({ tag = "Span", classes = { "chip" }, content = { str("Remote") } })
 assert(#other_chip.content == 1)
+-- every icon self-sizes, so a missing stylesheet cannot blow it up to the 300x150 SVG default
+assert(icon_html("code") == '<svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false">'
+  .. '<use href="#i-code"/></svg>', icon_html("code"))
+assert(icon_html("arrow-up-right", "icon-ext"):find('class="icon icon-ext" width="1em" height="1em"', 1, true))
 print("icon decoration ok")

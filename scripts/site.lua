@@ -75,9 +75,10 @@ end
 -- @param name string Icon name, without the i- prefix.
 -- @param extra string|nil Extra class names.
 -- @return string HTML for an decorative, aria-hidden <svg>.
+-- width/height keep the icon at 1em even if styles.css fails to load (an SVG's default is 300x150).
 function icon_html(name, extra)
-  return string.format('<svg class="icon%s" aria-hidden="true" focusable="false"><use href="#i-%s"/></svg>',
-    extra and (" " .. extra) or "", name)
+  return string.format('<svg class="icon%s" width="1em" height="1em" aria-hidden="true" focusable="false">'
+    .. '<use href="#i-%s"/></svg>', extra and (" " .. extra) or "", name)
 end
 
 local function icon_inline(name, extra, lead)
@@ -360,20 +361,20 @@ function Pandoc(doc)
     <a class="site-title" href="%sindex.html">Jack J. Burleson</a>
     <ul class="nav-list">
       %s
-      <li><button type="button" class="theme-toggle" aria-label="Switch theme">%s%s</button></li>
+      <li><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden>%s</span><span class="i-moon">%s</span></button></li>
     </ul>
   </nav>
 </header>
-%s
-<main id="main">]], prefix, table.concat(links, "\n      "),
-    icon_html("sun", "i-sun"), icon_html("moon", "i-moon"), sprite())
+<main id="main">]], prefix, table.concat(links, "\n      "), icon_html("sun"), icon_html("moon"))
 
+  -- The sprite goes after the footer so it never sits between the header and <main> in the layout.
   local footer = [[
 </main>
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="%sassets/js/site.js" defer></script>]]
+<script src="%sassets/js/site.js" defer></script>
+]] .. sprite()
   footer = string.format(footer, prefix)
 
   table.insert(doc.blocks, 1, pandoc.RawBlock("html", header))

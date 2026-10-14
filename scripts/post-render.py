@@ -9,8 +9,11 @@
    committed PDF is left untouched.
 3. Drops the " – <site title>" suffix Quarto adds to <title> when the page
    title already names the site, so tabs do not repeat the name.
+4. Adds a ?v=<content hash> to the site stylesheet and script links, so a
+   browser or the Pages CDN never pairs new HTML with a stale cached copy.
 """
 import glob
+import hashlib
 import html
 import os
 import re
@@ -117,12 +120,46 @@ def dedupe_titles():
             page.write_text(fixed, encoding="utf-8")
 
 
+CACHE_BUSTED = ("styles.css", "assets/js/site.js")
+
+
+def asset_versions():
+    """Return {relative path: short sha256} for each CACHE_BUSTED file present in docs/."""
+    versions = {}
+    for rel in CACHE_BUSTED:
+        path = DOCS / rel
+        if path.is_file():
+            versions[rel] = hashlib.sha256(path.read_bytes()).hexdigest()[:10]
+    return versions
+
+
+def cache_bust(text, versions):
+    """Append ?v=<hash> to href/src links that point at a versioned asset (any ../ depth)."""
+    for rel, version in versions.items():
+        pattern = r'((?:href|src)="(?:\.\./)*' + re.escape(rel) + r')(?:\?v=[0-9a-f]+)?"'
+        text = re.sub(pattern, lambda m: f'{m.group(1)}?v={version}"', text)
+    return text
+
+
+def cache_bust_pages():
+    """Apply cache_bust to every rendered page."""
+    versions = asset_versions()
+    if not versions:
+        return
+    for page in DOCS.rglob("*.html"):
+        text = page.read_text(encoding="utf-8")
+        fixed = cache_bust(text, versions)
+        if fixed != text:
+            page.write_text(fixed, encoding="utf-8")
+
+
 def main():
     """Prepare docs for GitHub Pages, remove the search index, and build the PDF."""
     DOCS.mkdir(exist_ok=True)
     (DOCS / ".nojekyll").touch()
     (DOCS / "search.json").unlink(missing_ok=True)
     dedupe_titles()
+    cache_bust_pages()
     build_pdf()
 
 
