@@ -170,6 +170,82 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Heads up.</strong> The 160-image points in both charts come from the slice I iterated on. The 1,120-image point is the one to quote. The 1,120-image slice shares at least 20 images per class with the 800-image slice, so those two results are not independent evidence. I did not check it against the 160-image tuning slice or the other earlier slices, so it may share images with them. Treat it as a better estimate than the tuning slice, not as a clean test.</p>
 </div>
 <p>Where it fails is consistent. Budget (67.1%), letter (70.0%), presentation (70.0%) and scientific report (71.4%) are the weak classes on the 1,120 run, and the most common single error is letter predicted as memo (16 cases). In 72 of the misses, the correct class was the model’s own runner-up.</p>
+<h2 id="what-the-simulations-showed">What the simulations showed</h2>
+<p>The repository’s Monte Carlo scripts treat every recorded run as a draw from a per-image distribution of answers, then resample it to ask “what if” questions without spending any model credits. They work on a pooled corpus of 5,599 rows covering 1,512 images from 18 experiments. The corpus mixes prompt versions and models, so its 82.1% baseline is a pooled rate and not the best prompt’s accuracy.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Question</th>
+<th>What the simulation said</th>
+<th>What I measured</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Would majority voting help?</td>
+<td>7 reads: 85.0%. 25 reads: 86.3%. The cost is the number of reads.</td>
+<td>Not tested on a live run.</td>
+</tr>
+<tr class="even">
+<td>Would sending the least-confident pages to a stronger model help?</td>
+<td>The least-confident 40%: 91.9% at 1.8 times the cost, if the stronger model is 90% accurate at 3 times the cost.</td>
+<td>Down, not up. On a 48-image low-confidence slice, 66.7% became 62.5%. On the tuning slice, v19 went from 97.5% to 96.9% at 7.8 times the cost.</td>
+</tr>
+<tr class="odd">
+<td>Would a few worked examples for the commonest confusions help?</td>
+<td>About 4.3% of errors fixed (33 of 767).</td>
+<td>Down. On a 48-image slice, 68.8% became 64.6%.</td>
+</tr>
+<tr class="even">
+<td>Which prompt changes were real?</td>
+<td>A paired bootstrap on shared images puts v0 to v11.8 at +13.0 points (95% interval 10.1 to 15.9, 898 images).</td>
+<td>This one is a test of measured runs, not a forecast.</td>
+</tr>
+<tr class="odd">
+<td>Would retries and a fallback model cover API failures?</td>
+<td>With a fallback, 0.11% of calls fail, against about 2.9% without one. Extra retries barely matter.</td>
+<td>Modelled only.</td>
+</tr>
+</tbody>
+</table>
+<p>Four findings stood out.</p>
+<ul>
+<li><strong>Voting fixes noisy errors, not consistent ones.</strong> The simulated gain concentrates in classes like handwritten (84.1% to 90.8% at 25 reads). Letter barely moves (74.2% to 75.7%) and budget stays near 70%. When the model is wrong about a page every time, asking again does not help. The method also resamples recorded runs, and only 945 of the 1,512 images have more than one, so the rest cannot change.</li>
+<li><strong>The confidence ranking found hard pages, but the stronger model did not fix them.</strong> The 48 lowest-confidence pages scored 66.7% on the base run, against 82.1% pooled, so the ranking was informative. When I routed the tail to a stronger model on the tuning slice, 15 pages went through, one answer changed, and it changed to a wrong label. A sensitivity sweep says the plan needs the escalated model to be better on exactly those pages (89.9% to 93.9% at 40% escalation for a 5-point swing either way), and neither escalation I tried was.</li>
+<li><strong>Most of the prompt gain came early.</strong> The jump from the baseline prompt to a rule-based one is real. The later versions are statistically indistinguishable from each other: v11.8 against v16 on 319 shared images is 89.0% against 90.0%, with an interval from about -5 to +3 points. The +28.4-point gain for v17 over v0 is measured on 155 images from the tuning slice, so I quote the 898-image figure instead.</li>
+<li><strong>Errors cluster in a few pairs.</strong> Budget read as invoice (63 cases), letter as memo (63), specification as form (52) and invoice as form (51) are the largest confusion pairs in the pooled corpus.</li>
+</ul>
+<p>I also mined the reasoning traces for the words that appear when the model stops checking early. The prompt works through up to 14 checks in order, and the typical trace stops at check 9.4. Words such as “minutes”, “routing” and “variance” show up in traces that stop early and are wrong far more often than the 17.1% baseline error rate. Each appears in only 10 or 11 traces, so these are leads to test and not findings.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="rvl-cdip-classifier/figures/f9_hasty_stop.svg" class="fig img-fluid" style="width:100.0%" alt="Horizontal bar chart of the ten words with the highest hasty-score, from minutes at 1.89 down to survey at 0.71, with routing, variance, products, addresses, introduction, process, meeting and food between them."></p>
+<figcaption>Ten words associated with the model stopping earlier and erring more, scored by how much earlier it stops and how much the error rate rises, against a 17.1% baseline error.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="rvl-cdip-classifier/figures/f8_routing.svg" class="fig img-fluid" style="width:100.0%" alt="Chart of simulated accuracy and cost factor against the fraction of images escalated to a stronger model, with accuracy peaking at 91.9 percent and cost reaching 2 times at 50 percent."></p>
+<figcaption>Simulated confidence-gated escalation: accuracy peaks at 91.9% at a 40% escalation fraction and 1.8 times the cost.</figcaption>
+</figure>
+</div>
+<div class="caveat">
+<p><strong>Heads up.</strong> These are resampled results from recorded runs, not new experiments. Two of the forecasts I tested by measurement, routing and worked examples, and neither held up. Voting and the failure model are untested, and the word list rests on small counts. The report has the full tables.</p>
+</div>
+<h2 id="explore-the-data-and-tools">Explore the data and tools</h2>
+<p>The repository ships the tooling I used to look at the data and to watch the runs, and a Quarto site that pulls the results together. The site renders offline with no model spend.</p>
+<ul>
+<li><strong><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website">The Quarto documentation site⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></strong> has the manuscript, methods, results and experiment logs, the prompt changelog, cost analysis, short research memos, notebooks and a misclassification appendix.</li>
+<li><strong><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/montecarlo">Monte Carlo pages⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></strong> are ten pages covering the analyses behind this section, and the <strong><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/reports/monte_carlo">raw reports⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></strong> hold the tables, including voting, routing, prompt ablation, the failure model, exemplar mining and the word analysis.</li>
+<li><strong><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/interactive">Interactive pages⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></strong> include a cost calculator and an experiment explorer.</li>
+<li><strong><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/scripts/eda">Data exploration scripts⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></strong> profile the dataset: class balance, image dimensions, file sizes, color modes and sample grids.</li>
+<li><strong><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/scripts/braintrust">Braintrust tooling⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></strong> builds the datasets, runs evaluations that are logged as Braintrust experiments, and writes summaries, reports and metric charts. The Monte Carlo scripts live there too.</li>
+<li><strong><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/notebooks">Notebooks⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></strong> walk through setup, balanced sampling and upload, evaluators over a full experiment, and cost.</li>
+</ul>
 <h2 id="what-i-learned">What I learned</h2>
 <ul>
 <li><strong>Tuning accuracy is not accuracy.</strong> Fixing named misses one by one pushed the tuning slice to 99.4% while larger slices stayed in the low 80s. Later versions made this worse in places: a longer v16 prompt dropped to 96.2% on the tuning slice and scored 83.8% and 79.4% on two fresh slices.</li>
@@ -177,7 +253,7 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>More resolution did not help.</strong> Full-size 2550×3300 images doubled prompt tokens and did not improve accuracy in an early comparison.</li>
 </ul>
 <h2 id="stack">Stack</h2>
-<p><span class="tag">Python</span> <span class="tag">OpenRouter</span> <span class="tag">Vision-language models</span> <span class="tag">Prompt engineering</span> <span class="tag">Tesseract OCR</span> <span class="tag">Monte Carlo simulation</span> <span class="tag">Error analysis</span> <span class="tag">pytest</span></p>
+<p><span class="tag">Python</span> <span class="tag">OpenRouter</span> <span class="tag">Vision-language models</span> <span class="tag">Prompt engineering</span> <span class="tag">Tesseract OCR</span> <span class="tag">Monte Carlo simulation</span> <span class="tag">Braintrust</span> <span class="tag">Quarto</span> <span class="tag">Error analysis</span> <span class="tag">pytest</span></p>
 <h2 id="credits">Credits</h2>
 <p>Built with co-author Grant Mooslin, advised by Siddharth Suresh. The dataset is RVL-CDIP (Harley, Ufkes and Derpanis, 2015).</p>
 </div>

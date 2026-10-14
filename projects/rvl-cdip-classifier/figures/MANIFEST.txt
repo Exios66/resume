@@ -1,8 +1,9 @@
 f1_accuracy_arc.svg <- source repo: RVL-CDIP-Classifier/website/figures/f1_accuracy_arc.svg
-f2_generalization_falloff.svg <- source repo: RVL-CDIP-Classifier/website/figures/f2_generalization_falloff.svg
+f2_generalization_falloff.svg <- source repo: RVL-CDIP-Classifier/website/figures/f2_generalization_falloff.svg (re-drawn with the source script and data, with the log axis's minor tick labels switched off, which had overlapped the real ticks; the x-axis label is now "Slice size (images)")
 f3_model_comparison.svg <- source repo: RVL-CDIP-Classifier/website/figures/f3_model_comparison.svg
 f4_confusion_heatmap.svg <- source repo: RVL-CDIP-Classifier/website/figures/f4_confusion_heatmap.svg
 f5_per_class_accuracy.svg <- source repo: RVL-CDIP-Classifier/website/figures/f5_per_class_accuracy.svg
 f6_cost_projections.svg <- source repo: RVL-CDIP-Classifier/website/figures/f6_cost_projections.svg
 f7_ensemble_vs_k.svg <- source repo: RVL-CDIP-Classifier/website/figures/f7_ensemble_vs_k.svg
 f8_routing.svg <- source repo: RVL-CDIP-Classifier/website/figures/f8_routing.svg
+f9_hasty_stop.svg <- source repo: RVL-CDIP-Classifier/website/figures/f9_hasty_stop.svg (unchanged)
