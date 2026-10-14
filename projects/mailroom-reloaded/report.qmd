@@ -135,9 +135,10 @@ node --test tests/tui/js/*.test.mjs
 node --test tests/ui/js/*.test.mjs
 ```
 
-Run one document, then the compose stack. The default provider is a mock that needs a fake OpenAI-compatible server, so a real run needs a provider set in `.env`:
+Run one document, then the compose stack. The default provider is a mock that needs a fake OpenAI-compatible server, so set a real provider in `.env` first (`DEFAULT_PROVIDER` and its key):
 
 ```sh
+cp .env.example .env   # then set DEFAULT_PROVIDER and its credentials
 uv run mailroom run tests/ingest/fixtures/letter.txt
 docker compose -f deploy/docker-compose.yml --env-file .env up -d --build
 scripts/smoke.sh
