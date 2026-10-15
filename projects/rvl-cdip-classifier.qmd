@@ -66,6 +66,46 @@ The honest headline comes from larger slices. The same v11.8 prompt scored 82.6%
 
 Where it fails is consistent. Budget (67.1%), letter (70.0%), presentation (70.0%) and scientific report (71.4%) are the weak classes on the 1,120 run, and the most common single error is letter predicted as memo (16 cases). In 72 of the misses, the correct class was the model's own runner-up.
 
+## What the simulations showed
+
+The repository's Monte Carlo scripts treat every recorded run as a draw from a per-image distribution of answers, then resample it to ask "what if" questions without spending any model credits. They work on a pooled corpus of 5,599 rows covering 1,512 images from 18 experiments. The corpus mixes prompt versions and models, so its 82.1% baseline is a pooled rate and not the best prompt's accuracy.
+
+| Question | What the simulation said | What I measured |
+| --- | --- | --- |
+| Would majority voting help? | 7 reads: 85.0%. 25 reads: 86.3%. The cost is the number of reads. | Not tested on a live run. |
+| Would sending the least-confident pages to a stronger model help? | The least-confident 40%: 91.9% at 1.8 times the cost, if the stronger model is 90% accurate at 3 times the cost. | Down, not up. On a 48-image low-confidence slice, 66.7% became 62.5%. On the tuning slice, v19 went from 97.5% to 96.9% at 7.8 times the cost. |
+| Would a few worked examples for the commonest confusions help? | About 4.3% of errors fixed (33 of 767). | Down. On a 48-image slice, 68.8% became 64.6%. |
+| Which prompt changes were real? | A paired bootstrap on shared images puts v0 to v11.8 at +13.0 points (95% interval 10.1 to 15.9, 898 images). | This one is a test of measured runs, not a forecast. |
+| Would retries and a fallback model cover API failures? | With a fallback, 0.11% of calls fail, against about 2.9% without one. Extra retries barely matter. | Modelled only. |
+
+Four findings stood out.
+
+- **Voting fixes noisy errors, not consistent ones.** The simulated gain concentrates in classes like handwritten (84.1% to 90.8% at 25 reads). Letter barely moves (74.2% to 75.7%) and budget stays near 70%. When the model is wrong about a page every time, asking again does not help. The method also resamples recorded runs, and only 945 of the 1,512 images have more than one, so the rest cannot change.
+- **The confidence ranking found hard pages, but the stronger model did not fix them.** The 48 lowest-confidence pages scored 66.7% on the base run, against 82.1% pooled, so the ranking was informative. When I routed the tail to a stronger model on the tuning slice, 15 pages went through, one answer changed, and it changed to a wrong label. A sensitivity sweep says the plan needs the escalated model to be better on exactly those pages (89.9% to 93.9% at 40% escalation for a 5-point swing either way), and neither escalation I tried was.
+- **Most of the prompt gain came early.** The jump from the baseline prompt to a rule-based one is real. The later versions are statistically indistinguishable from each other: v11.8 against v16 on 319 shared images is 89.0% against 90.0%, with an interval from about -5 to +3 points. The +28.4-point gain for v17 over v0 is measured on 155 images from the tuning slice, so I quote the 898-image figure instead.
+- **Errors cluster in a few pairs.** Budget read as invoice (63 cases), letter as memo (63), specification as form (52) and invoice as form (51) are the largest confusion pairs in the pooled corpus.
+
+I also mined the reasoning traces for the words that appear when the model stops checking early. The prompt works through up to 14 checks in order, and the typical trace stops at check 9.4. Words such as "minutes", "routing" and "variance" show up in traces that stop early and are wrong far more often than the 17.1% baseline error rate. Each appears in only 10 or 11 traces, so these are leads to test and not findings.
+
+![Ten words associated with the model stopping earlier and erring more, scored by how much earlier it stops and how much the error rate rises, against a 17.1% baseline error.](rvl-cdip-classifier/figures/f9_hasty_stop.svg){.fig fig-alt="Horizontal bar chart of the ten words with the highest hasty-score, from minutes at 1.89 down to survey at 0.71, with routing, variance, products, addresses, introduction, process, meeting and food between them." width="100%"}
+
+![Simulated confidence-gated escalation: accuracy peaks at 91.9% at a 40% escalation fraction and 1.8 times the cost.](rvl-cdip-classifier/figures/f8_routing.svg){.fig fig-alt="Chart of simulated accuracy and cost factor against the fraction of images escalated to a stronger model, with accuracy peaking at 91.9 percent and cost reaching 2 times at 50 percent." width="100%"}
+
+::: {.caveat}
+**Heads up.** These are resampled results from recorded runs, not new experiments. Two of the forecasts I tested by measurement, routing and worked examples, and neither held up. Voting and the failure model are untested, and the word list rests on small counts. The report has the full tables.
+:::
+
+## Explore the data and tools
+
+The repository ships the tooling I used to look at the data and to watch the runs, and a Quarto site that pulls the results together. The site renders offline with no model spend.
+
+- **[The Quarto documentation site](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website)** has the manuscript, methods, results and experiment logs, the prompt changelog, cost analysis, short research memos, notebooks and a misclassification appendix.
+- **[Monte Carlo pages](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/montecarlo)** are ten pages covering the analyses behind this section, and the **[raw reports](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/reports/monte_carlo)** hold the tables, including voting, routing, prompt ablation, the failure model, exemplar mining and the word analysis.
+- **[Interactive pages](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/interactive)** include a cost calculator and an experiment explorer.
+- **[Data exploration scripts](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/scripts/eda)** profile the dataset: class balance, image dimensions, file sizes, color modes and sample grids.
+- **[Braintrust tooling](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/scripts/braintrust)** builds the datasets, runs evaluations that are logged as Braintrust experiments, and writes summaries, reports and metric charts. The Monte Carlo scripts live there too.
+- **[Notebooks](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/notebooks)** walk through setup, balanced sampling and upload, evaluators over a full experiment, and cost.
+
 ## What I learned
 
 - **Tuning accuracy is not accuracy.** Fixing named misses one by one pushed the tuning slice to 99.4% while larger slices stayed in the low 80s. Later versions made this worse in places: a longer v16 prompt dropped to 96.2% on the tuning slice and scored 83.8% and 79.4% on two fresh slices.
@@ -74,7 +114,7 @@ Where it fails is consistent. Budget (67.1%), letter (70.0%), presentation (70.0
 
 ## Stack
 
-[Python]{.tag} [OpenRouter]{.tag} [Vision-language models]{.tag} [Prompt engineering]{.tag} [Tesseract OCR]{.tag} [Monte Carlo simulation]{.tag} [Error analysis]{.tag} [pytest]{.tag}
+[Python]{.tag} [OpenRouter]{.tag} [Vision-language models]{.tag} [Prompt engineering]{.tag} [Tesseract OCR]{.tag} [Monte Carlo simulation]{.tag} [Braintrust]{.tag} [Quarto]{.tag} [Error analysis]{.tag} [pytest]{.tag}
 
 ## Credits
 
