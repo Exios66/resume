@@ -6,7 +6,7 @@ Madison, WI · Open to relocation
 
 ## About me
 
-![image](https://github.com/user-attachments/assets/a0d994ed-46e0-4185-886e-5568c9561843)
+![](https://github.com/user-attachments/assets/a0d994ed-46e0-4185-886e-5568c9561843)
 
 ---
 
@@ -50,6 +50,7 @@ Each project has a case study on the [portfolio](https://exios66.github.io/resum
 [![Résumé](https://img.shields.io/badge/Résumé-PDF-B31B1B?style=flat-square&logo=adobeacrobatreader&logoColor=white)](https://exios66.github.io/resume/assets/Jack_Burleson_Resume.pdf)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-jackjburleson-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jackjburleson)
 [![Email](https://img.shields.io/badge/Email-Proton-6D4AFF?style=flat-square&logo=protonmail&logoColor=white)](mailto:jackjburleson@proton.me)
+
 ---
 
 This repository is the source for the site — see [how it's built](.github/BUILDING.md).
