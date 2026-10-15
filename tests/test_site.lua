@@ -11,7 +11,10 @@ pandoc = {
   utils = {
     stringify = function(el)
       local out = {}
-      for _, item in ipairs(el.content or {}) do out[#out + 1] = item.text or (item.tag == "Space" and " " or "") end
+      for _, item in ipairs(el.content or {}) do
+        out[#out + 1] = item.text or (item.tag == "Space" and " ")
+          or pandoc.utils.stringify(item)
+      end
       return table.concat(out)
     end,
   },
@@ -352,6 +355,42 @@ for _, content in ipairs({ {}, { str("Applied data engineering") } }) do
   local h = { tag = "Header", classes = { "group-title" }, content = content }
   assert(decorate_header(h) == h and h.content == content, "Unmatched group headings are unchanged")
 end
+
+-- Formatting inside a label must not hide the new group from the filter.
+local emphasis = { tag = "Emph", content = { str("Data") } }
+local strong = { tag = "Strong", content = { str("engineering") } }
+local formatted_content = { emphasis, SPACE, strong, SPACE, str("& visualization") }
+local formatted = { tag = "Header", classes = { "group-title" }, content = formatted_content }
+decorate_header(formatted)
+assert(#formatted.content == #formatted_content + 1 and uses(formatted.content, "database"),
+       "Formatted data-engineering headings get exactly one database icon")
+for i, item in ipairs(formatted_content) do
+  assert(formatted.content[i + 1] == item, "Inline formatting is preserved")
+end
+
+-- A linked group label takes precedence over the ordinary single-link heading arrow.
+for _, target in ipairs({ "index.qmd#data", "https://example.org/data" }) do
+  local group_link = link(target, {}, str("Data engineering"))
+  local original_content = group_link.content
+  local heading = { tag = "Header", classes = { "group-title" }, content = { group_link } }
+  decorate_header(heading)
+  assert(#heading.content == 2 and uses({ heading.content[1] }, "database"))
+  assert(heading.content[2] == group_link and group_link.target == target,
+         "Linked group label and destination are preserved")
+  assert(group_link.content == original_content and #group_link.content == 1,
+         "Group label must not gain a navigation arrow")
+end
+
+-- If Pandoc cannot stringify a heading, leave the new group untouched.
+local saved_utils = pandoc.utils
+for _, unavailable in ipairs({ {}, false }) do
+  pandoc.utils = unavailable
+  local content = { str("Data engineering") }
+  local heading = { tag = "Header", classes = { "group-title" }, content = content }
+  assert(decorate_header(heading) == heading and heading.content == content,
+         "Missing stringify support must not add an icon or lose the heading")
+end
+pandoc.utils = saved_utils
 
 -- location chip
 local place = decorate_span({ tag = "Span", classes = { "chip" }, content = { str("Madison, WI") } })
