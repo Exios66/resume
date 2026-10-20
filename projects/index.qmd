@@ -88,6 +88,19 @@ Can an LLM, told who a survey respondent is in the second person, predict that p
 :::
 :::
 
+## Cognitive neuroscience {.group-title}
+
+::: {.cards .cards-wide}
+::: {.card}
+### [The Neural Architecture of Truth and Deception](natd.qmd)
+[Cognitive neuroscience research · UW–Parkside]{.kicker}
+
+Nine participants each talked to two chatbots told either to help or to deceive. Exam scores rose after the helpful personas, almost nobody flagged the deceit, and the physiological and neural recordings need their provenance confirmed before anyone cites them.
+
+[EEG]{.tag} [NASA-TLX]{.tag} [Truth-Default Theory]{.tag} [Exploratory study]{.tag}
+:::
+:::
+
 ## LLM agent design {.group-title}
 
 ::: {.cards .cards-wide}

@@ -1,0 +1,91 @@
+---
+pagetitle: "The Neural Architecture of Truth and Deception — Jack J. Burleson"
+description: "An exploratory study of what happens when people talk to chatbots told to help or to deceive: nine participants, 18 sessions, five personas. Exam scores rose after helpful personas, almost nobody flagged deception, and the physiological and neural recordings need their provenance confirmed."
+---
+
+::: {.page}
+
+[← All projects](index.qmd){.back}
+
+::: {.project-nav}
+[Case study](natd.qmd){aria-current="page"} [Technical report](natd/report.qmd) [Code](https://github.com/Exios66/truth-deception-architecture)
+:::
+
+# The Neural Architecture of Truth and Deception {.page-title}
+
+[Cognitive neuroscience research · UW–Parkside]{.kicker}
+
+An exploratory study from the Cognitive Neuroscience Lab at UW–Parkside, advised by Dr. Melissa Gregg, by Jack J. Burleson. I presented findings from the project at the 2025 Midwestern Psychological Association conference. The numbers on this page come from the supplied per-session data files, which disagree with an earlier draft report in several places. Where they differ, I follow the files.
+
+::: {.actions}
+[View the code](https://github.com/Exios66/truth-deception-architecture){.btn .primary} [Technical report](natd/report.qmd){.btn}
+:::
+
+::: {.caveat}
+**Heads up: the provenance of the recordings is not confirmed.** The heart rate, SpO₂, EEG and eye-tracking values are unusually tight within each persona and correlate almost perfectly across instruments, which is rare in data recorded from separate sensors on nine people. I could not tell from the files whether they are raw measurements, session-level summaries, smoothed or modelled values, or simulated. Treat every physiological, neural and eye-tracking result here as exploratory, and do not cite it until the provenance is confirmed. The self-reported workload ratings are also unusually consistent within each persona. The learning and detection results use exam scores and a recorded yes or no, and they are the main findings.
+:::
+
+## At a glance
+
+::: {.stats}
+::: {.stat}
+[+12.3 vs −1.0]{.stat-value} [change in exam score, in points, after helpful personas (7 sessions) and after deceitful ones (11 sessions); the 13.3-point gap has a 95% CI of 6.3 to 20.3]{.stat-label}
+:::
+::: {.stat}
+[1 of 18]{.stat-value} [sessions in which the participant flagged the deception (5.6%; 95% CI 0.1% to 27.3%)]{.stat-label}
+:::
+::: {.stat}
+[9 and 18]{.stat-value} [participants and sessions, with five chatbot personas: two helpful, three deceitful]{.stat-label}
+:::
+:::
+
+In short, exam scores rose after the helpful personas and not after the deceitful ones, and participants almost never noticed the deceit. This is a nine-person exploratory study, so none of it is established.
+
+## The question
+
+People tend to assume that what they are told is true until something gives them a reason to doubt it. Truth-Default Theory says this, and it predicts that a person talking to a chatbot that has been told to deceive will rarely suspect it. I could not find a verified study that tests the theory against a deceitful chatbot, so this study is an exploratory extension and not a replication.
+
+I wanted to see three things when people talk to chatbots that help or deceive: whether their exam scores change, whether they notice the deceit, and whether their bodies, brains and eyes show anything different.
+
+## Design
+
+{{< include ../partials/diagrams/_natd.qmd >}}
+
+Each of nine participants (mean age 23.8, range 20 to 31; 7 men and 2 women) held two conversations, each with a different chatbot running a different system-prompt persona. Athena and Milgrim were told to be helpful. Alan, Enigma and Scarlet were told to deceive. Before and after each session I measured exam performance, self-reported workload (NASA-TLX), heart rate and blood oxygen (wrist oximeter), EEG markers (32-channel BrainVision system), eye movements (webcam), and whether the participant flagged the disinformation.
+
+## Findings
+
+**1. Learning followed the persona.** Exam scores rose 12.3 points on average after helpful personas and fell 1.0 point after deceitful ones. By persona the order was Athena, Milgrim, Enigma, Alan, Scarlet. Enigma gained 4.7 points despite a deceitful prompt, which a simple helpful-versus-deceitful reading would not predict.
+
+| Persona | Type | Sessions | Mean exam change (points) |
+| --- | --- | --- | --- |
+| Athena | Helpful | 4 | +14.5 |
+| Milgrim | Helpful | 3 | +9.3 |
+| Enigma | Deceitful | 3 | +4.7 |
+| Alan | Deceitful | 3 | −2.3 |
+| Scarlet | Deceitful | 5 | −3.6 |
+
+Helpful sessions also started 18 points lower (33.6% against 52.0%), so part of the gain is probably regression to the mean. Adjusting for the starting score still left a helpful-persona effect of +11.6 points (95% CI 2.9 to 20.3). In the five participants who met one helpful and one deceitful persona, the helpful session produced the larger gain every time.
+
+**2. Almost nobody flagged the deception.** Participants flagged it in 1 of 18 sessions, and in 1 of the 11 sessions with a deceitful persona. That fits the truth-default prediction, but with one event the 95% interval runs from 0.1% to 27.3%, so the rate is poorly pinned down.
+
+**3. Body, brain and eye measures moved together, and I cannot say what that means yet.** Heart rate, seven of eight EEG markers and pupil size all shifted in the same persona order, from Athena sessions (lowest load) to Enigma sessions (highest). Self-reported workload did not follow that order. This is the part the provenance caveat above applies to. If the recordings are real, the markers behave like workload and salience measures, and none is a deception signature. If they are summaries or derived scores, the agreement describes the summarizing as much as the participants.
+
+## What it supports and what it does not
+
+- **It supports:** larger exam gains after helpful personas than after deceitful ones, rare detection, and a shared ordering across the physiological, EEG and eye measures that self-rated workload does not share.
+- **It does not support:** that deceit causes worse learning. Helpful sessions started lower, persona is partly confounded with person (each person met two of five personas), and each persona has only three to five sessions.
+- **It does not support:** that any EEG or eye marker detects deception. Only one session involved a detection.
+- **It cannot be read as independent tests.** Sessions are nested within participants, and I did not refit mixed-effects models, so every p-value is descriptive.
+
+## What I would do next
+
+Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and how false each persona's output was. Pre-specify the EEG epoch locking and validate webcam pupil and blink measures against a reference tracker. Confirm where the recordings came from first, then fit mixed-effects models with participant random intercepts.
+
+The technical report has the literature review, the full method, every table, the cluster analysis and the references with how far each was verified.
+
+## Methods and tools
+
+[EEG]{.tag} [MNE-Python]{.tag} [EEGLAB]{.tag} [NASA-TLX]{.tag} [Webcam eye tracking]{.tag} [Truth-Default Theory]{.tag}
+
+:::

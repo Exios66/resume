@@ -301,7 +301,8 @@ local group = decorate_header({ tag = "Header", classes = { "group-title" },
   content = { str("Document"), SPACE, str("intelligence") } })
 assert(uses(group.content, "layers"))
 for text, icon in pairs({ ["Behavioral machine learning"] = "brain", ["LLM agent design"] = "scale",
-                          ["Side projects & interests"] = "waves", ["Data engineering & visualization"] = "database" }) do
+                          ["Side projects & interests"] = "waves", ["Data engineering & visualization"] = "database",
+                          ["Cognitive neuroscience"] = "brain" }) do
   local h = decorate_header({ tag = "Header", classes = { "group-title" }, content = { str(text) } })
   assert(uses(h.content, icon), text)
 end

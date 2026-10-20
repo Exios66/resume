@@ -270,7 +270,7 @@ class PortfolioRegressionTests(unittest.TestCase):
     """Contracts for the case studies, reports, and diagrams introduced by PR #7."""
 
     REPORT_SLUGS = ("mailroom-ml", "mailroom-reloaded", "rvl-cdip-classifier", "wave-laboratory",
-                    "degen-llms", "llm-personas", "psychometric-digital-twin", "mailroom-corpus-eda")
+                    "degen-llms", "llm-personas", "psychometric-digital-twin", "mailroom-corpus-eda", "natd")
     FIGURE_SLUGS = ("mailroom-ml", "mailroom-reloaded", "rvl-cdip-classifier", "wave-laboratory",
                     "degen-llms", "psychometric-digital-twin", "mailroom-corpus-eda")
     STUDY_SLUGS = ("digital-mailroom", "aeroglobe", *REPORT_SLUGS)
