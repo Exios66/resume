@@ -103,6 +103,7 @@ local NAV_ICONS = {
 }
 local GROUP_ICONS = {
   { "document intelligence", "layers" }, { "data engineering", "database" }, { "behavioral machine learning", "brain" },
+  { "cognitive neuroscience", "brain" },
   { "llm agent design", "scale" }, { "side projects", "waves" },
 }
 
