@@ -73,32 +73,25 @@ A rule is one flat table indexed by state and color. For each pair it gives the 
 
 ![The classic ant (rule RL) at step 29,243, with the grid readout in the top bar.](langtons-ant/figures/classic-ant-highway.png){.fig fig-alt="A screenshot of the simulator in its dark theme. On the black canvas, a diagonal road of repeating black and white cells runs from the top edge down and to the right until it meets an irregular white cluster in the lower middle. A bar along the top reads steps 29,243, steps per second 1,000, frames per second 60, ants 1, bounding box 101 by 129 and grid 24.0 KB. A panel on the right shows the rule RL with two colors, colony and display controls, and the first card of the preset gallery, Classic Langton's Ant." width="100%"}
 
-The irregular cluster is the first ten thousand or so steps. The road is the highway. The 24.0 KB in the top bar is six 4 KiB chunks. I checked the classic ant's numbers by replaying it without a browser: it settles into a 104-step cycle that moves it two cells along each axis, from about step 9,976, which matches the figure of about 9,977 steps that the gallery quotes from the literature.
+The irregular cluster is the first ten thousand or so steps. The road is the highway. The 24.0 KB in the top bar is six 4 KiB chunks. A replay of the classic ant without a browser checks its numbers: it settles into a 104-step cycle that moves it two cells along each axis, from about step 9,976, which matches the figure of about 9,977 steps that the gallery quotes from the literature.
 
-The repository's README reports how fast the engine steps in Node. Those numbers come from the author's laptop, and I re-ran the same benchmark on a different machine to see how much they depend on it.
+The repository's README reports how fast the engine steps in Node. Those numbers come from one laptop. The same benchmark re-run on a different machine shows how much they depend on it.
 
 | 1,000,000 steps per run, mean of 5 | README: Apple M2, macOS, Node 22.14.0 | Re-run: shared 4-core Linux container, Node 22.22.0 |
 | --- | --- | --- |
 | Classic `RL` ant, one ant | 19.65 million steps per second | 4.28 million (single runs 3.32 to 6.10) |
 | Colony of 25 ants | 0.54 million steps per second, 13.39 million cell updates per second | 0.19 million (single runs 0.12 to 0.41), 4.82 million cell updates per second |
 
-: Engine throughput in Node, with no browser and no rendering. The benchmark logs its timings and asserts nothing, so throughput never fails a test. These are not browser frame rates, and I have not measured those.
+: Engine throughput in Node, with no browser and no rendering. The benchmark logs its timings and asserts nothing, so throughput never fails a test. These are not browser frame rates, which have not been measured.
 
-The throughput depends heavily on the machine, so treat the README's figures as one laptop's result. The determinism test does not depend on the machine: the 11,000-step hash also passes on my Linux re-run.
+The throughput depends heavily on the machine, so treat the README's figures as one laptop's result. The determinism test does not depend on the machine: the 11,000-step hash also passes on the Linux re-run too.
 
 ## What does not work yet
 
-- **The highway detector.** When I replayed the classic ant without a browser, sampling the detector once per frame at batch sizes from 17 to 50,000 steps, it did not trigger in 30 million steps. With much finer sampling it does fire, but early: at step 512 in one setting and at step 5,520 in another, both before the highway starts at about step 9,977. So the onset badge is not something to rely on yet. No test covers it.
+- **The highway detector.** A replay of the classic ant without a browser, sampling the detector once per frame at batch sizes from 17 to 50,000 steps, did not trigger the detector in 30 million steps. With much finer sampling it does fire, but early: at step 512 in one setting and at step 5,520 in another, both before the highway starts at about step 9,977. So the onset badge is not something to rely on yet. No test covers it.
 - **Links made in the middle of a run.** A link to the start of a run replays it exactly, and every preset link is of that kind. A link made later carries the grid only while its encoding is under 900 characters, which for the classic ant was true at 1,000 steps and not true at 20,000. Past that, the link puts the ant back at its current position on an empty grid. An imported session file does not reproduce the grid either. The code comments say the grid is replayed from the step count, but the code does not do that. The app does tell you when a link is too large to carry the grid.
-- **The gallery's milestones are not tested.** They come from the sources the gallery cites. I re-ran three halting machines: the Fay champion halts after 59,348,219 steps with 888,629 painted cells, which matches the published 59,348,218 steps and 888,629 cells to within how the final halting step is counted. The two Brady machines do not match their labels. The one labeled S = 121 halted after 81 steps with 37 painted cells, and the one labeled 37 cells halted at step 121 with 29, so the two rules may be swapped. I have not checked them against their source.
-- **No continuous integration.** The tests run when I run them. Nothing runs them on each commit.
-
-## What I'm learning
-
-- Check what the host allows before choosing the architecture. GitHub Pages cannot send the headers that shared memory needs, and that settled the threading question at the start.
-- A single narrow test can hold a lot. One hash of one run pins the stepper, the chunk addressing and the rule table together.
-- Tests that cover only the engine leave the app layer unchecked, and that is where the gaps above were. Replaying the detector and the permalink restore outside a browser found them quickly, so those replays should become tests.
-- An estimate should carry its label. The design notes mark the memory figure as unvalidated, and I kept that on this page.
+- **The gallery's milestones are not tested.** They come from the sources the gallery cites. Re-running three halting machines gives the following. The Fay champion halts after 59,348,219 steps with 888,629 painted cells, which matches the published 59,348,218 steps and 888,629 cells to within how the final halting step is counted. The two Brady machines do not match their labels. The one labeled S = 121 halted after 81 steps with 37 painted cells, and the one labeled 37 cells halted at step 121 with 29, so the two rules may be swapped. They have not been checked against their source.
+- **No continuous integration.** The tests run only when someone runs them. Nothing runs them on each commit.
 
 ## Where the mathematics comes from
 
