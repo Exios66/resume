@@ -36,6 +36,7 @@ Each project has a case study on the [portfolio](https://exios66.github.io/resum
 - [The Neural Architecture of Truth and Deception](https://exios66.github.io/resume/projects/natd.html): a pilot study of nine people and 18 sessions with helpful and deceitful chatbot personas; exam scores rose after helpful ones, almost no one flagged the deceit, and the physiological, EEG and eye-tracking data are withheld until authenticated.
 - [MORNINGSTAR](https://exios66.github.io/resume/projects/llm-personas.html): a courtroom of LLM personas that argue, vote, and rule on engineering decisions.
 - [Wave Laboratory](https://exios66.github.io/resume/projects/wave-laboratory.html): a real-time 3D ocean and ship-motion sandbox that runs in the browser.
+- [Langton's Ant](https://exios66.github.io/resume/projects/langtons-ant.html): a browser simulator for Langton's ant and other turmites on an unbounded grid; an early version with a pinned determinism test.
 - [The Mandalay Bay](https://exios66.github.io/resume/projects/degen-llms.html): a satirical casino resort simulator, play chips only.
 
 ## Background

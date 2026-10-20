@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://exios66.github.io/resume/writing/index.html</loc>
-    <lastmod>2026-10-20T19:08:19.892Z</lastmod>
+    <lastmod>2026-10-20T20:00:17.980Z</lastmod>
   </url>
   <url>
     <loc>https://exios66.github.io/resume/about.html</loc>
@@ -33,44 +33,48 @@
     <lastmod>2026-10-20T19:08:19.882Z</lastmod>
   </url>
   <url>
-    <loc>https://exios66.github.io/resume/projects/psychometric-digital-twin/report.html</loc>
-    <lastmod>2026-10-20T19:08:19.882Z</lastmod>
+    <loc>https://exios66.github.io/resume/projects/langtons-ant.html</loc>
+    <lastmod>2026-10-20T20:00:17.978Z</lastmod>
   </url>
   <url>
-    <loc>https://exios66.github.io/resume/projects/wave-laboratory/report.html</loc>
-    <lastmod>2026-10-20T19:08:19.887Z</lastmod>
-  </url>
-  <url>
-    <loc>https://exios66.github.io/resume/projects/degen-llms/report.html</loc>
-    <lastmod>2026-10-20T19:08:19.876Z</lastmod>
-  </url>
-  <url>
-    <loc>https://exios66.github.io/resume/projects/digital-mailroom.html</loc>
-    <lastmod>2026-10-20T19:08:19.876Z</lastmod>
-  </url>
-  <url>
-    <loc>https://exios66.github.io/resume/projects/mailroom-reloaded.html</loc>
-    <lastmod>2026-10-20T19:08:19.879Z</lastmod>
-  </url>
-  <url>
-    <loc>https://exios66.github.io/resume/research.html</loc>
-    <lastmod>2026-10-20T19:11:47.907Z</lastmod>
-  </url>
-  <url>
-    <loc>https://exios66.github.io/resume/projects/rvl-cdip-classifier/report.html</loc>
-    <lastmod>2026-10-20T19:08:19.885Z</lastmod>
-  </url>
-  <url>
-    <loc>https://exios66.github.io/resume/projects/degen-llms.html</loc>
-    <lastmod>2026-10-20T19:08:19.876Z</lastmod>
+    <loc>https://exios66.github.io/resume/projects/psychometric-digital-twin.html</loc>
+    <lastmod>2026-10-20T19:08:19.880Z</lastmod>
   </url>
   <url>
     <loc>https://exios66.github.io/resume/projects/mailroom-corpus-eda.html</loc>
     <lastmod>2026-10-20T19:08:19.876Z</lastmod>
   </url>
   <url>
-    <loc>https://exios66.github.io/resume/projects/psychometric-digital-twin.html</loc>
-    <lastmod>2026-10-20T19:08:19.880Z</lastmod>
+    <loc>https://exios66.github.io/resume/projects/degen-llms.html</loc>
+    <lastmod>2026-10-20T19:08:19.876Z</lastmod>
+  </url>
+  <url>
+    <loc>https://exios66.github.io/resume/projects/rvl-cdip-classifier/report.html</loc>
+    <lastmod>2026-10-20T19:08:19.885Z</lastmod>
+  </url>
+  <url>
+    <loc>https://exios66.github.io/resume/research.html</loc>
+    <lastmod>2026-10-20T19:11:47.907Z</lastmod>
+  </url>
+  <url>
+    <loc>https://exios66.github.io/resume/projects/mailroom-reloaded.html</loc>
+    <lastmod>2026-10-20T19:08:19.879Z</lastmod>
+  </url>
+  <url>
+    <loc>https://exios66.github.io/resume/projects/digital-mailroom.html</loc>
+    <lastmod>2026-10-20T19:08:19.876Z</lastmod>
+  </url>
+  <url>
+    <loc>https://exios66.github.io/resume/projects/degen-llms/report.html</loc>
+    <lastmod>2026-10-20T19:08:19.876Z</lastmod>
+  </url>
+  <url>
+    <loc>https://exios66.github.io/resume/projects/wave-laboratory/report.html</loc>
+    <lastmod>2026-10-20T19:08:19.887Z</lastmod>
+  </url>
+  <url>
+    <loc>https://exios66.github.io/resume/projects/psychometric-digital-twin/report.html</loc>
+    <lastmod>2026-10-20T19:08:19.882Z</lastmod>
   </url>
   <url>
     <loc>https://exios66.github.io/resume/projects/wave-laboratory.html</loc>
@@ -86,7 +90,7 @@
   </url>
   <url>
     <loc>https://exios66.github.io/resume/projects/index.html</loc>
-    <lastmod>2026-10-20T19:16:46.803Z</lastmod>
+    <lastmod>2026-10-20T20:00:17.978Z</lastmod>
   </url>
   <url>
     <loc>https://exios66.github.io/resume/projects/mailroom-reloaded/report.html</loc>
@@ -102,6 +106,6 @@
   </url>
   <url>
     <loc>https://exios66.github.io/resume/index.html</loc>
-    <lastmod>2026-10-20T19:08:19.874Z</lastmod>
+    <lastmod>2026-10-20T20:00:17.978Z</lastmod>
   </url>
 </urlset>
