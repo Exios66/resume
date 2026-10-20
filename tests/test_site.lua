@@ -70,7 +70,7 @@ local function check(case, root, absolute, empty)
   assert(header.format == "html" and footer.format == "html")
   contains(header.text, '<nav class="site-nav" aria-label="Main">')
   contains(header.text, '<main id="main">')
-  contains(header.text, '<button type="button" class="theme-toggle" aria-label="Switch theme">')
+  contains(header.text, '<li hidden><button type="button" class="theme-toggle" aria-label="Switch theme">')
   contains(header.text, '<use href="#i-sun"/>')
   contains(header.text, '<use href="#i-moon"/>')
   contains(header.text, '<span class="i-sun" hidden><svg class="icon" width="1em" height="1em"')
@@ -301,7 +301,8 @@ local group = decorate_header({ tag = "Header", classes = { "group-title" },
   content = { str("Document"), SPACE, str("intelligence") } })
 assert(uses(group.content, "layers"))
 for text, icon in pairs({ ["Behavioral machine learning"] = "brain", ["LLM agent design"] = "scale",
-                          ["Side projects & interests"] = "waves", ["Data engineering & visualization"] = "database" }) do
+                          ["Side projects & interests"] = "waves", ["Data engineering & visualization"] = "database",
+                          ["Cognitive neuroscience"] = "brain" }) do
   local h = decorate_header({ tag = "Header", classes = { "group-title" }, content = { str(text) } })
   assert(uses(h.content, icon), text)
 end

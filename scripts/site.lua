@@ -103,6 +103,7 @@ local NAV_ICONS = {
 }
 local GROUP_ICONS = {
   { "document intelligence", "layers" }, { "data engineering", "database" }, { "behavioral machine learning", "brain" },
+  { "cognitive neuroscience", "brain" },
   { "llm agent design", "scale" }, { "side projects", "waves" },
 }
 
@@ -362,7 +363,7 @@ function Pandoc(doc)
     <a class="site-title" href="%sindex.html">Jack J. Burleson</a>
     <ul class="nav-list">
       %s
-      <li><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden>%s</span><span class="i-moon">%s</span></button></li>
+      <li hidden><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden>%s</span><span class="i-moon">%s</span></button></li>
     </ul>
   </nav>
 </header>

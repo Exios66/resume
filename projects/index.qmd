@@ -88,6 +88,19 @@ Can an LLM, told who a survey respondent is in the second person, predict that p
 :::
 :::
 
+## Cognitive neuroscience {.group-title}
+
+::: {.cards .cards-wide}
+::: {.card}
+### [The Neural Architecture of Truth and Deception](natd.qmd)
+[Cognitive neuroscience research · UW–Parkside]{.kicker}
+
+Nine participants each talked to two chatbots told either to help or to deceive. Exam scores rose after the helpful personas, almost nobody flagged the deceit, and the rest of the pilot data stays unpublished until it has been authenticated.
+
+[Truth-Default Theory]{.tag} [Chatbot personas]{.tag} [Pilot study]{.tag}
+:::
+:::
+
 ## LLM agent design {.group-title}
 
 ::: {.cards .cards-wide}
@@ -111,6 +124,15 @@ A courtroom of LLM personas that argue, vote, and issue a written ruling on engi
 A real-time 3D ocean you can experiment with. Spectral wave models, rogue waves, and ships that move in all six directions run in a Web Worker and render with WebGL 2.
 
 [TypeScript]{.tag} [Three.js]{.tag} [Physics]{.tag} [Accessibility]{.tag}
+:::
+
+::: {.card}
+### [Langton's Ant](langtons-ant.qmd)
+[Simulation · runs in the browser · version 0.1.0]{.kicker}
+
+A simulator for Langton's ant and other turmites on an unbounded grid, with a gallery of 20 published machines. It is an early version, and the engine has a pinned determinism test.
+
+[TypeScript]{.tag} [Canvas2D]{.tag} [Cellular automata]{.tag} [Testing]{.tag}
 :::
 
 ::: {.card}

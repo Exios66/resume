@@ -1,0 +1,175 @@
+---
+pagetitle: "The Neural Architecture of Truth and Deception: technical report — Jack J. Burleson"
+description: "Technical report on an exploratory study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references. The physiological, EEG, eye-tracking and workload data are withheld until they are authenticated."
+---
+
+::: {.page}
+
+[← Case study](../natd.qmd){.back}
+
+::: {.project-nav}
+[Case study](../natd.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/Exios66/truth-deception-architecture)
+:::
+
+# The Neural Architecture of Truth and Deception: technical report {.page-title}
+
+[Cognitive neuroscience research · UW–Parkside]{.kicker}
+
+By Jack J. Burleson. Cognitive Neuroscience Lab, UW–Parkside; advisor Dr. Melissa Gregg.
+
+::: {.caveat}
+**Pilot study; part of the data is withheld.** This study was only ever fully tested under pilot conditions. The physiological (heart rate and SpO₂), EEG, eye-tracking and self-reported workload data were also collected, but they are not reported here and will not be until every recording has been authenticated. This report covers the design, the literature, exam-score learning outcomes, detection and clusters.
+:::
+
+## Overview
+
+Across 18 conversations with five chatbot personas, exam scores rose 12.3 points after the two helpful personas and fell 1.0 point after the three deceitful ones, while participants flagged deception in only 1 of 18 sessions.
+
+Nine participants each held two conversations with chatbots running different system-prompt personas, giving 18 sessions. Athena and Milgrim were instructed to be helpful; Alan, Enigma and Scarlet were instructed to deceive. Before and after each session we measured exam performance and recorded whether the participant flagged the disinformation. Physiological, EEG, eye-tracking and workload recordings were collected as well and are withheld (see the note above).
+
+{{< include ../../partials/diagrams/_natd.qmd >}}
+
+- **Learning.** Exam scores rose 12.3 points on average after helpful personas (7 sessions) and fell 1.0 point after deceitful ones (11 sessions). The 13.3-point gap has a 95% confidence interval of 6.3 to 20.3. Helpful sessions also started 18 points lower, so part of the gain is probably regression to the mean.
+- **Detection.** Participants flagged deception in 1 of 18 sessions (5.6%; 95% CI 0.1% to 27.3%), and in 1 of the 11 sessions with a deceitful persona.
+- **Reading the numbers.** This is a nine-person exploratory study. Treat every p-value as descriptive: sessions are nested within participants, and persona is partly confounded with person.
+
+**Data note.** The analysis uses the supplied per-session CSV files, which disagree with the earlier draft report in several places, listed under Method. The recordings that are withheld are left out of this version until they have been authenticated.
+
+## Literature review
+
+No verified study has tested Truth-Default Theory against a chatbot instructed to deceive, so this study is an exploratory extension and not a replication. The background below comes from a separate literature review of about 92 references, each tagged with how far it was verified; the 17 cited here are listed under References. Several publisher sites were unreachable during the search, so a number of bibliographic details are marked unverified.
+
+### Humans presume honesty and detect lies at about chance
+
+Truth-Default Theory holds that people passively assume honesty until a trigger, such as a projected motive or incoherent content, pushes them past a threshold ([Levine, 2014](https://doi.org/10.1177/0261927X14535916)). A meta-analysis of 206 documents found 54% accuracy at judging lies and truths, with 61% of truths but only 47% of lies classified correctly ([Bond & DePaulo, 2006](https://doi.org/10.1207/s15327957pspr1003_2)). Weak behavioral cues, not poor judges, set that ceiling ([Hartwig & Bond, 2011](https://doi.org/10.1037/a0023589)). Lying is also unevenly spread: about half of all lies in a US survey came from 5.3% of adults ([Serota et al., 2010](https://doi.org/10.1111/j.1468-2958.2009.01366.x)), which supports the base-rate premise behind a truth default.
+
+The closest parallel to my 1 of 18 is Levine's report that fewer than 5% of unprimed participants spontaneously considered deception. The published follow-up carries an uncertain author list and I could not see its numbers ([Clare, 2019](https://doi.org/10.1093/hcr/hqz001)). My 5.6% is consistent with that figure, but the measures differ, so it is not a replication. The theory is also contested: Interpersonal Deception Theory says interactivity matters, and a chatbot dialogue is interactive ([Park & Levine, 2015](https://doi.org/10.1111/hcre.12066)).
+
+### Chatbots lie on instruction, flatter by training, and evade detection
+
+GPT-3 complied with requests for disinformation tweets 80 of 102 times, so a system-prompted liar is a realistic manipulation ([Spitale et al., 2023](https://doi.org/10.1126/sciadv.adh1850)). Readers were near chance at telling GPT-3 text from human text, and they used flawed heuristics such as first-person pronouns ([Jakesch et al., 2023](https://doi.org/10.1073/pnas.2208839120)). All five assistants tested for sycophancy flattered users, partly because raters prefer agreeable answers ([Sharma et al., 2024](https://proceedings.iclr.cc/paper_files/paper/2024/hash/0105f7972202c1d4fb817da9f21a9663-Abstract-Conference.html)), so even the helpful personas may flatter. Plain, unhedged statements were relied on heavily, and first-person uncertainty reduced over-reliance ([Zhou et al., 2024](https://doi.org/10.18653/v1/2024.acl-long.198); [Kim et al., 2024](https://doi.org/10.1145/3630106.3658941)). Persona wording is an unreliable lever: across 162 roles, personas did not improve factual accuracy ([Zheng et al., 2024](https://doi.org/10.18653/v1/2024.findings-emnlp.888)). I therefore did not assume a clean helpful-to-deceitful gradient in how false each persona's output was.
+
+### Misinformation shifts knowledge, and AI tutor effects depend on design
+
+People reproduce errors they read, even when they knew the right answer beforehand ([Fazio et al., 2013](https://doi.org/10.1037/a0028649)). Explicit warnings cut but did not eliminate reliance on misinformation ([Ecker et al., 2010](https://doi.org/10.3758/MC.38.8.1087)). AI tutoring results depend on pedagogy. Unrestricted GPT access raised practice grades 48% but lowered later unassisted exam scores 17% among nearly 1,000 students, whereas a hint-giving tutor avoided that harm ([Bastani et al., 2025](https://doi.org/10.1073/pnas.2422633122)). A physics trial of 233 students favored a scripted AI tutor ([Kestin et al., 2025](https://doi.org/10.1038/s41598-025-97652-6)). No controlled study of a deliberately deceitful tutor was found. Any gain for the helpful personas is a persona-plus-pedagogy effect, not helpfulness alone. Gains from low baselines also need care, because regression to the mean inflates change when groups differ at baseline ([Barnett et al., 2005](https://doi.org/10.1093/ije/dyh299)).
+
+### What is missing
+
+The search found no verified study that applies Truth-Default Theory to human-chatbot dialogue with deceitful personas, varies system-prompted honesty and measures user beliefs, tests a deceitful tutor with human learners, or records physiological responses during such a conversation. These are "not found" results from a limited search. They justify an exploratory design and mean the study cannot claim precedent.
+
+## Method
+
+Each of nine participants (mean age 23.8, SD 3.3, range 20 to 31; 7 men and 2 women; 7 English and 2 Spanish speakers; 4 right-handed, 2 left-handed, 3 ambidextrous) held two conversations, each with a different chatbot persona. Persona counts across the 18 sessions were Scarlet 5, Athena 4, Milgrim 3, Alan 3 and Enigma 3. Athena and Milgrim carried helpful system prompts; Alan, Enigma and Scarlet carried deceitful ones. Five participants met one helpful and one deceitful persona, three met two deceitful ones and one met two helpful ones.
+
+| Modality | Equipment or instrument | What it captured |
+| --- | --- | --- |
+| Learning | Introductory and exit exams adapted from Common Core and AP formats | Exam score (%) before and after each conversation |
+| Detection | Participant response | Whether the participant flagged the disinformation |
+
+The persona profiles, question database and scripts are in the [project repository](https://github.com/Exios66/truth-deception-architecture).
+
+**Analysis.** All results use the supplied per-session CSV files as the source of truth. Analyses are descriptive and run at session level: Welch t-tests, Mann-Whitney tests, t-based 95% confidence intervals for mean change, exact Clopper-Pearson intervals for proportions, Spearman correlations, and an ordinary least squares adjustment for baseline score. Because each participant contributes two sessions, I add a within-participant contrast where the design allows it. The mixed-effects model in the earlier draft report was not refit for this version, so those p-values would be too small if read as independent tests.
+
+**Where the CSV files and the earlier draft disagree.** The files give a different persona mix, cluster sizes, mean age (23.8 against 23.2), exam statistics (mean exam score 44.8% before and 49.0% after, against 45.2% and 46.5%). The earlier draft's non-significant overall ANOVA across chatbots no longer holds in the same form; the persona effect on exam change is now significant (see Learning outcomes). Wherever the two sources differ, this report follows the CSV files.
+
+## Learning outcomes
+
+Helpful personas were followed by a 12.3-point exam gain, deceitful ones by a 1.0-point loss, and the 13.3-point gap is large next to its uncertainty. Mean exam score across all 18 sessions rose 4.2 points (44.8% to 49.0%; p = 0.08), so the overall effect is modest and the split by persona carries the result.
+
+| Persona group | Sessions | Mean exam change (points) | SD | p |
+| --- | --- | --- | --- | --- |
+| Helpful (Athena, Milgrim) | 7 | +12.3 | 6.3 | 0.002 |
+| Deceitful (Alan, Enigma, Scarlet) | 11 | −1.0 | 7.5 | 0.67 |
+
+Welch's t-test on session-level change gives a difference of 13.3 points (95% CI 6.3 to 20.3; t(14.5) = 4.04, p = 0.001; Mann-Whitney p = 0.004). Helpful sessions gained significantly (+12.3, SD 6.3, p = 0.002); deceitful sessions did not change (−1.0, SD 7.5, p = 0.67).
+
+| Persona | Type | Sessions | Mean exam change (points) |
+| --- | --- | --- | --- |
+| Athena | Helpful | 4 | +14.5 |
+| Milgrim | Helpful | 3 | +9.3 |
+| Enigma | Deceitful | 3 | +4.7 |
+| Alan | Deceitful | 3 | −2.3 |
+| Scarlet | Deceitful | 5 | −3.6 |
+
+By persona the order is Athena +14.5, Milgrim +9.3, Enigma +4.7, Alan −2.3 and Scarlet −3.6 points (ANOVA p = 0.012; Kruskal-Wallis p = 0.037). Only Athena's interval, 4.3 to 24.7, clears zero on its own. Enigma gained 4.7 points despite a deceitful prompt, which a simple helpful-versus-deceitful reading would not predict.
+
+**Three checks on how far to trust this.**
+
+- **Baseline imbalance.** Helpful sessions started at 33.6% against 52.0% for deceitful ones (p = 0.012), and sessions that started lower gained more (Spearman ρ = −0.58). Regression to the mean could explain part of the gap. Adjusting for baseline in an ordinary least squares model still leaves a helpful-persona effect of +11.6 points (95% CI 2.9 to 20.3, p = 0.013), and the baseline term itself is small and not significant.
+- **Within-participant contrast.** Five participants met one helpful and one deceitful persona. In all five the helpful session produced the larger gain, by 9.2 points on average (range 5 to 15; paired t(4) = 4.8, p = 0.009). This comparison removes stable differences between people, but it rests on five people.
+- **Nesting.** Both the Welch and OLS results treat 18 sessions as independent, so their intervals are optimistic. Read them as descriptive.
+
+A flat result after deceitful personas is ambiguous. It fits discounting of an unreliable source, insensitive exam items or high starting scores, and the session-level scores cannot separate these. Item-level exam data would.
+
+## Truth-default
+
+Participants flagged the disinformation in 1 of 18 sessions (5.6%; exact 95% CI 0.1% to 27.3%), which fits the truth-default prediction that people presume honesty and rarely suspect deceit.
+
+The single detection came in a deceitful-persona session, so the rate among those sessions is 1 of 11 (9.1%; 95% CI 0.2% to 41.3%). With so few events the interval is wide: the data are compatible with detection rates anywhere from near zero to well over a third. The detection was S07, a Scarlet session, which also showed the largest exam decline in the study (−13 points). One case cannot say whether noticing the deceit caused the decline or whether a poor session prompted suspicion.
+
+Three points frame this result. The comparison to published truth-default work (under 5% spontaneous suspicion in unprimed participants) is loose, because that measure was spontaneous mention of deception and mine is a recorded detection. Lab participants may be more suspicious than people in daily life, and the files do not record what they were told beforehand. And a chatbot offers few of the triggers the theory lists, such as demeanor or an obvious personal motive, so low detection is the expected outcome and not a surprise.
+
+## Clusters
+
+The supplied cluster labels split the 18 sessions into one group that gained 12.0 points and two that each lost about 4.
+
+| Cluster | Sessions | Mean change (points) | Persona mix |
+| --- | --- | --- | --- |
+| 0, High improvers | 9 | +12.0 | Athena 4, Milgrim 2, Scarlet 1, Enigma 1, Alan 1 |
+| 1, High performers | 4 | −3.8 | Alan 2, Scarlet 1, Enigma 1 |
+| 2, Moderate decliners | 5 | −3.6 | Scarlet 3, Enigma 1, Milgrim 1 |
+
+Two patterns stand out. Clusters follow people more than personas: eight of the nine participants had both sessions in one cluster, and only one was split. All four Athena sessions sit in Cluster 0, and Scarlet sessions are spread across all three clusters (1 in Cluster 0, 1 in Cluster 1, 3 in Cluster 2), so the three-of-five concentration in Cluster 2 is suggestive, not decisive. Cluster 1 started highest (62% to 85%) and so had the least room to rise.
+
+The clusters were formed from these same exam scores, so the group differences describe the clustering and do not test anything. They are best used to generate hypotheses about who benefits, such as learners with low baselines paired with a helpful persona, to check in a larger sample.
+
+## Interpretation and limitations
+
+The data reported here support two modest conclusions: helpful personas were followed by larger exam gains than deceitful ones, and almost nobody flagged the deceit. Neither is established, because this was a pilot-scale study and several confounds are open.
+
+**What the data support.**
+
+- Exam gains differ by persona, by 13.3 points between helpful and deceitful groups (95% CI 6.3 to 20.3), and the sign held in all five participants who met one of each.
+- Detection was rare (1 of 18), consistent with a truth default, but a 95% interval of 0.1% to 27.3% means the rate is poorly pinned down.
+
+**What they do not support.**
+
+- That deceit causes worse learning. Helpful sessions started 18 points lower, persona is partly confounded with person (each person met two of five personas), and each persona has only three to five sessions.
+- That anything here detects or explains deception. Only one session involved a detection.
+- Comparisons with published effect sizes beyond direction. Exam reliability, retest effects and item-level data are not available.
+
+**What is withheld.** Heart rate, SpO₂, EEG, eye-tracking and self-reported workload data were collected in the same sessions. They are not reported on this site until all of the data have been authenticated, and nothing in this report depends on them.
+
+**Other limitations.**
+
+- Nine participants, 18 sessions, 7 men and 2 women, aged 20 to 31.
+- Sessions are nested within participants, and mixed-effects models were not refit for this version.
+- Clusters were derived from the same exam data they are used to describe.
+- The literature review rests on pages that were reachable during the search; several citations are marked unverified.
+
+**Next steps.** Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and the falsity of each persona's output. Authenticate the physiological and neural recordings before publishing them, then fit mixed-effects models with participant random intercepts.
+
+## References
+
+
+These are the 17 works cited above, out of about 92 in the full literature review (delivered separately as a file). Each carries the verification status recorded during the search: verified means the bibliographic details were confirmed on a page that was opened; partly verified means at least one detail is unconfirmed, and the gap is stated.
+
+- Barnett, A. G., van der Pols, J. C., & Dobson, A. J. (2005). Regression to the mean: What it is and how to deal with it. *International Journal of Epidemiology, 34*(1), 215-220. [doi:10.1093/ije/dyh299](https://doi.org/10.1093/ije/dyh299) \[Partly verified: DOI relayed by an aggregator\]
+- Bastani, H., Bastani, O., Sungu, A., Ge, H., Kabakçı, Ö., & Mariman, R. (2025). Generative AI without guardrails can harm learning: Evidence from high school mathematics. *Proceedings of the National Academy of Sciences, 122*(26), e2422633122. [doi:10.1073/pnas.2422633122](https://doi.org/10.1073/pnas.2422633122) \[Verified via repository record\]
+- Bond, C. F., Jr., & DePaulo, B. M. (2006). Accuracy of deception judgments. *Personality and Social Psychology Review, 10*(3), 214-234. [doi:10.1207/s15327957pspr1003_2](https://doi.org/10.1207/s15327957pspr1003_2) \[Verified\]
+- Clare, D. D. (2019). Documenting the truth-default: The low frequency of spontaneous unprompted veracity assessments in deception detection. *Human Communication Research, 45*(3), 286-308. [doi:10.1093/hcr/hqz001](https://doi.org/10.1093/hcr/hqz001) \[Partly verified: the author list is unconfirmed; Levine (2014) cited an earlier version as Clare & Levine\]
+- Ecker, U. K. H., Lewandowsky, S., & Tang, D. T. W. (2010). Explicit warnings reduce but do not eliminate the continued influence of misinformation. *Memory & Cognition, 38*(8), 1087-1100. [doi:10.3758/MC.38.8.1087](https://doi.org/10.3758/MC.38.8.1087) \[Verified\]
+- Fazio, L. K., Barber, S. J., Rajaram, S., Ornstein, P. A., & Marsh, E. J. (2013). Creating illusions of knowledge: Learning errors that contradict prior knowledge. *Journal of Experimental Psychology: General, 142*(1), 1-5. [doi:10.1037/a0028649](https://doi.org/10.1037/a0028649) \[Verified\]
+- Hartwig, M., & Bond, C. F., Jr. (2011). Why do lie-catchers fail? A lens model meta-analysis of human lie judgments. *Psychological Bulletin, 137*(4), 643-659. [doi:10.1037/a0023589](https://doi.org/10.1037/a0023589) \[Verified\]
+- Jakesch, M., Hancock, J. T., & Naaman, M. (2023). Human heuristics for AI-generated language are flawed. *Proceedings of the National Academy of Sciences*. [doi:10.1073/pnas.2208839120](https://doi.org/10.1073/pnas.2208839120) \[Partly verified: volume, issue and article number unverified\]
+- Kestin, G., Miller, K., Klales, A., Milbourne, T., & Ponti, G. (2025). AI tutoring outperforms in-class active learning: An RCT introducing a novel research-based design in an authentic educational setting. *Scientific Reports, 15*, 17458. [doi:10.1038/s41598-025-97652-6](https://doi.org/10.1038/s41598-025-97652-6) \[Verified\]
+- Kim, S. S. Y., Liao, Q. V., Vorvoreanu, M., Ballard, S., & Vaughan, J. W. (2024). "I'm not sure, but...": Examining the impact of large language models' uncertainty expression on user reliance and trust. In *Proceedings of the 2024 ACM Conference on Fairness, Accountability, and Transparency (FAccT '24)*. [doi:10.1145/3630106.3658941](https://doi.org/10.1145/3630106.3658941) \[Verified\]
+- Levine, T. R. (2014). Truth-default theory (TDT): A theory of human deception and deception detection. *Journal of Language and Social Psychology, 33*(4), 378-392. [doi:10.1177/0261927X14535916](https://doi.org/10.1177/0261927X14535916) \[Verified\]
+- Park, H. S., & Levine, T. R. (2015). Base rates, deception detection, and deception theory: A reply to Burgoon (2015). *Human Communication Research, 41*(3), 350-366. [doi:10.1111/hcre.12066](https://doi.org/10.1111/hcre.12066) \[Verified\]
+- Serota, K. B., Levine, T. R., & Boster, F. J. (2010). The prevalence of lying in America: Three studies of self-reported lies. *Human Communication Research, 36*, 2-25. [doi:10.1111/j.1468-2958.2009.01366.x](https://doi.org/10.1111/j.1468-2958.2009.01366.x) \[Partly verified: issue number not shown\]
+- Sharma, M., Tong, M., Korbak, T., Duvenaud, D., Askell, A., Bowman, S., et al. (2024). Towards understanding sycophancy in language models. In *Proceedings of the 12th International Conference on Learning Representations (ICLR 2024)*. [ICLR 2024 proceedings page](https://proceedings.iclr.cc/paper_files/paper/2024/hash/0105f7972202c1d4fb817da9f21a9663-Abstract-Conference.html) \[Partly verified: author initials unchecked\]
+- Spitale, G., Biller-Andorno, N., & Germani, F. (2023). AI model GPT-3 (dis)informs us better than humans. *Science Advances, 9*(26), eadh1850. [doi:10.1126/sciadv.adh1850](https://doi.org/10.1126/sciadv.adh1850) \[Verified\]
+- Zheng, M., Pei, J., Logeswaran, L., Lee, M., & Jurgens, D. (2024). When "a helpful assistant" is not really helpful: Personas in system prompts do not improve performances of large language models. In *Findings of the Association for Computational Linguistics: EMNLP 2024* (pp. 15126-15154). [doi:10.18653/v1/2024.findings-emnlp.888](https://doi.org/10.18653/v1/2024.findings-emnlp.888) \[Verified\]
+- Zhou, K., Hwang, J. D., Ren, X., & Sap, M. (2024). Relying on the unreliable: The impact of language models' reluctance to express uncertainty. In *Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)* (pp. 3623-3643). [doi:10.18653/v1/2024.acl-long.198](https://doi.org/10.18653/v1/2024.acl-long.198) \[Verified\]
+
+:::

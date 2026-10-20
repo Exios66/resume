@@ -15,6 +15,7 @@
   --accent: #0e6f7a;
   --accent-soft: #e5f2f3;
   --accent-ink: #ffffff;
+  color-scheme: light;
   --shadow: 0 1px 2px rgba(16, 32, 38, .06), 0 12px 32px rgba(16, 32, 38, .07);
   --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --serif: "Newsreader", Georgia, "Times New Roman", serif;
@@ -31,6 +32,7 @@
     --accent: #4fc1cd;
     --accent-soft: #16303a;
     --accent-ink: #06191d;
+    color-scheme: dark;
     --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px rgba(0, 0, 0, .35);
   }
 }
@@ -44,6 +46,7 @@
     --accent: #4fc1cd;
     --accent-soft: #16303a;
     --accent-ink: #06191d;
+    color-scheme: dark;
     --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px rgba(0, 0, 0, .35);
 }
 
@@ -214,6 +217,9 @@ p { margin: 0 0 12px; }
   .site-nav { max-width: 880px; margin: 0 auto; }
   .site-header + main .page { margin-top: 8px; }
   .page :is(h2, h3, h4, [id]) { scroll-margin-top: 84px; }
+  /* A page that carries its own id (about.html#about) must clear the sticky header too:
+     the rule above only matches descendants, so without this the card top lands under it. */
+  .page[id] { scroll-margin-top: 84px; }
 }
 .site-footer { max-width: 880px; margin: 28px auto 36px; padding: 0 4px; text-align: center; color: var(--muted); font-size: .8rem; }
 .site-footer p { margin: 0; }
@@ -229,14 +235,18 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 .lede p { margin: 0; color: var(--muted); font-size: 1.05rem; }
 .more { display: inline-flex; align-items: center; font-weight: 600; }
 /* Links inside running text must not rely on color alone */
-.page :is(p, li) a:not(.btn, .chip, .back, .more) { text-decoration: underline; text-decoration-thickness: 1px; }
-.page :is(p, li) a:not(.btn, .chip, .back, .more):hover { text-decoration-thickness: 2px; }
+.page :is(p, li) a:not(.btn, .chip, .back, .more, .project-nav a) { text-decoration: underline; text-decoration-thickness: 1px; }
+.page :is(p, li) a:not(.btn, .chip, .back, .more, .project-nav a):hover { text-decoration-thickness: 2px; }
 .card :is(h2, h3) a { text-decoration: none; }
 .page li { margin: 4px 0; }
 .page li::marker { color: var(--accent); }
 
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin: 4px 0 14px; }
 .cards-wide { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 22px; }
+/* Exactly four cards sit in a 2x2 grid instead of leaving one alone on a third row. */
+@media (min-width: 560px) {
+  .cards:not(.cards-wide):has(> .card:nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 .card {
   position: relative; display: flex; flex-direction: column;
   padding: 18px 20px; background: var(--paper); border: 1px solid var(--rule); border-radius: 12px;
@@ -274,13 +284,24 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   .skills dd { margin-bottom: 10px; }
   .date { margin-left: 0; flex-basis: 100%; }
 }
+/* Résumé action buttons: tighter so all three share a row at 375px; if they must wrap they stretch. */
+@media (max-width: 480px) {
+  .actions { gap: 8px; }
+  .actions .btn { flex: 1 1 auto; padding-inline: 12px; }
+}
 
 /* ---------- Print ---------- */
 @media print {
   @page { size: letter; margin: .45in .5in; }
-  :root { --bg: #fff; --paper: #fff; --ink: #111; --muted: #444; --rule: #ccc; --accent: #0e6f7a; --accent-soft: #fff; }
-  body { background: #fff; font-size: 9.6pt; line-height: 1.33; }
-  .page { margin: 0; padding: 0; max-width: none; box-shadow: none; border: 0; border-radius: 0; }
+  /* Paper is always light. The extra selectors out-rank both dark token blocks (0,2,0), so a
+     page printed from the dark theme (OS preference or toggle) is still dark ink on white. */
+  :root:root:root, :root[data-theme="dark"]:root, :root:not([data-theme="light"]):root {
+    --bg: #fff; --paper: #fff; --ink: #111; --muted: #444; --rule: #ccc;
+    --accent: #0e6f7a; --accent-soft: #fff; --accent-ink: #fff; --shadow: none;
+    color-scheme: light;
+  }
+  body { background: #fff; color: #111; font-size: 9.6pt; line-height: 1.33; }
+  .page { background: #fff; margin: 0; padding: 0; max-width: none; box-shadow: none; border: 0; border-radius: 0; }
   .skip-link, .site-header, .site-footer, .actions, .footer { display: none; }
   .print-only { display: inline-block; }
   .chip { padding: 0 2px; background: none; }
@@ -432,7 +453,7 @@ pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .stat-value { font-size: 15pt; }
   .page table { display: table; font-size: 8.5pt; break-inside: avoid; }
   .page thead th { background: none; }
-  .page img.fig, .page figure img { background: #fff; padding: 0; }
+  :root:root:root .page img.fig, .page figure img { background: #fff; padding: 0; }
   .page figure, .stat, .caveat, .sample-doc, .page tr { break-inside: avoid; }
   .sample-doc pre, pre { max-height: none; overflow: visible; white-space: pre-wrap; border-color: #ccc; background: none; }
   .caveat { background: none; }

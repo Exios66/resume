@@ -355,7 +355,7 @@ class PortfolioAdditionTests(unittest.TestCase):
         _, parser = self.read_page("writing/index.html")
         page = self.one(parser, "section", id="writing")
         text = parser.text(page)
-        for attribution in ("Hermes, an AI persona", "not technical writing", "not my own analysis"):
+        for attribution in ("done by Hermes, my AI agent", "not by me", "not my own analysis", "not technical write-ups"):
             self.assertIn(attribution, text)
         self.assertNotIn("No posts yet", text)
         self.assertFalse(any("empty" in checks.classes(attrs) for _, attrs in parser.children(page)))
