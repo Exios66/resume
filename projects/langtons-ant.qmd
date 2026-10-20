@@ -51,11 +51,11 @@ A rule is one flat table indexed by state and color. For each pair it gives the 
 
 ## Engineering decisions
 
-- **Chunked typed arrays, not a sparse map.** The grid is a map from chunk coordinates to 64 × 64 `Uint8Array` chunks, created the first time a cell in them is written. The most recently used chunk is cached, because the ant stays in one chunk for many steps in a row, and chunk coordinates are packed into one number so that long highways do not collide. The design notes estimate that a map entry per cell would need several gigabytes after 100 million steps, against 100 to 200 MB for chunks. That figure is an estimate from how V8 stores hash tables. The repository does not measure it.
+- **Chunked typed arrays, not a sparse map.** The grid is a map from chunk coordinates to 64 × 64 `Uint8Array` chunks, created the first time a cell in them is written. Chunk coordinates are packed into one number so that long highways do not collide. The design notes argue that a map entry per cell would use far more memory than chunks. The repository does not measure that comparison.
 - **One thread, on purpose.** Sharing memory with a worker needs the `COOP` and `COEP` response headers, and GitHub Pages cannot send them. So the simulation runs on the main thread, and the code contains no worker.
 - **Repaint only what changed.** Every step records the cell it wrote. The renderer keeps an offscreen texture at one pixel per cell and updates only those cells: one small write per cell up to 512 changes in a frame, and above that a repaint of the touched chunks with buffers that are reused rather than reallocated. The visible canvas then gets one scaled draw of the texture. The grid is unbounded, but the texture is capped at about 16.7 million pixels; past that it re-centers on recent activity.
-- **Determinism you can test.** The step function is integer-only and allocation-free, and the engine never calls `Math.random`. The one source of randomness, placing stray ants, goes through a seeded generator (mulberry32). A single test runs the classic ant for 11,000 steps from a blank grid and compares an FNV-1a hash of the visited region with a committed value, `6219b3fb`. That one assertion covers integer stepping, chunk addressing across negative coordinates, and the rule table.
-- **Permalinks in the URL hash.** The hash carries the rule, the ants, the step count, the camera, the palette and the seed (`#r=…&a=…&s=…&z=…&c=…&x=…`). It never goes to a server. When the run-length encoding of the grid is under 900 characters, the grid rides along too.
+- **Determinism you can test.** The step function is integer-only, and the engine never calls `Math.random`. The one source of randomness, placing stray ants, goes through a seeded generator (mulberry32). A single test runs the classic ant for 11,000 steps from a blank grid and compares an FNV-1a hash of the visited region with a committed value, `6219b3fb`. That one assertion covers integer stepping, chunk addressing across negative coordinates, and the rule table.
+- **Permalinks in the URL hash.** The hash carries the rule, the ants, the step count, the camera, the palette and the seed (`#r=…&a=…&s=…&z=…&c=…&x=…`). It never goes to a server. When the run-length encoding of the grid is at most 900 characters, the grid rides along too.
 
 ## What I built
 
@@ -66,20 +66,20 @@ A rule is one flat table indexed by state and color. For each pair it gives the 
 
 ## Results
 
-![The classic ant (rule RL) at step 29,243, with the grid readout in the top bar.](langtons-ant/figures/classic-ant-highway.png){.fig fig-alt="A screenshot of the simulator in its dark theme. On the black canvas, a diagonal road of repeating black and white cells runs from the top edge down and to the right until it meets an irregular white cluster in the lower middle. A bar along the top reads steps 29,243, steps per second 1,000, frames per second 60, ants 1, bounding box 101 by 129 and grid 24.0 KB. A panel on the right shows the rule RL with two colors, colony and display controls, and the first card of the preset gallery, Classic Langton's Ant." width="100%"}
+![The classic ant (rule RL) at step 15,181, with the grid readout in the top bar.](langtons-ant/figures/classic-ant-highway.png){.fig fig-alt="A screenshot of the simulator in its dark theme. On the black canvas, a diagonal road of repeating black and white cells runs from the top edge down and to the right until it meets an irregular white cluster in the lower middle. A bar along the top reads steps 15,181, steps per second 1,000, frames per second 60, ants 1, bounding box 119 by 147 and grid 24.0 KB. A panel on the right shows the rule RL with two colors, colony and display controls, and the first card of the preset gallery, Classic Langton's Ant." width="100%"}
 
-The irregular cluster is the first ten thousand or so steps. The road is the highway. The 24.0 KB in the top bar is six 4 KiB chunks. A replay of the classic ant without a browser checks its numbers: it settles into a 104-step cycle that moves it two cells along each axis, from about step 9,976, which matches the figure of about 9,977 steps that the gallery quotes from the literature.
+The irregular cluster is the first ten thousand or so steps. The road is the highway. The 24.0 KB in the top bar is six 4 KiB chunks. A replay of the classic ant without a browser checks its numbers: it settles into a 104-step cycle that moves it two cells along each axis, from about step 9,976, which matches the figure of about 9,977 steps in the gallery's milestone.
 
 The repository's README reports how fast the engine steps in Node. Those numbers come from one laptop. The same benchmark re-run on a different machine shows how much they depend on it.
 
-| 1,000,000 steps per run, mean of 5 | README: Apple M2, macOS, Node 22.14.0 | Re-run: shared 4-core Linux container, Node 22.22.0 |
+| 1,000,000 steps per run, mean of 5 | README: Apple M2, macOS, Node 22.14.0 | Re-runs: shared 4-core Linux container, Node 22.22.0 |
 | --- | --- | --- |
-| Classic `RL` ant, one ant | 19.65 million steps per second | 4.28 million (single runs 3.32 to 6.10) |
-| Colony of 25 ants | 0.54 million steps per second, 13.39 million cell updates per second | 0.19 million (single runs 0.12 to 0.41), 4.82 million cell updates per second |
+| Classic `RL` ant, one ant | 19.65 million steps per second | 4.28, 10.63 and 13.18 million in three re-runs |
+| Colony of 25 ants | 0.54 million steps per second, 13.39 million cell updates per second | 0.19, 0.29 and 0.31 million in three re-runs |
 
 : Engine throughput in Node, with no browser and no rendering. The benchmark logs its timings and asserts nothing, so throughput never fails a test. These are not browser frame rates, which have not been measured.
 
-The throughput depends heavily on the machine, so treat the README's figures as one laptop's result. The determinism test does not depend on the machine: the 11,000-step hash also passes on the Linux re-run too.
+The throughput depends heavily on the machine, and it varied by a factor of three between runs on the same shared container, so treat the README's figures as one laptop's result. The determinism test does not depend on the machine: the 11,000-step hash also passes on the Linux re-run.
 
 ## Where the mathematics comes from
 

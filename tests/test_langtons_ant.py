@@ -123,7 +123,8 @@ class LangtonsAntTests(unittest.TestCase):
         captions = [attrs for tag, attrs in parser.children(figures[0]) if tag == "figcaption"]
         self.assertEqual(len(captions), 1)
         self.assertTrue(parser.text(captions[0]), "Figure needs a visible caption")
-        self.assertIn(f"{FIGURE} <- source repo: langtons-ant/public/social-card.png", manifest)
+        self.assertIn(f"{FIGURE} <- captured for this site:", manifest)
+        self.assertIn("step 15,181", manifest)
         target = (page.parent / unquote(urlsplit(checks.attr(image, "src")).path)).resolve()
         self.assertEqual(target, (checks.DOCS / "projects/langtons-ant/figures" / FIGURE).resolve())
         self.assertEqual(target.read_bytes(), (source_dir / FIGURE).read_bytes())

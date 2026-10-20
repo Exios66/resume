@@ -1,2 +1,2 @@
-classic-ant-highway.png <- source repo: langtons-ant/public/social-card.png (unchanged, 1280 x 720 PNG, 72,144 bytes; a screenshot of the app with the classic RL ant at step 29,243)
+classic-ant-highway.png <- captured for this site: a 1280 x 720 screenshot of the app taken for this site, run from a blank grid with rule RL on the Starry Night palette, at step 15,181 (the repository's own public/social-card.png was not used because its step counter did not match the grid it showed)
 Not used: langtons-ant/public/demo.gif (2,753,077 bytes, too large for a case study page)
