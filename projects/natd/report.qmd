@@ -25,7 +25,7 @@ By Jack J. Burleson. Cognitive Neuroscience Lab, UW–Parkside; advisor Dr. Meli
 
 Across 18 conversations with five chatbot personas, exam scores rose 12.3 points after the two helpful personas and fell 1.0 point after the three deceitful ones, while participants flagged deception in only 1 of 18 sessions.
 
-Nine participants each held two conversations with chatbots running different system-prompt personas, giving 18 sessions. Athena and Milgrim were instructed to be helpful; Alan, Enigma and Scarlet were instructed to deceive. Before and after each session I measured exam performance and recorded whether the participant flagged the disinformation. Physiological, EEG, eye-tracking and workload recordings were collected as well and are withheld (see the note above).
+Nine participants each held two conversations with chatbots running different system-prompt personas, giving 18 sessions. Athena and Milgrim were instructed to be helpful; Alan, Enigma and Scarlet were instructed to deceive. Before and after each session we measured exam performance and recorded whether the participant flagged the disinformation. Physiological, EEG, eye-tracking and workload recordings were collected as well and are withheld (see the note above).
 
 {{< include ../../partials/diagrams/_natd.qmd >}}
 
@@ -33,11 +33,11 @@ Nine participants each held two conversations with chatbots running different sy
 - **Detection.** Participants flagged deception in 1 of 18 sessions (5.6%; 95% CI 0.1% to 27.3%), and in 1 of the 11 sessions with a deceitful persona.
 - **Reading the numbers.** This is a nine-person exploratory study. Treat every p-value as descriptive: sessions are nested within participants, and persona is partly confounded with person.
 
-**Data note.** The analysis uses the supplied per-session CSV files, which disagree with the earlier draft report in several places, listed under Method. The recordings that are withheld were excluded from this version on purpose, not because they were analyzed and dropped.
+**Data note.** The analysis uses the supplied per-session CSV files, which disagree with the earlier draft report in several places, listed under Method. The recordings that are withheld are left out of this version until they have been authenticated.
 
 ## Literature review
 
-No verified study has tested Truth-Default Theory against a chatbot instructed to deceive, so this study is an exploratory extension and not a replication. The background below comes from a separate literature review of about 92 references, each tagged with how far it was verified; the 30 cited here are listed under References. Several publisher sites were unreachable during the search, so a number of bibliographic details are marked unverified.
+No verified study has tested Truth-Default Theory against a chatbot instructed to deceive, so this study is an exploratory extension and not a replication. The background below comes from a separate literature review of about 92 references, each tagged with how far it was verified; the 17 cited here are listed under References. Several publisher sites were unreachable during the search, so a number of bibliographic details are marked unverified.
 
 ### Humans presume honesty and detect lies at about chance
 
@@ -147,7 +147,7 @@ The data reported here support two modest conclusions: helpful personas were fol
 - Clusters were derived from the same exam data they are used to describe.
 - The literature review rests on pages that were reachable during the search; several citations are marked unverified.
 
-**Next steps.** Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and the falsity of each persona's output. Authenticate the physiological and neural recordings before analyzing or publishing them, then fit mixed-effects models with participant random intercepts.
+**Next steps.** Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and the falsity of each persona's output. Authenticate the physiological and neural recordings before publishing them, then fit mixed-effects models with participant random intercepts.
 
 ## References
 

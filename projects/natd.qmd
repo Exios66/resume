@@ -15,7 +15,7 @@ description: "A pilot study of what happens when people talk to chatbots told to
 
 [Cognitive neuroscience research · UW–Parkside]{.kicker}
 
-A pilot study from the Cognitive Neuroscience Lab at UW–Parkside, advised by Dr. Melissa Gregg, by Jack J. Burleson. I presented findings from the project at the 2025 Midwestern Psychological Association conference. The numbers on this page come from the supplied per-session data files, which disagree with an earlier draft report in several places. Where they differ, I follow the files.
+A pilot study from the Cognitive Neuroscience Lab at UW–Parkside, advised by Dr. Melissa Gregg, by Jack J. Burleson.
 
 ::: {.actions}
 [View the code](https://github.com/Exios66/truth-deception-architecture){.btn .primary} [Technical report](natd/report.qmd){.btn}
@@ -29,7 +29,7 @@ A pilot study from the Cognitive Neuroscience Lab at UW–Parkside, advised by D
 
 ::: {.stats}
 ::: {.stat}
-[+12.3 vs −1.0]{.stat-value} [change in exam score, in points, after helpful personas (7 sessions) and after deceitful ones (11 sessions); the 13.3-point gap has a 95% CI of 6.3 to 20.3]{.stat-label}
+[+12.3 vs −1.0]{.stat-value} [change in exam score, in points, after helpful personas (7 sessions) and after deceitful ones (11 sessions); the 13.3-point gap has a 95% CI of 6.3 to 20.3, which is optimistic because sessions are nested within people]{.stat-label}
 :::
 ::: {.stat}
 [1 of 18]{.stat-value} [sessions in which the participant flagged the deception (5.6%; 95% CI 0.1% to 27.3%)]{.stat-label}
@@ -45,17 +45,17 @@ In short, exam scores rose after the helpful personas and not after the deceitfu
 
 People tend to assume that what they are told is true until something gives them a reason to doubt it. Truth-Default Theory says this, and it predicts that a person talking to a chatbot that has been told to deceive will rarely suspect it. I could not find a verified study that tests the theory against a deceitful chatbot, so this study is a pilot-scale extension and not a replication.
 
-I wanted to see two things when people talk to chatbots that help or deceive: whether their exam scores change and whether they notice the deceit. The study also recorded bodies, brains and eyes, and that part is withheld for now.
+The study asks two things about people who talk to chatbots that help or deceive: whether their exam scores change and whether they notice the deceit. The study also recorded bodies, brains and eyes, and that part is withheld for now.
 
 ## Design
 
 {{< include ../partials/diagrams/_natd.qmd >}}
 
-Each of nine participants (mean age 23.8, range 20 to 31; 7 men and 2 women) held two conversations, each with a different chatbot running a different system-prompt persona. Athena and Milgrim were told to be helpful. Alan, Enigma and Scarlet were told to deceive. Before and after each session I measured exam performance and whether the participant flagged the disinformation. Other recordings from the same sessions are withheld (see the note above).
+Each of nine participants (mean age 23.8, range 20 to 31; 7 men and 2 women) held two conversations, each with a different chatbot running a different system-prompt persona. Athena and Milgrim were told to be helpful. Alan, Enigma and Scarlet were told to deceive. Before and after each session we measured exam performance and whether the participant flagged the disinformation. Other recordings from the same sessions are withheld (see the note above).
 
 ## Findings
 
-**1. Learning followed the persona.** Exam scores rose 12.3 points on average after helpful personas and fell 1.0 point after deceitful ones. By persona the order was Athena, Milgrim, Enigma, Alan, Scarlet. Enigma gained 4.7 points despite a deceitful prompt, which a simple helpful-versus-deceitful reading would not predict.
+**1. Exam scores differed by persona.** Exam scores rose 12.3 points on average after helpful personas and fell 1.0 point after deceitful ones. By persona the order was Athena, Milgrim, Enigma, Alan, Scarlet. Enigma gained 4.7 points despite a deceitful prompt, which a simple helpful-versus-deceitful reading would not predict.
 
 | Persona | Type | Sessions | Mean exam change (points) |
 | --- | --- | --- | --- |
@@ -65,7 +65,7 @@ Each of nine participants (mean age 23.8, range 20 to 31; 7 men and 2 women) hel
 | Alan | Deceitful | 3 | −2.3 |
 | Scarlet | Deceitful | 5 | −3.6 |
 
-Helpful sessions also started 18 points lower (33.6% against 52.0%), so part of the gain is probably regression to the mean. Adjusting for the starting score still left a helpful-persona effect of +11.6 points (95% CI 2.9 to 20.3). In the five participants who met one helpful and one deceitful persona, the helpful session produced the larger gain every time.
+Helpful sessions also started 18 points lower (33.6% against 52.0%), so part of the gain is probably regression to the mean. Adjusting for the starting score still left a helpful-persona effect of +11.6 points (95% CI 2.9 to 20.3; the interval treats sessions as independent, so it is optimistic). In the five participants who met one helpful and one deceitful persona, the helpful session produced the larger gain every time, though that rests on only five people.
 
 **2. Almost nobody flagged the deception.** Participants flagged it in 1 of 18 sessions, and in 1 of the 11 sessions with a deceitful persona. That fits the truth-default prediction, but with one event the 95% interval runs from 0.1% to 27.3%, so the rate is poorly pinned down.
 
@@ -74,11 +74,11 @@ Helpful sessions also started 18 points lower (33.6% against 52.0%), so part of 
 - **It supports:** larger exam gains after helpful personas than after deceitful ones, and rare detection.
 - **It does not support:** that deceit causes worse learning. Helpful sessions started lower, persona is partly confounded with person (each person met two of five personas), and each persona has only three to five sessions.
 - **It does not support:** any claim about how people detect deception. Only one session involved a detection.
-- **It cannot be read as independent tests.** Sessions are nested within participants, and I did not refit mixed-effects models, so every p-value is descriptive.
+- **It cannot be read as independent tests.** Sessions are nested within participants, and mixed-effects models were not refit, so every p-value and interval is descriptive.
 
 ## What I would do next
 
-Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and how false each persona's output was. Authenticate the physiological and neural recordings before analyzing or publishing them, then fit mixed-effects models with participant random intercepts.
+Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and how false each persona's output was. Authenticate the physiological and neural recordings before publishing them, then fit mixed-effects models with participant random intercepts.
 
 The technical report has the literature review, the full method, every table, the cluster analysis and the references with how far each was verified.
 

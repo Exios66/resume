@@ -59,6 +59,14 @@ class NatdTests(unittest.TestCase):
                 with self.subTest(page=name, heading=banned_heading):
                     self.assertFalse([h for h in headings if banned_heading in h])
 
+    def test_report_reference_count_and_data_note_are_accurate(self):
+        text = self.page_text(REPORT)
+        self.assertIn("the 17 cited here are listed under References", text)
+        self.assertNotIn("on purpose", text)
+        study = self.page_text(STUDY)
+        for claim in ("I presented", "I wanted", "I measured", "Learning followed"):
+            self.assertNotIn(claim, study)
+
     def test_byline_is_the_site_owner_and_the_draft_byline_is_not_published(self):
         for name in (STUDY, REPORT):
             with self.subTest(page=name):
