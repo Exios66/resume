@@ -51,7 +51,7 @@ M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (ex
 **Digital-Mailroom** [DSHB Capstone project — American Family Insurance (industry partner)]{.sub}
 :::
 
-- Capstone with American Family Insurance to improve how documents are read, sorted, and managed: 10 Python packages covering entity extraction, classification, routing, and scalable workflows.
+- Capstone with American Family Insurance to improve how documents are read, sorted, and managed: 7 Python packages covering entity extraction, classification, routing, and scalable workflows.
 - Designed and built one LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, dataset management, and deployment in a reproducible Docker environment.
 :::
 
