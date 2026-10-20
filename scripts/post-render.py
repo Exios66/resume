@@ -9,7 +9,10 @@
    committed PDF is left untouched.
 3. Drops the " – <site title>" suffix Quarto adds to <title> when the page
    title already names the site, so tabs do not repeat the name.
-4. Adds a ?v=<content hash> to the site stylesheet and script links, so a
+4. Gives every shape in an inline-SVG diagram plain `fill`/`stroke` presentation
+   attributes, so a diagram still draws as outlines (not solid black boxes) if
+   styles.css fails to load. The stylesheet's rules override these attributes.
+5. Adds a ?v=<content hash> to the site stylesheet and script links, so a
    browser or the Pages CDN never pairs new HTML with a stale cached copy.
 """
 import glob
@@ -153,12 +156,48 @@ def cache_bust_pages():
             page.write_text(fixed, encoding="utf-8")
 
 
+SVG_SHAPE = re.compile(r"<(rect|circle|ellipse|path|line|polygon|polyline)(\s[^<>]*?)?(/?)>")
+DIAGRAM = re.compile(r'<figure class="diagram".*?</figure>', re.S)
+
+
+def harden_shape(match):
+    """Add fill/stroke defaults to one diagram shape that carries a d-* class.
+
+    Shapes without a d-* class (such as the arrowhead inside <marker>) and
+    attributes already present are left alone.
+    """
+    tag, attrs, close = match.group(1), match.group(2) or "", match.group(3)
+    if not re.search(r'\sclass="[^"]*\bd-', attrs):
+        return match.group(0)
+    extra = ""
+    if not re.search(r"\sfill=", attrs):
+        extra += ' fill="none"'
+    if not re.search(r"\sstroke=", attrs):
+        extra += ' stroke="currentColor"'
+    return f"<{tag}{attrs}{extra}{close}>" if extra else match.group(0)
+
+
+def harden_diagrams(text):
+    """Apply harden_shape to every shape inside each <figure class="diagram">."""
+    return DIAGRAM.sub(lambda figure: SVG_SHAPE.sub(harden_shape, figure.group(0)), text)
+
+
+def harden_diagram_pages():
+    """Apply harden_diagrams to every rendered page."""
+    for page in DOCS.rglob("*.html"):
+        text = page.read_text(encoding="utf-8")
+        fixed = harden_diagrams(text)
+        if fixed != text:
+            page.write_text(fixed, encoding="utf-8")
+
+
 def main():
     """Prepare docs for GitHub Pages, remove the search index, and build the PDF."""
     DOCS.mkdir(exist_ok=True)
     (DOCS / ".nojekyll").touch()
     (DOCS / "search.json").unlink(missing_ok=True)
     dedupe_titles()
+    harden_diagram_pages()
     cache_bust_pages()
     build_pdf()
 
