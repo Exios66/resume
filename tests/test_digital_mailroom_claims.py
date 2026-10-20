@@ -32,6 +32,16 @@ class DigitalMailroomPackageCountTests(unittest.TestCase):
         self.assertRegex(study, r"\b7 Python packages: entity extraction|\b7\s+Python packages\b")
         self.assertIn("7 Python packages covering entity extraction", visible_text(checks.DOCS / "resume.html"))
 
+    def test_readme_and_both_project_cards_say_seven_packages(self):
+        readme = (checks.ROOT / "README.md").read_text(encoding="utf-8")
+        line = next(l for l in readme.splitlines() if l.startswith("- [Digital-Mailroom]"))
+        self.assertIn("seven Python packages", line)
+        for name in ("index.html", "projects/index.html"):
+            with self.subTest(page=name):
+                self.assertIn("Seven Python packages and one LangGraph pipeline"
+                              if name == "index.html" else "seven Python packages and one LangGraph pipeline",
+                              visible_text(checks.DOCS / name))
+
 
 if __name__ == "__main__":
     unittest.main()
