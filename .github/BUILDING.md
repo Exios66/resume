@@ -15,7 +15,7 @@ An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages
 | `projects/<slug>/report.qmd` | Technical report: iteration history, metrics tables, figures, reproduction steps |
 | `projects/<slug>/figures/` | Figures copied from each project repo; `MANIFEST.txt` records where each one came from |
 | `research.qmd` | Cognitive neuroscience and graduate research |
-| `writing/index.qmd` | Blog stub ("coming soon") |
+| `writing/index.qmd` | Writing by the Hermes agent (Owlcot entries) |
 | `resume.qmd` | Two-page résumé, also the source of the PDF |
 
 ## How it fits together
