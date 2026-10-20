@@ -1,5 +1,5 @@
 <script>
-  // Theme toggle: switches to the opposite of what is currently shown and remembers the choice.
+  // Theme toggle: shown only once this script runs; switches to the opposite of what is currently shown and remembers the choice.
   // Print button: opens the browser print dialog.
   (function () {
     var root = document.documentElement;
@@ -21,6 +21,8 @@
     }
     var toggle = document.querySelector(".theme-toggle");
     if (toggle) {
+      // Rendered hidden so it is not a dead control without JavaScript; shown once it can work.
+      toggle.hidden = false;
       label(toggle);
       toggle.addEventListener("click", function () {
         var next = current() === "dark" ? "light" : "dark";
