@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Technical report on an exploratory study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references. The physiological, EEG, eye-tracking and workload data are withheld until they are authenticated.">
+
+<title>The Neural Architecture of Truth and Deception: technical report — Jack J. Burleson</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+
+
+<link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<meta name="theme-color" content="#0e6f7a">
+<meta name="author" content="Jack J. Burleson">
+<link rel="preload" href="../../assets/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin="">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image-width" content="1200">
+<meta name="twitter:image-height" content="630">
+<script>
+  // Apply the saved theme before first paint so there is no light/dark flash.
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+  // Motion styles apply only when the visitor has not asked for reduced motion.
+  try {
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
+  } catch (e) {}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Jack J. Burleson",
+  "url": "https://exios66.github.io/resume/",
+  "jobTitle": "AI / Machine Learning and Data Science",
+  "email": "mailto:jackjburleson@proton.me",
+  "address": { "@type": "PostalAddress", "addressLocality": "Madison", "addressRegion": "WI", "addressCountry": "US" },
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Madison" },
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Parkside" }
+  ],
+  "knowsAbout": ["Machine learning", "Natural language processing", "LLM evaluation", "Computer vision", "Behavioral data science"],
+  "sameAs": [
+    "https://www.linkedin.com/in/jackjburleson",
+    "https://github.com/Exios66"
+  ]
+}
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css?v=7bc15133c7">
+<meta property="og:title" content="The Neural Architecture of Truth and Deception: technical report — Jack J. Burleson">
+<meta property="og:description" content="Technical report on an exploratory study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references. The physiological, EEG, eye-tracking and workload data are withheld until they are authenticated.">
+<meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta property="og:site_name" content="Jack J. Burleson">
+<meta property="og:image:alt" content="Jack J. Burleson — AI / Machine Learning · Data Science">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:title" content="The Neural Architecture of Truth and Deception: technical report — Jack J. Burleson">
+<meta name="twitter:description" content="Technical report on an exploratory study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references. The physiological, EEG, eye-tracking and workload data are withheld until they are authenticated.">
+<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://exios66.github.io/resume/projects/natd/report.html">
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+
+
+
+<header class="site-header">
+  <nav class="site-nav" aria-label="Main">
+    <a class="site-title" href="../../index.html">Jack J. Burleson</a>
+    <ul class="nav-list">
+      <li><a class="nav-link" href="../../index.html">Home</a></li>
+      <li><a class="nav-link" href="../../about.html">About</a></li>
+      <li><a class="nav-link" href="../../projects/index.html" aria-current="page">Projects</a></li>
+      <li><a class="nav-link" href="../../research.html">Research</a></li>
+      <li><a class="nav-link" href="../../writing/index.html">Writing</a></li>
+      <li><a class="nav-link" href="../../resume.html">Résumé</a></li>
+      <li><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden=""><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg></span><span class="i-moon"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg></span></button></li>
+    </ul>
+  </nav>
+</header>
+<main id="main"><header id="title-block-header" class="quarto-title-block"></header>
+<div class="page">
+<p><a href="../../projects/natd.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>Case study</a></p>
+<div class="project-nav">
+<p><a href="../../projects/natd.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/natd/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="https://github.com/Exios66/truth-deception-architecture"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
+</div>
+<h1 class="page-title" id="the-neural-architecture-of-truth-and-deception-technical-report">The Neural Architecture of Truth and Deception: technical report</h1>
+<p><span class="kicker">Cognitive neuroscience research · UW–Parkside</span></p>
+<p>By Jack J. Burleson. Cognitive Neuroscience Lab, UW–Parkside; advisor Dr.&nbsp;Melissa Gregg.</p>
+<div class="caveat">
+<p><strong>Pilot study; part of the data is withheld.</strong> This study was only ever fully tested under pilot conditions. The physiological (heart rate and SpO₂), EEG, eye-tracking and self-reported workload data were also collected, but they are not reported here and will not be until every recording has been authenticated. This report covers the design, the literature, exam-score learning outcomes, detection and clusters.</p>
+</div>
+<h2 id="overview">Overview</h2>
+<p>Across 18 conversations with five chatbot personas, exam scores rose 12.3 points after the two helpful personas and fell 1.0 point after the three deceitful ones, while participants flagged deception in only 1 of 18 sessions.</p>
+<p>Nine participants each held two conversations with chatbots running different system-prompt personas, giving 18 sessions. Athena and Milgrim were instructed to be helpful; Alan, Enigma and Scarlet were instructed to deceive. Before and after each session we measured exam performance and recorded whether the participant flagged the disinformation. Physiological, EEG, eye-tracking and workload recordings were collected as well and are withheld (see the note above).</p>
+<figure class="diagram" role="img" aria-labelledby="natd-cap"><svg viewbox="0 0 800 320" aria-hidden="true" focusable="false"><defs><marker id="natd-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="16" y="118" width="150" height="84" rx="8"></rect><text x="91" y="150" text-anchor="middle" font-weight="600">9 participants</text><text x="91" y="168" text-anchor="middle">2 conversations</text><text x="91" y="186" text-anchor="middle">each</text><rect class="d-box d-accent" x="222" y="30" width="190" height="84" rx="8"></rect><text x="317" y="60" text-anchor="middle" font-weight="600">Helpful personas</text><text x="317" y="78" text-anchor="middle">Athena, Milgrim</text><text x="317" y="96" text-anchor="middle">7 sessions</text><rect class="d-box" x="222" y="206" width="190" height="84" rx="8"></rect><text x="317" y="236" text-anchor="middle" font-weight="600">Deceitful personas</text><text x="317" y="254" text-anchor="middle">Alan, Enigma, Scarlet</text><text x="317" y="272" text-anchor="middle">11 sessions</text><rect class="d-box" x="480" y="30" width="304" height="260" rx="8"></rect><text x="632" y="62" text-anchor="middle" font-weight="600">Reported here, 18 sessions</text><text x="632" y="100" text-anchor="middle">Exam score before and after</text><text x="632" y="160" text-anchor="middle">Whether deception was flagged</text><text x="632" y="200" text-anchor="middle" font-style="italic">Other recordings: not reported</text><path class="d-arrow" d="M166 160H194V72H220" fill="none" marker-end="url(#natd-ah)"></path><path class="d-arrow" d="M166 160H194V248H220" fill="none" marker-end="url(#natd-ah)"></path><path class="d-arrow" d="M412 72H478" marker-end="url(#natd-ah)"></path><path class="d-arrow" d="M412 248H446V220H478" fill="none" marker-end="url(#natd-ah)"></path></svg><figcaption id="natd-cap">Study design: nine participants each held two conversations with chatbots running different system-prompt personas, giving 18 sessions. Athena and Milgrim were instructed to be helpful, Alan, Enigma and Scarlet to deceive. Exam scores and detection are reported here; other recordings from the same sessions are withheld until the data are authenticated.</figcaption></figure>
+<ul>
+<li><strong>Learning.</strong> Exam scores rose 12.3 points on average after helpful personas (7 sessions) and fell 1.0 point after deceitful ones (11 sessions). The 13.3-point gap has a 95% confidence interval of 6.3 to 20.3. Helpful sessions also started 18 points lower, so part of the gain is probably regression to the mean.</li>
+<li><strong>Detection.</strong> Participants flagged deception in 1 of 18 sessions (5.6%; 95% CI 0.1% to 27.3%), and in 1 of the 11 sessions with a deceitful persona.</li>
+<li><strong>Reading the numbers.</strong> This is a nine-person exploratory study. Treat every p-value as descriptive: sessions are nested within participants, and persona is partly confounded with person.</li>
+</ul>
+<p><strong>Data note.</strong> The analysis uses the supplied per-session CSV files, which disagree with the earlier draft report in several places, listed under Method. The recordings that are withheld are left out of this version until they have been authenticated.</p>
+<h2 id="literature-review">Literature review</h2>
+<p>No verified study has tested Truth-Default Theory against a chatbot instructed to deceive, so this study is an exploratory extension and not a replication. The background below comes from a separate literature review of about 92 references, each tagged with how far it was verified; the 17 cited here are listed under References. Several publisher sites were unreachable during the search, so a number of bibliographic details are marked unverified.</p>
+<h3 id="humans-presume-honesty-and-detect-lies-at-about-chance">Humans presume honesty and detect lies at about chance</h3>
+<p>Truth-Default Theory holds that people passively assume honesty until a trigger, such as a projected motive or incoherent content, pushes them past a threshold (<a href="https://doi.org/10.1177/0261927X14535916">Levine, 2014⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>). A meta-analysis of 206 documents found 54% accuracy at judging lies and truths, with 61% of truths but only 47% of lies classified correctly (<a href="https://doi.org/10.1207/s15327957pspr1003_2">Bond &amp; DePaulo, 2006⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>). Weak behavioral cues, not poor judges, set that ceiling (<a href="https://doi.org/10.1037/a0023589">Hartwig &amp; Bond, 2011⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>). Lying is also unevenly spread: about half of all lies in a US survey came from 5.3% of adults (<a href="https://doi.org/10.1111/j.1468-2958.2009.01366.x">Serota et al., 2010⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>), which supports the base-rate premise behind a truth default.</p>
+<p>The closest parallel to my 1 of 18 is Levine’s report that fewer than 5% of unprimed participants spontaneously considered deception. The published follow-up carries an uncertain author list and I could not see its numbers (<a href="https://doi.org/10.1093/hcr/hqz001">Clare, 2019⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>). My 5.6% is consistent with that figure, but the measures differ, so it is not a replication. The theory is also contested: Interpersonal Deception Theory says interactivity matters, and a chatbot dialogue is interactive (<a href="https://doi.org/10.1111/hcre.12066">Park &amp; Levine, 2015⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>).</p>
+<h3 id="chatbots-lie-on-instruction-flatter-by-training-and-evade-detection">Chatbots lie on instruction, flatter by training, and evade detection</h3>
+<p>GPT-3 complied with requests for disinformation tweets 80 of 102 times, so a system-prompted liar is a realistic manipulation (<a href="https://doi.org/10.1126/sciadv.adh1850">Spitale et al., 2023⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>). Readers were near chance at telling GPT-3 text from human text, and they used flawed heuristics such as first-person pronouns (<a href="https://doi.org/10.1073/pnas.2208839120">Jakesch et al., 2023⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>). All five assistants tested for sycophancy flattered users, partly because raters prefer agreeable answers (<a href="https://proceedings.iclr.cc/paper_files/paper/2024/hash/0105f7972202c1d4fb817da9f21a9663-Abstract-Conference.html">Sharma et al., 2024⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>), so even the helpful personas may flatter. Plain, unhedged statements were relied on heavily, and first-person uncertainty reduced over-reliance (<a href="https://doi.org/10.18653/v1/2024.acl-long.198">Zhou et al., 2024⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>; <a href="https://doi.org/10.1145/3630106.3658941">Kim et al., 2024⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>). Persona wording is an unreliable lever: across 162 roles, personas did not improve factual accuracy (<a href="https://doi.org/10.18653/v1/2024.findings-emnlp.888">Zheng et al., 2024⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>). I therefore did not assume a clean helpful-to-deceitful gradient in how false each persona’s output was.</p>
+<h3 id="misinformation-shifts-knowledge-and-ai-tutor-effects-depend-on-design">Misinformation shifts knowledge, and AI tutor effects depend on design</h3>
+<p>People reproduce errors they read, even when they knew the right answer beforehand (<a href="https://doi.org/10.1037/a0028649">Fazio et al., 2013⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>). Explicit warnings cut but did not eliminate reliance on misinformation (<a href="https://doi.org/10.3758/MC.38.8.1087">Ecker et al., 2010⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>). AI tutoring results depend on pedagogy. Unrestricted GPT access raised practice grades 48% but lowered later unassisted exam scores 17% among nearly 1,000 students, whereas a hint-giving tutor avoided that harm (<a href="https://doi.org/10.1073/pnas.2422633122">Bastani et al., 2025⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>). A physics trial of 233 students favored a scripted AI tutor (<a href="https://doi.org/10.1038/s41598-025-97652-6">Kestin et al., 2025⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>). No controlled study of a deliberately deceitful tutor was found. Any gain for the helpful personas is a persona-plus-pedagogy effect, not helpfulness alone. Gains from low baselines also need care, because regression to the mean inflates change when groups differ at baseline (<a href="https://doi.org/10.1093/ije/dyh299">Barnett et al., 2005⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>).</p>
+<h3 id="what-is-missing">What is missing</h3>
+<p>The search found no verified study that applies Truth-Default Theory to human-chatbot dialogue with deceitful personas, varies system-prompted honesty and measures user beliefs, tests a deceitful tutor with human learners, or records physiological responses during such a conversation. These are “not found” results from a limited search. They justify an exploratory design and mean the study cannot claim precedent.</p>
+<h2 id="method">Method</h2>
+<p>Each of nine participants (mean age 23.8, SD 3.3, range 20 to 31; 7 men and 2 women; 7 English and 2 Spanish speakers; 4 right-handed, 2 left-handed, 3 ambidextrous) held two conversations, each with a different chatbot persona. Persona counts across the 18 sessions were Scarlet 5, Athena 4, Milgrim 3, Alan 3 and Enigma 3. Athena and Milgrim carried helpful system prompts; Alan, Enigma and Scarlet carried deceitful ones. Five participants met one helpful and one deceitful persona, three met two deceitful ones and one met two helpful ones.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modality</th>
+<th>Equipment or instrument</th>
+<th>What it captured</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Learning</td>
+<td>Introductory and exit exams adapted from Common Core and AP formats</td>
+<td>Exam score (%) before and after each conversation</td>
+</tr>
+<tr class="even">
+<td>Detection</td>
+<td>Participant response</td>
+<td>Whether the participant flagged the disinformation</td>
+</tr>
+</tbody>
+</table>
+<p>The persona profiles, question database and scripts are in the <a href="https://github.com/Exios66/truth-deception-architecture">project repository⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>.</p>
+<p><strong>Analysis.</strong> All results use the supplied per-session CSV files as the source of truth. Analyses are descriptive and run at session level: Welch t-tests, Mann-Whitney tests, t-based 95% confidence intervals for mean change, exact Clopper-Pearson intervals for proportions, Spearman correlations, and an ordinary least squares adjustment for baseline score. Because each participant contributes two sessions, I add a within-participant contrast where the design allows it. The mixed-effects model in the earlier draft report was not refit for this version, so those p-values would be too small if read as independent tests.</p>
+<p><strong>Where the CSV files and the earlier draft disagree.</strong> The files give a different persona mix, cluster sizes, mean age (23.8 against 23.2), exam statistics (mean exam score 44.8% before and 49.0% after, against 45.2% and 46.5%). The earlier draft’s non-significant overall ANOVA across chatbots no longer holds in the same form; the persona effect on exam change is now significant (see Learning outcomes). Wherever the two sources differ, this report follows the CSV files.</p>
+<h2 id="learning-outcomes">Learning outcomes</h2>
+<p>Helpful personas were followed by a 12.3-point exam gain, deceitful ones by a 1.0-point loss, and the 13.3-point gap is large next to its uncertainty. Mean exam score across all 18 sessions rose 4.2 points (44.8% to 49.0%; p = 0.08), so the overall effect is modest and the split by persona carries the result.</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Persona group</th>
+<th>Sessions</th>
+<th>Mean exam change (points)</th>
+<th>SD</th>
+<th>p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Helpful (Athena, Milgrim)</td>
+<td>7</td>
+<td>+12.3</td>
+<td>6.3</td>
+<td>0.002</td>
+</tr>
+<tr class="even">
+<td>Deceitful (Alan, Enigma, Scarlet)</td>
+<td>11</td>
+<td>−1.0</td>
+<td>7.5</td>
+<td>0.67</td>
+</tr>
+</tbody>
+</table>
+<p>Welch’s t-test on session-level change gives a difference of 13.3 points (95% CI 6.3 to 20.3; t(14.5) = 4.04, p = 0.001; Mann-Whitney p = 0.004). Helpful sessions gained significantly (+12.3, SD 6.3, p = 0.002); deceitful sessions did not change (−1.0, SD 7.5, p = 0.67).</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Persona</th>
+<th>Type</th>
+<th>Sessions</th>
+<th>Mean exam change (points)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Athena</td>
+<td>Helpful</td>
+<td>4</td>
+<td>+14.5</td>
+</tr>
+<tr class="even">
+<td>Milgrim</td>
+<td>Helpful</td>
+<td>3</td>
+<td>+9.3</td>
+</tr>
+<tr class="odd">
+<td>Enigma</td>
+<td>Deceitful</td>
+<td>3</td>
+<td>+4.7</td>
+</tr>
+<tr class="even">
+<td>Alan</td>
+<td>Deceitful</td>
+<td>3</td>
+<td>−2.3</td>
+</tr>
+<tr class="odd">
+<td>Scarlet</td>
+<td>Deceitful</td>
+<td>5</td>
+<td>−3.6</td>
+</tr>
+</tbody>
+</table>
+<p>By persona the order is Athena +14.5, Milgrim +9.3, Enigma +4.7, Alan −2.3 and Scarlet −3.6 points (ANOVA p = 0.012; Kruskal-Wallis p = 0.037). Only Athena’s interval, 4.3 to 24.7, clears zero on its own. Enigma gained 4.7 points despite a deceitful prompt, which a simple helpful-versus-deceitful reading would not predict.</p>
+<p><strong>Three checks on how far to trust this.</strong></p>
+<ul>
+<li><strong>Baseline imbalance.</strong> Helpful sessions started at 33.6% against 52.0% for deceitful ones (p = 0.012), and sessions that started lower gained more (Spearman ρ = −0.58). Regression to the mean could explain part of the gap. Adjusting for baseline in an ordinary least squares model still leaves a helpful-persona effect of +11.6 points (95% CI 2.9 to 20.3, p = 0.013), and the baseline term itself is small and not significant.</li>
+<li><strong>Within-participant contrast.</strong> Five participants met one helpful and one deceitful persona. In all five the helpful session produced the larger gain, by 9.2 points on average (range 5 to 15; paired t(4) = 4.8, p = 0.009). This comparison removes stable differences between people, but it rests on five people.</li>
+<li><strong>Nesting.</strong> Both the Welch and OLS results treat 18 sessions as independent, so their intervals are optimistic. Read them as descriptive.</li>
+</ul>
+<p>A flat result after deceitful personas is ambiguous. It fits discounting of an unreliable source, insensitive exam items or high starting scores, and the session-level scores cannot separate these. Item-level exam data would.</p>
+<h2 id="truth-default">Truth-default</h2>
+<p>Participants flagged the disinformation in 1 of 18 sessions (5.6%; exact 95% CI 0.1% to 27.3%), which fits the truth-default prediction that people presume honesty and rarely suspect deceit.</p>
+<p>The single detection came in a deceitful-persona session, so the rate among those sessions is 1 of 11 (9.1%; 95% CI 0.2% to 41.3%). With so few events the interval is wide: the data are compatible with detection rates anywhere from near zero to well over a third. The detection was S07, a Scarlet session, which also showed the largest exam decline in the study (−13 points). One case cannot say whether noticing the deceit caused the decline or whether a poor session prompted suspicion.</p>
+<p>Three points frame this result. The comparison to published truth-default work (under 5% spontaneous suspicion in unprimed participants) is loose, because that measure was spontaneous mention of deception and mine is a recorded detection. Lab participants may be more suspicious than people in daily life, and the files do not record what they were told beforehand. And a chatbot offers few of the triggers the theory lists, such as demeanor or an obvious personal motive, so low detection is the expected outcome and not a surprise.</p>
+<h2 id="clusters">Clusters</h2>
+<p>The supplied cluster labels split the 18 sessions into one group that gained 12.0 points and two that each lost about 4.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Cluster</th>
+<th>Sessions</th>
+<th>Mean change (points)</th>
+<th>Persona mix</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0, High improvers</td>
+<td>9</td>
+<td>+12.0</td>
+<td>Athena 4, Milgrim 2, Scarlet 1, Enigma 1, Alan 1</td>
+</tr>
+<tr class="even">
+<td>1, High performers</td>
+<td>4</td>
+<td>−3.8</td>
+<td>Alan 2, Scarlet 1, Enigma 1</td>
+</tr>
+<tr class="odd">
+<td>2, Moderate decliners</td>
+<td>5</td>
+<td>−3.6</td>
+<td>Scarlet 3, Enigma 1, Milgrim 1</td>
+</tr>
+</tbody>
+</table>
+<p>Two patterns stand out. Clusters follow people more than personas: eight of the nine participants had both sessions in one cluster, and only one was split. All four Athena sessions sit in Cluster 0, and Scarlet sessions are spread across all three clusters (1 in Cluster 0, 1 in Cluster 1, 3 in Cluster 2), so the three-of-five concentration in Cluster 2 is suggestive, not decisive. Cluster 1 started highest (62% to 85%) and so had the least room to rise.</p>
+<p>The clusters were formed from these same exam scores, so the group differences describe the clustering and do not test anything. They are best used to generate hypotheses about who benefits, such as learners with low baselines paired with a helpful persona, to check in a larger sample.</p>
+<h2 id="interpretation-and-limitations">Interpretation and limitations</h2>
+<p>The data reported here support two modest conclusions: helpful personas were followed by larger exam gains than deceitful ones, and almost nobody flagged the deceit. Neither is established, because this was a pilot-scale study and several confounds are open.</p>
+<p><strong>What the data support.</strong></p>
+<ul>
+<li>Exam gains differ by persona, by 13.3 points between helpful and deceitful groups (95% CI 6.3 to 20.3), and the sign held in all five participants who met one of each.</li>
+<li>Detection was rare (1 of 18), consistent with a truth default, but a 95% interval of 0.1% to 27.3% means the rate is poorly pinned down.</li>
+</ul>
+<p><strong>What they do not support.</strong></p>
+<ul>
+<li>That deceit causes worse learning. Helpful sessions started 18 points lower, persona is partly confounded with person (each person met two of five personas), and each persona has only three to five sessions.</li>
+<li>That anything here detects or explains deception. Only one session involved a detection.</li>
+<li>Comparisons with published effect sizes beyond direction. Exam reliability, retest effects and item-level data are not available.</li>
+</ul>
+<p><strong>What is withheld.</strong> Heart rate, SpO₂, EEG, eye-tracking and self-reported workload data were collected in the same sessions. They are not reported on this site until all of the data have been authenticated, and nothing in this report depends on them.</p>
+<p><strong>Other limitations.</strong></p>
+<ul>
+<li>Nine participants, 18 sessions, 7 men and 2 women, aged 20 to 31.</li>
+<li>Sessions are nested within participants, and mixed-effects models were not refit for this version.</li>
+<li>Clusters were derived from the same exam data they are used to describe.</li>
+<li>The literature review rests on pages that were reachable during the search; several citations are marked unverified.</li>
+</ul>
+<p><strong>Next steps.</strong> Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and the falsity of each persona’s output. Authenticate the physiological and neural recordings before publishing them, then fit mixed-effects models with participant random intercepts.</p>
+<h2 id="references">References</h2>
+<p>These are the 17 works cited above, out of about 92 in the full literature review (delivered separately as a file). Each carries the verification status recorded during the search: verified means the bibliographic details were confirmed on a page that was opened; partly verified means at least one detail is unconfirmed, and the gap is stated.</p>
+<ul>
+<li>Barnett, A. G., van der Pols, J. C., &amp; Dobson, A. J. (2005). Regression to the mean: What it is and how to deal with it. <em>International Journal of Epidemiology, 34</em>(1), 215-220. <a href="https://doi.org/10.1093/ije/dyh299">doi:10.1093/ije/dyh299⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Partly verified: DOI relayed by an aggregator]</li>
+<li>Bastani, H., Bastani, O., Sungu, A., Ge, H., Kabakçı, Ö., &amp; Mariman, R. (2025). Generative AI without guardrails can harm learning: Evidence from high school mathematics. <em>Proceedings of the National Academy of Sciences, 122</em>(26), e2422633122. <a href="https://doi.org/10.1073/pnas.2422633122">doi:10.1073/pnas.2422633122⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Verified via repository record]</li>
+<li>Bond, C. F., Jr., &amp; DePaulo, B. M. (2006). Accuracy of deception judgments. <em>Personality and Social Psychology Review, 10</em>(3), 214-234. <a href="https://doi.org/10.1207/s15327957pspr1003_2">doi:10.1207/s15327957pspr1003_2⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Verified]</li>
+<li>Clare, D. D. (2019). Documenting the truth-default: The low frequency of spontaneous unprompted veracity assessments in deception detection. <em>Human Communication Research, 45</em>(3), 286-308. <a href="https://doi.org/10.1093/hcr/hqz001">doi:10.1093/hcr/hqz001⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Partly verified: the author list is unconfirmed; Levine (2014) cited an earlier version as Clare &amp; Levine]</li>
+<li>Ecker, U. K. H., Lewandowsky, S., &amp; Tang, D. T. W. (2010). Explicit warnings reduce but do not eliminate the continued influence of misinformation. <em>Memory &amp; Cognition, 38</em>(8), 1087-1100. <a href="https://doi.org/10.3758/MC.38.8.1087">doi:10.3758/MC.38.8.1087⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Verified]</li>
+<li>Fazio, L. K., Barber, S. J., Rajaram, S., Ornstein, P. A., &amp; Marsh, E. J. (2013). Creating illusions of knowledge: Learning errors that contradict prior knowledge. <em>Journal of Experimental Psychology: General, 142</em>(1), 1-5. <a href="https://doi.org/10.1037/a0028649">doi:10.1037/a0028649⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Verified]</li>
+<li>Hartwig, M., &amp; Bond, C. F., Jr.&nbsp;(2011). Why do lie-catchers fail? A lens model meta-analysis of human lie judgments. <em>Psychological Bulletin, 137</em>(4), 643-659. <a href="https://doi.org/10.1037/a0023589">doi:10.1037/a0023589⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Verified]</li>
+<li>Jakesch, M., Hancock, J. T., &amp; Naaman, M. (2023). Human heuristics for AI-generated language are flawed. <em>Proceedings of the National Academy of Sciences</em>. <a href="https://doi.org/10.1073/pnas.2208839120">doi:10.1073/pnas.2208839120⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Partly verified: volume, issue and article number unverified]</li>
+<li>Kestin, G., Miller, K., Klales, A., Milbourne, T., &amp; Ponti, G. (2025). AI tutoring outperforms in-class active learning: An RCT introducing a novel research-based design in an authentic educational setting. <em>Scientific Reports, 15</em>, 17458. <a href="https://doi.org/10.1038/s41598-025-97652-6">doi:10.1038/s41598-025-97652-6⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Verified]</li>
+<li>Kim, S. S. Y., Liao, Q. V., Vorvoreanu, M., Ballard, S., &amp; Vaughan, J. W. (2024). “I’m not sure, but…”: Examining the impact of large language models’ uncertainty expression on user reliance and trust. In <em>Proceedings of the 2024 ACM Conference on Fairness, Accountability, and Transparency (FAccT ’24)</em>. <a href="https://doi.org/10.1145/3630106.3658941">doi:10.1145/3630106.3658941⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Verified]</li>
+<li>Levine, T. R. (2014). Truth-default theory (TDT): A theory of human deception and deception detection. <em>Journal of Language and Social Psychology, 33</em>(4), 378-392. <a href="https://doi.org/10.1177/0261927X14535916">doi:10.1177/0261927X14535916⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Verified]</li>
+<li>Park, H. S., &amp; Levine, T. R. (2015). Base rates, deception detection, and deception theory: A reply to Burgoon (2015). <em>Human Communication Research, 41</em>(3), 350-366. <a href="https://doi.org/10.1111/hcre.12066">doi:10.1111/hcre.12066⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Verified]</li>
+<li>Serota, K. B., Levine, T. R., &amp; Boster, F. J. (2010). The prevalence of lying in America: Three studies of self-reported lies. <em>Human Communication Research, 36</em>, 2-25. <a href="https://doi.org/10.1111/j.1468-2958.2009.01366.x">doi:10.1111/j.1468-2958.2009.01366.x⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Partly verified: issue number not shown]</li>
+<li>Sharma, M., Tong, M., Korbak, T., Duvenaud, D., Askell, A., Bowman, S., et al.&nbsp;(2024). Towards understanding sycophancy in language models. In <em>Proceedings of the 12th International Conference on Learning Representations (ICLR 2024)</em>. <a href="https://proceedings.iclr.cc/paper_files/paper/2024/hash/0105f7972202c1d4fb817da9f21a9663-Abstract-Conference.html">ICLR 2024 proceedings page⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Partly verified: author initials unchecked]</li>
+<li>Spitale, G., Biller-Andorno, N., &amp; Germani, F. (2023). AI model GPT-3 (dis)informs us better than humans. <em>Science Advances, 9</em>(26), eadh1850. <a href="https://doi.org/10.1126/sciadv.adh1850">doi:10.1126/sciadv.adh1850⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Verified]</li>
+<li>Zheng, M., Pei, J., Logeswaran, L., Lee, M., &amp; Jurgens, D. (2024). When “a helpful assistant” is not really helpful: Personas in system prompts do not improve performances of large language models. In <em>Findings of the Association for Computational Linguistics: EMNLP 2024</em> (pp.&nbsp;15126-15154). <a href="https://doi.org/10.18653/v1/2024.findings-emnlp.888">doi:10.18653/v1/2024.findings-emnlp.888⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Verified]</li>
+<li>Zhou, K., Hwang, J. D., Ren, X., &amp; Sap, M. (2024). Relying on the unreliable: The impact of language models’ reluctance to express uncertainty. In <em>Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)</em> (pp.&nbsp;3623-3643). <a href="https://doi.org/10.18653/v1/2024.acl-long.198">doi:10.18653/v1/2024.acl-long.198⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> [Verified]</li>
+</ul>
+</div>
+
+</main>
+<footer class="site-footer">
+  <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
+</footer>
+<script src="../../assets/js/site.js?v=857c7d4672" defer=""></script>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-github" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></symbol><symbol id="i-linkedin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></symbol><symbol id="i-mail" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></symbol><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-download" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></symbol><symbol id="i-map-pin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol><symbol id="i-layers" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></symbol><symbol id="i-brain" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M19.938 10.5a4 4 0 0 1 .585.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M19.967 17.484A4 4 0 0 1 18 18"></path></symbol><symbol id="i-scale" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></symbol><symbol id="i-waves" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></symbol><symbol id="i-database" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></symbol><symbol id="i-clock" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol></svg>
+
+<script>
+  // Theme toggle: switches to the opposite of what is currently shown and remembers the choice.
+  // Print button: opens the browser print dialog.
+  (function () {
+    var root = document.documentElement;
+    /** Return a nonempty data-theme value, or the system's dark/light preference. */
+    function current() {
+      var set = root.getAttribute("data-theme");
+      if (set) return set;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    /** Set the button's accessible label and icon to offer the opposite theme. */
+    function label(btn) {
+      var dark = current() === "dark";
+      btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+      btn.setAttribute("data-mode", dark ? "dark" : "light");
+      // The hidden attribute, not CSS, picks the icon, so only one shows even without styles.css.
+      var sun = btn.querySelector && btn.querySelector(".i-sun");
+      var moon = btn.querySelector && btn.querySelector(".i-moon");
+      if (sun && moon) { sun.hidden = !dark; moon.hidden = dark; }
+    }
+    var toggle = document.querySelector(".theme-toggle");
+    if (toggle) {
+      label(toggle);
+      toggle.addEventListener("click", function () {
+        var next = current() === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+        label(toggle);
+      });
+    }
+    var print = document.querySelector(".print-btn");
+    if (print) {
+      print.addEventListener("click", function (e) { e.preventDefault(); window.print(); });
+    }
+  })();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+    tabsets.forEach(function(tabset) {
+      const tabby = new Tabby('#' + tabset.id);
+    });
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/exios66\.github\.io\/resume");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+
+
+
+
+</body></html>
