@@ -35,6 +35,7 @@ Each project has a case study on the [portfolio](https://exios66.github.io/resum
 - [Psychometric Digital Twin](https://exios66.github.io/resume/projects/psychometric-digital-twin.html): LLM "digital twin" personas against seven classical models on 241 survey respondents; the personas did not beat simple baselines.
 - [MORNINGSTAR](https://exios66.github.io/resume/projects/llm-personas.html): a courtroom of LLM personas that argue, vote, and rule on engineering decisions.
 - [Wave Laboratory](https://exios66.github.io/resume/projects/wave-laboratory.html): a real-time 3D ocean and ship-motion sandbox that runs in the browser.
+- [Langton's Ant](https://exios66.github.io/resume/projects/langtons-ant.html): a browser simulator for Langton's ant and other turmites on an unbounded grid; an early version with a pinned determinism test.
 - [The Mandalay Bay](https://exios66.github.io/resume/projects/degen-llms.html): a satirical casino resort simulator, play chips only.
 
 ## Background

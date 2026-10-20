@@ -114,6 +114,15 @@ A real-time 3D ocean you can experiment with. Spectral wave models, rogue waves,
 :::
 
 ::: {.card}
+### [Langton's Ant](langtons-ant.qmd)
+[Simulation · runs in the browser · version 0.1.0]{.kicker}
+
+A simulator for Langton's ant and other turmites on an unbounded grid, with a gallery of 20 published machines. It is an early version, and the engine has a pinned determinism test.
+
+[TypeScript]{.tag} [Canvas2D]{.tag} [Cellular automata]{.tag} [Testing]{.tag}
+:::
+
+::: {.card}
 ### [The Mandalay Bay](degen-llms.qmd)
 [Game systems · CLI, browser & pixel RPG]{.kicker}
 
