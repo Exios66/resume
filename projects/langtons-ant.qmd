@@ -25,7 +25,7 @@ A browser simulator for Langton's ant and the wider family of two-dimensional Tu
 
 ::: {.stats}
 ::: {.stat}
-[38]{.stat-value} [passing tests in 5 files, all on the engine; a throughput benchmark is skipped unless asked for]{.stat-label}
+[99]{.stat-value} [passing tests in 9 files, covering the engine, the permalink and session code, and the presets; a throughput benchmark is skipped unless asked for]{.stat-label}
 :::
 ::: {.stat}
 [20]{.stat-value} [preset machines in the gallery, each with its notation and a source]{.stat-label}
@@ -55,14 +55,14 @@ A rule is one flat table indexed by state and color. For each pair it gives the 
 - **One thread, on purpose.** Sharing memory with a worker needs the `COOP` and `COEP` response headers, and GitHub Pages cannot send them. So the simulation runs on the main thread, and the code contains no worker.
 - **Repaint only what changed.** Every step records the cell it wrote. The renderer keeps an offscreen texture at one pixel per cell and updates only those cells: one small write per cell up to 512 changes in a frame, and above that a repaint of the touched chunks with buffers that are reused rather than reallocated. The visible canvas then gets one scaled draw of the texture. The grid is unbounded, but the texture is capped at about 16.7 million pixels; past that it re-centers on recent activity.
 - **Determinism you can test.** The step function is integer-only, and the engine never calls `Math.random`. The one source of randomness, placing stray ants, goes through a seeded generator (mulberry32). A single test runs the classic ant for 11,000 steps from a blank grid and compares an FNV-1a hash of the visited region with a committed value, `6219b3fb`. That one assertion covers integer stepping, chunk addressing across negative coordinates, and the rule table.
-- **Permalinks in the URL hash.** The hash carries the rule, the ants, the step count, the camera, the palette and the seed (`#r=…&a=…&s=…&z=…&c=…&x=…`). It never goes to a server. When the run-length encoding of the grid is at most 900 characters, the grid rides along too.
+- **Permalinks in the URL hash.** The hash carries the rule, the ants, the step count, the camera, the palette and the seed (`#r=…&a=…&i=…&s=…&z=…&c=…&x=…`). It never goes to a server. When the run-length encoding of the grid is at most 900 characters, the grid rides along too.
 
 ## What I built
 
 - **The engine.** Rule parsers and encoders for the three notations, the chunked grid, the stepper, the PRNG and the hash.
 - **The renderer and interface.** A Canvas2D renderer with pan and zoom, a rule editor, palettes, a dark and a light theme, keyboard shortcuts, PNG and WebM export, and session export as JSON.
 - **A preset gallery.** Twenty machines, each with its notation, a one-line milestone where one is known and a link to its source: the classic ant, ants with three to twelve colors, ants whose highways have been proved, two turmites that stay chaotic for millions of steps, halting machines and absolute-heading turmites.
-- **Tests.** Thirty-eight Vitest tests across the rule parsers, the grid, the simulation, serialization and the golden hash, and a type-check that passes.
+- **Tests.** Ninety-nine Vitest tests across the rule parsers, the grid, the simulation, serialization, the highway detector, session restore, the preset gallery and the golden hash, and a type-check that passes.
 
 ## Results
 

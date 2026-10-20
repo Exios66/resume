@@ -130,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 id="at-a-glance">At a glance</h2>
 <div class="stats">
 <div class="stat">
-<p><span class="stat-value">38</span> <span class="stat-label">passing tests in 5 files, all on the engine; a throughput benchmark is skipped unless asked for</span></p>
+<p><span class="stat-value">99</span> <span class="stat-label">passing tests in 9 files, covering the engine, the permalink and session code, and the presets; a throughput benchmark is skipped unless asked for</span></p>
 </div>
 <div class="stat">
 <p><span class="stat-value">20</span> <span class="stat-label">preset machines in the gallery, each with its notation and a source</span></p>
@@ -152,14 +152,14 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>One thread, on purpose.</strong> Sharing memory with a worker needs the <code>COOP</code> and <code>COEP</code> response headers, and GitHub Pages cannot send them. So the simulation runs on the main thread, and the code contains no worker.</li>
 <li><strong>Repaint only what changed.</strong> Every step records the cell it wrote. The renderer keeps an offscreen texture at one pixel per cell and updates only those cells: one small write per cell up to 512 changes in a frame, and above that a repaint of the touched chunks with buffers that are reused rather than reallocated. The visible canvas then gets one scaled draw of the texture. The grid is unbounded, but the texture is capped at about 16.7 million pixels; past that it re-centers on recent activity.</li>
 <li><strong>Determinism you can test.</strong> The step function is integer-only, and the engine never calls <code>Math.random</code>. The one source of randomness, placing stray ants, goes through a seeded generator (mulberry32). A single test runs the classic ant for 11,000 steps from a blank grid and compares an FNV-1a hash of the visited region with a committed value, <code>6219b3fb</code>. That one assertion covers integer stepping, chunk addressing across negative coordinates, and the rule table.</li>
-<li><strong>Permalinks in the URL hash.</strong> The hash carries the rule, the ants, the step count, the camera, the palette and the seed (<code>#r=…&amp;a=…&amp;s=…&amp;z=…&amp;c=…&amp;x=…</code>). It never goes to a server. When the run-length encoding of the grid is at most 900 characters, the grid rides along too.</li>
+<li><strong>Permalinks in the URL hash.</strong> The hash carries the rule, the ants, the step count, the camera, the palette and the seed (<code>#r=…&amp;a=…&amp;i=…&amp;s=…&amp;z=…&amp;c=…&amp;x=…</code>). It never goes to a server. When the run-length encoding of the grid is at most 900 characters, the grid rides along too.</li>
 </ul>
 <h2 id="what-i-built">What I built</h2>
 <ul>
 <li><strong>The engine.</strong> Rule parsers and encoders for the three notations, the chunked grid, the stepper, the PRNG and the hash.</li>
 <li><strong>The renderer and interface.</strong> A Canvas2D renderer with pan and zoom, a rule editor, palettes, a dark and a light theme, keyboard shortcuts, PNG and WebM export, and session export as JSON.</li>
 <li><strong>A preset gallery.</strong> Twenty machines, each with its notation, a one-line milestone where one is known and a link to its source: the classic ant, ants with three to twelve colors, ants whose highways have been proved, two turmites that stay chaotic for millions of steps, halting machines and absolute-heading turmites.</li>
-<li><strong>Tests.</strong> Thirty-eight Vitest tests across the rule parsers, the grid, the simulation, serialization and the golden hash, and a type-check that passes.</li>
+<li><strong>Tests.</strong> Ninety-nine Vitest tests across the rule parsers, the grid, the simulation, serialization, the highway detector, session restore, the preset gallery and the golden hash, and a type-check that passes.</li>
 </ul>
 <h2 id="results">Results</h2>
 <div class="quarto-figure quarto-figure-center">

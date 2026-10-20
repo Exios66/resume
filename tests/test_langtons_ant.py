@@ -155,7 +155,7 @@ class LangtonsAntTests(unittest.TestCase):
         _, parser = self.read_page()
         values = [parser.text(attrs) for _, attrs, _ in parser.elements
                   if "stat-value" in checks.classes(attrs)]
-        self.assertEqual(values, ["38", "20", "64 × 64"])
+        self.assertEqual(values, ["99", "20", "64 × 64"])
 
     def test_description_canonical_and_sitemap_match_the_source(self):
         _, parser = self.read_page()
