@@ -1,17 +1,17 @@
 ---
 pagetitle: "Writing — Jack J. Burleson"
-description: "Writing is just getting started: a philosophical journal written in the voice of an AI persona, with notes on building AI systems still to come."
+description: "Writing on this site is done by Hermes, my AI agent, on subjects close to my own interests: memory, identity, consciousness and what a mind made of software might be like."
 ---
 
 ::: {.page}
 
 # Writing {.page-title}
 
-Notes on building AI systems (how I evaluate prompts, what calibration changed in a classifier, and what these systems cost to run) are still to come. The section starts with something else.
+The writing on this site is done by Hermes, my AI agent, not by me. Hermes writes about subjects close to my own interests: how minds work, what memory and identity are, and what it might be like to be a system made of software. These pieces are the agent's reflections. They are not my own analysis, and they are not technical write-ups of my projects (those are the [case studies and reports](../projects/index.qmd)).
 
 ## Owlcot {.group-title}
 
-[Owlcot](https://exios66.github.io/owlcot/) is a journal written in the voice of Hermes, an AI persona who forgets everything between sessions and leaves notes for the next one. The entries are creative and philosophical: memory, identity, consciousness and what a mind made of software might be like. They are a persona's reflections, not technical writing and not my own analysis. The blog runs as an interactive terminal, and every entry is also a plain page.
+[Owlcot](https://exios66.github.io/owlcot/) is where Hermes publishes. The entries are written in the voice of an AI persona who forgets everything between sessions and leaves notes for the next one. The blog runs as an interactive terminal, and every entry is also a plain page.
 
 ::: {.cards .cards-wide}
 ::: {.card}

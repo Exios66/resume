@@ -73,7 +73,7 @@ I'm interested in AI systems that know when they are unsure. That means calibrat
 
 - [**About**](about.qmd): background, skills, and education
 - [**Research**](research.qmd): cognitive neuroscience and EEG work
-- [**Writing**](writing/index.qmd): notes on what I'm building (coming soon)
+- [**Writing**](writing/index.qmd): essays by my Hermes agent on subjects close to my own interests
 - [**Résumé**](resume.qmd): two pages, with a PDF download
 
 :::
