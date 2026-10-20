@@ -26,7 +26,7 @@ I'm interested in AI systems that know when they are unsure: calibrated classifi
 
 Each project has a case study on the [portfolio](https://exios66.github.io/resume/).
 
-- [Digital-Mailroom](https://exios66.github.io/resume/projects/digital-mailroom.html): my capstone with American Family Insurance, one LangGraph pipeline for document routing, prompt experiments, scoring, and deployment.
+- [Digital-Mailroom](https://exios66.github.io/resume/projects/digital-mailroom.html): my capstone with American Family Insurance: seven Python packages and one LangGraph pipeline for document routing, prompt experiments, scoring, and deployment.
 - [Mailroom-ML](https://exios66.github.io/resume/projects/mailroom-ml.html): a calibrated ModernBERT classifier that handles routine documents and knows when to hand off to an LLM.
 - [Mailroom Reloaded](https://exios66.github.io/resume/projects/mailroom-reloaded.html): the mailroom rebuilt as one deployable service, with an audit log of every decision.
 - [RVL-CDIP-Classifier](https://exios66.github.io/resume/projects/rvl-cdip-classifier.html): zero-shot document classification with vision LLMs, with tracked prompt versions and cost per page.

@@ -38,7 +38,7 @@ M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (ex
 ### [Digital-Mailroom](projects/digital-mailroom.qmd)
 [Capstone · American Family Insurance]{.kicker}
 
-One LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, and deployment, in a reproducible Docker environment.
+Seven Python packages and one LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, and deployment, in a reproducible Docker environment.
 :::
 
 ::: {.card}
