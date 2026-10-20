@@ -1,0 +1,118 @@
+---
+pagetitle: "Langton's Ant — Jack J. Burleson"
+description: "An early version of a browser simulator for Langton's ant and other turmites: any rule up to 32 colors and 16 states on an unbounded grid, a gallery of 20 published machines, and a pinned determinism test."
+---
+
+::: {.page}
+
+[← All projects](index.qmd){.back}
+
+::: {.project-nav}
+[Case study](langtons-ant.qmd){aria-current="page"} [Code](https://github.com/Exios66/langtons-ant) [Live demo](https://exios66.github.io/langtons-ant/)
+:::
+
+# Langton's Ant {.page-title}
+
+[Side project · simulation in the browser · version 0.1.0]{.kicker}
+
+A browser simulator for Langton's ant and the wider family of two-dimensional Turing machines called turmites. I wrote the engine, the renderer and the interface. The mathematics of what these machines do comes from the literature listed at the bottom of this page, not from me.
+
+::: {.actions}
+[Open the simulator](https://exios66.github.io/langtons-ant/){.btn .primary} [View the code](https://github.com/Exios66/langtons-ant){.btn}
+:::
+
+::: {.caveat}
+**Early version.** This is version 0.1.0 of a one-person project, and it has two known gaps that matter for what it claims: its highway detector and its mid-run permalinks do not yet work as intended. They are described under "What does not work yet" below.
+:::
+
+## At a glance
+
+::: {.stats}
+::: {.stat}
+[38]{.stat-value} [passing tests in 5 files, all on the engine; a throughput benchmark is skipped unless asked for]{.stat-label}
+:::
+::: {.stat}
+[20]{.stat-value} [preset machines in the gallery, each with its notation and a source]{.stat-label}
+:::
+::: {.stat}
+[64 × 64]{.stat-value} [cells per grid chunk, one byte per cell, so 4 KiB a chunk]{.stat-label}
+:::
+:::
+
+## The problem
+
+In 1986 Christopher Langton described an ant on a grid of cells. On a blank cell it turns right, paints the cell and steps forward; on a painted cell it turns left, clears the cell and steps forward. For about ten thousand steps the result looks like noise. Then the ant starts building a diagonal road that repeats every 104 steps and goes on forever. Whether this always happens is the open Highway Conjecture. Generalized ants, with more colors and more internal states, are called turmites, and some of them have been proved to be universal computers.
+
+The goal of the project is to run any of these machines in a browser, on a grid with no edge, deterministically, and to make a run something you can link to. Each of those three requirements shaped the code.
+
+## Approach
+
+{{< include ../partials/diagrams/_langtons-ant.qmd >}}
+
+The app is TypeScript built with Vite. It has no runtime dependencies, only development tools. The code is split into three folders. `src/engine` holds the rule tables, the grid and the stepper, and nothing in it touches the browser, so the same code runs in the page and under Vitest in Node. `src/render` paints the grid, and `src/app` runs the animation loop, the panels and the permalinks.
+
+A rule is one flat table indexed by state and color. For each pair it gives the color to write, the turn to make and the next state, so the classic ant is one state and two colors and a turmite is more of each. The engine accepts up to 32 colors and 16 states, in three notations: ant strings such as `RL` or `LLRR`, tables of triples in the style of the GollyGang Rule Table Repository, and decimal IDs. It refuses rule codes that would make an ant split in two, rather than guess at them. With more than one ant, every ant acts on every step, in array order.
+
+## Engineering decisions
+
+- **Chunked typed arrays, not a sparse map.** The grid is a map from chunk coordinates to 64 × 64 `Uint8Array` chunks, created the first time a cell in them is written. The most recently used chunk is cached, because the ant stays in one chunk for many steps in a row, and chunk coordinates are packed into one number so that long highways do not collide. The design notes estimate that a map entry per cell would need several gigabytes after 100 million steps, against 100 to 200 MB for chunks. That figure is an estimate from how V8 stores hash tables. The repository does not measure it.
+- **One thread, on purpose.** Sharing memory with a worker needs the `COOP` and `COEP` response headers, and GitHub Pages cannot send them. So the simulation runs on the main thread, and the code contains no worker.
+- **Repaint only what changed.** Every step records the cell it wrote. The renderer keeps an offscreen texture at one pixel per cell and updates only those cells: one small write per cell up to 512 changes in a frame, and above that a repaint of the touched chunks with buffers that are reused rather than reallocated. The visible canvas then gets one scaled draw of the texture. The grid is unbounded, but the texture is capped at about 16.7 million pixels; past that it re-centers on recent activity.
+- **Determinism you can test.** The step function is integer-only and allocation-free, and the engine never calls `Math.random`. The one source of randomness, placing stray ants, goes through a seeded generator (mulberry32). A single test runs the classic ant for 11,000 steps from a blank grid and compares an FNV-1a hash of the visited region with a committed value, `6219b3fb`. That one assertion covers integer stepping, chunk addressing across negative coordinates, and the rule table.
+- **Permalinks in the URL hash.** The hash carries the rule, the ants, the step count, the camera, the palette and the seed (`#r=…&a=…&s=…&z=…&c=…&x=…`). It never goes to a server. When the run-length encoding of the grid is under 900 characters, the grid rides along too.
+
+## What I built
+
+- **The engine.** Rule parsers and encoders for the three notations, the chunked grid, the stepper, the PRNG and the hash.
+- **The renderer and interface.** A Canvas2D renderer with pan and zoom, a rule editor, palettes, a dark and a light theme, keyboard shortcuts, PNG and WebM export, and session export and import as JSON.
+- **A preset gallery.** Twenty machines, each with its notation, a one-line milestone where one is known and a link to its source: the classic ant, ants with three to twelve colors, ants whose highways have been proved, two turmites that stay chaotic for millions of steps, halting machines and absolute-heading turmites.
+- **A highway detector.** A heuristic that samples the first ant's position and looks for its average velocity to settle at a steady nonzero value, then shows an onset badge and can pause the run. It does not prove anything about a highway.
+- **Tests.** Thirty-eight Vitest tests across the rule parsers, the grid, the simulation, serialization and the golden hash, and a type-check that passes.
+
+## Results
+
+![The classic ant (rule RL) at step 29,243, with the grid readout in the top bar.](langtons-ant/figures/classic-ant-highway.png){.fig fig-alt="A screenshot of the simulator in its dark theme. On the black canvas, a diagonal road of repeating black and white cells runs from the top edge down and to the right until it meets an irregular white cluster in the lower middle. A bar along the top reads steps 29,243, steps per second 1,000, frames per second 60, ants 1, bounding box 101 by 129 and grid 24.0 KB. A panel on the right shows the rule RL with two colors, colony and display controls, and the first card of the preset gallery, Classic Langton's Ant." width="100%"}
+
+The irregular cluster is the first ten thousand or so steps. The road is the highway. The 24.0 KB in the top bar is six 4 KiB chunks. I checked the classic ant's numbers by replaying it without a browser: it settles into a 104-step cycle that moves it two cells along each axis, from about step 9,976, which matches the figure of about 9,977 steps that the gallery quotes from the literature.
+
+The repository's README reports how fast the engine steps in Node. Those numbers come from the author's laptop, and I re-ran the same benchmark on a different machine to see how much they depend on it.
+
+| 1,000,000 steps per run, mean of 5 | README: Apple M2, macOS, Node 22.14.0 | Re-run: shared 4-core Linux container, Node 22.22.0 |
+| --- | --- | --- |
+| Classic `RL` ant, one ant | 19.65 million steps per second | 4.28 million (single runs 3.32 to 6.10) |
+| Colony of 25 ants | 0.54 million steps per second, 13.39 million cell updates per second | 0.19 million (single runs 0.12 to 0.41), 4.82 million cell updates per second |
+
+: Engine throughput in Node, with no browser and no rendering. The benchmark logs its timings and asserts nothing, so throughput never fails a test. These are not browser frame rates, and I have not measured those.
+
+The throughput depends heavily on the machine, so treat the README's figures as one laptop's result. The determinism test does not depend on the machine: the 11,000-step hash also passes on my Linux re-run.
+
+## What does not work yet
+
+- **The highway detector.** When I replayed the classic ant without a browser, sampling the detector once per frame at batch sizes from 17 to 50,000 steps, it did not trigger in 30 million steps. With much finer sampling it does fire, but early: at step 512 in one setting and at step 5,520 in another, both before the highway starts at about step 9,977. So the onset badge is not something to rely on yet. No test covers it.
+- **Links made in the middle of a run.** A link to the start of a run replays it exactly, and every preset link is of that kind. A link made later carries the grid only while its encoding is under 900 characters, which for the classic ant was true at 1,000 steps and not true at 20,000. Past that, the link puts the ant back at its current position on an empty grid. An imported session file does not reproduce the grid either. The code comments say the grid is replayed from the step count, but the code does not do that. The app does tell you when a link is too large to carry the grid.
+- **The gallery's milestones are not tested.** They come from the sources the gallery cites. I re-ran three halting machines: the Fay champion halts after 59,348,219 steps with 888,629 painted cells, which matches the published 59,348,218 steps and 888,629 cells to within how the final halting step is counted. The two Brady machines do not match their labels. The one labeled S = 121 halted after 81 steps with 37 painted cells, and the one labeled 37 cells halted at step 121 with 29, so the two rules may be swapped. I have not checked them against their source.
+- **No continuous integration.** The tests run when I run them. Nothing runs them on each commit.
+
+## What I'm learning
+
+- Check what the host allows before choosing the architecture. GitHub Pages cannot send the headers that shared memory needs, and that settled the threading question at the start.
+- A single narrow test can hold a lot. One hash of one run pins the stepper, the chunk addressing and the rule table together.
+- Tests that cover only the engine leave the app layer unchecked, and that is where the gaps above were. Replaying the detector and the permalink restore outside a browser found them quickly, so those replays should become tests.
+- An estimate should carry its label. The design notes mark the memory figure as unvalidated, and I kept that on this page.
+
+## Where the mathematics comes from
+
+None of the following is my work. They are the papers this project's README cites for its claims.
+
+- Langton, C. G., "Studying artificial life with cellular automata," *Physica D* 22 (1986): [the original paper](https://deepblue.lib.umich.edu/bitstream/2027.42/26022/1/0000093.pdf).
+- Gajardo, Moreira and Goles, "Complexity of Langton's ant," *Discrete Applied Mathematics* 117 (2002): [arXiv](https://arxiv.org/abs/nlin/0306022).
+- Gajardo, Hellouin de Menibus, Maldonado and Moreira, "Nontrivial Turmites Are Turing-Universal" (2017): [arXiv](https://arxiv.org/abs/1702.05547).
+- Gajardo, Lutfalla and Rao, "Ants on the highway," *Natural Computing* (2025): [arXiv](https://arxiv.org/abs/2409.10124).
+- Lutfalla, "Sideways on the highways" (2025): [arXiv](https://arxiv.org/abs/2505.05426), and "The LLLR generalised Langton's ant" (2025): [arXiv](https://arxiv.org/abs/2506.10482).
+- The GollyGang [Rule Table Repository](https://github.com/GollyGang/ruletablerepository/wiki/TwoDimensionalTuringMachines), the source of the rule notation and of many gallery machines.
+
+## Stack
+
+[TypeScript]{.tag} [Vite]{.tag} [Canvas2D]{.tag} [Vitest]{.tag}
+
+:::

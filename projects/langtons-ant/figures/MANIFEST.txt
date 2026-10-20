@@ -1,0 +1,2 @@
+classic-ant-highway.png <- source repo: langtons-ant/public/social-card.png (unchanged, 1280 x 720 PNG, 72,144 bytes; a screenshot of the app with the classic RL ant at step 29,243)
+Not used: langtons-ant/public/demo.gif (2,753,077 bytes, too large for a case study page)
