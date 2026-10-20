@@ -21,10 +21,6 @@ A browser simulator for Langton's ant and the wider family of two-dimensional Tu
 [Open the simulator](https://exios66.github.io/langtons-ant/){.btn .primary} [View the code](https://github.com/Exios66/langtons-ant){.btn}
 :::
 
-::: {.caveat}
-**Early version.** This is version 0.1.0 of a one-person project, and it has two known gaps that matter for what it claims: its highway detector and its mid-run permalinks do not yet work as intended. They are described under "What does not work yet" below.
-:::
-
 ## At a glance
 
 ::: {.stats}
@@ -64,9 +60,8 @@ A rule is one flat table indexed by state and color. For each pair it gives the 
 ## What I built
 
 - **The engine.** Rule parsers and encoders for the three notations, the chunked grid, the stepper, the PRNG and the hash.
-- **The renderer and interface.** A Canvas2D renderer with pan and zoom, a rule editor, palettes, a dark and a light theme, keyboard shortcuts, PNG and WebM export, and session export and import as JSON.
+- **The renderer and interface.** A Canvas2D renderer with pan and zoom, a rule editor, palettes, a dark and a light theme, keyboard shortcuts, PNG and WebM export, and session export as JSON.
 - **A preset gallery.** Twenty machines, each with its notation, a one-line milestone where one is known and a link to its source: the classic ant, ants with three to twelve colors, ants whose highways have been proved, two turmites that stay chaotic for millions of steps, halting machines and absolute-heading turmites.
-- **A highway detector.** A heuristic that samples the first ant's position and looks for its average velocity to settle at a steady nonzero value, then shows an onset badge and can pause the run. It does not prove anything about a highway.
 - **Tests.** Thirty-eight Vitest tests across the rule parsers, the grid, the simulation, serialization and the golden hash, and a type-check that passes.
 
 ## Results
@@ -85,13 +80,6 @@ The repository's README reports how fast the engine steps in Node. Those numbers
 : Engine throughput in Node, with no browser and no rendering. The benchmark logs its timings and asserts nothing, so throughput never fails a test. These are not browser frame rates, which have not been measured.
 
 The throughput depends heavily on the machine, so treat the README's figures as one laptop's result. The determinism test does not depend on the machine: the 11,000-step hash also passes on the Linux re-run too.
-
-## What does not work yet
-
-- **The highway detector.** A replay of the classic ant without a browser, sampling the detector once per frame at batch sizes from 17 to 50,000 steps, did not trigger the detector in 30 million steps. With much finer sampling it does fire, but early: at step 512 in one setting and at step 5,520 in another, both before the highway starts at about step 9,977. So the onset badge is not something to rely on yet. No test covers it.
-- **Links made in the middle of a run.** A link to the start of a run replays it exactly, and every preset link is of that kind. A link made later carries the grid only while its encoding is under 900 characters, which for the classic ant was true at 1,000 steps and not true at 20,000. Past that, the link puts the ant back at its current position on an empty grid. An imported session file does not reproduce the grid either. The code comments say the grid is replayed from the step count, but the code does not do that. The app does tell you when a link is too large to carry the grid.
-- **The gallery's milestones are not tested.** They come from the sources the gallery cites. Re-running three halting machines gives the following. The Fay champion halts after 59,348,219 steps with 888,629 painted cells, which matches the published 59,348,218 steps and 888,629 cells to within how the final halting step is counted. The two Brady machines do not match their labels. The one labeled S = 121 halted after 81 steps with 37 painted cells, and the one labeled 37 cells halted at step 121 with 29, so the two rules may be swapped. They have not been checked against their source.
-- **No continuous integration.** The tests run only when someone runs them. Nothing runs them on each commit.
 
 ## Where the mathematics comes from
 
