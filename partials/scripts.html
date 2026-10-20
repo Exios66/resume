@@ -21,7 +21,8 @@
     }
     var toggle = document.querySelector(".theme-toggle");
     if (toggle) {
-      // Rendered hidden so it is not a dead control without JavaScript; shown once it can work.
+      // Its list item is rendered hidden so there is no dead control (or stray bullet) without JavaScript; shown once it can work.
+      if (toggle.parentNode) toggle.parentNode.hidden = false;
       toggle.hidden = false;
       label(toggle);
       toggle.addEventListener("click", function () {

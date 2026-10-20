@@ -362,7 +362,7 @@ function Pandoc(doc)
     <a class="site-title" href="%sindex.html">Jack J. Burleson</a>
     <ul class="nav-list">
       %s
-      <li><button type="button" class="theme-toggle" aria-label="Switch theme" hidden><span class="i-sun" hidden>%s</span><span class="i-moon">%s</span></button></li>
+      <li hidden><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden>%s</span><span class="i-moon">%s</span></button></li>
     </ul>
   </nav>
 </header>

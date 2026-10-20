@@ -245,7 +245,7 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 .cards-wide { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 22px; }
 /* Exactly four cards sit in a 2x2 grid instead of leaving one alone on a third row. */
 @media (min-width: 560px) {
-  .cards:has(> .card:nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cards:not(.cards-wide):has(> .card:nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 .card {
   position: relative; display: flex; flex-direction: column;

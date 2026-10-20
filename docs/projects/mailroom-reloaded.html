@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=986e290253">
+<link rel="stylesheet" href="../styles.css?v=9a2cda9afc">
 <meta property="og:title" content="Mailroom Reloaded — Jack J. Burleson">
 <meta property="og:description" content="A compressed, deployment-ready Digital Mailroom on CrewAI Flows: a deterministic driver, a ModernBERT fast path, a durable audit trail, and consoles that replay every run.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -111,7 +111,7 @@ ul.task-list li input[type="checkbox"] {
       <li><a class="nav-link" href="../research.html">Research</a></li>
       <li><a class="nav-link" href="../writing/index.html">Writing</a></li>
       <li><a class="nav-link" href="../resume.html">Résumé</a></li>
-      <li><button type="button" class="theme-toggle" aria-label="Switch theme" hidden=""><span class="i-sun" hidden=""><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg></span><span class="i-moon"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg></span></button></li>
+      <li hidden=""><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden=""><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg></span><span class="i-moon"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg></span></button></li>
     </ul>
   </nav>
 </header>
@@ -217,7 +217,8 @@ ul.task-list li input[type="checkbox"] {
     }
     var toggle = document.querySelector(".theme-toggle");
     if (toggle) {
-      // Rendered hidden so it is not a dead control without JavaScript; shown once it can work.
+      // Its list item is rendered hidden so there is no dead control (or stray bullet) without JavaScript; shown once it can work.
+      if (toggle.parentNode) toggle.parentNode.hidden = false;
       toggle.hidden = false;
       label(toggle);
       toggle.addEventListener("click", function () {

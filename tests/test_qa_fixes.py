@@ -73,8 +73,16 @@ class SmallCssFixTests(unittest.TestCase):
         self.assertRegex(block(CSS, ':root[data-theme="dark"]'), r"color-scheme: dark;")
 
     def test_four_cards_use_two_columns_only_above_phone_width(self):
-        self.assertRegex(CSS, r"@media \(min-width: 560px\) \{\s*\.cards:has\(> \.card:nth-child\(4\):last-child\) "
+        self.assertRegex(CSS, r"@media \(min-width: 560px\) \{\s*\.cards:not\(\.cards-wide\):has\(> \.card:nth-child\(4\):last-child\) "
                               r"\{ grid-template-columns: repeat\(2, minmax\(0, 1fr\)\); \}")
+
+    def test_wide_card_groups_keep_their_own_column_rule(self):
+        # .cards-wide uses a 300px minimum column; the four-card 2x2 rule must not override it.
+        self.assertNotRegex(CSS, r"\.cards:has\(> \.card:nth-child\(4\)")
+
+    def test_published_stylesheet_is_the_source_stylesheet(self):
+        published = (DOCS / "styles.css").read_text(encoding="utf-8")
+        self.assertEqual(published, CSS)
 
     def test_resume_action_buttons_tighten_on_phones(self):
         phone = block(CSS, "@media (max-width: 480px)")
@@ -124,15 +132,17 @@ class DiagramHardeningTests(unittest.TestCase):
 
 
 class ThemeToggleTests(unittest.TestCase):
-    def test_toggle_is_hidden_in_markup_and_revealed_by_the_script(self):
+    def test_toggle_item_is_hidden_in_markup_and_revealed_by_the_script(self):
         for page in DOCS.rglob("*.html"):
             if "site_libs" in page.parts:
                 continue
             html = page.read_text(encoding="utf-8")
-            self.assertRegex(html, r'<button type="button" class="theme-toggle" aria-label="Switch theme" hidden(?:="")?>',
+            self.assertRegex(html, r'<li hidden(?:="")?><button type="button" class="theme-toggle" aria-label="Switch theme">',
                              page.name)
-        self.assertIn("toggle.hidden = false;", (ROOT / "partials/scripts.html").read_text(encoding="utf-8"))
-        self.assertIn(" hidden>", (ROOT / "scripts/site.lua").read_text(encoding="utf-8"))
+        script = (ROOT / "partials/scripts.html").read_text(encoding="utf-8")
+        self.assertIn("toggle.parentNode.hidden = false;", script)
+        self.assertIn("toggle.hidden = false;", script)
+        self.assertIn("<li hidden>", (ROOT / "scripts/site.lua").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
