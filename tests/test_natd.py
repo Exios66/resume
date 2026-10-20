@@ -25,21 +25,39 @@ class NatdTests(unittest.TestCase):
         _, parser = self.read_page(name)
         return " ".join("".join(data for data, _ in parser.text_fragments).split())
 
-    def test_provenance_caveat_is_visible_on_the_case_study_and_the_report(self):
+    def test_pilot_and_withheld_data_caveat_leads_the_case_study_and_the_report(self):
         for name in (STUDY, REPORT):
             with self.subTest(page=name):
                 _, parser = self.read_page(name)
                 caveats = [attrs for _, attrs, _ in parser.elements if "caveat" in checks.classes(attrs)]
                 self.assertTrue(caveats, f"{name} lost its caveat")
                 first = parser.text(caveats[0])
-                self.assertIn("provenance", first.lower())
-                self.assertRegex(first, r"(?i)not confirmed|unconfirmed")
-                self.assertIn("exploratory", first.lower())
+                self.assertIn("pilot", first.lower())
+                self.assertIn("withheld", first.lower())
+                self.assertIn("authenticated", first.lower())
                 # The caveat comes before the first findings heading, so it leads the page.
                 names = [(tag, attrs) for tag, attrs, _ in parser.elements]
                 first_caveat = next(i for i, (_, attrs) in enumerate(names) if attrs is caveats[0])
                 first_h2 = next(i for i, (tag, _) in enumerate(names) if tag == "h2")
                 self.assertLess(first_caveat, first_h2 + 1)
+
+    def test_unauthenticated_recordings_are_not_published_anywhere(self):
+        banned = ("theta", "P300", "N400", "late positive potential", "pupil", "saccade", "gaze",
+                  "bpm", "NASA-TLX", "r = 0.97", "r = 0.99", "Gaze-Tracker", "BrainVision",
+                  "oximeter")
+        for name in (STUDY, REPORT, "projects/index.html", "research.html"):
+            text = self.page_text(name)
+            for word in banned:
+                with self.subTest(page=name, word=word):
+                    self.assertNotIn(word.lower(), text.lower())
+        for name in (STUDY, REPORT):
+            _, parser = self.read_page(name)
+            headings = [parser.text(attrs).lower() for tag, attrs, _ in parser.elements
+                        if tag in ("h2", "h3")]
+            for banned_heading in ("physiology", "neural markers", "eye tracking", "self-reported workload",
+                                   "profiles across measures"):
+                with self.subTest(page=name, heading=banned_heading):
+                    self.assertFalse([h for h in headings if banned_heading in h])
 
     def test_byline_is_the_site_owner_and_the_draft_byline_is_not_published(self):
         for name in (STUDY, REPORT):
@@ -65,7 +83,7 @@ class NatdTests(unittest.TestCase):
         for text in ("13.3-point gap", "95% confidence interval of 6.3 to 20.3", "t(14.5) = 4.04",
                      "Mann-Whitney p = 0.004", "+11.6 points (95% CI 2.9 to 20.3, p = 0.013)",
                      "paired t(4) = 4.8, p = 0.009", "exact 95% CI 0.1% to 27.3%",
-                     "9.1%; 95% CI 0.2% to 41.3%", "r = 0.97", "NASA-TLX 4.77"):
+                     "9.1%; 95% CI 0.2% to 41.3%"):
             self.assertIn(text, report)
 
     def test_hedges_from_the_source_are_kept(self):
@@ -84,7 +102,7 @@ class NatdTests(unittest.TestCase):
         self.assertEqual(sessions, [9, 4, 5])
         self.assertEqual(sum(sessions), 18)
 
-    def test_references_list_30_works_each_with_a_link_and_verification_tag(self):
+    def test_references_list_each_work_each_with_a_link_and_verification_tag(self):
         _, parser = self.read_page(REPORT)
         h2s = [(i, attrs) for i, (tag, attrs, _) in enumerate(parser.elements) if tag == "h2"]
         heading = next(i for i, attrs in h2s if checks.attr(attrs, "id") == "references")
@@ -92,7 +110,7 @@ class NatdTests(unittest.TestCase):
         for tag, attrs, ancestors in parser.elements[heading:]:
             if tag == "li":
                 items.append(attrs)
-        self.assertEqual(len(items), 30)
+        self.assertEqual(len(items), 17)
         for item in items:
             with self.subTest(reference=parser.text(item)[:40]):
                 self.assertRegex(parser.text(item), r"\[(Verified|Partly verified)[^\]]*\]")

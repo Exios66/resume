@@ -1,6 +1,6 @@
 ---
 pagetitle: "The Neural Architecture of Truth and Deception: technical report — Jack J. Burleson"
-description: "Technical report on an exploratory study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning, workload, physiology, EEG, eye tracking, detection, clusters, limits and 30 references."
+description: "Technical report on an exploratory study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references. The physiological, EEG, eye-tracking and workload data are withheld until they are authenticated."
 ---
 
 ::: {.page}
@@ -18,23 +18,22 @@ description: "Technical report on an exploratory study of nine participants and 
 By Jack J. Burleson. Cognitive Neuroscience Lab, UW–Parkside; advisor Dr. Melissa Gregg.
 
 ::: {.caveat}
-**Provenance of the physiological and neural recordings is unconfirmed.** Within each persona, values from different instruments are unusually tight and correlate almost perfectly across modalities. I could not tell from the files whether they are raw measurements, session-level summaries, smoothed or modelled values, or simulated. The heart rate, SpO₂, EEG and eye-tracking results below are exploratory and should not be cited until that is confirmed. The sections on learning and detection come first for that reason. The Interpretation and limitations section gives the details.
+**Pilot study; part of the data is withheld.** This study was only ever fully tested under pilot conditions. The physiological (heart rate and SpO₂), EEG, eye-tracking and self-reported workload data were also collected, but they are not reported here and will not be until every recording has been authenticated. This report covers the design, the literature, exam-score learning outcomes, detection and clusters.
 :::
 
 ## Overview
 
 Across 18 conversations with five chatbot personas, exam scores rose 12.3 points after the two helpful personas and fell 1.0 point after the three deceitful ones, while participants flagged deception in only 1 of 18 sessions.
 
-Nine participants each held two conversations with chatbots running different system-prompt personas, giving 18 sessions. Athena and Milgrim were instructed to be helpful; Alan, Enigma and Scarlet were instructed to deceive. Before and after each session I measured exam performance, self-reported workload (NASA-TLX), heart rate and blood oxygen, EEG markers, eye movements, and whether the participant flagged the disinformation.
+Nine participants each held two conversations with chatbots running different system-prompt personas, giving 18 sessions. Athena and Milgrim were instructed to be helpful; Alan, Enigma and Scarlet were instructed to deceive. Before and after each session I measured exam performance and recorded whether the participant flagged the disinformation. Physiological, EEG, eye-tracking and workload recordings were collected as well and are withheld (see the note above).
 
 {{< include ../../partials/diagrams/_natd.qmd >}}
 
 - **Learning.** Exam scores rose 12.3 points on average after helpful personas (7 sessions) and fell 1.0 point after deceitful ones (11 sessions). The 13.3-point gap has a 95% confidence interval of 6.3 to 20.3. Helpful sessions also started 18 points lower, so part of the gain is probably regression to the mean.
 - **Detection.** Participants flagged deception in 1 of 18 sessions (5.6%; 95% CI 0.1% to 27.3%), and in 1 of the 11 sessions with a deceitful persona.
-- **Workload (exploratory; see the provenance caveat).** Heart rate, EEG markers and pupil size all rose from Athena to Enigma sessions and moved together. Self-reported workload did not follow the same ordering.
 - **Reading the numbers.** This is a nine-person exploratory study. Treat every p-value as descriptive: sessions are nested within participants, and persona is partly confounded with person.
 
-**Data note.** Within each persona, values for different instruments are unusually tight and correlate almost perfectly across modalities (for example theta power with heart rate, r = 0.97). Please confirm the provenance of the recordings before citing the physiological results; the Interpretation section says more. The analysis uses the supplied CSV files throughout, which disagree with the earlier draft report in several places, listed under Method.
+**Data note.** The analysis uses the supplied per-session CSV files, which disagree with the earlier draft report in several places, listed under Method. The recordings that are withheld were excluded from this version on purpose, not because they were analyzed and dropped.
 
 ## Literature review
 
@@ -54,17 +53,9 @@ GPT-3 complied with requests for disinformation tweets 80 of 102 times, so a sys
 
 People reproduce errors they read, even when they knew the right answer beforehand ([Fazio et al., 2013](https://doi.org/10.1037/a0028649)). Explicit warnings cut but did not eliminate reliance on misinformation ([Ecker et al., 2010](https://doi.org/10.3758/MC.38.8.1087)). AI tutoring results depend on pedagogy. Unrestricted GPT access raised practice grades 48% but lowered later unassisted exam scores 17% among nearly 1,000 students, whereas a hint-giving tutor avoided that harm ([Bastani et al., 2025](https://doi.org/10.1073/pnas.2422633122)). A physics trial of 233 students favored a scripted AI tutor ([Kestin et al., 2025](https://doi.org/10.1038/s41598-025-97652-6)). No controlled study of a deliberately deceitful tutor was found. Any gain for the helpful personas is a persona-plus-pedagogy effect, not helpfulness alone. Gains from low baselines also need care, because regression to the mean inflates change when groups differ at baseline ([Barnett et al., 2005](https://doi.org/10.1093/ije/dyh299)).
 
-### EEG markers are validated for trial-locked tasks, not free conversation
-
-P300 distinguished knowledgeable from naive participants in concealed-information tests ([Farwell & Donchin, 1991](https://doi.org/10.1111/j.1469-8986.1991.tb01990.x)), but those are small laboratory studies, and added task load itself lowers P300 amplitude ([Rosenfeld, 2019](https://doi.org/10.1111/psyp.13362)). The N400 tracks meaning and world-knowledge conflict ([Hagoort et al., 2004](https://doi.org/10.1126/science.1095455)). The late positive potential (LPP) indexes stimulus significance, so it is best read as salience, not as a deception signature ([Hajcak & Foti, 2020](https://doi.org/10.1111/psyp.13570)). Frontal theta rises and alpha falls with load in the sources I opened ([Borghini et al., 2014](https://doi.org/10.1016/j.neubiorev.2012.10.003)). Lying engages executive control, so inferring detection from frontal activity risks reverse inference ([Christ et al., 2009](https://doi.org/10.1093/cercor/bhn189)). I found no EEG study of helpful versus deceitful chatbot personas, only bioRxiv preprints on trust in AI partners.
-
-### Workload measures disagree, and webcam sensing narrows what I can claim
-
-NASA-TLX comparisons across participants are weak, so within-person contrasts are the defensible use ([Longo et al., 2022](https://doi.org/10.3389/fpsyg.2022.883321)). No single physiological measure reliably tracks workload ([Charles & Nixon, 2019](https://doi.org/10.1016/j.apergo.2018.08.028)). Pupil dilation is the best-supported ocular index but is confounded by luminance, arousal and affect ([van der Wel & van Steenbergen, 2018](https://doi.org/10.3758/s13423-018-1432-y)). Webcam gaze offsets of 181 to 264 px and 30 Hz sampling limit what a webcam can resolve ([Yang & Krajbich, 2021](https://doi.org/10.1017/S1930297500008512); [Kaduk et al., 2024](https://doi.org/10.3758/s13428-023-02237-8)), and no source validated webcam pupil diameter or blink detection. Performance and subjective workload can dissociate ([Yeh & Wickens, 1988](https://ntrs.nasa.gov/citations/19880042174)), and lower reported load has coexisted with weaker reasoning ([Stadler et al., 2024](https://doi.org/10.1016/j.chb.2024.108386)).
-
 ### What is missing
 
-The search found no verified study that applies Truth-Default Theory to human-chatbot dialogue with deceitful personas, varies system-prompted honesty and measures user beliefs, tests a deceitful tutor with human learners, records EEG during such a conversation, or validates webcam pupil and SpO₂ instruments for workload. These are "not found" results from a limited search. They justify an exploratory design and mean the study cannot claim precedent.
+The search found no verified study that applies Truth-Default Theory to human-chatbot dialogue with deceitful personas, varies system-prompted honesty and measures user beliefs, tests a deceitful tutor with human learners, or records physiological responses during such a conversation. These are "not found" results from a limited search. They justify an exploratory design and mean the study cannot claim precedent.
 
 ## Method
 
@@ -73,17 +64,13 @@ Each of nine participants (mean age 23.8, SD 3.3, range 20 to 31; 7 men and 2 wo
 | Modality | Equipment or instrument | What it captured |
 | --- | --- | --- |
 | Learning | Introductory and exit exams adapted from Common Core and AP formats | Exam score (%) before and after each conversation |
-| Workload | NASA-TLX between conversations | Self-reported workload per session |
-| Cardiovascular | Wrist-mounted pulse oximeter | Mean heart rate (bpm) and SpO₂ (%) |
-| EEG | 32-channel BrainVision system; BrainVision Analyzer, EEGLAB, MNE-Python | Delta, theta, alpha and beta power; P300 amplitude and latency; N400; LPP |
-| Eye tracking | Logitech 4K webcam with a customized fork of the open-source Gaze-Tracker | Pupil diameter, fixation duration, saccade velocity, blink rate, dwell and off-screen time, gaze entropy, engagement index |
 | Detection | Participant response | Whether the participant flagged the disinformation |
 
 The persona profiles, question database and scripts are in the [project repository](https://github.com/Exios66/truth-deception-architecture).
 
-**Analysis.** All results use the supplied per-session CSV files as the source of truth. Analyses are descriptive and run at session level: Welch t-tests, Mann-Whitney tests, t-based 95% confidence intervals for mean change, exact Clopper-Pearson intervals for proportions, Spearman correlations, and an ordinary least squares adjustment for baseline score. Because each participant contributes two sessions, I add a within-participant contrast where the design allows it. The mixed-effects model in the earlier draft report was not refit for this version, so those p-values would be too small if read as independent tests. EEG and eye-tracking columns carry no units in the files, so values are reported as supplied.
+**Analysis.** All results use the supplied per-session CSV files as the source of truth. Analyses are descriptive and run at session level: Welch t-tests, Mann-Whitney tests, t-based 95% confidence intervals for mean change, exact Clopper-Pearson intervals for proportions, Spearman correlations, and an ordinary least squares adjustment for baseline score. Because each participant contributes two sessions, I add a within-participant contrast where the design allows it. The mixed-effects model in the earlier draft report was not refit for this version, so those p-values would be too small if read as independent tests.
 
-**Where the CSV files and the earlier draft disagree.** The files give a different persona mix, cluster sizes, mean age (23.8 against 23.2), workload spreads and exam statistics (mean exam score 44.8% before and 49.0% after, against 45.2% and 46.5%). The earlier draft's non-significant overall ANOVA across chatbots no longer holds in the same form; the persona effect on exam change is now significant (see Learning outcomes). Wherever the two sources differ, this report follows the CSV files.
+**Where the CSV files and the earlier draft disagree.** The files give a different persona mix, cluster sizes, mean age (23.8 against 23.2), exam statistics (mean exam score 44.8% before and 49.0% after, against 45.2% and 46.5%). The earlier draft's non-significant overall ANOVA across chatbots no longer holds in the same form; the persona effect on exam change is now significant (see Learning outcomes). Wherever the two sources differ, this report follows the CSV files.
 
 ## Learning outcomes
 
@@ -136,143 +123,52 @@ Two patterns stand out. Clusters follow people more than personas: eight of the 
 
 The clusters were formed from these same exam scores, so the group differences describe the clustering and do not test anything. They are best used to generate hypotheses about who benefits, such as learners with low baselines paired with a helpful persona, to check in a larger sample.
 
-## Self-reported workload
-
-::: {.caveat}
-**Exploratory from here to Profiles across measures.** The provenance of the physiological and neural recordings is unconfirmed (see Interpretation and limitations), and the workload ratings are unusually consistent within each persona too.
-:::
-
-Enigma sessions felt hardest (NASA-TLX 4.77), well above the overall mean of 3.22, and ratings rank Athena (3.43), Scarlet (2.98), Milgrim (2.60) and Alan (2.43) below it.
-
-The spread between personas is significant (ANOVA p < 0.001; Kruskal-Wallis p = 0.003), but sessions within one persona differ by only 0.05 to 0.16 points, which is tighter than ratings from separate people usually are.
-
-Two features matter for interpretation. First, the ranking is not helpful-versus-deceitful: Athena, a helpful persona, was rated more demanding than Alan and Scarlet, two deceitful ones, so participants did not simply rate deceit as harder work. Second, self-rating tracks the physiological markers weakly. Across sessions, TLX correlates with heart rate at ρ = 0.35 (p = 0.15), with theta power at 0.25 and with pupil diameter at 0.23, none significant. Among the seven High-workload sessions, Enigma (rated 4.6 to 4.9) and Scarlet (2.9 to 3.2) had the same heart rate, 94.9 and 94.8 bpm, yet very different ratings. This fits the literature: performance, subjective workload and physiology can dissociate, and lower reported load does not mean better processing.
-
-## Physiology
-
-Heart rate was 21 bpm higher and SpO₂ 1.3 points lower in High-workload sessions than in Low-workload ones, and the three groups do not overlap.
-
-| Workload group | Sessions | Mean heart rate (bpm) | Mean SpO₂ (%) |
-| --- | --- | --- | --- |
-| Low | 8 | 73.8 | 98.2 |
-| Emergent | 3 | 83.8 | 97.4 |
-| High | 7 | 94.8 | 96.8 |
-
-Heart rate and SpO₂ are almost mirror images across sessions (r = −0.99).
-
-Two cautions apply. The workload groups were defined from these same physiological signals, so the clean separation is built in and is not an independent finding; I therefore report no test statistic for it. The groups are also tied to persona: all three Enigma sessions and four of the five Scarlet sessions fall in High, all four Athena sessions and two of the three Milgrim sessions fall in Low, and two of the three Alan sessions fall in Emergent. A wrist oximeter measures heart rate well but SpO₂ workload effects of about a point may be small next to device error, and the literature review found no evidence that wrist SpO₂ tracks workload at all, so SpO₂ here is exploratory.
-
-## Neural markers
-
-Seven of the eight EEG markers shift in the same direction, in the same persona order, from Athena sessions (lowest load) through Milgrim, Alan and Scarlet to Enigma sessions (highest).
-
-| Marker | Athena sessions | Enigma sessions |
-| --- | --- | --- |
-| Theta power | 5.95 | 9.27 |
-| P300 latency (ms) | 335 | 421 |
-| N400 | −1.50 | −3.63 |
-| LPP | 2.85 | 5.10 |
-| Delta power | 11.4 | 16.5 |
-| Alpha power | 9.15 | 5.97 |
-| Beta power | 5.12 | 6.57 |
-
-From Athena to Enigma, theta power rises from 5.95 to 9.27 and P300 latency lengthens from 335 to 421 ms. The N400 deepens from −1.50 to −3.63 and the LPP grows from 2.85 to 5.10. Slow-wave power follows the same direction (delta 11.4 to 16.5), alpha falls (9.15 to 5.97) and beta edges up (5.12 to 6.57). P300 amplitude is the exception: it is highest for Enigma (6.73) but lowest for Alan (4.10), not Athena (4.75).
-
-**How to read these.** The ordering matches the heart rate and workload-group ordering, not a deceit gradient. Within the High-workload sessions Enigma and Scarlet differ only modestly (theta 9.27 against 8.75; P300 latency 421 against 406 ms), so these markers track workload group more closely than persona. In the literature, frontal theta rising and alpha falling is a load signature, the N400 indexes meaning and world-knowledge conflict, and the LPP indexes salience. None is a validated deception signature, and none has been validated during free conversation with a chatbot.
-
-**Detection and exploratory correlations.** Only one session produced a detection (S07, a Scarlet session in the High group; theta 8.7, P300 latency 405 ms, close to Scarlet's other sessions), so no neural signature of noticing deception can be estimated. Across sessions, theta power correlates with heart rate at r = 0.97, and exam change correlates negatively with theta (ρ = −0.57, p = 0.013). Persona drives both, so the second correlation is not evidence that EEG predicts learning.
-
-Power and amplitude units are not given in the data files, and epoch locking to individual words versus whole messages was not specified, so the absolute values should not be compared with published ERP studies.
-
-## Eye tracking and attention
-
-Pupils widen, fixations lengthen and engagement falls along the same persona order as the EEG markers, with Enigma sessions at the demanding end.
-
-| Measure | Athena sessions | Enigma sessions |
-| --- | --- | --- |
-| Pupil diameter (mm) | 3.45 | 4.93 |
-| Fixation duration (ms) | 251 | 433 |
-| Saccade velocity (deg/s) | 366 | 502 |
-| Blink rate (per minute) | 13.3 | 19.5 |
-| Off-screen time (s) | 3.9 | 9.2 |
-| Time looking at the chatbot (s) | 49.4 | 36.2 |
-| Gaze entropy | 0.63 | 0.82 |
-| Engagement index | 83.0 | 59.9 |
-
-From Athena to Enigma sessions, mean pupil diameter rises from 3.45 to 4.93 mm and fixation duration from 251 to 433 ms. Saccade velocity rises from 366 to 502 deg/s, blink rate from 13.3 to 19.5 per minute, and off-screen time from 3.9 to 9.2 s. Time spent looking at the chatbot falls from 49.4 to 36.2 s, gaze entropy rises from 0.63 to 0.82, and the engagement index drops from 83.0 to 59.9.
-
-The eye measures sit close to the physiological ones: across sessions, pupil diameter correlates with theta power at r = 0.99 and with the engagement index at r = −0.99. Exam change rises with engagement (ρ = 0.55, p = 0.017), but persona drives both, so this is a confound to resolve, not a result.
-
-**Limits of webcam sensing.** A consumer webcam samples slowly (about 30 Hz), and published webcam validations report gaze offsets of roughly 180 to 260 px and coarse resolution. I found no validation of webcam pupil diameter or blink detection, so the pupil, blink and saccade values are best read as indicative rankings, not absolute measurements. Pupil size is also confounded by screen luminance and by text volume, which I cannot rule out differed by persona. Gaze entropy depends on how areas of interest are defined, and the files do not say how they were. Units are as supplied.
-
-## Profiles across measures
-
-Heart rate, EEG and eye markers form one gradient across the five personas, while self-rated workload and exam change follow different orderings.
-
-Athena sits at the low-load end of eight of the ten rows and Enigma at the high-load end, with Milgrim, Alan and Scarlet between them in a consistent order. Two rows break the pattern. NASA-TLX places Athena above Scarlet, Alan and Milgrim. Exam change puts Athena and Milgrim at the top and Alan and Scarlet at the bottom, with Enigma in the middle (+4.7), so learning follows neither the workload gradient nor a plain helpful-versus-deceitful split.
-
-The practical reading is that the body, brain and eye measures say the same thing about the same sessions, while what participants reported and what they learned say something different. The persona with the highest physiological load, Enigma, was followed by a modest gain, while Alan, with a low-to-moderate load, was followed by a small loss. Whether the shared gradient reflects real effort, or reflects how the recordings were produced, is the question the next section raises.
-
 ## Interpretation and limitations
 
-The supplied data support three modest conclusions: helpful personas were followed by larger exam gains than deceitful ones, almost nobody flagged the deceit, and body, brain and eye markers move together across personas while self-rated workload does not. None is established, because the study is small and several confounds are open.
+The data reported here support two modest conclusions: helpful personas were followed by larger exam gains than deceitful ones, and almost nobody flagged the deceit. Neither is established, because this was a pilot-scale study and several confounds are open.
 
 **What the data support.**
 
 - Exam gains differ by persona, by 13.3 points between helpful and deceitful groups (95% CI 6.3 to 20.3), and the sign held in all five participants who met one of each.
 - Detection was rare (1 of 18), consistent with a truth default, but a 95% interval of 0.1% to 27.3% means the rate is poorly pinned down.
-- Persona rankings on heart rate, EEG and eye markers agree, and none of them match self-reported workload.
 
 **What they do not support.**
 
 - That deceit causes worse learning. Helpful sessions started 18 points lower, persona is partly confounded with person (each person met two of five personas), and each persona has only three to five sessions.
-- That any EEG or eye marker detects deception. The markers behave like workload and salience measures, and only one session involved a detection.
+- That anything here detects or explains deception. Only one session involved a detection.
 - Comparisons with published effect sizes beyond direction. Exam reliability, retest effects and item-level data are not available.
 
-**Provenance of the recordings.** Within each persona, readings from different instruments agree to a degree that is rare in human data recorded from separate sensors. NASA-TLX scores for a persona differ by 0.05 to 0.16 points; theta power correlates with heart rate at r = 0.97 and with pupil diameter at r = 0.99 across sessions; pupil diameter and engagement correlate at r = −0.99; and several markers (such as P300 latency, fixation duration and engagement index) separate Enigma from Athena sessions with no overlap. Real recordings from nine people with a webcam and a wrist oximeter normally show more session-to-session noise. I could not tell from the files whether the values are raw measurements, session-level summaries, smoothed or modelled values, or simulated. This should be confirmed and stated in the Method before the physiological and neural results are cited publicly. If the values are summaries or derived scores, the report should say so, and the correlations above describe the summarizing process as much as the participants.
+**What is withheld.** Heart rate, SpO₂, EEG, eye-tracking and self-reported workload data were collected in the same sessions. They are not reported on this site until all of the data have been authenticated, and nothing in this report depends on them.
 
 **Other limitations.**
 
 - Nine participants, 18 sessions, 7 men and 2 women, aged 20 to 31.
 - Sessions are nested within participants, and mixed-effects models were not refit for this version.
-- EEG and eye-tracking units are unspecified, and webcam pupil and blink measures are unvalidated.
-- Workload groups and clusters were derived from the same data they are used to describe.
+- Clusters were derived from the same exam data they are used to describe.
 - The literature review rests on pages that were reachable during the search; several citations are marked unverified.
 
-**Next steps.** Replicate with more participants and balanced persona assignment, randomize persona order, record item-level exam data and the falsity of each persona's output, pre-specify EEG epoch locking, and validate webcam pupil and blink against a reference tracker. Fit mixed-effects models with participant random intercepts once the data provenance is confirmed.
+**Next steps.** Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and the falsity of each persona's output. Authenticate the physiological and neural recordings before analyzing or publishing them, then fit mixed-effects models with participant random intercepts.
 
 ## References
 
-These are the 30 works cited above, out of about 92 in the full literature review. Each carries the verification status recorded during the search: verified means the bibliographic details were confirmed on a page that was opened; partly verified means at least one detail is unconfirmed, and the gap is stated.
+
+These are the 17 works cited above, out of about 92 in the full literature review (delivered separately as a file). Each carries the verification status recorded during the search: verified means the bibliographic details were confirmed on a page that was opened; partly verified means at least one detail is unconfirmed, and the gap is stated.
 
 - Barnett, A. G., van der Pols, J. C., & Dobson, A. J. (2005). Regression to the mean: What it is and how to deal with it. *International Journal of Epidemiology, 34*(1), 215-220. [doi:10.1093/ije/dyh299](https://doi.org/10.1093/ije/dyh299) \[Partly verified: DOI relayed by an aggregator\]
 - Bastani, H., Bastani, O., Sungu, A., Ge, H., Kabakçı, Ö., & Mariman, R. (2025). Generative AI without guardrails can harm learning: Evidence from high school mathematics. *Proceedings of the National Academy of Sciences, 122*(26), e2422633122. [doi:10.1073/pnas.2422633122](https://doi.org/10.1073/pnas.2422633122) \[Verified via repository record\]
 - Bond, C. F., Jr., & DePaulo, B. M. (2006). Accuracy of deception judgments. *Personality and Social Psychology Review, 10*(3), 214-234. [doi:10.1207/s15327957pspr1003_2](https://doi.org/10.1207/s15327957pspr1003_2) \[Verified\]
-- Borghini, G., Astolfi, L., Vecchiato, G., Mattia, D., & Babiloni, F. (2014). Measuring neurophysiological signals in aircraft pilots and car drivers for the assessment of mental workload, fatigue and drowsiness. *Neuroscience & Biobehavioral Reviews, 44*, 58-75. [doi:10.1016/j.neubiorev.2012.10.003](https://doi.org/10.1016/j.neubiorev.2012.10.003) \[Verified\]
-- Charles, R. L., & Nixon, J. (2019). Measuring mental workload using physiological measures: A systematic review. *Applied Ergonomics, 74*, 221-232. [doi:10.1016/j.apergo.2018.08.028](https://doi.org/10.1016/j.apergo.2018.08.028) \[Verified\]
-- Christ, S. E., Van Essen, D. C., Watson, J. M., Brubaker, L. E., & McDermott, K. B. (2009). The contributions of prefrontal cortex and executive control to deception: Evidence from activation likelihood estimate meta-analyses. *Cerebral Cortex, 19*(7), 1557-1566. [doi:10.1093/cercor/bhn189](https://doi.org/10.1093/cercor/bhn189) \[Verified\]
 - Clare, D. D. (2019). Documenting the truth-default: The low frequency of spontaneous unprompted veracity assessments in deception detection. *Human Communication Research, 45*(3), 286-308. [doi:10.1093/hcr/hqz001](https://doi.org/10.1093/hcr/hqz001) \[Partly verified: the author list is unconfirmed; Levine (2014) cited an earlier version as Clare & Levine\]
 - Ecker, U. K. H., Lewandowsky, S., & Tang, D. T. W. (2010). Explicit warnings reduce but do not eliminate the continued influence of misinformation. *Memory & Cognition, 38*(8), 1087-1100. [doi:10.3758/MC.38.8.1087](https://doi.org/10.3758/MC.38.8.1087) \[Verified\]
-- Farwell, L. A., & Donchin, E. (1991). The truth will out: Interrogative polygraphy ("lie detection") with event-related brain potentials. *Psychophysiology, 28*(5), 531-547. [doi:10.1111/j.1469-8986.1991.tb01990.x](https://doi.org/10.1111/j.1469-8986.1991.tb01990.x) \[Verified\]
 - Fazio, L. K., Barber, S. J., Rajaram, S., Ornstein, P. A., & Marsh, E. J. (2013). Creating illusions of knowledge: Learning errors that contradict prior knowledge. *Journal of Experimental Psychology: General, 142*(1), 1-5. [doi:10.1037/a0028649](https://doi.org/10.1037/a0028649) \[Verified\]
-- Hagoort, P., Hald, L., Bastiaansen, M., & Petersson, K. M. (2004). Integration of word meaning and world knowledge in language comprehension. *Science, 304*(5669), 438-441. [doi:10.1126/science.1095455](https://doi.org/10.1126/science.1095455) \[Verified\]
-- Hajcak, G., & Foti, D. (2020). Significance?... Significance! Empirical, methodological, and theoretical connections between the late positive potential and P300 as neural responses to stimulus significance: An integrative review. *Psychophysiology, 57*, e13570. [doi:10.1111/psyp.13570](https://doi.org/10.1111/psyp.13570) \[Verified\]
 - Hartwig, M., & Bond, C. F., Jr. (2011). Why do lie-catchers fail? A lens model meta-analysis of human lie judgments. *Psychological Bulletin, 137*(4), 643-659. [doi:10.1037/a0023589](https://doi.org/10.1037/a0023589) \[Verified\]
 - Jakesch, M., Hancock, J. T., & Naaman, M. (2023). Human heuristics for AI-generated language are flawed. *Proceedings of the National Academy of Sciences*. [doi:10.1073/pnas.2208839120](https://doi.org/10.1073/pnas.2208839120) \[Partly verified: volume, issue and article number unverified\]
-- Kaduk, T., Goeke, C., Finger, H., & König, P. (2024). Webcam eye tracking close to laboratory standards: Comparing a new webcam-based system and the EyeLink 1000. *Behavior Research Methods, 56*(5), 5002-5022. [doi:10.3758/s13428-023-02237-8](https://doi.org/10.3758/s13428-023-02237-8) \[Verified; the source page had internal inconsistencies on data-loss figures\]
 - Kestin, G., Miller, K., Klales, A., Milbourne, T., & Ponti, G. (2025). AI tutoring outperforms in-class active learning: An RCT introducing a novel research-based design in an authentic educational setting. *Scientific Reports, 15*, 17458. [doi:10.1038/s41598-025-97652-6](https://doi.org/10.1038/s41598-025-97652-6) \[Verified\]
 - Kim, S. S. Y., Liao, Q. V., Vorvoreanu, M., Ballard, S., & Vaughan, J. W. (2024). "I'm not sure, but...": Examining the impact of large language models' uncertainty expression on user reliance and trust. In *Proceedings of the 2024 ACM Conference on Fairness, Accountability, and Transparency (FAccT '24)*. [doi:10.1145/3630106.3658941](https://doi.org/10.1145/3630106.3658941) \[Verified\]
 - Levine, T. R. (2014). Truth-default theory (TDT): A theory of human deception and deception detection. *Journal of Language and Social Psychology, 33*(4), 378-392. [doi:10.1177/0261927X14535916](https://doi.org/10.1177/0261927X14535916) \[Verified\]
-- Longo, L., Wickens, C. D., Hancock, G., & Hancock, P. A. (2022). Human mental workload: A survey and a novel inclusive definition. *Frontiers in Psychology, 13*, 883321. [doi:10.3389/fpsyg.2022.883321](https://doi.org/10.3389/fpsyg.2022.883321) \[Verified; a survey, not a systematic review\]
 - Park, H. S., & Levine, T. R. (2015). Base rates, deception detection, and deception theory: A reply to Burgoon (2015). *Human Communication Research, 41*(3), 350-366. [doi:10.1111/hcre.12066](https://doi.org/10.1111/hcre.12066) \[Verified\]
-- Rosenfeld, J. P. (2019). P300 in detecting concealed information and deception: A review. *Psychophysiology*, e13362. [doi:10.1111/psyp.13362](https://doi.org/10.1111/psyp.13362) \[Partly verified: volume and issue not shown\]
 - Serota, K. B., Levine, T. R., & Boster, F. J. (2010). The prevalence of lying in America: Three studies of self-reported lies. *Human Communication Research, 36*, 2-25. [doi:10.1111/j.1468-2958.2009.01366.x](https://doi.org/10.1111/j.1468-2958.2009.01366.x) \[Partly verified: issue number not shown\]
 - Sharma, M., Tong, M., Korbak, T., Duvenaud, D., Askell, A., Bowman, S., et al. (2024). Towards understanding sycophancy in language models. In *Proceedings of the 12th International Conference on Learning Representations (ICLR 2024)*. [ICLR 2024 proceedings page](https://proceedings.iclr.cc/paper_files/paper/2024/hash/0105f7972202c1d4fb817da9f21a9663-Abstract-Conference.html) \[Partly verified: author initials unchecked\]
 - Spitale, G., Biller-Andorno, N., & Germani, F. (2023). AI model GPT-3 (dis)informs us better than humans. *Science Advances, 9*(26), eadh1850. [doi:10.1126/sciadv.adh1850](https://doi.org/10.1126/sciadv.adh1850) \[Verified\]
-- Stadler, M., Bannert, M., & Sailer, M. (2024). Cognitive ease at a cost: LLMs reduce mental effort but compromise depth in student scientific inquiry. *Computers in Human Behavior, 160*, 108386. [doi:10.1016/j.chb.2024.108386](https://doi.org/10.1016/j.chb.2024.108386) \[Verified; abstract only\]
-- van der Wel, P., & van Steenbergen, H. (2018). Pupil dilation as an index of effort in cognitive control tasks: A review. *Psychonomic Bulletin & Review, 25*(6), 2005-2015. [doi:10.3758/s13423-018-1432-y](https://doi.org/10.3758/s13423-018-1432-y) \[Verified\]
-- Yang, X., & Krajbich, I. (2021). Webcam-based online eye-tracking for behavioral research. *Judgment and Decision Making, 16*(6), 1485-1505. [doi:10.1017/S1930297500008512](https://doi.org/10.1017/S1930297500008512) \[Partly verified: DOI inferred from a PDF filename\]
-- Yeh, Y.-Y., & Wickens, C. D. (1988). Dissociation of performance and subjective measures of workload. *Human Factors, 30*. [NASA Technical Reports Server record](https://ntrs.nasa.gov/citations/19880042174) \[Partly verified: issue and pages unverified; abstract only\]
 - Zheng, M., Pei, J., Logeswaran, L., Lee, M., & Jurgens, D. (2024). When "a helpful assistant" is not really helpful: Personas in system prompts do not improve performances of large language models. In *Findings of the Association for Computational Linguistics: EMNLP 2024* (pp. 15126-15154). [doi:10.18653/v1/2024.findings-emnlp.888](https://doi.org/10.18653/v1/2024.findings-emnlp.888) \[Verified\]
 - Zhou, K., Hwang, J. D., Ren, X., & Sap, M. (2024). Relying on the unreliable: The impact of language models' reluctance to express uncertainty. In *Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)* (pp. 3623-3643). [doi:10.18653/v1/2024.acl-long.198](https://doi.org/10.18653/v1/2024.acl-long.198) \[Verified\]
 
