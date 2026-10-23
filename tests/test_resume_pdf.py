@@ -28,7 +28,9 @@ def squash(text):
 class ResumePdfLayout(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.pages = [squash(page.extract_text()) for page in pypdf.PdfReader(str(PDF)).pages]
+        cls.reader = pypdf.PdfReader(str(PDF))
+        cls.raw_pages = [page.extract_text() for page in cls.reader.pages]
+        cls.pages = [squash(text) for text in cls.raw_pages]
 
     def test_two_pages(self):
         self.assertEqual(len(self.pages), 2)
@@ -51,6 +53,68 @@ class ResumePdfLayout(unittest.TestCase):
         text = "".join(self.pages)
         for stale in ("99.4%", "17+PROMPT"):
             self.assertNotIn(stale, text)
+
+    def test_summary_precedes_education(self):
+        first = self.pages[0]
+        self.assertLess(first.index("PROFESSIONALSUMMARY"), first.index("EDUCATION"))
+
+    def test_page_one_contains_complete_education_experience_and_skills(self):
+        first = self.pages[0]
+        for text in ("GPA 3.85", "GPA 3.93", "300 lab hours", "Building Services",
+                     "Avis Budget Group", "Undergraduate Researcher", "Meijer Distribution",
+                     "64 daily deliveries", "AWS, Azure, GCP"):
+            with self.subTest(text=text):
+                self.assertIn(squash(text), first)
+                self.assertNotIn(squash(text), self.pages[1])
+
+    def test_research_training_follows_the_last_project_on_page_two(self):
+        second = self.pages[1]
+        self.assertNotIn("RESEARCHTRAINING", self.pages[0])
+        self.assertLess(second.index(squash(PROJECTS[-1])), second.index("RESEARCHTRAINING"))
+        for text in ("Conflicts of Interest 2025", "IRB Training for Students and Faculty 2025"):
+            self.assertIn(squash(text), second)
+
+    def test_printed_headings_and_role_extract_as_words_for_ats(self):
+        # Do not squash here: that would hide a regression to spaced-out letters.
+        for page, phrases in ((0, ("PROFESSIONAL SUMMARY", "EDUCATION", "PROFESSIONAL EXPERIENCE",
+                                    "TECHNICAL SKILLS", "AI / MACHINE LEARNING • DATA SCIENCE")),
+                              (1, ("PROJECTS", "RESEARCH TRAINING"))):
+            text = " ".join(self.raw_pages[page].split()).upper()
+            for phrase in phrases:
+                with self.subTest(page=page + 1, phrase=phrase):
+                    self.assertIn(phrase, text)
+
+    def test_project_metrics_and_caveats_survive_pdf_export(self):
+        second = self.pages[1]
+        for text in ("95.05% document-type accuracy (307 of 323)",
+                     "0.0152 window-level expected calibration error",
+                     "held out from training and calibration (also used to compare runs)",
+                     "synthetic insurance claims", "29 registered prompt versions",
+                     "v11.8 prompt scored 82.6% on a 1,120-image class-balanced evaluation slice",
+                     "241 analyzed survey respondents (252 matched)",
+                     "personas did not beat the classical models", "99 passing tests"):
+            with self.subTest(text=text):
+                self.assertIn(squash(text), second)
+
+    def test_project_repository_links_survive_pdf_export(self):
+        expected = (
+            "https://github.com/LLM-Mailroom-Services/Digital-Mailroom",
+            "https://github.com/LLM-Mailroom-Services/mailroom-ml",
+            "https://github.com/Exios66/Mailroom-Corpus-EDA",
+            "https://github.com/Exios66/RVL-CDIP-Classifier",
+            "https://github.com/Exios66/psych755-jjb",
+            "https://github.com/Exios66/langtons-ant",
+        )
+        links = [annotation.get_object().get("/A", {}).get("/URI")
+                 for annotation in self.reader.pages[1].get("/Annots", [])]
+        for url in expected:
+            with self.subTest(url=url):
+                self.assertIn(url, links)
+
+
+class ResumePdfAssets(unittest.TestCase):
+    def test_source_and_downloaded_pdf_are_identical(self):
+        self.assertEqual((ROOT / "assets" / PDF.name).read_bytes(), PDF.read_bytes())
 
 
 if __name__ == "__main__":
