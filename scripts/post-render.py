@@ -3,10 +3,9 @@
 
 1. Recreates docs/.nojekyll (Quarto clears the output directory on each render)
    and removes the unused search.json.
-2. Prints docs/resume.html to PDF with its @media print rules, so the downloadable
-   résumé always matches the page. Needs `pip install playwright` and a Chromium
-   build; if either is missing the step is skipped with a warning and the
-   committed PDF is left untouched.
+2. Publishes the committed résumé PDF (assets/Jack_Burleson_Resume.pdf) to
+   docs/assets unchanged. The PDF is the owner's own two-page layout, not a
+   print of resume.html, so the render never rebuilds or rewrites it.
 3. Drops the " – <site title>" suffix Quarto adds to <title> when the page
    title already names the site, so tabs do not repeat the name.
 4. Gives every shape in an inline-SVG diagram plain `fill`/`stroke` presentation
@@ -15,10 +14,8 @@
 5. Adds a ?v=<content hash> to the site stylesheet and script links, so a
    browser or the Pages CDN never pairs new HTML with a stale cached copy.
 """
-import glob
 import hashlib
 import html
-import os
 import re
 import shutil
 import sys
@@ -29,64 +26,21 @@ DOCS = ROOT / "docs"
 PDF_NAME = "Jack_Burleson_Resume.pdf"
 
 
-def find_chromium():
-    """Return a Chromium executable path, or None for Playwright's default.
+def publish_pdf():
+    """Copy the committed résumé PDF to docs/assets.
 
-    Prefer an existing CHROMIUM_PATH, then search PLAYWRIGHT_BROWSERS_PATH
-    for Chromium builds, choosing the last sorted match of the first pattern
-    that matches.
+    Return True after copying. Return False with a warning, leaving docs/
+    untouched, if the source PDF is missing. Errors while creating the output
+    directory or copying the PDF propagate to the caller.
     """
-    env = os.environ.get("CHROMIUM_PATH")
-    if env and Path(env).exists():
-        return env
-    base = os.environ.get("PLAYWRIGHT_BROWSERS_PATH", "")
-    for pattern in (f"{base}/chromium-*/chrome-linux*/chrome", f"{base}/chromium/chrome-linux*/chrome"):
-        hits = sorted(glob.glob(pattern))
-        if hits:
-            return hits[-1]
-    return None  # let Playwright use its own managed browser
-
-
-def build_pdf():
-    """Print docs/resume.html to PDF and copy it to the source assets directory.
-
-    Return True after writing and copying the PDF. Return False with a warning
-    if Playwright is unavailable or browser/PDF generation fails. Errors while
-    creating the output directory or copying the PDF propagate to the caller.
-    """
-    try:
-        from playwright.sync_api import sync_playwright
-    except ImportError:
-        print("post-render: playwright not installed; keeping existing PDF", file=sys.stderr)
+    source = ROOT / "assets" / PDF_NAME
+    if not source.is_file():
+        print(f"post-render: {source} is missing; résumé PDF not published", file=sys.stderr)
         return False
-
-    html = DOCS / "resume.html"
     out = DOCS / "assets" / PDF_NAME
     out.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        with sync_playwright() as p:
-            exe = find_chromium()
-            browser = p.chromium.launch(executable_path=exe) if exe else p.chromium.launch()
-            page = browser.new_page()
-            page.goto(html.as_uri(), wait_until="networkidle")
-            page.emulate_media(media="print")
-            page.evaluate("document.fonts.ready")
-            page.pdf(
-                path=str(out),
-                format="Letter",
-                print_background=True,
-                prefer_css_page_size=True,
-                display_header_footer=False,
-                tagged=True,
-                outline=True,
-            )
-            browser.close()
-    except Exception as exc:  # noqa: BLE001 - never fail the whole render over the PDF
-        print(f"post-render: PDF build failed ({exc}); keeping existing PDF", file=sys.stderr)
-        return False
-
-    shutil.copyfile(out, ROOT / "assets" / PDF_NAME)
-    print(f"post-render: wrote {PDF_NAME}")
+    shutil.copyfile(source, out)
+    print(f"post-render: published {PDF_NAME}")
     return True
 
 
@@ -192,14 +146,14 @@ def harden_diagram_pages():
 
 
 def main():
-    """Prepare docs for GitHub Pages, remove the search index, and build the PDF."""
+    """Prepare docs for GitHub Pages, remove the search index, and publish the PDF."""
     DOCS.mkdir(exist_ok=True)
     (DOCS / ".nojekyll").touch()
     (DOCS / "search.json").unlink(missing_ok=True)
     dedupe_titles()
     harden_diagram_pages()
     cache_bust_pages()
-    build_pdf()
+    publish_pdf()
 
 
 if __name__ == "__main__":

@@ -22,45 +22,45 @@ I build AI systems from start to finish: multi-agent document pipelines, transfo
 
 ::: {.skills}
 **Languages & Data**
-: Python (pandas, NumPy, scikit-learn, PyTorch, Hugging Face, PyArrow), R, MATLAB, SQL, JavaScript/TypeScript, Parquet, Hive
+: Python (pandas, NumPy, scikit-learn, PyTorch, Hugging Face, PyArrow), R, MATLAB, SQL, Parquet, Hive, JavaScript/TypeScript, Git
 
 **Machine Learning**
-: Transformer fine-tuning, neural networks, regularized models (Lasso/Ridge), ensemble methods (random forests, bagging), resampling, model evaluation & calibration, cross-validation, SHAP feature importance, error analysis, computer vision
+: transformer fine-tuning, neural networks, regularization & penalized models (Lasso/Ridge), ensemble methods (random forests, bagging), resampling methods, model evaluation & calibration, cross-validation, SHAP/feature importance, error analysis, computer vision
 
 **AI Engineering**
-: LangGraph (LangChain), multi-agent pipelines, LLM eval harnesses (including bias and robustness evals), prompt engineering, model serving (vLLM, Ollama, LM Studio, OpenRouter), ONNX + FastAPI deployment on Modal
+: LangGraph (LangChain), multi-agent pipelines, LLM eval harnesses (incl. bias & robustness evals), Prompt Engineering, model serving (vLLM, Ollama, LM Studio, OpenRouter), ONNX + FastAPI deployment on Modal
 
-**Engineering & Cloud**
-: Git, Docker, gRPC, Apache Spark/PySpark, HDFS, bash, pytest, Quarto, CHTC (high-throughput computing), AWS, Azure, GCP
+**Engineering & Cloud Services**
+: Docker, gRPC, Apache Spark, PySpark, HDFS, shell scripting (bash), pytest, Quarto, CHTC (high-throughput computing), AWS, Azure, GCP
 :::
 
 ## Education
 
 ::: {.entry}
 ::: {.entry-head}
-**University of Wisconsin–Madison** [Madison, WI]{.sub} [Aug 2025 – Dec 2026 (expected)]{.date}
+[**University of Wisconsin–Madison** [Madison, WI]{.sub}]{.head-main} [August 2025 – December 2026]{.date}
 :::
 
 ::: {.degree}
-*M.S. Candidate — Psychology: Data Science in Human Behavior* · **GPA 3.85**
+*M.S. Candidate – Psychology & Data Science in Human Behavior* · **GPA: 3.85**
 :::
 
-- Graduate program in which about 95% of coursework is data science and data engineering, building on an undergraduate foundation in neuroscience research, experimental design, and statistical analysis.
-- Advanced training in machine learning (neural networks, regularized and ensemble models, transformer fine-tuning, LLM evaluation), statistical modeling, and large-scale data systems (Spark, gRPC services, HDFS, Parquet, SQL, Docker).
+- Graduate program in which roughly 95% of coursework is data science and data engineering — building on an undergraduate foundation in neuroscience research, experimental design, and statistical analysis.
+- Advanced training in machine learning (neural networks, regularized and ensemble models, transformer fine-tuning and LLM evaluation), statistical modeling, and large-scale data systems (Spark, gRPC services, HDFS, Parquet, SQL, Docker).
 - Industry capstone with American Family Insurance ([Digital-Mailroom](projects/digital-mailroom.qmd)).
 :::
 
 ::: {.entry}
 ::: {.entry-head}
-**University of Wisconsin–Parkside** [Kenosha, WI]{.sub} [Sep 2020 – May 2025]{.date}
+[**University of Wisconsin–Parkside** [Kenosha, WI]{.sub}]{.head-main} [September 2020 – May 2025]{.date}
 :::
 
 ::: {.degree}
-*B.S., Psychology* · Concentration: Neuroscience · **GPA 3.93**
+*B.S., Psychology* · Concentration: Neuroscience · **GPA: 3.93**
 :::
 
-- Coursework in cognitive and computational neuroscience, psychological theory, clinical psychology, psychopharmacology, psychometrics, psychological statistics, and early data science, plus philosophy, neuroethics, and pre-law.
-- Sociology minor; Provost's List (7x), Dean's List (8x), Distinguished Achievement Award (2025), Psychological Research Certification (300 lab hours).
+- Coursework spanning cognitive and computational neuroscience, psychological theory, clinical psychology, psychopharmacology, psychometrics, psychological statistics, and early data science preparation — plus philosophy, neuroethics, and pre-law.
+- Minor in Sociology; Provost's List (7x), Dean's List (8x), Distinguished Achievement Award (2025), and Psychological Research Certification (300 lab hours).
 :::
 
 ## Research Training
