@@ -55,6 +55,29 @@ class PrintFromDarkTests(unittest.TestCase):
         for token in re.findall(r"(--[\w-]+):", dark):
             self.assertIn(token + ":", reset, f"{token} is set in dark mode but not reset in print")
 
+    def test_resume_projects_start_a_new_page_only_in_print(self):
+        self.assertRegex(block(self.print_css, ".print-new-page {"), r"\bbreak-before:\s*page\s*;")
+        screen_css = CSS.replace(self.print_css, "")
+        self.assertNotIn(".print-new-page", screen_css)
+
+    def test_project_heading_has_no_top_margin_for_both_quarto_shapes(self):
+        # Quarto can put the class on the heading or its section wrapper.
+        rule = re.search(r"([^{}]*h2\.print-new-page[^{}]*)\{([^{}]*)\}", self.print_css)
+        self.assertIsNotNone(rule)
+        selectors, body = rule.groups()
+        self.assertIn(".print-new-page > h2:first-child", selectors)
+        self.assertRegex(body, r"\bmargin-top:\s*0\s*;")
+
+    def test_print_letter_spacing_keeps_headings_and_role_ats_readable(self):
+        for selector in ("h2 {", ".role {"):
+            with self.subTest(selector=selector):
+                self.assertRegex(block(self.print_css, selector), r"\bletter-spacing:\s*0?\.06em\s*;")
+
+    def test_print_skills_use_the_narrow_label_column(self):
+        skills = block(self.print_css, ".skills dl {")
+        self.assertRegex(skills, r"\bgrid-template-columns:\s*8\.5rem\s+1fr\s*;")
+        self.assertRegex(skills, r"\bgap:\s*3px\s+14px\s*;")
+
 
 class SmallCssFixTests(unittest.TestCase):
     def test_project_nav_pills_are_excluded_from_prose_link_underlines(self):

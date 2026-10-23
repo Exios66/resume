@@ -26,61 +26,7 @@ description: "Résumé of Jack J. Burleson: M.S. candidate in Data Science in Hu
 
 ## Professional Summary
 
-M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (expected Dec 2026); B.S. in Psychology (neuroscience concentration, sociology minor) from UW–Parkside. I build AI systems from start to finish: multi-agent document pipelines, transformer fine-tuning and calibration, LLM evaluation, computer vision classification, and behavioral prediction models. My capstone, with industry partner American Family Insurance, looks for ways to cut the cost of AI inference and improve document processing. I also bring five years of high-volume logistics and operations work in quality assurance, documentation, and process improvement.
-
-## Technical Skills
-
-::: {.skills}
-**Programming Languages**
-: Python (pandas, NumPy, scikit-learn, PyTorch, Hugging Face), R, MATLAB, SQL, Parquet, Git
-
-**Machine Learning**
-: Transformer fine-tuning, model evaluation & calibration, cross-validation, SHAP/feature importance, error analysis, computer vision (OCR-based document classification), experimental design
-
-**AI Engineering & Development**
-: LangGraph, multi-agent pipelines, prompt engineering, LLM eval harnesses & LLM-as-a-judge, model serving (vLLM, Ollama, LM Studio, OpenRouter), ONNX + FastAPI deployment on Modal
-
-**Engineering & Cloud**
-: Docker, pytest, Quarto, AWS, Azure
-:::
-
-## Projects
-
-::: {.entry}
-::: {.entry-head}
-**Digital-Mailroom** [DSHB Capstone project — American Family Insurance (industry partner)]{.sub}
-:::
-
-- Capstone with American Family Insurance to improve how documents are read, sorted, and managed: 7 Python packages covering entity extraction, classification, routing, and scalable workflows.
-- Designed and built one LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, dataset management, and deployment in a reproducible Docker environment.
-:::
-
-::: {.entry}
-::: {.entry-head}
-**Mailroom-ML** [ML Training, Evaluation & Fine-Tuning]{.sub}
-:::
-
-- Built a ModernBERT document classifier with training, evaluation, and fine-tuning pipelines, including data lineage tracking, probability calibration, and production routing logic.
-- Wrote PyTorch training pipelines with Transformers and Hugging Face datasets, evaluated with scipy, and exported to ONNX for FastAPI serving on Modal. Kept pytest coverage throughout.
-:::
-
-::: {.entry}
-::: {.entry-head}
-**RVL-CDIP-Classifier** [Computer Vision & Prompt Engineering]{.sub}
-:::
-
-- Built a Python toolkit that converts TIFF/PDF pages to 300-DPI images, runs OCR, and sorts documents into 16 RVL-CDIP categories using OpenRouter vision models.
-- Ran 17+ prompt iterations and produced confusion matrices, misclassification analyses, and cost projections to choose prompts and models on evidence.
-:::
-
-::: {.entry}
-::: {.entry-head}
-**Psychometric Digital Twin** [Behavioral ML Research | UW–Madison]{.sub}
-:::
-
-- Built a behavioral prediction pipeline on 241 analysed survey respondents (252 matched). Ridge, Elastic Net, k-NN, Random Forest, histogram gradient boosting, XGBoost, and MLP models predicted communication-apprehension scores from demographic, employment, geographic, and transit features, with cross-validation and SHAP feature importance.
-- Checked the PRCA's psychometric structure with factor analysis, then built LLM "digital twin" personas with tiered embodiment prompts (OpenRouter/vLLM). Benchmarked them against the ML baselines on shared metrics (MAE, band accuracy, F1) and analyzed systematic bias by demographic group.
-:::
+M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (expected Dec 2026). Applied AI practitioner building full-lifecycle systems: multi-agent document-intelligence pipelines, transformer fine-tuning and calibration, LLM evaluation, computer vision, and behavioral prediction. Capstone with American Family Insurance, developed in biweekly working sessions with its Enterprise Data Science lead. Five years of high-volume operations experience in quality assurance and process improvement.
 
 ## Education
 
@@ -93,7 +39,7 @@ M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (ex
 *M.S. Candidate — Psychology: Data Science in Human Behavior* · **GPA 3.85**
 :::
 
-- Graduate work in machine learning, statistics, behavioral data analysis, predictive modeling, experimental design, and publication-quality visualization.
+- Coursework in machine learning, statistics, behavioral data analysis, predictive modeling, and experimental design.
 :::
 
 ::: {.entry}
@@ -105,29 +51,18 @@ M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (ex
 *B.S., Psychology* · Concentration: Neuroscience · **GPA 3.93**
 :::
 
-- Minor in Sociology; Provost's List (7x), Dean's List (8x), Distinguished Achievement Award (2025), and Psychological Research Certification (300 lab hours).
+- Sociology minor; Provost's List (7x), Dean's List (8x), Distinguished Achievement Award (2025), Psychological Research Certification (300 lab hours).
 :::
 
 ## Professional Experience
 
 ::: {.entry}
 ::: {.entry-head}
-**UW–Parkside — Undergraduate Researcher, Cognitive Neuroscience Lab** [Kenosha, WI]{.sub} [Jun 2024 – Aug 2025]{.date}
+**UW–Madison Recreation & Wellbeing — Building Services** [Madison, WI]{.sub} [Jun 2026 – Present]{.date}
 :::
 
-- Conducted cognitive neuroscience research under Dr. Melissa Gregg: designed and pilot-tested a study of perceptions of chatbot truth, deception, and user cognitive workload (code: [github.com/Exios66/truth-deception-architecture](https://github.com/Exios66/truth-deception-architecture)).
-- Ran EEG systems and analyzed neural time-series data to measure brain activity, adding signal-processing and statistical analysis to existing lab research on sleep quality and cognitive load.
-- Presented findings at the 2025 Midwestern Psychological Association conference.
-:::
-
-::: {.entry}
-::: {.entry-head}
-**UW–Madison Recreation & Wellbeing — Building Services** [Madison, WI]{.sub} [Jan 2026 – Present]{.date}
-:::
-
-- Keep recreation and wellbeing centers across campus clean, safe, and ready for use.
-- Fix facility and equipment problems across multiple locations so centers stay safe and open during peak hours.
-- Worked with operations and event staff to resolve facility problems quickly and limit disruption for students, staff, and visitors.
+- Maintain campus recreation and wellbeing centers to high standards of cleanliness, safety, and readiness.
+- Respond to facility and equipment issues across multiple locations, keeping centers safe during peak use.
 :::
 
 ::: {.entry}
@@ -135,24 +70,106 @@ M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (ex
 **Avis Budget Group — Driver** [Madison, WI]{.sub} [Jun 2026 – Present]{.date}
 :::
 
-- Move, stage, and safety-check rental vehicles across a 500+ vehicle fleet so cars are ready and on time across the rental network.
-- Coordinate vehicle moves between locations and uphold fleet safety standards.
+- Transport, stage, and safety-check rental vehicles across a 500+ vehicle fleet for on-time availability.
+- Coordinate vehicle movements between locations while upholding fleet safety standards.
 :::
 
 ::: {.entry}
 ::: {.entry-head}
-**Meijer Distribution — Logistics Coordinator** [Pleasant Prairie, WI]{.sub} [Jul 2020 – Dec 2025]{.date}
+**UW–Parkside — Undergraduate Researcher, Cognitive Neuroscience Lab** [Kenosha, WI]{.sub} [Jun 2024 – Aug 2025]{.date}
 :::
 
-- Promoted from Retail Loader to Logistics Coordinator for reliable quality assurance and data-driven process documentation in high-volume operations.
-- Analyzed quality-assurance data for 64 daily outbound trailers across the Midwest regional network and held error rates below 1% through root-cause investigation and process refinement.
-- Worked with warehouse and transportation teams to find quality problems and resolve logistics exceptions before shipment.
+- Conducted cognitive neuroscience research under Dr. Melissa Gregg, designing and pilot-testing a study of truth, deception, and cognitive workload (code: [github.com/Exios66/truth-deception-architecture](https://github.com/Exios66/truth-deception-architecture)).
+- Operated EEG systems and analyzed neural time-series data for lab research on sleep quality and cognitive load.
+- Presented at the 2025 Midwestern Psychological Association conference (Chicago) and at Research in the Rotunda.
+:::
+
+::: {.entry}
+::: {.entry-head}
+**Meijer Distribution — Logistics Coordinator** [Pleasant Prairie, WI]{.sub} [Jul 2020 – Aug 2025]{.date}
+:::
+
+- Promoted from Retail Loader to Logistics Coordinator for reliable quality assurance and process documentation.
+- Analyzed QA data for 64 daily deliveries across a Midwest regional network, keeping error rates below 1%.
+- Partnered with warehouse and transportation teams to resolve quality problems and exceptions before shipment.
+:::
+
+## Technical Skills
+
+::: {.skills}
+**Languages & Data**
+: Python (pandas, NumPy, SciPy, scikit-learn, PyTorch, Hugging Face, PyArrow), R, SQL, MATLAB, JavaScript/TypeScript, Parquet, Hive
+
+**Machine Learning**
+: Transformer fine-tuning, neural networks, Lasso/Ridge, ensembles (random forests, bagging, XGBoost), resampling, calibration, cross-validation, SHAP, computer vision
+
+**AI Engineering**
+: LangGraph (LangChain), multi-agent pipelines, LLM evals & LLM-as-a-judge, prompt engineering, vLLM, Ollama, LM Studio, OpenRouter, ONNX + FastAPI on Modal
+
+**Tools & Cloud**
+: Git, Docker, pytest, bash, gRPC, Spark/PySpark, HDFS, CHTC, Quarto, AWS, Azure, GCP
+:::
+
+## Projects {.print-new-page}
+
+::: {.entry}
+::: {.entry-head}
+**[Digital-Mailroom](https://github.com/LLM-Mailroom-Services/Digital-Mailroom)** [DSHB Capstone · American Family Insurance (industry partner)]{.sub}
+:::
+
+- 7 Python packages covering entity extraction, classification, routing, and scalable legal-document workflows, addressing document-intelligence problems scoped by American Family Insurance's Enterprise Data Science division.
+- Built one LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, corpus analysis, and deployment in a reproducible Docker environment, sending each document to the cheapest step that can handle it.
+:::
+
+::: {.entry}
+::: {.entry-head}
+**[Mailroom-ML](https://github.com/LLM-Mailroom-Services/mailroom-ml)** [ML Training, Evaluation & Fine-Tuning]{.sub}
+:::
+
+- Fine-tuned a ModernBERT document classifier to 95.05% document-type accuracy (307 of 323) and 0.0152 window-level expected calibration error on a test split held out from training and calibration (also used to compare runs), with data lineage tracking, per-head temperature scaling, and a confidence gate that decides which documents can skip an LLM.
+- Audited the training data, found a label leak (42.8% of fallback filenames named the subclass), removed it, and added a build-time guard. Trained in PyTorch with Hugging Face datasets on Modal GPUs, evaluated with SciPy, exported to ONNX for FastAPI serving, and kept 485 pytest tests in CI.
+:::
+
+::: {.entry}
+::: {.entry-head}
+**[Mailroom-Corpus-EDA](https://github.com/Exios66/Mailroom-Corpus-EDA)** [Data Engineering & Dataset Audit]{.sub}
+:::
+
+- Assembled a 3,302-document, 5-class mailroom corpus from public sources (CUAD, MAUD, SEC EDGAR, Enron email, synthetic insurance claims) with stable document IDs, content hashes, per-label provenance, and tracked licenses.
+- Built a 7-phase audit pipeline that reruns with one command (integrity, composition, 48 figures, 17 tables), backed by about 200 tests; all 13,753 contract clause annotations match the document text exactly.
+:::
+
+::: {.entry}
+::: {.entry-head}
+**[RVL-CDIP-Classifier](https://github.com/Exios66/RVL-CDIP-Classifier)** [Computer Vision & Prompt Engineering]{.sub}
+:::
+
+- Built a Python toolkit that classifies scanned pages into the 16 RVL-CDIP categories with OpenRouter vision models at about $0.0004 per image, plus preprocessing that converts TIFF/PDF pages to 300-DPI images and runs Tesseract OCR.
+- Iterated through 29 registered prompt versions using confusion matrices, misclassification analysis, and cost projections; the v11.8 prompt scored 82.6% on a 1,120-image class-balanced evaluation slice.
+:::
+
+::: {.entry}
+::: {.entry-head}
+**[Psychometric Digital Twin](https://github.com/Exios66/psych755-jjb)** [Behavioral ML Research · UW–Madison]{.sub}
+:::
+
+- Predicted communication-apprehension (PRCA) scores for 241 analyzed survey respondents (252 matched) from demographic, employment, geographic, and transit features with Ridge, Elastic Net, k-NN, random forest, XGBoost, and MLP models, using cross-validation and SHAP feature importance.
+- Tested the PRCA's psychometric structure with factor analysis, then built LLM "digital twin" personas with tiered embodiment prompts (Ollama, OpenRouter, vLLM) and benchmarked them against the ML baselines on shared metrics (MAE, band accuracy, F1, AUC); the personas did not beat the classical models, and their bias was analyzed by demographic group.
+:::
+
+::: {.entry}
+::: {.entry-head}
+**[Langton's Ant](https://github.com/Exios66/langtons-ant)** [Simulation · TypeScript]{.sub}
+:::
+
+- Built a browser simulator for Langton's ant and other turmites: any rule up to 32 colors and 16 states on an unbounded, chunked grid, with a gallery of 20 published machines and shareable permalinks.
+- Kept the engine deterministic (integer-only stepping, seeded randomness) and covered it with 99 passing tests, including a pinned determinism test.
 :::
 
 ## Research Training
 
 ::: {.training}
-- **CITI Program:** Conflicts of Interest training [2025]{.date}
+- **CITI Program:** Conflicts of Interest [2025]{.date}
 - **CITI Program:** IRB Training for Students and Faculty [2025]{.date}
 :::
 

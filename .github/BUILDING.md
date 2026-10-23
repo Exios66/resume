@@ -39,10 +39,10 @@ An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages
 
 ## Update the site
 
-One-time setup for the PDF step (skip it and the render still works; the existing PDF is kept):
+One-time setup for the PDF step (skip it and the render still works; the existing PDF is kept). `pypdf` lets `tests/test_resume_pdf.py` check the PDF's layout instead of skipping:
 
 ```sh
-pip install playwright
+pip install playwright pypdf
 playwright install chromium
 ```
 

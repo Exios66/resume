@@ -72,7 +72,7 @@ The repository's Monte Carlo scripts treat every recorded run as a draw from a p
 
 | Question | What the simulation said | What I measured |
 | --- | --- | --- |
-| Would majority voting help? | Forecast from the pooled, mixed-model corpus: 7 reads, 85.0%; 25 reads, 86.3%. Cost assumed to scale with the number of reads. | Not tested on a live run. |
+| Would majority voting help? | Forecast from the pooled, mixed-model corpus, not repeated reads of one fixed classifier: 7 reads, 85.0%; 25 reads, 86.3%. Cost is assumed to scale with the number of reads; it is not a measured rerun cost. | Not tested on a live run. |
 | Would sending the least-confident pages to a stronger model help? | The least-confident 40%: 91.9% at 1.8 times the cost, if the stronger model is 90% accurate at 3 times the cost. | Down, not up. On a 48-image low-confidence slice, 66.7% became 62.5%. On the tuning slice, v19 went from 97.5% to 96.9% at 7.8 times the cost. |
 | Would a few worked examples for the commonest confusions help? | About 4.3% of errors fixed (33 of 767). | Down. On a 48-image slice, 68.8% became 64.6%. |
 | Which prompt changes were real? | A paired bootstrap on shared images puts v0 to v11.8 at +13.0 points (95% interval 10.1 to 15.9, 898 images). | This one is a test of measured runs, not a forecast. |
