@@ -26,7 +26,7 @@ description: "Résumé of Jack J. Burleson: M.S. candidate in Data Science in Hu
 
 ## Professional Summary
 
-Data scientist and ML engineer completing an M.S. in Psychology: Data Science in Human Behavior at UW–Madison (Dec 2026). Builds AI systems end to end: multi-agent LLM document pipelines, calibrated transformer classifiers, LLM evaluation, and behavioral prediction models. Capstone with American Family Insurance on cutting AI inference cost in document processing. Five years of high-volume logistics experience in quality assurance and process improvement.
+Data scientist and ML engineer completing an M.S. in Psychology: Data Science in Human Behavior at UW–Madison (Dec 2026), building AI systems end to end: multi-agent LLM document pipelines, calibrated transformer classifiers, LLM evaluation, and behavioral prediction models. Capstone with American Family Insurance on cutting AI inference cost in document processing, plus five years of high-volume logistics experience in quality assurance and process improvement.
 
 ## Education
 
@@ -51,7 +51,7 @@ Data scientist and ML engineer completing an M.S. in Psychology: Data Science in
 *B.S., Psychology* · Concentration: Neuroscience · **GPA 3.93**
 :::
 
-- Sociology minor; Provost's List (7×), Dean's List (8×), Distinguished Achievement Award (2025), Psychological Research Certification (300 lab hours).
+- Sociology minor; Provost's List (7x), Dean's List (8x), Distinguished Achievement Award (2025), Psychological Research Certification (300 lab hours).
 :::
 
 ## Professional Experience
@@ -61,7 +61,7 @@ Data scientist and ML engineer completing an M.S. in Psychology: Data Science in
 **UW–Parkside — Undergraduate Researcher, Cognitive Neuroscience Lab** [Kenosha, WI]{.sub} [Jun 2024 – Aug 2025]{.date}
 :::
 
-- Designed and pilot-tested a study of perceived chatbot truthfulness, deception, and user cognitive workload with Dr. Melissa Gregg (code: [github.com/Exios66/truth-deception-architecture](https://github.com/Exios66/truth-deception-architecture)).
+- Designed and pilot-tested a study of perceived chatbot truthfulness, deception, and user cognitive workload under Dr. Melissa Gregg (code: [github.com/Exios66/truth-deception-architecture](https://github.com/Exios66/truth-deception-architecture)).
 - Operated EEG systems and analyzed neural time-series data for lab research on sleep quality and cognitive load.
 - Presented findings at the 2025 Midwestern Psychological Association conference.
 :::
@@ -118,7 +118,7 @@ Data scientist and ML engineer completing an M.S. in Psychology: Data Science in
 
 ::: {.entry}
 ::: {.entry-head}
-**Digital-Mailroom** [DSHB Capstone — American Family Insurance (industry partner)]{.sub}
+**Digital-Mailroom** [DSHB Capstone · American Family Insurance (industry partner)]{.sub}
 :::
 
 - Capstone on cutting AI inference cost in document processing: 7 Python packages covering entity extraction, classification, routing, and scalable workflows.
@@ -130,8 +130,8 @@ Data scientist and ML engineer completing an M.S. in Psychology: Data Science in
 **Mailroom-ML** [ML Training, Evaluation & Fine-Tuning]{.sub}
 :::
 
-- Fine-tuned a ModernBERT document classifier to 95.05% document-type accuracy (307 of 323) and 0.0152 expected calibration error on the held-out test split, with per-head temperature scaling and a confidence gate that decides which documents can skip an LLM.
-- Audited the training data, found a label leak (42.8% of fallback filenames named the subclass), removed it, and added a build-time guard; PyTorch training on Modal GPUs, ONNX export for FastAPI serving, and 485 pytest tests in CI.
+- Fine-tuned a ModernBERT document classifier to 95.05% document-type accuracy (307 of 323) and 0.0152 window-level expected calibration error on the test split, with per-head temperature scaling and a confidence gate that decides which documents can skip an LLM.
+- Audited the training data, found a label leak (42.8% of fallback filenames named the subclass), removed it, and added a build-time guard. Trained in PyTorch on Modal GPUs, exported to ONNX for FastAPI serving, and kept 485 pytest tests in CI.
 :::
 
 ::: {.entry}
@@ -139,7 +139,7 @@ Data scientist and ML engineer completing an M.S. in Psychology: Data Science in
 **Mailroom-Corpus-EDA** [Data Engineering & Dataset Audit]{.sub}
 :::
 
-- Assembled a 3,302-document, 5-class mailroom corpus from public sources (CUAD, MAUD, SEC EDGAR, Enron email, insurance claims) with stable document IDs, content hashes, per-label provenance, and tracked licenses.
+- Assembled a 3,302-document, 5-class mailroom corpus from public sources (CUAD, MAUD, SEC EDGAR, Enron email, synthetic insurance claims) with stable document IDs, content hashes, per-label provenance, and tracked licenses.
 - Built a 7-phase audit pipeline that reruns with one command (integrity, composition, 48 figures, 17 tables), backed by about 200 tests; all 13,753 contract clause annotations match the document text exactly.
 :::
 
@@ -148,17 +148,17 @@ Data scientist and ML engineer completing an M.S. in Psychology: Data Science in
 **RVL-CDIP-Classifier** [Computer Vision & Prompt Engineering]{.sub}
 :::
 
-- Built a Python toolkit that converts TIFF/PDF pages to 300-DPI images (with Tesseract OCR) and classifies page images into the 16 RVL-CDIP categories with OpenRouter vision models, at about $0.0004 per image.
-- Iterated through 29 registered prompt versions using confusion matrices, misclassification analysis, and cost projections; the final prompt scored 82.6% on a 1,120-image class-balanced evaluation slice.
+- Built a Python toolkit that classifies scanned pages into the 16 RVL-CDIP categories with OpenRouter vision models at about $0.0004 per image, plus preprocessing that converts TIFF/PDF pages to 300-DPI images and runs Tesseract OCR.
+- Iterated through 29 registered prompt versions using confusion matrices, misclassification analysis, and cost projections; the v11.8 prompt scored 82.6% on a 1,120-image class-balanced evaluation slice.
 :::
 
 ::: {.entry}
 ::: {.entry-head}
-**Psychometric Digital Twin** [Behavioral ML Research | UW–Madison]{.sub}
+**Psychometric Digital Twin** [Behavioral ML Research · UW–Madison]{.sub}
 :::
 
 - Predicted communication-apprehension (PRCA) scores for 241 analyzed survey respondents with Ridge, Elastic Net, k-NN, random forest, histogram gradient boosting, XGBoost, and MLP models, using cross-validation and SHAP feature importance.
-- Validated the PRCA's factor structure, then benchmarked LLM "digital twin" personas (vLLM, OpenRouter) against the ML baselines on shared metrics (MAE, band accuracy, F1, AUC): best persona 5.02 vs. 4.49 points of group-score error for the best classical model, with bias analyzed by demographic group.
+- Checked the PRCA's factor structure, then benchmarked LLM "digital twin" personas (vLLM) against the ML baselines on shared metrics (MAE, band accuracy, F1, AUC); the personas did not beat the classical models, and their bias was analyzed by demographic group.
 :::
 
 ::: {.entry}
@@ -170,7 +170,7 @@ Data scientist and ML engineer completing an M.S. in Psychology: Data Science in
 - Kept the engine deterministic (integer-only stepping, seeded randomness) and covered it with 99 passing tests, including a pinned determinism test.
 :::
 
-## Certifications
+## Research Training
 
 ::: {.training}
 - **CITI Program:** Conflicts of Interest [2025]{.date}

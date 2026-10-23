@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="styles.css?v=cffdb76faa">
+<link rel="stylesheet" href="styles.css?v=c8113d1853">
 <meta property="og:title" content="Résumé — Jack J. Burleson">
 <meta property="og:description" content="Résumé of Jack J. Burleson: M.S. candidate in Data Science in Human Behavior at UW–Madison with experience in LLM pipelines, transformer fine-tuning, and behavioral ML.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -130,7 +130,7 @@ Jack J. Burleson
 </div>
 </div>
 <h2 id="professional-summary">Professional Summary</h2>
-<p>Data scientist and ML engineer completing an M.S. in Psychology: Data Science in Human Behavior at UW–Madison (Dec 2026). Builds AI systems end to end: multi-agent LLM document pipelines, calibrated transformer classifiers, LLM evaluation, and behavioral prediction models. Capstone with American Family Insurance on cutting AI inference cost in document processing. Five years of high-volume logistics experience in quality assurance and process improvement.</p>
+<p>Data scientist and ML engineer completing an M.S. in Psychology: Data Science in Human Behavior at UW–Madison (Dec 2026), building AI systems end to end: multi-agent LLM document pipelines, calibrated transformer classifiers, LLM evaluation, and behavioral prediction models. Capstone with American Family Insurance on cutting AI inference cost in document processing, plus five years of high-volume logistics experience in quality assurance and process improvement.</p>
 <h2 id="education">Education</h2>
 <div class="entry">
 <div class="entry-head">
@@ -151,7 +151,7 @@ Jack J. Burleson
 <p><em>B.S., Psychology</em> · Concentration: Neuroscience · <strong>GPA 3.93</strong></p>
 </div>
 <ul>
-<li>Sociology minor; Provost’s List (7×), Dean’s List (8×), Distinguished Achievement Award (2025), Psychological Research Certification (300 lab hours).</li>
+<li>Sociology minor; Provost’s List (7x), Dean’s List (8x), Distinguished Achievement Award (2025), Psychological Research Certification (300 lab hours).</li>
 </ul>
 </div>
 <h2 id="professional-experience">Professional Experience</h2>
@@ -160,7 +160,7 @@ Jack J. Burleson
 <p><strong>UW–Parkside — Undergraduate Researcher, Cognitive Neuroscience Lab</strong> <span class="sub">Kenosha, WI</span> <span class="date">Jun 2024 – Aug 2025</span></p>
 </div>
 <ul>
-<li>Designed and pilot-tested a study of perceived chatbot truthfulness, deception, and user cognitive workload with Dr.&nbsp;Melissa Gregg (code: <a href="https://github.com/Exios66/truth-deception-architecture">github.com/Exios66/truth-deception-architecture⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>).</li>
+<li>Designed and pilot-tested a study of perceived chatbot truthfulness, deception, and user cognitive workload under Dr.&nbsp;Melissa Gregg (code: <a href="https://github.com/Exios66/truth-deception-architecture">github.com/Exios66/truth-deception-architecture⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>).</li>
 <li>Operated EEG systems and analyzed neural time-series data for lab research on sleep quality and cognitive load.</li>
 <li>Presented findings at the 2025 Midwestern Psychological Association conference.</li>
 </ul>
@@ -222,7 +222,7 @@ Git, Docker, pytest, ONNX, FastAPI, Modal, vLLM, Ollama, Parquet, AWS, Azure
 <h2 class="print-new-page" id="projects">Projects</h2>
 <div class="entry">
 <div class="entry-head">
-<p><strong>Digital-Mailroom</strong> <span class="sub">DSHB Capstone — American Family Insurance (industry partner)</span></p>
+<p><strong>Digital-Mailroom</strong> <span class="sub">DSHB Capstone · American Family Insurance (industry partner)</span></p>
 </div>
 <ul>
 <li>Capstone on cutting AI inference cost in document processing: 7 Python packages covering entity extraction, classification, routing, and scalable workflows.</li>
@@ -234,8 +234,8 @@ Git, Docker, pytest, ONNX, FastAPI, Modal, vLLM, Ollama, Parquet, AWS, Azure
 <p><strong>Mailroom-ML</strong> <span class="sub">ML Training, Evaluation &amp; Fine-Tuning</span></p>
 </div>
 <ul>
-<li>Fine-tuned a ModernBERT document classifier to 95.05% document-type accuracy (307 of 323) and 0.0152 expected calibration error on the held-out test split, with per-head temperature scaling and a confidence gate that decides which documents can skip an LLM.</li>
-<li>Audited the training data, found a label leak (42.8% of fallback filenames named the subclass), removed it, and added a build-time guard; PyTorch training on Modal GPUs, ONNX export for FastAPI serving, and 485 pytest tests in CI.</li>
+<li>Fine-tuned a ModernBERT document classifier to 95.05% document-type accuracy (307 of 323) and 0.0152 window-level expected calibration error on the test split, with per-head temperature scaling and a confidence gate that decides which documents can skip an LLM.</li>
+<li>Audited the training data, found a label leak (42.8% of fallback filenames named the subclass), removed it, and added a build-time guard. Trained in PyTorch on Modal GPUs, exported to ONNX for FastAPI serving, and kept 485 pytest tests in CI.</li>
 </ul>
 </div>
 <div class="entry">
@@ -243,7 +243,7 @@ Git, Docker, pytest, ONNX, FastAPI, Modal, vLLM, Ollama, Parquet, AWS, Azure
 <p><strong>Mailroom-Corpus-EDA</strong> <span class="sub">Data Engineering &amp; Dataset Audit</span></p>
 </div>
 <ul>
-<li>Assembled a 3,302-document, 5-class mailroom corpus from public sources (CUAD, MAUD, SEC EDGAR, Enron email, insurance claims) with stable document IDs, content hashes, per-label provenance, and tracked licenses.</li>
+<li>Assembled a 3,302-document, 5-class mailroom corpus from public sources (CUAD, MAUD, SEC EDGAR, Enron email, synthetic insurance claims) with stable document IDs, content hashes, per-label provenance, and tracked licenses.</li>
 <li>Built a 7-phase audit pipeline that reruns with one command (integrity, composition, 48 figures, 17 tables), backed by about 200 tests; all 13,753 contract clause annotations match the document text exactly.</li>
 </ul>
 </div>
@@ -252,17 +252,17 @@ Git, Docker, pytest, ONNX, FastAPI, Modal, vLLM, Ollama, Parquet, AWS, Azure
 <p><strong>RVL-CDIP-Classifier</strong> <span class="sub">Computer Vision &amp; Prompt Engineering</span></p>
 </div>
 <ul>
-<li>Built a Python toolkit that converts TIFF/PDF pages to 300-DPI images (with Tesseract OCR) and classifies page images into the 16 RVL-CDIP categories with OpenRouter vision models, at about $0.0004 per image.</li>
-<li>Iterated through 29 registered prompt versions using confusion matrices, misclassification analysis, and cost projections; the final prompt scored 82.6% on a 1,120-image class-balanced evaluation slice.</li>
+<li>Built a Python toolkit that classifies scanned pages into the 16 RVL-CDIP categories with OpenRouter vision models at about $0.0004 per image, plus preprocessing that converts TIFF/PDF pages to 300-DPI images and runs Tesseract OCR.</li>
+<li>Iterated through 29 registered prompt versions using confusion matrices, misclassification analysis, and cost projections; the v11.8 prompt scored 82.6% on a 1,120-image class-balanced evaluation slice.</li>
 </ul>
 </div>
 <div class="entry">
 <div class="entry-head">
-<p><strong>Psychometric Digital Twin</strong> <span class="sub">Behavioral ML Research | UW–Madison</span></p>
+<p><strong>Psychometric Digital Twin</strong> <span class="sub">Behavioral ML Research · UW–Madison</span></p>
 </div>
 <ul>
 <li>Predicted communication-apprehension (PRCA) scores for 241 analyzed survey respondents with Ridge, Elastic Net, k-NN, random forest, histogram gradient boosting, XGBoost, and MLP models, using cross-validation and SHAP feature importance.</li>
-<li>Validated the PRCA’s factor structure, then benchmarked LLM “digital twin” personas (vLLM, OpenRouter) against the ML baselines on shared metrics (MAE, band accuracy, F1, AUC): best persona 5.02 vs.&nbsp;4.49 points of group-score error for the best classical model, with bias analyzed by demographic group.</li>
+<li>Checked the PRCA’s factor structure, then benchmarked LLM “digital twin” personas (vLLM) against the ML baselines on shared metrics (MAE, band accuracy, F1, AUC); the personas did not beat the classical models, and their bias was analyzed by demographic group.</li>
 </ul>
 </div>
 <div class="entry">
@@ -274,7 +274,7 @@ Git, Docker, pytest, ONNX, FastAPI, Modal, vLLM, Ollama, Parquet, AWS, Azure
 <li>Kept the engine deterministic (integer-only stepping, seeded randomness) and covered it with 99 passing tests, including a pinned determinism test.</li>
 </ul>
 </div>
-<h2 id="certifications">Certifications</h2>
+<h2 id="research-training">Research Training</h2>
 <div class="training">
 <ul>
 <li><strong>CITI Program:</strong> Conflicts of Interest <span class="date">2025</span></li>
