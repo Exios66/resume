@@ -8,7 +8,7 @@ project:
 website:
   title: "Jack J. Burleson"
   site-url: "https://exios66.github.io/resume"
-  description: "Portfolio of Jack J. Burleson — AI / machine learning and data science. Document-intelligence pipelines, transformer fine-tuning, LLM evaluation, and behavioral ML."
+  description: "Portfolio of Jack J. Burleson — machine learning, data science, and AI engineering & safety. Document-intelligence pipelines, transformer fine-tuning, LLM evaluation, and behavioral ML."
   favicon: assets/favicon.svg
   search: false
   open-graph:
