@@ -126,7 +126,7 @@ M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (ex
 **[Mailroom-ML](https://github.com/LLM-Mailroom-Services/mailroom-ml)** [ML Training, Evaluation & Fine-Tuning]{.sub}
 :::
 
-- Fine-tuned a ModernBERT document classifier to 95.05% document-type accuracy (307 of 323) and 0.0152 window-level expected calibration error on the test split, with data lineage tracking, per-head temperature scaling, and a confidence gate that decides which documents can skip an LLM.
+- Fine-tuned a ModernBERT document classifier to 95.05% document-type accuracy (307 of 323) and 0.0152 window-level expected calibration error on a test split held out from training and calibration, with data lineage tracking, per-head temperature scaling, and a confidence gate that decides which documents can skip an LLM.
 - Audited the training data, found a label leak (42.8% of fallback filenames named the subclass), removed it, and added a build-time guard. Trained in PyTorch with Hugging Face datasets on Modal GPUs, evaluated with SciPy, exported to ONNX for FastAPI serving, and kept 485 pytest tests in CI.
 :::
 
