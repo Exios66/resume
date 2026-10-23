@@ -21,31 +21,33 @@ I build AI systems from start to finish: multi-agent document pipelines, transfo
 ## Technical Skills
 
 ::: {.skills}
-**Programming Languages**
-: Python (pandas, NumPy, scikit-learn, PyTorch, Hugging Face), R, MATLAB, SQL, Parquet, Git
+**Languages & Data**
+: Python (pandas, NumPy, scikit-learn, PyTorch, Hugging Face, PyArrow), R, MATLAB, SQL, JavaScript/TypeScript, Parquet, Hive
 
 **Machine Learning**
-: Transformer fine-tuning, model evaluation & calibration, cross-validation, SHAP/feature importance, error analysis, computer vision (OCR-based document classification), experimental design
+: Transformer fine-tuning, neural networks, regularized models (Lasso/Ridge), ensemble methods (random forests, bagging), resampling, model evaluation & calibration, cross-validation, SHAP feature importance, error analysis, computer vision
 
-**AI Engineering & Development**
-: LangGraph, multi-agent pipelines, prompt engineering, LLM eval harnesses & LLM-as-a-judge, model serving (vLLM, Ollama, LM Studio, OpenRouter), ONNX + FastAPI deployment on Modal
+**AI Engineering**
+: LangGraph (LangChain), multi-agent pipelines, LLM eval harnesses (including bias and robustness evals), prompt engineering, model serving (vLLM, Ollama, LM Studio, OpenRouter), ONNX + FastAPI deployment on Modal
 
 **Engineering & Cloud**
-: Docker, pytest, Quarto, AWS, Azure
+: Git, Docker, gRPC, Apache Spark/PySpark, HDFS, bash, pytest, Quarto, CHTC (high-throughput computing), AWS, Azure, GCP
 :::
 
 ## Education
 
 ::: {.entry}
 ::: {.entry-head}
-**University of Wisconsin–Madison** [Madison, WI]{.sub} [Expected Dec 2026]{.date}
+**University of Wisconsin–Madison** [Madison, WI]{.sub} [Aug 2025 – Dec 2026 (expected)]{.date}
 :::
 
 ::: {.degree}
 *M.S. Candidate — Psychology: Data Science in Human Behavior* · **GPA 3.85**
 :::
 
-- Graduate work in machine learning, statistics, behavioral data analysis, predictive modeling, experimental design, and publication-quality visualization.
+- Graduate program in which about 95% of coursework is data science and data engineering, building on an undergraduate foundation in neuroscience research, experimental design, and statistical analysis.
+- Advanced training in machine learning (neural networks, regularized and ensemble models, transformer fine-tuning, LLM evaluation), statistical modeling, and large-scale data systems (Spark, gRPC services, HDFS, Parquet, SQL, Docker).
+- Industry capstone with American Family Insurance ([Digital-Mailroom](projects/digital-mailroom.qmd)).
 :::
 
 ::: {.entry}
@@ -57,7 +59,8 @@ I build AI systems from start to finish: multi-agent document pipelines, transfo
 *B.S., Psychology* · Concentration: Neuroscience · **GPA 3.93**
 :::
 
-- Minor in Sociology; Provost's List (7x), Dean's List (8x), Distinguished Achievement Award (2025), and Psychological Research Certification (300 lab hours).
+- Coursework in cognitive and computational neuroscience, psychological theory, clinical psychology, psychopharmacology, psychometrics, psychological statistics, and early data science, plus philosophy, neuroethics, and pre-law.
+- Sociology minor; Provost's List (7x), Dean's List (8x), Distinguished Achievement Award (2025), Psychological Research Certification (300 lab hours).
 :::
 
 ## Research Training

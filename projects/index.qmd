@@ -20,7 +20,7 @@ Four connected projects about one question: how do you sort and read business do
 ### [Digital-Mailroom](digital-mailroom.qmd)
 [Capstone · American Family Insurance]{.kicker}
 
-The capstone design: seven Python packages and one LangGraph pipeline for document routing, prompt experiments, deterministic scoring, and deployment, trained and tested on a dataset I assembled from public sources.
+The capstone design: five Python packages and one LangGraph pipeline for document routing, prompt experiments, deterministic scoring, and deployment, trained and tested on a dataset I assembled from public sources.
 
 [LangGraph]{.tag} [Docker]{.tag} [Dataset design]{.tag}
 :::

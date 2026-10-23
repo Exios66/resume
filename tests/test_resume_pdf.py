@@ -1,7 +1,7 @@
 """Layout checks for the downloadable résumé PDF.
 
-Page 1 holds the summary, education, experience and skills; page 2 holds the
-projects. Section headings are letter-spaced in print, so whitespace is
+The layout follows the owner's v16 PDF: page 1 holds the summary, education
+and experience; page 2 holds the projects, then the technical skills. Section headings are letter-spaced in print, so whitespace is
 stripped before matching.
 """
 
@@ -16,8 +16,8 @@ except ImportError:  # pragma: no cover - optional dependency
 
 ROOT = Path(__file__).resolve().parents[1]
 PDF = ROOT / "docs" / "assets" / "Jack_Burleson_Resume.pdf"
-PROJECTS = ("Digital-Mailroom", "Mailroom-ML", "Mailroom-Corpus-EDA", "RVL-CDIP-Classifier",
-            "Psychometric Digital Twin", "Langton's Ant")
+PROJECTS = ("Digital-Mailroom", "Mailroom-ML", "RVL-CDIP-Classifier",
+            "Psychometric Digital Twin", "Alignment-Gym", "MapReduce-Reloaded")
 
 
 def squash(text):
@@ -35,13 +35,15 @@ class ResumePdfLayout(unittest.TestCase):
     def test_two_pages(self):
         self.assertEqual(len(self.pages), 2)
 
-    def test_page_one_is_education_experience_skills(self):
+    def test_page_one_is_summary_education_experience(self):
         first = self.pages[0]
-        for heading in ("PROFESSIONALSUMMARY", "EDUCATION", "PROFESSIONALEXPERIENCE", "TECHNICALSKILLS"):
+        for heading in ("PROFESSIONALSUMMARY", "EDUCATION", "PROFESSIONALEXPERIENCE"):
             self.assertIn(heading, first)
-        self.assertNotIn("PROJECTS", first)
+        # "(see Projects)" in the M.S. entry is the only mention of projects on page 1.
+        self.assertEqual(first.count("PROJECTS"), 1)
+        self.assertIn("(SEEPROJECTS)", first)
+        self.assertNotIn("TECHNICALSKILLS", first)
         self.assertLess(first.index("EDUCATION"), first.index("PROFESSIONALEXPERIENCE"))
-        self.assertLess(first.index("PROFESSIONALEXPERIENCE"), first.index("TECHNICALSKILLS"))
 
     def test_page_two_starts_with_projects(self):
         second = self.pages[1]
@@ -51,48 +53,45 @@ class ResumePdfLayout(unittest.TestCase):
 
     def test_no_tuning_slice_or_stale_figures(self):
         text = "".join(self.pages)
-        for stale in ("99.4%", "17+PROMPT"):
+        for stale in ("99.4%", "17+PROMPT", "AVISBUDGETGROUP", "7PYTHONPACKAGES"):
             self.assertNotIn(stale, text)
 
     def test_summary_precedes_education(self):
         first = self.pages[0]
         self.assertLess(first.index("PROFESSIONALSUMMARY"), first.index("EDUCATION"))
 
-    def test_page_one_contains_complete_education_experience_and_skills(self):
+    def test_page_one_contains_complete_education_and_experience(self):
         first = self.pages[0]
-        for text in ("GPA 3.85", "GPA 3.93", "300 lab hours", "Building Services",
-                     "Avis Budget Group", "Undergraduate Researcher", "Meijer Distribution",
-                     "64 daily deliveries", "AWS, Azure, GCP"):
+        for text in ("GPA 3.85", "GPA 3.93", "300 lab hours", "neuroethics, and pre-law",
+                     "Building Services", "Undergrad Researcher", "Meijer Distribution",
+                     "64 daily deliveries", "resolve logistics exceptions before shipment"):
             with self.subTest(text=text):
                 self.assertIn(squash(text), first)
                 self.assertNotIn(squash(text), self.pages[1])
 
-    def test_research_training_follows_the_last_project_on_page_two(self):
+    def test_complete_skills_follow_the_last_project_on_page_two(self):
         second = self.pages[1]
-        self.assertNotIn("RESEARCHTRAINING", self.pages[0])
-        self.assertLess(second.index(squash(PROJECTS[-1])), second.index("RESEARCHTRAINING"))
-        for text in ("Conflicts of Interest 2025", "IRB Training for Students and Faculty 2025"):
-            self.assertIn(squash(text), second)
+        self.assertLess(second.index(squash(PROJECTS[-1])), second.index("TECHNICALSKILLS"))
+        for text in ("LANGUAGES & DATA", "MACHINE LEARNING", "AI ENGINEERING", "ENGINEERING & CLOUD",
+                     "Hugging Face, PyArrow", "ONNX + FastAPI deployment on Modal", "AWS, Azure, GCP"):
+            with self.subTest(text=text):
+                self.assertIn(squash(text), second[second.index("TECHNICALSKILLS"):])
 
     def test_printed_headings_and_role_extract_as_words_for_ats(self):
         # Do not squash here: that would hide a regression to spaced-out letters.
         for page, phrases in ((0, ("PROFESSIONAL SUMMARY", "EDUCATION", "PROFESSIONAL EXPERIENCE",
-                                    "TECHNICAL SKILLS", "AI / MACHINE LEARNING • DATA SCIENCE")),
-                              (1, ("PROJECTS", "RESEARCH TRAINING"))):
+                                    "MACHINE LEARNING • DATA SCIENCE • AI ENGINEERING & SAFETY")),
+                              (1, ("PROJECTS", "TECHNICAL SKILLS"))):
             text = " ".join(self.raw_pages[page].split()).upper()
             for phrase in phrases:
                 with self.subTest(page=page + 1, phrase=phrase):
                     self.assertIn(phrase, text)
 
-    def test_project_metrics_and_caveats_survive_pdf_export(self):
+    def test_project_figures_survive_pdf_export(self):
         second = self.pages[1]
-        for text in ("95.05% document-type accuracy (307 of 323)",
-                     "0.0152 window-level expected calibration error",
-                     "held out from training and calibration (also used to compare runs)",
-                     "synthetic insurance claims", "29 registered prompt versions",
-                     "v11.8 prompt scored 82.6% on a 1,120-image class-balanced evaluation slice",
-                     "241 analyzed survey respondents (252 matched)",
-                     "personas did not beat the classical models", "99 passing tests"):
+        for text in ("5 Python packages", "16 RVL-CDIP categories", "29 prompt iterations",
+                     "252 matched survey participants", "89 needle/decoy pairs",
+                     "28 condition cells", "Dean & Ghemawat, OSDI 2004"):
             with self.subTest(text=text):
                 self.assertIn(squash(text), second)
 
@@ -100,16 +99,24 @@ class ResumePdfLayout(unittest.TestCase):
         expected = (
             "https://github.com/LLM-Mailroom-Services/Digital-Mailroom",
             "https://github.com/LLM-Mailroom-Services/mailroom-ml",
-            "https://github.com/Exios66/Mailroom-Corpus-EDA",
             "https://github.com/Exios66/RVL-CDIP-Classifier",
             "https://github.com/Exios66/psych755-jjb",
-            "https://github.com/Exios66/langtons-ant",
+            "https://github.com/Exios66/MapReduce-Reloaded",
         )
         links = [annotation.get_object().get("/A", {}).get("/URI")
                  for annotation in self.reader.pages[1].get("/Annots", [])]
         for url in expected:
             with self.subTest(url=url):
                 self.assertIn(url, links)
+        # Alignment-Gym is a private repository; the PDF must not link to it.
+        self.assertFalse([url for url in links if url and "alignment-gym" in url.lower()])
+
+    def test_header_links_the_portfolio_and_omits_the_phone_number(self):
+        links = [annotation.get_object().get("/A", {}).get("/URI")
+                 for annotation in self.reader.pages[0].get("/Annots", [])]
+        self.assertIn("https://exios66.github.io/resume/", links)
+        self.assertFalse([url for url in links if url and url.startswith("tel:")])
+        self.assertNotRegex(self.raw_pages[0], r"(?<!\d)\d{3}[-.\s]\d{3}[-.\s]\d{4}(?!\d)")
 
 
 class ResumePdfAssets(unittest.TestCase):
