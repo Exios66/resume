@@ -229,7 +229,7 @@ Git, Docker, pytest, bash, gRPC, Spark/PySpark, HDFS, CHTC, Quarto, AWS, Azure, 
 <p><strong><a href="https://github.com/LLM-Mailroom-Services/mailroom-ml">Mailroom-ML⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></strong> <span class="sub">ML Training, Evaluation &amp; Fine-Tuning</span></p>
 </div>
 <ul>
-<li>Fine-tuned a ModernBERT document classifier to 95.05% document-type accuracy (307 of 323) and 0.0152 window-level expected calibration error on a test split held out from training and calibration, with data lineage tracking, per-head temperature scaling, and a confidence gate that decides which documents can skip an LLM.</li>
+<li>Fine-tuned a ModernBERT document classifier to 95.05% document-type accuracy (307 of 323) and 0.0152 window-level expected calibration error on a test split held out from training and calibration (also used to compare runs), with data lineage tracking, per-head temperature scaling, and a confidence gate that decides which documents can skip an LLM.</li>
 <li>Audited the training data, found a label leak (42.8% of fallback filenames named the subclass), removed it, and added a build-time guard. Trained in PyTorch with Hugging Face datasets on Modal GPUs, evaluated with SciPy, exported to ONNX for FastAPI serving, and kept 485 pytest tests in CI.</li>
 </ul>
 </div>
