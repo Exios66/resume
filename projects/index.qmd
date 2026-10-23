@@ -1,13 +1,13 @@
 ---
 pagetitle: "Projects — Jack J. Burleson"
-description: "Selected work in document intelligence, data engineering, model evaluation, behavioral machine learning, LLM agent design, and simulation, with case studies and selected technical reports."
+description: "Selected work in document intelligence, data engineering, distributed systems, model evaluation, behavioral machine learning, LLM agent design, and simulation, with case studies and selected technical reports."
 ---
 
 ::: {.page}
 
 # Projects {.page-title}
 
-Selected work in document intelligence, data engineering, model evaluation, behavioral machine learning, LLM agent design, and simulation. Each project has a short case study. Most also have a technical report with the full experiment history, metrics, and steps to reproduce the results.
+Selected work in document intelligence, data engineering, distributed systems, model evaluation, behavioral machine learning, LLM agent design, and simulation. Each project has a short case study. Most also have a technical report with the full experiment history, metrics, and steps to reproduce the results.
 
 ## Document intelligence {.group-title}
 
@@ -69,9 +69,22 @@ The data work behind the mailroom projects: 3,302 documents assembled from publi
 ### [AeroGlobe](aeroglobe.qmd)
 [In active development · 3D flight data on a globe]{.kicker}
 
-A browser globe for flight tracking, being built around a static data pipeline so that historical flights can be replayed without an always-on server. It is a work in progress: the globe client and pipeline exist, and playback is planned.
+A browser globe for flight tracking, built around a static data pipeline so that flights can be replayed without an always-on server. An early version is live: it shows a snapshot of current traffic and replays recorded tracks, and full-day playback is planned.
 
 [TypeScript]{.tag} [CesiumJS]{.tag} [React]{.tag} [Data pipeline]{.tag}
+:::
+:::
+
+## Big data & distributed systems {.group-title}
+
+::: {.cards .cards-wide}
+::: {.card}
+### [MapReduce-Reloaded](mapreduce-reloaded.qmd)
+[In active development · distributed systems · Go & Python]{.kicker}
+
+A from-scratch rebuild of Google's 2004 MapReduce. All 23 of the paper's features are built in Go, each tied to a test, along with coordinator crash recovery and a chaos test whose output must match a single-machine run. Object storage, compression and benchmarks are planned.
+
+[Go]{.tag} [gRPC]{.tag} [Docker Compose]{.tag} [Fault tolerance]{.tag}
 :::
 :::
 

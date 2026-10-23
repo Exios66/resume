@@ -101,7 +101,8 @@ class PortfolioAdditionTests(unittest.TestCase):
                 nav = self.one(parser, "div", **{"class": "project-nav"})
                 links = [attrs for tag, attrs in parser.children(nav) if tag == "a"]
                 if "aeroglobe" in name:
-                    expected = {"Case study": page.resolve(), "Code": "https://github.com/Exios66/aeroglobe"}
+                    expected = {"Case study": page.resolve(), "Code": "https://github.com/Exios66/aeroglobe",
+                                "Live site": "https://exios66.github.io/aeroglobe/"}
                 else:
                     expected = {"Case study": study, "Technical report": report,
                                 "Code": "https://github.com/Exios66/Mailroom-Corpus-EDA", "Dataset": DATASET_URL}
@@ -134,7 +135,9 @@ class PortfolioAdditionTests(unittest.TestCase):
         self.assertIn("In active development", parser.text(kicker))
         caveat = self.one(parser, "div", **{"class": "caveat"})
         self.assertIn("Work in progress", parser.text(caveat))
-        self.assertIn("no public demo", parser.text(caveat))
+        self.assertIn("no real historical day is published yet", parser.text(caveat))
+        caveat_links = [checks.attr(attrs, "href") for tag, attrs in parser.children(caveat) if tag == "a"]
+        self.assertEqual(caveat_links, ["https://exios66.github.io/aeroglobe/"])
         planned = self.one(parser, "h2", id="what-is-planned")
         self.assertEqual(parser.text(planned), "What is planned")
         body = self.one(parser, "div", **{"class": "page"})
@@ -143,8 +146,8 @@ class PortfolioAdditionTests(unittest.TestCase):
         self.assertFalse((checks.DOCS / "projects/aeroglobe/report.html").exists(), "AeroGlobe is a case study only")
         actions = self.one(parser, "div", **{"class": "actions"})
         action_links = [checks.attr(attrs, "href") for tag, attrs in parser.children(actions) if tag == "a"]
-        self.assertEqual(action_links, ["https://github.com/Exios66/aeroglobe"],
-                         "Only the code is available; do not advertise an unverified live demo")
+        self.assertEqual(action_links, ["https://exios66.github.io/aeroglobe/", "https://github.com/Exios66/aeroglobe"],
+                         "Issue #51: the live site comes first, then the code")
         _, index = self.read_page("projects/index.html")
         card = self.one(index, "section", id="aeroglobe")
         self.assertIn("In active development", index.text(card))

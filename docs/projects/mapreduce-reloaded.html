@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A from-scratch rebuild of Google’s MapReduce in Go, with a Python reference implementation: all 23 features of the 2004 paper, each tied to a named test, plus coordinator crash recovery, chaos testing and Prometheus metrics. In active development.">
+
+<title>MapReduce-Reloaded — Jack J. Burleson</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+
+
+<link href="../assets/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<meta name="theme-color" content="#0e6f7a">
+<meta name="author" content="Jack J. Burleson">
+<link rel="preload" href="../assets/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin="">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image-width" content="1200">
+<meta name="twitter:image-height" content="630">
+<script>
+  // Apply the saved theme before first paint so there is no light/dark flash.
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+  // Motion styles apply only when the visitor has not asked for reduced motion.
+  try {
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
+  } catch (e) {}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Jack J. Burleson",
+  "url": "https://exios66.github.io/resume/",
+  "jobTitle": "Machine Learning, Data Science, and AI Engineering & Safety",
+  "email": "mailto:jackjburleson@proton.me",
+  "address": { "@type": "PostalAddress", "addressLocality": "Madison", "addressRegion": "WI", "addressCountry": "US" },
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Madison" },
+    { "@type": "CollegeOrUniversity", "name": "University of Wisconsin–Parkside" }
+  ],
+  "knowsAbout": ["Machine learning", "Natural language processing", "LLM evaluation", "Computer vision", "Behavioral data science"],
+  "sameAs": [
+    "https://www.linkedin.com/in/jackjburleson",
+    "https://github.com/Exios66"
+  ]
+}
+</script>
+
+
+<link rel="stylesheet" href="../styles.css?v=41d6e9f6ec">
+<meta property="og:title" content="MapReduce-Reloaded — Jack J. Burleson">
+<meta property="og:description" content="A from-scratch rebuild of Google’s MapReduce in Go, with a Python reference implementation: all 23 features of the 2004 paper, each tied to a named test, plus coordinator crash recovery, chaos testing and Prometheus metrics. In active development.">
+<meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta property="og:site_name" content="Jack J. Burleson">
+<meta property="og:image:alt" content="Jack J. Burleson — Machine Learning · Data Science · AI Engineering &amp; Safety">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:title" content="MapReduce-Reloaded — Jack J. Burleson">
+<meta name="twitter:description" content="A from-scratch rebuild of Google’s MapReduce in Go, with a Python reference implementation: all 23 features of the 2004 paper, each tied to a named test, plus coordinator crash recovery, chaos testing and Prometheus metrics. In active development.">
+<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://exios66.github.io/resume/projects/mapreduce-reloaded.html">
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+
+
+
+<header class="site-header">
+  <nav class="site-nav" aria-label="Main">
+    <a class="site-title" href="../index.html">Jack J. Burleson</a>
+    <ul class="nav-list">
+      <li><a class="nav-link" href="../index.html">Home</a></li>
+      <li><a class="nav-link" href="../about.html">About</a></li>
+      <li><a class="nav-link" href="../projects/index.html" aria-current="page">Projects</a></li>
+      <li><a class="nav-link" href="../research.html">Research</a></li>
+      <li><a class="nav-link" href="../writing/index.html">Writing</a></li>
+      <li><a class="nav-link" href="../resume.html">Résumé</a></li>
+      <li hidden=""><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden=""><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg></span><span class="i-moon"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg></span></button></li>
+    </ul>
+  </nav>
+</header>
+<main id="main"><header id="title-block-header" class="quarto-title-block"></header>
+<div class="page">
+<p><a href="../projects/index.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>All projects</a></p>
+<div class="project-nav">
+<p><a href="../projects/mapreduce-reloaded.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="https://github.com/Exios66/MapReduce-Reloaded"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
+</div>
+<h1 class="page-title" id="mapreduce-reloaded">MapReduce-Reloaded</h1>
+<p><span class="kicker">In active development · big data &amp; distributed systems · Go &amp; Python</span></p>
+<p>A from-scratch rebuild of Google’s MapReduce, as described by Dean and Ghemawat in <a href="https://research.google.com/archive/mapreduce-osdi04.pdf"><em>MapReduce: Simplified Data Processing on Large Clusters</em>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> (OSDI 2004). Go is the main implementation. Python is a second implementation of the shared contract and of single-machine mode, so the two can be checked against each other byte for byte.</p>
+<div class="actions">
+<p><a href="https://github.com/Exios66/MapReduce-Reloaded" class="btn primary">View the code</a></p>
+</div>
+<div class="caveat">
+<p><strong>Work in progress.</strong> This page describes the code on 23 October 2026. Every feature of the paper is built in Go. The planned modern extensions (object storage and compression), the benchmarks and the final report are not built yet.</p>
+</div>
+<h2 id="at-a-glance">At a glance</h2>
+<div class="stats">
+<div class="stat">
+<p><span class="stat-value">23 / 23</span> <span class="stat-label">features of the paper built, each mapped to its code and a named test; a test fails if the mapping names a file or test that does not exist</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">350</span> <span class="stat-label">passing tests: 146 in Go and 204 in Python</span></p>
+</div>
+<div class="stat">
+<p><span class="stat-value">50</span> <span class="stat-label">chaos runs in a row that kill and stall workers and restart the coordinator, and still match single-machine output</span></p>
+</div>
+</div>
+<h2 id="the-problem">The problem</h2>
+<p>MapReduce is the paper that made large-scale data processing ordinary. You write a <code>map</code> function and a <code>reduce</code> function, and the system handles splitting the input, scheduling thousands of tasks, moving data between machines and surviving the machines that fail along the way. Spark, Hadoop and most modern batch systems descend from it.</p>
+<p>I wanted to understand those guarantees by building them, not by reading about them. The aim is a faithful rebuild: every feature in the paper, each with a test that proves it works, then extended with what a 2026 system would use instead of 2004 infrastructure.</p>
+<h2 id="approach">Approach</h2>
+<figure class="diagram" role="img" aria-labelledby="mr-cap"><svg viewbox="0 0 800 264" aria-hidden="true" focusable="false"><defs><marker id="mr-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="0" y="30" width="150" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="75.0" y="60" text-anchor="middle" font-weight="600">mr CLI</text><text x="75.0" y="79" text-anchor="middle">submits a job,</text><text x="75.0" y="98" text-anchor="middle">or runs it</text><text x="75.0" y="117" text-anchor="middle">-local (oracle)</text><rect class="d-box d-accent" x="190" y="30" width="190" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="285.0" y="60" text-anchor="middle" font-weight="600">Coordinator</text><text x="285.0" y="79" text-anchor="middle">task table</text><text x="285.0" y="98" text-anchor="middle">write-ahead log</text><text x="285.0" y="117" text-anchor="middle">heartbeats, backups</text><rect class="d-box" x="420" y="30" width="170" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="505.0" y="60" text-anchor="middle" font-weight="600">Map tasks</text><text x="505.0" y="79" text-anchor="middle">split → map</text><text x="505.0" y="98" text-anchor="middle">R partition files</text><text x="505.0" y="117" text-anchor="middle">shuffle server</text><rect class="d-box" x="630" y="30" width="170" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="715.0" y="60" text-anchor="middle" font-weight="600">Reduce tasks</text><text x="715.0" y="79" text-anchor="middle">fetch partitions</text><text x="715.0" y="98" text-anchor="middle">merge sort, reduce</text><text x="715.0" y="117" text-anchor="middle">part-r-NNNNN</text><path class="d-arrow" d="M150 90.0H188" marker-end="url(#mr-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M380 90.0H418" marker-end="url(#mr-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M590 90.0H628" marker-end="url(#mr-ah)" fill="none" stroke="currentColor"></path><rect class="d-box" x="190" y="195" width="190" height="62" rx="8" stroke-dasharray="5 4" fill="none" stroke="currentColor"></rect><text x="285.0" y="225" text-anchor="middle" font-weight="600">Status page</text><text x="285.0" y="244" text-anchor="middle">HTTP, /metrics</text><path class="d-arrow" d="M285.0 150V193" marker-end="url(#mr-ah)" fill="none" stroke="currentColor"></path><rect class="d-box" x="420" y="195" width="170" height="62" rx="8" stroke-dasharray="5 4" fill="none" stroke="currentColor"></rect><text x="505.0" y="225" text-anchor="middle" font-weight="600">Prometheus</text><text x="505.0" y="244" text-anchor="middle">Grafana dashboard</text><path class="d-arrow" d="M380 226.0H418" marker-end="url(#mr-ah)" fill="none" stroke="currentColor"></path><text class="d-muted" x="0" y="216" font-size="13">Go and Python share</text><text class="d-muted" x="0" y="234" font-size="13">the protobuf contract,</text><text class="d-muted" x="0" y="252" font-size="13">file format and hash</text><text class="d-muted" x="630" y="216" font-size="13">Workers run map and</text><text class="d-muted" x="630" y="234" font-size="13">reduce tasks; 4 run in</text><text class="d-muted" x="630" y="252" font-size="13">the Compose cluster</text></svg><figcaption id="mr-cap">MapReduce-Reloaded as built so far: the mr command submits a job with mr submit to the coordinator, or runs it in one process as local mode, which every other mode must match byte for byte. The coordinator keeps the task table, logs each decision to a write-ahead log, and tracks workers by heartbeat. Workers ask it for tasks over gRPC; map tasks write R partition files and serve them, and reduce tasks fetch their partition from every map task, sort, reduce and write one output file each. The coordinator serves a status page, the coordinator and every worker export Prometheus metrics, and a Grafana dashboard shows them.</figcaption></figure>
+<p><strong>A single-machine oracle first.</strong> The first working version runs the whole job in one process (<code>mr run -local</code>). Every later version, distributed or fault tolerant, must produce exactly the same output files. Correctness is something the tests prove, not something I hope for.</p>
+<p><strong>One contract, two languages.</strong> Go and Python share a gRPC and protobuf message contract, a documented on-disk record format with a checksum on every block, and a partition hash written out by hand in both languages. The built-in hash functions of both languages use a random seed per process, so two workers would disagree about which reducer gets a key. Test vectors and golden files hold both implementations to the same bytes.</p>
+<p><strong>Small, reviewable steps.</strong> Each piece of work is one issue and one pull request, and each phase adds a short design record. A <code>make check</code> quality gate runs every linter and test before each push. There is no hosted CI.</p>
+<h2 id="what-i-built">What I built</h2>
+<ul>
+<li><strong>The programming model and the data path (§2–§4.4).</strong> Input splitting on record boundaries, partitioning by <code>hash(key) mod R</code>, a combiner, an external merge sort for data larger than memory, pluggable input and output formats, and atomic commits, so a half-written output file is never visible.</li>
+<li><strong>A distributed cluster (§3.1–§3.2).</strong> A coordinator keeps the task table and the location of every intermediate file. Workers ask it for tasks over gRPC, map tasks write R partition files and serve them, and reducers stream their partition from every map task.</li>
+<li><strong>Fault tolerance (§3.3, §3.6, §4.6, §4.9).</strong>
+<ul>
+<li>Workers send heartbeats. A worker that misses three is declared dead, and its finished map tasks run again, because their output was on its disk.</li>
+<li>The coordinator logs every decision to a write-ahead log and resumes the job after a restart. The 2004 implementation aborted the job instead.</li>
+<li>Backup copies of the last slow tasks run near the end of a job, and the first copy to finish wins.</li>
+<li>A record that crashes user code twice is skipped on the next attempt.</li>
+<li>Counters are counted only from the winning attempt of each task, so re-run tasks do not double-count.</li>
+</ul></li>
+<li><strong>Locality and status (§3.4, §4.8).</strong> The scheduler prefers to run a map task on the host that holds its input. The coordinator serves a status page, the coordinator and workers export Prometheus metrics, a Grafana dashboard shows them, and logs can be written as structured JSON.</li>
+<li><strong>The paper’s example programs (§2.3, §5).</strong> Grep, word count, URL access frequency, reverse web-link graph, term vectors, inverted index and distributed sort, each with a test.</li>
+<li><strong>A Docker Compose cluster.</strong> One coordinator, four workers, Prometheus and Grafana, with a memory limit on each service so the whole cluster fits on one 8 GB virtual machine. An end-to-end script checks the cluster’s output against the oracle.</li>
+</ul>
+<h2 id="what-chaos-testing-found">What chaos testing found</h2>
+<p>The chaos test runs word count while, at random moments, workers die, new ones join, workers stall for 50–250 ms and the coordinator restarts from its log. A run passes only if the output files and the counters equal single-machine mode. Each run’s choices come from a seed, so a failure can be replayed.</p>
+<p>Its first runs failed on seed 7. The output held an extra <code>_temporary</code> directory: a reduce attempt that had already lost, to a backup copy or because its worker was declared dead, kept running and recreated the directory after the job had cleaned it up. Now the job creates that directory when it starts, and attempts never do. An attempt that runs after the job has finished fails and leaves nothing behind.</p>
+<p>The test runs in one process, so a “dead” worker behaves like a machine cut off from the network, not one that lost power. Killing containers and dropping packets need the Compose cluster, and that driver is not written yet.</p>
+<h2 id="what-is-planned">What is planned</h2>
+<ul>
+<li>S3-compatible object storage, run locally with MinIO, in place of the paper’s GFS.</li>
+<li>Compression for intermediate and output files.</li>
+<li>A benchmark tool, and small-scale reruns of the paper’s §5 experiments that compare the shapes of the graphs, not the absolute numbers.</li>
+<li>A final report.</li>
+</ul>
+<p>Further extensions, such as a full Python coordinator and worker, a standby coordinator, skew handling and Parquet input, are stretch goals and may not be built.</p>
+<h2 id="what-im-learning">What I’m learning</h2>
+<ul>
+<li>Build the oracle first. Once a simple version defines the right answer, every harder version is a test against it, not a judgement call.</li>
+<li>Write the contract down before the code. The hand-written hash exists because both languages’ built-in hashes would have sent the same key to different reducers without any error.</li>
+<li>Random fault injection finds bugs that one-failure-at-a-time tests miss. The seed 7 bug needed two overlapping events to appear.</li>
+</ul>
+<h2 id="stack">Stack</h2>
+<p><span class="tag">Go</span> <span class="tag">Python</span> <span class="tag">gRPC</span> <span class="tag">Protocol Buffers</span> <span class="tag">Docker Compose</span> <span class="tag">Prometheus</span> <span class="tag">Grafana</span> <span class="tag">Distributed systems</span></p>
+</div>
+
+</main>
+<footer class="site-footer">
+  <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
+</footer>
+<script src="../assets/js/site.js?v=857c7d4672" defer=""></script>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-github" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></symbol><symbol id="i-linkedin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></symbol><symbol id="i-mail" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></symbol><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-download" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></symbol><symbol id="i-map-pin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol><symbol id="i-layers" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></symbol><symbol id="i-brain" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M19.938 10.5a4 4 0 0 1 .585.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M19.967 17.484A4 4 0 0 1 18 18"></path></symbol><symbol id="i-scale" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></symbol><symbol id="i-waves" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></symbol><symbol id="i-database" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></symbol><symbol id="i-clock" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol></svg>
+
+<script>
+  // Theme toggle: shown only once this script runs; switches to the opposite of what is currently shown and remembers the choice.
+  // Print button: opens the browser print dialog.
+  (function () {
+    var root = document.documentElement;
+    /** Return a nonempty data-theme value, or the system's dark/light preference. */
+    function current() {
+      var set = root.getAttribute("data-theme");
+      if (set) return set;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    /** Set the button's accessible label and icon to offer the opposite theme. */
+    function label(btn) {
+      var dark = current() === "dark";
+      btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+      btn.setAttribute("data-mode", dark ? "dark" : "light");
+      // The hidden attribute, not CSS, picks the icon, so only one shows even without styles.css.
+      var sun = btn.querySelector && btn.querySelector(".i-sun");
+      var moon = btn.querySelector && btn.querySelector(".i-moon");
+      if (sun && moon) { sun.hidden = !dark; moon.hidden = dark; }
+    }
+    var toggle = document.querySelector(".theme-toggle");
+    if (toggle) {
+      // Its list item is rendered hidden so there is no dead control (or stray bullet) without JavaScript; shown once it can work.
+      if (toggle.parentNode) toggle.parentNode.hidden = false;
+      toggle.hidden = false;
+      label(toggle);
+      toggle.addEventListener("click", function () {
+        var next = current() === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+        label(toggle);
+      });
+    }
+    var print = document.querySelector(".print-btn");
+    if (print) {
+      print.addEventListener("click", function (e) { e.preventDefault(); window.print(); });
+    }
+  })();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+    tabsets.forEach(function(tabset) {
+      const tabby = new Tabby('#' + tabset.id);
+    });
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/exios66\.github\.io\/resume");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+
+
+
+
+</body></html>
