@@ -19,7 +19,7 @@ description: "Capstone with an industry partner: one LangGraph pipeline for docu
 
 ::: {.stats}
 ::: {.stat}
-[7]{.stat-value} [Python packages: entity extraction, classification, routing, scalable workflows]{.stat-label}
+[5]{.stat-value} [Python packages: entity extraction, classification, routing, scalable workflows]{.stat-label}
 :::
 ::: {.stat}
 [1]{.stat-value} [LangGraph pipeline joining routing, experiments, scoring, data and deployment]{.stat-label}
@@ -44,11 +44,11 @@ The design is one LangGraph pipeline that joins legal-document routing, prompt e
 
 {{< include ../partials/diagrams/_digital-mailroom.qmd >}}
 
-I split the work into seven packages so each part can be tested and swapped on its own.
+I split the work into five packages so each part can be tested and swapped on its own.
 
 ## What I built
 
-- **Seven Python packages** covering entity extraction, classification, routing and scalable workflows.
+- **Five Python packages** covering entity extraction, classification, routing and scalable workflows.
 - **One LangGraph pipeline** that joins legal-document routing, prompt experiments, deterministic scoring, dataset management and deployment.
 - **Prompt experiments and deterministic scoring**, so prompt choices are judged by fixed rules against known labels instead of by another model.
 - **Dataset management** for the public-source dataset described below.

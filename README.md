@@ -1,6 +1,6 @@
 # Jack J. Burleson
 
-**AI / Machine Learning · Data Science** — I build AI systems from start to finish: multi-agent document pipelines, fine-tuned and calibrated transformers, LLM evaluation, and behavioral prediction models.
+**Machine Learning · Data Science · AI Engineering & Safety** — I build AI systems from start to finish: multi-agent document pipelines, fine-tuned and calibrated transformers, LLM evaluation, and behavioral prediction models.
 
 Madison, WI · Open to relocation
 
@@ -26,7 +26,7 @@ I'm interested in AI systems that know when they are unsure: calibrated classifi
 
 Each project has a case study on the [portfolio](https://exios66.github.io/resume/).
 
-- [Digital-Mailroom](https://exios66.github.io/resume/projects/digital-mailroom.html): my capstone with American Family Insurance: seven Python packages and one LangGraph pipeline for document routing, prompt experiments, scoring, and deployment.
+- [Digital-Mailroom](https://exios66.github.io/resume/projects/digital-mailroom.html): my capstone with American Family Insurance: five Python packages and one LangGraph pipeline for document routing, prompt experiments, scoring, and deployment.
 - [Mailroom-ML](https://exios66.github.io/resume/projects/mailroom-ml.html): a calibrated ModernBERT classifier that handles routine documents and knows when to hand off to an LLM.
 - [Mailroom Reloaded](https://exios66.github.io/resume/projects/mailroom-reloaded.html): the mailroom rebuilt as one deployable service, with an audit log of every decision.
 - [RVL-CDIP-Classifier](https://exios66.github.io/resume/projects/rvl-cdip-classifier.html): zero-shot document classification with vision LLMs, with tracked prompt versions and cost per page.
@@ -42,7 +42,7 @@ Each project has a case study on the [portfolio](https://exios66.github.io/resum
 ## Background
 
 - **Education:** M.S. candidate, Psychology: Data Science in Human Behavior, UW–Madison (expected Dec 2026). B.S. Psychology, UW–Parkside (2020–2025).
-- **Now:** building services at UW–Madison Recreation & Wellbeing and driving for Avis Budget Group in Madison, alongside my capstone.
+- **Now:** building services at UW–Madison Recreation & Wellbeing in Madison, alongside my capstone.
 - **Research:** undergraduate researcher in a cognitive neuroscience lab at UW–Parkside (2024–2025), working with EEG and presenting at the 2025 Midwestern Psychological Association conference.
 - **Before that:** logistics coordinator at Meijer Distribution (2020–2025), promoted from Retail Loader.
 
