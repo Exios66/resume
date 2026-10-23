@@ -35,7 +35,7 @@ A from-scratch rebuild of Google's MapReduce, as described by Dean and Ghemawat 
 [350]{.stat-value} [passing tests: 146 in Go and 204 in Python]{.stat-label}
 :::
 ::: {.stat}
-[50]{.stat-value} [chaos runs in a row that kill and stall workers and restart the coordinator, and still match single-machine output]{.stat-label}
+[50]{.stat-value} [chaos runs in a row, with random worker kills, stalls and coordinator restarts, that still match single-machine output]{.stat-label}
 :::
 :::
 
@@ -49,7 +49,7 @@ I wanted to understand those guarantees by building them, not by reading about t
 
 {{< include ../partials/diagrams/_mapreduce-reloaded.qmd >}}
 
-**A single-machine oracle first.** The first working version runs the whole job in one process (`mr run -local`). Every later version, distributed or fault tolerant, must produce exactly the same output files. Correctness is something the tests prove, not something I hope for.
+**A single-machine oracle first.** The first working version runs the whole job in one process (`mr run -local`). Every later version, distributed or fault tolerant, must produce exactly the same output files. The tests check each version against it.
 
 **One contract, two languages.** Go and Python share a gRPC and protobuf message contract, a documented on-disk record format with a checksum on every block, and a partition hash written out by hand in both languages. The built-in hash functions of both languages use a random seed per process, so two workers would disagree about which reducer gets a key. Test vectors and golden files hold both implementations to the same bytes.
 
@@ -65,9 +65,9 @@ I wanted to understand those guarantees by building them, not by reading about t
   - Backup copies of the last slow tasks run near the end of a job, and the first copy to finish wins.
   - A record that crashes user code twice is skipped on the next attempt.
   - Counters are counted only from the winning attempt of each task, so re-run tasks do not double-count.
-- **Locality and status (§3.4, §4.8).** The scheduler prefers to run a map task on the host that holds its input. The coordinator serves a status page, the coordinator and workers export Prometheus metrics, a Grafana dashboard shows them, and logs can be written as structured JSON.
+- **Locality and status (§3.4, §4.8).** The scheduler prefers to run a map task on the host that holds its input. The coordinator serves a status page, the coordinator and workers export Prometheus metrics, an optional monitoring profile adds Prometheus and a Grafana dashboard, and logs can be written as structured JSON.
 - **The paper's example programs (§2.3, §5).** Grep, word count, URL access frequency, reverse web-link graph, term vectors, inverted index and distributed sort, each with a test.
-- **A Docker Compose cluster.** One coordinator, four workers, Prometheus and Grafana, with a memory limit on each service so the whole cluster fits on one 8 GB virtual machine. An end-to-end script checks the cluster's output against the oracle.
+- **A Docker Compose cluster.** One coordinator and four workers, with Prometheus and Grafana as an optional profile, and a memory limit on each service so the whole cluster fits on one 8 GB virtual machine. An end-to-end script checks the cluster's output against the oracle.
 
 ## What chaos testing found
 
@@ -90,7 +90,7 @@ Further extensions, such as a full Python coordinator and worker, a standby coor
 
 - Build the oracle first. Once a simple version defines the right answer, every harder version is a test against it, not a judgement call.
 - Write the contract down before the code. The hand-written hash exists because both languages' built-in hashes would have sent the same key to different reducers without any error.
-- Random fault injection finds bugs that one-failure-at-a-time tests miss. The seed 7 bug needed two overlapping events to appear.
+- Random fault injection finds bugs that one-failure-at-a-time tests miss. The seed 7 bug appeared only when a losing attempt outlived the job's cleanup.
 
 ## Stack
 

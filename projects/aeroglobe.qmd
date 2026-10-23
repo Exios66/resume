@@ -22,7 +22,7 @@ A browser-based 3D globe for flight tracking. It is a work in progress, and an e
 :::
 
 ::: {.caveat}
-**Work in progress.** The repository is being built right now, so this page will change. It describes the state of the code on 23 October 2026. The [live site](https://exios66.github.io/aeroglobe/) shows one snapshot of current traffic from OpenSky, taken when the site was last built, and a labeled sample day of generated flights. It does not poll live data, and no real historical day is published yet.
+**Work in progress.** The repository is being built right now, so this page will change. It describes the state of the code on 23 October 2026. The [live site](https://exios66.github.io/aeroglobe/) shows a short sample of real traffic, three OpenSky observations recorded when the site was built, and a labeled sample day of generated flights. It does not poll live data, and no real historical day is published yet.
 :::
 
 ## At a glance
@@ -56,23 +56,23 @@ The data side is a Node and TypeScript pipeline. It takes state vectors, turns t
 ## What I built
 
 - **The globe client.** A Cesium viewer with aircraft markers, search, filters for region, altitude, status and airline, a flight detail card, a flight list and a dark and light skin.
-- **A static data pipeline.** Normalization, flight segmentation, hourly chunking and a catalog, with a snapshot command that writes one OpenSky snapshot and a fixture command that writes a deterministic set of generated traces for offline work.
-- **A historical source.** An adapter for full days of adsb.lol flight data, which runs through the same pipeline and publishes to a separate data branch from my own machine. A global day needs about 10 GB of disk.
-- **Track replay.** A day picker, and a **Replay track** control that moves a selected aircraft along its recorded positions, with an option to keep the camera on it. Each aircraft draws a short trail from its consecutive observations.
+- **A static data pipeline.** Normalization, flight segmentation, hourly chunking and a catalog, with a snapshot command that records a few OpenSky observations and a fixture command that writes a deterministic set of generated traces for offline work.
+- **A historical source.** An adapter for full days of adsb.lol flight data, which runs through the same pipeline and can publish to a separate data branch from my own machine. A global day needs about 10 GB of disk.
+- **Playback and track replay.** A day picker and a time slider with play and pause, driven by the globe's clock, that moves every aircraft along its recorded positions. A **Replay track** control follows one selected aircraft, with an option to keep the camera on it. Up to 2,000 aircraft nearest the camera draw a short trail from their consecutive observations.
 - **Reference data.** Airport and airline tables built from public sources, with the source and licence of each recorded next to the file, and time-zone polygons for the planned overlay.
-- **Tests and checks.** The repository's continuous integration runs lint, the type-checker, the tests and the build on every push and pull request.
+- **Tests and checks.** The repository's continuous integration runs lint, the type-checker, the tests and the build on pushes and pull requests to the main branch.
 
 ## What is planned
 
 The design spec for the next stage is a draft. In outline:
 
 - a published historical day on the live site;
-- a playback engine that interpolates every aircraft's position in the browser, with a clock and a transport bar;
+- a faster playback engine that decodes data off the main thread and draws aircraft as one layer, with a transport bar that sets the speed and shows traffic over the day;
 - inferred routes between airports and a time-zone overlay;
 - a per-aircraft history panel;
 - a personal flight logbook kept in the browser.
 
-None of these is built yet, and the spec may change as I build.
+None of these is built yet beyond the basic playback above, and the spec may change as I build.
 
 ## What I'm learning
 

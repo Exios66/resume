@@ -69,7 +69,7 @@ The data work behind the mailroom projects: 3,302 documents assembled from publi
 ### [AeroGlobe](aeroglobe.qmd)
 [In active development · 3D flight data on a globe]{.kicker}
 
-A browser globe for flight tracking, built around a static data pipeline so that flights can be replayed without an always-on server. An early version is live: it shows a snapshot of current traffic and replays recorded tracks, and full-day playback is planned.
+A browser globe for flight tracking, built around a static data pipeline so that flights can be replayed without an always-on server. An early version is live: it shows a short sample of real traffic recorded when the site was built and replays recorded tracks, and full-day playback is planned.
 
 [TypeScript]{.tag} [CesiumJS]{.tag} [React]{.tag} [Data pipeline]{.tag}
 :::
@@ -84,7 +84,7 @@ A browser globe for flight tracking, built around a static data pipeline so that
 
 A from-scratch rebuild of Google's 2004 MapReduce. All 23 of the paper's features are built in Go, each tied to a test, along with coordinator crash recovery and a chaos test whose output must match a single-machine run. Object storage, compression and benchmarks are planned.
 
-[Go]{.tag} [gRPC]{.tag} [Docker Compose]{.tag} [Fault tolerance]{.tag}
+[Go]{.tag} [Python]{.tag} [gRPC]{.tag} [Docker Compose]{.tag} [Fault tolerance]{.tag}
 :::
 :::
 

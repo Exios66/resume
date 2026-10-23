@@ -50,7 +50,7 @@ class MapReduceReloadedTests(unittest.TestCase):
         self.assertEqual(destination(page, links[0]), (checks.DOCS / PAGE).resolve())
         text = parser.text(cards[0])
         self.assertIn("In active development", text)
-        self.assertIn("planned", text)
+        self.assertIn("Object storage, compression and benchmarks are planned.", text)
 
     def test_group_reuses_an_existing_icon_and_the_sprite_is_unchanged(self):
         _, index = self.read_page("projects/index.html")
@@ -117,6 +117,15 @@ class MapReduceReloadedTests(unittest.TestCase):
         self.assertEqual(checks.attr(canonical, "href"), SITE_URL + PAGE)
         locations = [node.text for node in ET.parse(checks.DOCS / "sitemap.xml").findall("{*}url/{*}loc")]
         self.assertEqual(locations.count(SITE_URL + PAGE), 1)
+
+    def test_aeroglobe_card_describes_the_live_build_without_overclaiming(self):
+        _, parser = self.read_page("projects/index.html")
+        card = self.one(parser, "section", id="aeroglobe")
+        text = parser.text(card)
+        self.assertIn("An early version is live", text)
+        self.assertIn("recorded when the site was built", text)
+        self.assertIn("full-day playback is planned", text)
+        self.assertNotIn("current traffic", text)
 
     def test_readme_links_the_published_case_study_once(self):
         readme = (checks.ROOT / "README.md").read_text(encoding="utf-8")
