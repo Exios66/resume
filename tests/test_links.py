@@ -273,7 +273,7 @@ class PortfolioRegressionTests(unittest.TestCase):
                     "degen-llms", "llm-personas", "psychometric-digital-twin", "mailroom-corpus-eda", "natd")
     FIGURE_SLUGS = ("mailroom-ml", "mailroom-reloaded", "rvl-cdip-classifier", "wave-laboratory",
                     "degen-llms", "psychometric-digital-twin", "mailroom-corpus-eda")
-    STUDY_SLUGS = ("digital-mailroom", "aeroglobe", "langtons-ant", *REPORT_SLUGS)
+    STUDY_SLUGS = ("digital-mailroom", "aeroglobe", "langtons-ant", "mapreduce-reloaded", *REPORT_SLUGS)
 
     def test_expected_case_studies_and_reports_are_published(self):
         """Verify every expected case study and report is published with one main landmark and heading."""

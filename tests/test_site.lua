@@ -233,7 +233,7 @@ assert(database_symbol:find("<ellipse ", 1, true) and database_symbol:find("<pat
 
 -- project-nav labels
 for label, icon in pairs({ ["Case study"] = "book-open", ["Technical report"] = "file-text",
-                           ["Code"] = "code", ["Live demo"] = "play" }) do
+                           ["Code"] = "code", ["Live demo"] = "play", ["Live site"] = "play" }) do
   assert(nav_icon_name(label) == icon, label)
   assert(nav_icon_name("  " .. label:lower() .. " ") == icon, label .. " is case and space tolerant")
 end
@@ -326,6 +326,7 @@ for _, label in ipairs({ "", "Data", "Data engineer", "Data visualization",
   assert(group_icon_name(label) == nil, "No group icon for " .. label)
 end
 assert(group_icon_name(nil) == nil, "Missing group label has no icon")
+assert(group_icon_name("Big data & distributed systems") == "layers", "Distributed-systems group reuses an existing icon")
 
 -- Pandoc splits the real heading into inlines. Preserve their order and the heading's attributes.
 local data_content = { str("Data"), SPACE, str("engineering"), SPACE, str("&"), SPACE, str("visualization") }

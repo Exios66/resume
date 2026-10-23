@@ -1,8 +1,9 @@
 """Layout checks for the downloadable résumé PDF.
 
-The layout follows the owner's v16 PDF: page 1 holds the summary, education
-and experience; page 2 holds the projects, then the technical skills. Section headings are letter-spaced in print, so whitespace is
-stripped before matching.
+The PDF is the owner's own v16 export, published as is apart from the phone
+number: page 1 holds the summary, education and experience; page 2 holds the
+projects, then the technical skills. Extracted text breaks lines between words,
+so whitespace is stripped before matching.
 """
 
 import re
@@ -16,7 +17,7 @@ except ImportError:  # pragma: no cover - optional dependency
 
 ROOT = Path(__file__).resolve().parents[1]
 PDF = ROOT / "docs" / "assets" / "Jack_Burleson_Resume.pdf"
-PROJECTS = ("Digital-Mailroom", "Mailroom-ML", "RVL-CDIP-Classifier",
+PROJECTS = ("Digital-Mailroom", "mailroom-ml", "RVL-CDIP-Classifier",
             "Psychometric Digital Twin", "Alignment-Gym", "MapReduce-Reloaded")
 
 
@@ -53,7 +54,7 @@ class ResumePdfLayout(unittest.TestCase):
 
     def test_no_tuning_slice_or_stale_figures(self):
         text = "".join(self.pages)
-        for stale in ("99.4%", "17+PROMPT", "AVISBUDGETGROUP", "7PYTHONPACKAGES"):
+        for stale in ("99.4%", "AVISBUDGETGROUP", "7PYTHONPACKAGES"):
             self.assertNotIn(stale, text)
 
     def test_summary_precedes_education(self):
@@ -62,7 +63,7 @@ class ResumePdfLayout(unittest.TestCase):
 
     def test_page_one_contains_complete_education_and_experience(self):
         first = self.pages[0]
-        for text in ("GPA 3.85", "GPA 3.93", "300 lab hours", "neuroethics, and pre-law",
+        for text in ("GPA: 3.85", "GPA: 3.93", "300 lab hours", "neuroethics, and pre-law",
                      "Building Services", "Undergrad Researcher", "Meijer Distribution",
                      "64 daily deliveries", "resolve logistics exceptions before shipment"):
             with self.subTest(text=text):
@@ -89,7 +90,7 @@ class ResumePdfLayout(unittest.TestCase):
 
     def test_project_figures_survive_pdf_export(self):
         second = self.pages[1]
-        for text in ("5 Python packages", "16 RVL-CDIP categories", "29 prompt iterations",
+        for text in ("5 Python packages", "16 RVL-CDIP categories", "17+ prompt iterations",
                      "252 matched survey participants", "89 needle/decoy pairs",
                      "28 condition cells", "Dean & Ghemawat, OSDI 2004"):
             with self.subTest(text=text):
@@ -101,7 +102,6 @@ class ResumePdfLayout(unittest.TestCase):
             "https://github.com/LLM-Mailroom-Services/mailroom-ml",
             "https://github.com/Exios66/RVL-CDIP-Classifier",
             "https://github.com/Exios66/psych755-jjb",
-            "https://github.com/Exios66/MapReduce-Reloaded",
         )
         links = [annotation.get_object().get("/A", {}).get("/URI")
                  for annotation in self.reader.pages[1].get("/Annots", [])]
@@ -110,6 +110,7 @@ class ResumePdfLayout(unittest.TestCase):
                 self.assertIn(url, links)
         # Alignment-Gym is a private repository; the PDF must not link to it.
         self.assertFalse([url for url in links if url and "alignment-gym" in url.lower()])
+        self.assertEqual(sorted(url for url in links if url), sorted(expected))
 
     def test_header_links_the_portfolio_and_omits_the_phone_number(self):
         links = [annotation.get_object().get("/A", {}).get("/URI")
@@ -117,6 +118,11 @@ class ResumePdfLayout(unittest.TestCase):
         self.assertIn("https://exios66.github.io/resume/", links)
         self.assertFalse([url for url in links if url and url.startswith("tel:")])
         self.assertNotRegex(self.raw_pages[0], r"(?<!\d)\d{3}[-.\s]\d{3}[-.\s]\d{4}(?!\d)")
+        header = " ".join(self.raw_pages[0].split())
+        for text in ("Madison, WI – Open to Relocation", "jackjburleson@proton.me",
+                     "linkedin.com/in/jackjburleson", "Portfolio"):
+            with self.subTest(text=text):
+                self.assertIn(text, header)
 
 
 class ResumePdfAssets(unittest.TestCase):

@@ -100,9 +100,11 @@ end
 
 local NAV_ICONS = {
   ["case study"] = "book-open", ["technical report"] = "file-text", ["code"] = "code", ["live demo"] = "play",
+  ["live site"] = "play",
 }
 local GROUP_ICONS = {
-  { "document intelligence", "layers" }, { "data engineering", "database" }, { "behavioral machine learning", "brain" },
+  { "document intelligence", "layers" }, { "data engineering", "database" }, { "big data", "layers" },
+  { "behavioral machine learning", "brain" },
   { "cognitive neuroscience", "brain" },
   { "llm agent design", "scale" }, { "side projects", "waves" },
 }

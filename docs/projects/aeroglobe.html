@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="A 3D flight-tracking globe in active development: a React and CesiumJS client over a static data pipeline, with a plan to play back historical flights without an always-on server.">
+<meta name="description" content="A 3D flight-tracking globe in active development, with an early version live: a React and CesiumJS client over a static data pipeline, built to play back flights without an always-on server.">
 
 <title>AeroGlobe — Jack J. Burleson</title>
 <style>
@@ -80,15 +80,15 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=c201da4fd0">
+<link rel="stylesheet" href="../styles.css?v=41d6e9f6ec">
 <meta property="og:title" content="AeroGlobe — Jack J. Burleson">
-<meta property="og:description" content="A 3D flight-tracking globe in active development: a React and CesiumJS client over a static data pipeline, with a plan to play back historical flights without an always-on server.">
+<meta property="og:description" content="A 3D flight-tracking globe in active development, with an early version live: a React and CesiumJS client over a static data pipeline, built to play back flights without an always-on server.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta property="og:site_name" content="Jack J. Burleson">
 <meta property="og:image:alt" content="Jack J. Burleson — Machine Learning · Data Science · AI Engineering &amp; Safety">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="AeroGlobe — Jack J. Burleson">
-<meta name="twitter:description" content="A 3D flight-tracking globe in active development: a React and CesiumJS client over a static data pipeline, with a plan to play back historical flights without an always-on server.">
+<meta name="twitter:description" content="A 3D flight-tracking globe in active development, with an early version live: a React and CesiumJS client over a static data pipeline, built to play back flights without an always-on server.">
 <meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://exios66.github.io/resume/projects/aeroglobe.html">
@@ -119,53 +119,55 @@ ul.task-list li input[type="checkbox"] {
 <div class="page">
 <p><a href="../projects/index.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>All projects</a></p>
 <div class="project-nav">
-<p><a href="../projects/aeroglobe.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="https://github.com/Exios66/aeroglobe"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
+<p><a href="../projects/aeroglobe.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="https://github.com/Exios66/aeroglobe"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a> <a href="https://exios66.github.io/aeroglobe/"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-play"></use></svg>Live site</a></p>
 </div>
 <h1 class="page-title" id="aeroglobe">AeroGlobe</h1>
 <p><span class="kicker">In active development · data pipeline &amp; 3D visualization</span></p>
-<p>A browser-based 3D globe for flight tracking. It is a work in progress: the pieces described here exist today, and the parts marked as planned do not.</p>
+<p>A browser-based 3D globe for flight tracking. It is a work in progress, and an early version is live. The pieces described here exist today, and the parts marked as planned do not.</p>
 <div class="actions">
-<p><a href="https://github.com/Exios66/aeroglobe" class="btn primary">View the code</a></p>
+<p><a href="https://exios66.github.io/aeroglobe/" class="btn primary">Open the live site</a> <a href="https://github.com/Exios66/aeroglobe" class="btn">View the code</a></p>
 </div>
 <div class="caveat">
-<p><strong>Work in progress.</strong> The repository is being built right now, so this page will change. It describes the state of the code in October 2026. There is no public demo to link to yet.</p>
+<p><strong>Work in progress.</strong> The repository is being built right now, so this page will change. It describes the state of the code on 23 October 2026. The <a href="https://exios66.github.io/aeroglobe/">live site⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> shows a short sample of real traffic, three OpenSky observations recorded when the site was built, and a labeled sample day of generated flights. It does not poll live data, and no real historical day is published yet.</p>
 </div>
 <h2 id="at-a-glance">At a glance</h2>
 <div class="stats">
 <div class="stat">
-<p><span class="stat-value">257</span> <span class="stat-label">passing tests in 32 files, with lint, type-checking and the production build all clean</span></p>
+<p><span class="stat-value">395</span> <span class="stat-label">passing tests in 42 files, with lint, type-checking and the production build all clean</span></p>
 </div>
 <div class="stat">
 <p><span class="stat-value">4</span> <span class="stat-label">stages in the data pipeline: normalize, segment, chunk, catalog</span></p>
 </div>
 <div class="stat">
-<p><span class="stat-value">4,900</span> <span class="stat-label">lines of TypeScript across the client, server, pipeline and shared code</span></p>
+<p><span class="stat-value">5,800</span> <span class="stat-label">lines of TypeScript across the client, server, pipeline and shared code</span></p>
 </div>
 </div>
 <h2 id="the-problem">The problem</h2>
 <p>Most flight trackers show what is in the air now. I wanted to look at flights that have already happened: where an aircraft went, how a route looked over a day, and what a busy hour of global traffic looks like on a globe. That is a data problem before it is a graphics problem. Bulk historical flight logs are large, free and awkward, and a live API gives you only a short window.</p>
 <p>My first version was live-first, polling an API every 15 seconds. Auditing it showed that a historical view needs a different shape: process the data ahead of time, publish it as static files, and let the browser do the rest.</p>
 <h2 id="approach">Approach</h2>
-<figure class="diagram" role="img" aria-labelledby="aero-cap"><svg viewbox="0 0 800 264" aria-hidden="true" focusable="false"><defs><marker id="aero-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="0" y="30" width="170" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="85.0" y="60" text-anchor="middle" font-weight="600">Flight data</text><text x="85.0" y="79" text-anchor="middle">OpenSky snapshot</text><text x="85.0" y="96" text-anchor="middle">or generated</text><text x="85.0" y="113" text-anchor="middle">fixtures</text><rect class="d-box" x="210" y="30" width="170" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="295.0" y="60" text-anchor="middle" font-weight="600">pipeline/</text><text x="295.0" y="79" text-anchor="middle">normalize</text><text x="295.0" y="96" text-anchor="middle">segment</text><text x="295.0" y="113" text-anchor="middle">chunk, catalog</text><rect class="d-box d-accent" x="420" y="30" width="170" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="505.0" y="60" text-anchor="middle" font-weight="600">Static data/</text><text x="505.0" y="79" text-anchor="middle">catalog.json</text><text x="505.0" y="96" text-anchor="middle">hourly track</text><text x="505.0" y="113" text-anchor="middle">chunks, indexes</text><rect class="d-box" x="620" y="30" width="180" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="710.0" y="60" text-anchor="middle" font-weight="600">Browser client</text><text x="710.0" y="79" text-anchor="middle">React, Zustand</text><text x="710.0" y="96" text-anchor="middle">CesiumJS globe</text><path class="d-arrow" d="M170 90.0H208" marker-end="url(#aero-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M380 90.0H418" marker-end="url(#aero-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M590 90.0H620" marker-end="url(#aero-ah)" fill="none" stroke="currentColor"></path><rect class="d-box" x="620" y="195" width="180" height="62" rx="8" stroke-dasharray="5 4" fill="none" stroke="currentColor"></rect><text x="710.0" y="222" text-anchor="middle" font-weight="600">Express proxy</text><text x="710.0" y="241" text-anchor="middle">local dev, live polling</text><path class="d-arrow" d="M710.0 195V152" marker-end="url(#aero-ah)" fill="none" stroke="currentColor"></path><text class="d-muted" x="0" y="225" font-size="13">In progress: a source for historical</text><text class="d-muted" x="0" y="243" font-size="13">flight days is planned, not built yet</text></svg><figcaption id="aero-cap">AeroGlobe data flow as built so far: state vectors from OpenSky, or generated fixtures, pass through a Node pipeline that normalizes, segments into flights and chunks by hour, and writes a catalog and track files as static data; the React and CesiumJS client reads them, and a small Express proxy serves live polling in local development. A source for historical flight days is planned but not built.</figcaption></figure>
+<figure class="diagram" role="img" aria-labelledby="aero-cap"><svg viewbox="0 0 800 264" aria-hidden="true" focusable="false"><defs><marker id="aero-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="0" y="30" width="170" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="85.0" y="60" text-anchor="middle" font-weight="600">Flight data</text><text x="85.0" y="79" text-anchor="middle">OpenSky samples,</text><text x="85.0" y="96" text-anchor="middle">adsb.lol days or</text><text x="85.0" y="113" text-anchor="middle">generated fixtures</text><rect class="d-box" x="210" y="30" width="170" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="295.0" y="60" text-anchor="middle" font-weight="600">pipeline/</text><text x="295.0" y="79" text-anchor="middle">normalize</text><text x="295.0" y="96" text-anchor="middle">segment</text><text x="295.0" y="113" text-anchor="middle">chunk, catalog</text><rect class="d-box d-accent" x="420" y="30" width="170" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="505.0" y="60" text-anchor="middle" font-weight="600">Static data/</text><text x="505.0" y="79" text-anchor="middle">catalog.json</text><text x="505.0" y="96" text-anchor="middle">hourly track</text><text x="505.0" y="113" text-anchor="middle">chunks, indexes</text><rect class="d-box" x="620" y="30" width="180" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="710.0" y="60" text-anchor="middle" font-weight="600">Browser client</text><text x="710.0" y="79" text-anchor="middle">React, Zustand</text><text x="710.0" y="96" text-anchor="middle">CesiumJS globe</text><path class="d-arrow" d="M170 90.0H208" marker-end="url(#aero-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M380 90.0H418" marker-end="url(#aero-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M590 90.0H620" marker-end="url(#aero-ah)" fill="none" stroke="currentColor"></path><rect class="d-box" x="620" y="195" width="180" height="62" rx="8" stroke-dasharray="5 4" fill="none" stroke="currentColor"></rect><text x="710.0" y="222" text-anchor="middle" font-weight="600">Express proxy</text><text x="710.0" y="241" text-anchor="middle">local dev, live polling</text><path class="d-arrow" d="M710.0 195V152" marker-end="url(#aero-ah)" fill="none" stroke="currentColor"></path><text class="d-muted" x="0" y="225" font-size="13">The live site ships a short OpenSky</text><text class="d-muted" x="0" y="243" font-size="13">sample and a sample day</text></svg><figcaption id="aero-cap">AeroGlobe data flow as built so far: state vectors from short OpenSky samples, full adsb.lol days or generated fixtures pass through a Node pipeline that normalizes, segments into flights and chunks by hour, and writes a catalog and track files as static data; the React and CesiumJS client reads them, and a small Express proxy serves live polling in local development. The live site ships a short OpenSky sample recorded at build time and a labeled sample day; no real historical day is published yet.</figcaption></figure>
 <p>The client is React and TypeScript with CesiumJS for the globe. State lives in Zustand stores, and search and filtering work on a set derived from the flight store. A small Express server proxies the live feed for local development.</p>
 <p>The data side is a Node and TypeScript pipeline. It takes state vectors, turns them into per-aircraft tracks, splits each track into flights, slices the tracks into hourly chunks and writes a catalog. The output is plain JSON that a static host can serve, so there is no database and no always-on API. The pipeline puts a size limit on each hourly chunk and throws an error when a chunk goes over it.</p>
 <h2 id="what-i-built">What I built</h2>
 <ul>
 <li><strong>The globe client.</strong> A Cesium viewer with aircraft markers, search, filters for region, altitude, status and airline, a flight detail card, a flight list and a dark and light skin.</li>
-<li><strong>A static data pipeline.</strong> Normalization, flight segmentation, hourly chunking and a catalog, with a snapshot command that writes one OpenSky snapshot and a fixture command that writes a deterministic set of generated traces for offline work.</li>
-<li><strong>Reference data.</strong> Airport and airline tables built from public sources, with the source and licence of each recorded next to the file.</li>
-<li><strong>Tests and checks.</strong> The repository’s continuous integration runs lint, the type-checker, the tests and the build on every push and pull request.</li>
+<li><strong>A static data pipeline.</strong> Normalization, flight segmentation, hourly chunking and a catalog, with a snapshot command that records a few OpenSky observations and a fixture command that writes a deterministic set of generated traces for offline work.</li>
+<li><strong>A historical source.</strong> An adapter for full days of adsb.lol flight data, which runs through the same pipeline and can publish to a separate data branch from my own machine. A global day needs about 10 GB of disk.</li>
+<li><strong>Playback and track replay.</strong> A day picker and a time slider with play and pause, driven by the globe’s clock, that moves every aircraft along its recorded positions. A <strong>Replay track</strong> control follows one selected aircraft, with an option to keep the camera on it. Up to 2,000 aircraft nearest the camera draw a short trail from their consecutive observations.</li>
+<li><strong>Reference data.</strong> Airport and airline tables built from public sources, with the source and licence of each recorded next to the file, and time-zone polygons for the planned overlay.</li>
+<li><strong>Tests and checks.</strong> The repository’s continuous integration runs lint, the type-checker, the tests and the build on pushes and pull requests to the main branch.</li>
 </ul>
 <h2 id="what-is-planned">What is planned</h2>
 <p>The design spec for the next stage is a draft. In outline:</p>
 <ul>
-<li>a source adapter for bulk historical flight days;</li>
-<li>a playback engine that interpolates positions in the browser, with a clock and a day picker;</li>
-<li>flown trails, inferred routes between airports and a time-zone overlay;</li>
+<li>a published historical day on the live site;</li>
+<li>a faster playback engine that decodes data off the main thread and draws aircraft as one layer, with a transport bar that sets the speed and shows traffic over the day;</li>
+<li>inferred routes between airports and a time-zone overlay;</li>
 <li>a per-aircraft history panel;</li>
 <li>a personal flight logbook kept in the browser.</li>
 </ul>
-<p>None of these is built yet, and the spec may change as I build.</p>
+<p>None of these is built yet beyond the basic playback above, and the spec may change as I build.</p>
 <h2 id="what-im-learning">What I’m learning</h2>
 <ul>
 <li>Choose where the work happens before choosing the framework. Moving the heavy work into a build step is what makes a historical view possible without running a server.</li>

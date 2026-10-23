@@ -25,7 +25,7 @@ An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages
 - `styles.css` holds the whole design: light/dark themes, mobile layout, print layout. Fonts (Newsreader for the display headings, Inter for text and UI, JetBrains Mono for code) are self-hosted in `assets/fonts/`.
 - `partials/` holds the head metadata (JSON-LD `Person` schema, theme bootstrapping), skip link, and the small theme-toggle script.
 - `assets/js/site.js` is the only site script file: a hairline under the sticky header (wide screens only), a reading-progress bar on technical reports, and a fade-in for project cards below the fold. The fade is skipped on deep links, reloads and back/forward navigation, and all motion is off under `prefers-reduced-motion` and in print.
-- `scripts/post-render.py` runs after every render. It recreates `docs/.nojekyll`, removes the repeated site name from page titles, adds a `?v=<hash>` to the `styles.css` and `site.js` links, and prints `resume.html` to `assets/Jack_Burleson_Resume.pdf`. The PDF is refreshed only when that step succeeds; without Playwright or Chromium the committed PDF is kept, so re-check it after editing the résumé.
+- `scripts/post-render.py` runs after every render. It recreates `docs/.nojekyll`, removes the repeated site name from page titles, adds a `?v=<hash>` to the `styles.css` and `site.js` links, and copies `assets/Jack_Burleson_Resume.pdf` to `docs/assets/` unchanged. That PDF is the owner's own two-page résumé, exported from their résumé document; the render never rebuilds it from `resume.html`.
 - `scripts/og-image.html` + `scripts/make-og.py` regenerate the social preview image `assets/og-image.png`.
 - `partials/diagrams/_*.qmd` are inline SVG architecture diagrams. Pages pull them in with `{{< include >}}`. They draw with `currentColor` and CSS classes, so they follow the light/dark theme. The leading underscore stops Quarto from rendering them as pages.
 - `docs/` holds the built site. Do not edit it by hand.
@@ -39,24 +39,24 @@ An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages
 
 ## Update the site
 
-One-time setup for the PDF step (skip it and the render still works; the existing PDF is kept). `pypdf` lets `tests/test_resume_pdf.py` check the PDF's layout instead of skipping:
+Optional: `pypdf` lets `tests/test_resume_pdf.py` check the PDF's layout instead of skipping:
 
 ```sh
-pip install playwright pypdf
-playwright install chromium
+pip install pypdf
 ```
 
 Then:
 
 1. Edit the `.qmd` files.
-2. Run `quarto render`. This rebuilds `docs/` and the PDF.
-3. Commit and push, including `docs/` and the refreshed `assets/Jack_Burleson_Resume.pdf`.
+2. To change the downloadable résumé, replace `assets/Jack_Burleson_Resume.pdf` with the new export, and edit `resume.qmd` to match it.
+3. Run `quarto render`. This rebuilds `docs/` and copies the PDF into it.
+4. Commit and push, including `docs/`.
 
-Use `quarto preview` while writing. The header and footer appear there too, but the PDF is only rebuilt by `quarto render`.
+Use `quarto preview` while writing. The header and footer appear there too.
 
 Run the checks with `lua tests/test_site.lua`, `node --test tests/theme.test.cjs tests/icons.test.cjs`, and `python -m pytest tests`. `tests/icons.test.cjs` reads the rendered `docs/` and checks that every icon sizes itself and the stylesheet and script links are cache-busted. `tests/test_links.py` checks the rendered `docs/` for broken internal links, images without alt text, and strings that must never be published.
 
-To refresh the social image after changing the tagline, run `python scripts/make-og.py`.
+To refresh the social image after changing the tagline, run `python scripts/make-og.py` (needs `pip install playwright` and `playwright install chromium`).
 
 ## Things to fill in
 

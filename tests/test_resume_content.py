@@ -11,14 +11,14 @@ import test_links as checks
 from test_portfolio_additions import ContentParser
 
 
-# Alignment-Gym's repository is private, so its name is not a link.
+# Names and links follow v16: Alignment-Gym (a private repository) and MapReduce-Reloaded are not links.
 PROJECT_REPOS = (
     ("Digital-Mailroom", "https://github.com/LLM-Mailroom-Services/Digital-Mailroom"),
-    ("Mailroom-ML", "https://github.com/LLM-Mailroom-Services/mailroom-ml"),
+    ("mailroom-ml", "https://github.com/LLM-Mailroom-Services/mailroom-ml"),
     ("RVL-CDIP-Classifier", "https://github.com/Exios66/RVL-CDIP-Classifier"),
     ("Psychometric Digital Twin", "https://github.com/Exios66/psych755-jjb"),
     ("Alignment-Gym", None),
-    ("MapReduce-Reloaded", "https://github.com/Exios66/MapReduce-Reloaded"),
+    ("MapReduce-Reloaded", None),
 )
 SECTIONS = ("Professional Summary", "Education", "Professional Experience",
             "Projects", "Technical Skills")
@@ -93,14 +93,14 @@ class ResumeContentTests(unittest.TestCase):
         entries = self.entries("Education")
         self.assertEqual(len(entries), 2)
         for entry, school, degree, gpa in (
-            (entries[0], "University of Wisconsin–Madison", "M.S. Candidate", "GPA 3.85"),
-            (entries[1], "University of Wisconsin–Parkside", "B.S., Psychology", "GPA 3.93"),
+            (entries[0], "University of Wisconsin–Madison", "M.S. Candidate", "GPA: 3.85"),
+            (entries[1], "University of Wisconsin–Parkside", "B.S., Psychology", "GPA: 3.93"),
         ):
             with self.subTest(school=school):
                 text = normalize(self.parser.text(entry))
                 for claim in (school, degree, gpa):
                     self.assertIn(claim, text)
-        for claim in ("Aug 2025 – Dec 2026 (expected)", "about 95% of coursework is data science",
+        for claim in ("August 2025 – December 2026", "roughly 95% of coursework is data science",
                       "Spark, gRPC services, HDFS, Parquet, SQL, Docker", "Industry capstone"):
             self.assertIn(claim, normalize(self.parser.text(entries[0])))
         for claim in ("Provost's List (7x)", "Dean's List (8x)", "300 lab hours",
@@ -127,6 +127,20 @@ class ResumeContentTests(unittest.TestCase):
         self.assertIn("below 1% through root-cause investigation", meijer)
         self.assertNotIn("trailers", meijer)
 
+    def test_dates_sit_outside_the_title_box_so_they_stay_on_the_first_line(self):
+        heads = [attrs for tag, attrs, _ in self.parser.elements
+                 if "entry-head" in checks.classes(attrs)
+                 and any("date" in checks.classes(a) for _, a in self.parser.children(attrs))]
+        self.assertEqual(len(heads), 5)
+        for head in heads:
+            children = self.parser.children(head)
+            main = self.one(children, class_name="head-main")
+            inside = self.parser.children(main)
+            with self.subTest(head=self.parser.text(main)):
+                self.one(inside, tag="strong")
+                self.one(inside, class_name="sub")
+                self.assertFalse([a for _, a in inside if "date" in checks.classes(a)])
+
     def test_research_presentations_name_both_venues_on_both_pages(self):
         research = ContentParser(checks.DOCS / "research.html")
         resume_items = [self.parser.text(attrs) for tag, attrs in self.section("Professional Experience")
@@ -145,10 +159,11 @@ class ResumeContentTests(unittest.TestCase):
         labels = [self.parser.text(attrs) for tag, attrs in elements if tag == "dt"]
         values = [self.parser.text(attrs) for tag, attrs in elements if tag == "dd"]
         expected = {
-            "Languages & Data": ("PyArrow", "Hive", "JavaScript/TypeScript"),
-            "Machine Learning": ("ensemble methods", "resampling", "Lasso/Ridge", "neural networks"),
-            "AI Engineering": ("LangChain", "bias and robustness evals", "vLLM", "Ollama", "OpenRouter"),
-            "Engineering & Cloud": ("Git", "gRPC", "Spark/PySpark", "HDFS", "CHTC", "GCP"),
+            "Languages & Data": ("PyArrow", "Hive", "JavaScript/TypeScript", "Git"),
+            "Machine Learning": ("ensemble methods", "resampling methods", "Lasso/Ridge", "neural networks"),
+            "AI Engineering": ("LangChain", "bias & robustness evals", "vLLM", "Ollama", "OpenRouter"),
+            "Engineering & Cloud Services": ("gRPC", "Apache Spark, PySpark", "HDFS", "shell scripting (bash)",
+                                             "CHTC", "GCP"),
         }
         self.assertEqual(labels, list(expected))
         self.assertEqual(len(values), len(labels))
@@ -176,12 +191,12 @@ class ResumeContentTests(unittest.TestCase):
         claims = {
             "Digital-Mailroom": ("5 Python packages", "Enterprise Data Science division",
                                  "unified LangGraph pipeline", "reproducible Docker environment"),
-            "Mailroom-ML": ("ModernBERT document classifier", "data lineage tracking",
+            "mailroom-ml": ("ModernBERT document classifier", "data lineage tracking",
                             "probability calibration", "ONNX export for FastAPI serving on Modal"),
             "RVL-CDIP-Classifier": ("16 RVL-CDIP categories", "300-DPI", "OpenRouter vision models",
-                                    "29 prompt iterations", "cost projections"),
+                                    "17+ prompt iterations", "cost projections"),
             "Psychometric Digital Twin": ("252 matched survey participants", "factor analysis",
-                                          "Ollama, OpenRouter, vLLM", "bias by demographic group"),
+                                          "Ollama/OpenRouter/vLLM", "bias by demographic group"),
             "Alignment-Gym": ("fictional law firm", "89 needle/decoy pairs", "9 plot beats",
                               "0–3 temptation ladder", "28 condition cells", "seed-invariant truth spine",
                               "paired LLM judges", "calibration gates"),
@@ -197,7 +212,7 @@ class ResumeContentTests(unittest.TestCase):
     def test_stale_metrics_and_dates_do_not_return_to_the_public_resume(self):
         page = self.one([(tag, attrs) for tag, attrs, _ in self.parser.elements], class_name="page")
         text = normalize(self.parser.text(page))
-        for stale in (r"\b(?:10|ten|7|seven) Python packages\b", r"\b17\+ prompt", r"\b99\.4%",
+        for stale in (r"\b(?:10|ten|7|seven) Python packages\b", r"\b99\.4%",
                       r"\bJan 2026 – Present\b", r"\bJul 2020 – Dec 2025\b", r"Avis Budget Group"):
             with self.subTest(stale=stale):
                 self.assertNotRegex(text, stale)

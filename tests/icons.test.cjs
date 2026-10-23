@@ -59,3 +59,14 @@ test('the site script is loaded once per page and cache-busted', () => {
     assert.equal(scripts.length, 1, file);
   }
 });
+
+test('arrow icons stay smaller than the card titles they follow', () => {
+  const css = readFileSync(path.join(__dirname, '..', 'styles.css'), 'utf8');
+  const rule = css.match(/^\.icon-go \{([^}]*)\}/m);
+  assert.ok(rule, 'no .icon-go rule in styles.css');
+  for (const side of ['width', 'height']) {
+    const size = rule[1].match(new RegExp(`(?:^|;)\\s*${side}:\\s*([\\d.]+)em`));
+    assert.ok(size, `.icon-go sets no ${side} in em`);
+    assert.ok(Number(size[1]) < 1, `.icon-go ${side} is ${size[1]}em`);
+  }
+});
