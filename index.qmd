@@ -1,5 +1,5 @@
 ---
-pagetitle: "Jack J. Burleson — AI / Machine Learning · Data Science"
+pagetitle: "Jack J. Burleson — Machine Learning · Data Science · AI Engineering & Safety"
 description: "Portfolio of Jack J. Burleson: document-intelligence pipelines, transformer fine-tuning, LLM evaluation, and behavioral machine learning."
 ---
 
@@ -8,7 +8,7 @@ description: "Portfolio of Jack J. Burleson: document-intelligence pipelines, tr
 ::: {.hero}
 <div class="name" role="heading" aria-level="1">Jack J. Burleson</div>
 
-[AI / Machine Learning • Data Science]{.role}
+[Machine Learning • Data Science • AI Engineering & Safety]{.role}
 
 ::: {.lede}
 I build AI systems from start to finish: multi-agent document pipelines, fine-tuned and calibrated transformers, LLM evaluation harnesses, and behavioral prediction models.
@@ -38,7 +38,7 @@ M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (ex
 ### [Digital-Mailroom](projects/digital-mailroom.qmd)
 [Capstone · American Family Insurance]{.kicker}
 
-Seven Python packages and one LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, and deployment, in a reproducible Docker environment.
+Five Python packages and one LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, and deployment, in a reproducible Docker environment.
 :::
 
 ::: {.card}
