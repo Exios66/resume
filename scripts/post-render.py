@@ -13,6 +13,8 @@
    styles.css fails to load. The stylesheet's rules override these attributes.
 5. Adds a ?v=<content hash> to the site stylesheet and script links, so a
    browser or the Pages CDN never pairs new HTML with a stale cached copy.
+6. Inserts a table of contents on technical reports. Quarto's theme is none,
+   so toc: true in a report does not emit a nav.
 """
 import hashlib
 import html
@@ -174,6 +176,45 @@ def build_search_index():
     print(f"post-render: indexed {len(pages)} pages")
 
 
+H2_RE = re.compile(r'<h2\b[^>]*\bid="([^"]+)"[^>]*>(.*?)</h2>', re.S)
+
+
+def add_report_toc(text):
+    """Insert a contents nav before the first h2 of a long report."""
+    if 'id="TOC"' in text:
+        return text
+    heads = []
+    for match in H2_RE.finditer(text):
+        label = visible_text(match.group(2))
+        if label:
+            heads.append((match.group(1), label, match.start()))
+    if len(heads) < 3:
+        return text
+    items = "\n".join(
+        f'    <li><a href="#{html.escape(hid, quote=True)}">{html.escape(label)}</a></li>'
+        for hid, label, _ in heads
+    )
+    nav = (
+        '<nav id="TOC" role="doc-toc" aria-label="Table of contents">\n'
+        '  <p class="kicker">Contents</p>\n'
+        "  <ul>\n"
+        f"{items}\n"
+        "  </ul>\n"
+        "</nav>\n"
+    )
+    at = heads[0][2]
+    return text[:at] + nav + text[at:]
+
+
+def add_report_tocs():
+    """Apply add_report_toc to every rendered technical report."""
+    for page in DOCS.glob("projects/*/report.html"):
+        text = page.read_text(encoding="utf-8")
+        fixed = add_report_toc(text)
+        if fixed != text:
+            page.write_text(fixed, encoding="utf-8")
+
+
 def wrap_tables(text):
     """Give each top-level table a horizontal scroll container."""
     if 'class="table-scroll"' in text:
@@ -200,6 +241,7 @@ def main():
     (DOCS / "search.json").unlink(missing_ok=True)
     dedupe_titles()
     harden_diagram_pages()
+    add_report_tocs()
     wrap_table_pages()
     build_search_index()
     cache_bust_pages()

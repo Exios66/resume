@@ -71,6 +71,19 @@ class PostRenderTests(unittest.TestCase):
         self.assertEqual(self.source.read_bytes(), b"owner's PDF")
         self.assertIn("published Jack_Burleson_Resume.pdf", out)
 
+    def test_long_reports_get_a_contents_nav(self):
+        html = (
+            '<h1 id="title">Report</h1>\n'
+            '<h2 id="one">One</h2><p>a</p>\n'
+            '<h2 id="two">Two</h2><p>b</p>\n'
+            '<h2 id="three">Three</h2><p>c</p>\n'
+        )
+        fixed = POST["add_report_toc"](html)
+        self.assertIn('id="TOC"', fixed)
+        self.assertIn('href="#two"', fixed)
+        self.assertLess(fixed.index('id="TOC"'), fixed.index('id="one"'))
+        self.assertEqual(POST["add_report_toc"](fixed), fixed)
+
     def test_render_never_prints_the_page_to_pdf(self):
         self.assertNotIn("build_pdf", POST)
         self.assertNotIn("sync_playwright", (ROOT / "scripts/post-render.py").read_text(encoding="utf-8"))

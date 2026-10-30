@@ -1,0 +1,207 @@
+[
+  {
+    "title": "About",
+    "url": "about.html",
+    "text": "Background, skills, and education of Jack J. Burleson, an M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison."
+  },
+  {
+    "title": "Jack J. Burleson — Machine Learning · Data Science · AI Engineering & Safety",
+    "url": "index.html",
+    "text": "Portfolio of Jack J. Burleson: document-intelligence pipelines, transformer fine-tuning, LLM evaluation, and behavioral machine learning."
+  },
+  {
+    "title": "AeroGlobe: appendix",
+    "url": "projects/aeroglobe/appendix.html",
+    "text": "Verification notes for the AeroGlobe case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "AeroGlobe",
+    "url": "projects/aeroglobe.html",
+    "text": "A 3D flight-tracking globe in active development, with an early version live: a React and CesiumJS client over a static data pipeline, built to play back flights without an always-on server."
+  },
+  {
+    "title": "The Mandalay Bay: appendix",
+    "url": "projects/degen-llms/appendix.html",
+    "text": "Verification notes for the The Mandalay Bay case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "The Mandalay Bay: technical report",
+    "url": "projects/degen-llms/report.html",
+    "text": "Architecture, shared-screen rule, save format, randomness, exact slot return calculation, test counts, bugs fixed and limitations for The Mandalay Bay."
+  },
+  {
+    "title": "The Mandalay Bay",
+    "url": "projects/degen-llms.html",
+    "text": "A satirical choose-your-adventure casino and resort simulator with one chip wallet, a Python CLI, a browser terminal and a pixel-art RPG that share their screens."
+  },
+  {
+    "title": "Digital-Mailroom: appendix",
+    "url": "projects/digital-mailroom/appendix.html",
+    "text": "Verification notes for the Digital-Mailroom case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "Digital-Mailroom",
+    "url": "projects/digital-mailroom.html",
+    "text": "Capstone with an industry partner: one LangGraph pipeline for document routing, prompt experiments, deterministic scoring and reproducible deployment, built and tested on a dataset I assembled from public sources."
+  },
+  {
+    "title": "Projects",
+    "url": "projects/index.html",
+    "text": "Selected work in document intelligence, data engineering, distributed systems, model evaluation, behavioral machine learning, LLM agent design, and simulation, with case studies and selected technical reports."
+  },
+  {
+    "title": "Langton’s Ant: appendix",
+    "url": "projects/langtons-ant/appendix.html",
+    "text": "Verification notes for the Langton’s Ant case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "Langton’s Ant",
+    "url": "projects/langtons-ant.html",
+    "text": "An early version of a browser simulator for Langton’s ant and other turmites: any rule up to 32 colors and 16 states on an unbounded grid, a gallery of 20 published machines, and a pinned determinism test."
+  },
+  {
+    "title": "MORNINGSTAR: appendix",
+    "url": "projects/llm-personas/appendix.html",
+    "text": "Verification notes for the MORNINGSTAR case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "MORNINGSTAR: technical report",
+    "url": "projects/llm-personas/report.html",
+    "text": "Court structure, voting rules, runner design, executive layer, test counts, limitations and a proposed evaluation for MORNINGSTAR, a deliberative persona framework with no published evaluation."
+  },
+  {
+    "title": "MORNINGSTAR",
+    "url": "projects/llm-personas.html",
+    "text": "A deliberative persona framework that runs engineering decisions as courtroom proceedings, with a rule-bound vote, a written ruling and a saved transcript. It also contains a tamper-evident log library that the runner does not call yet. A design exploration, not an evaluated system."
+  },
+  {
+    "title": "Mailroom-Corpus-EDA: appendix",
+    "url": "projects/mailroom-corpus-eda/appendix.html",
+    "text": "Verification notes for the Mailroom-Corpus-EDA case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "Mailroom-Corpus-EDA: technical report",
+    "url": "projects/mailroom-corpus-eda/report.html",
+    "text": "Sources and licences, identity and provenance design, label separation, split rule, intent hydration, audit pipeline, revision history, test results and limitations for the mailroom dataset and its audit repository."
+  },
+  {
+    "title": "Mailroom-Corpus-EDA",
+    "url": "projects/mailroom-corpus-eda.html",
+    "text": "The data engineering behind the mailroom dataset: 3,302 documents assembled from public sources, with identity, provenance, label separation and an audit pipeline that checks every number it publishes."
+  },
+  {
+    "title": "Mailroom-ML: appendix",
+    "url": "projects/mailroom-ml/appendix.html",
+    "text": "Verification notes for the Mailroom-ML case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "Mailroom-ML: technical report",
+    "url": "projects/mailroom-ml/report.html",
+    "text": "Technical report on a ModernBERT document classifier: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits."
+  },
+  {
+    "title": "Mailroom-ML",
+    "url": "projects/mailroom-ml.html",
+    "text": "A ModernBERT document classifier with calibrated confidence, a routing gate that decides which documents can skip an LLM, and a leak audit that caught a label leak in my own training data."
+  },
+  {
+    "title": "Mailroom Reloaded: appendix",
+    "url": "projects/mailroom-reloaded/appendix.html",
+    "text": "Verification notes for the Mailroom Reloaded case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "Mailroom Reloaded: technical report",
+    "url": "projects/mailroom-reloaded/report.html",
+    "text": "Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published."
+  },
+  {
+    "title": "Mailroom Reloaded",
+    "url": "projects/mailroom-reloaded.html",
+    "text": "A compressed, deployment-ready Digital Mailroom on CrewAI Flows: a deterministic driver, a ModernBERT fast path, a durable audit trail, and consoles that replay every run."
+  },
+  {
+    "title": "MapReduce-Reloaded: appendix",
+    "url": "projects/mapreduce-reloaded/appendix.html",
+    "text": "Verification notes for the MapReduce-Reloaded case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "MapReduce-Reloaded",
+    "url": "projects/mapreduce-reloaded.html",
+    "text": "A from-scratch rebuild of Google’s MapReduce in Go, with a Python coordinator: F1–F24 of the 2004 paper, CircleCI, S3-compatible storage, compression, benchmarks and a final report. In active development."
+  },
+  {
+    "title": "The Neural Architecture of Truth and Deception: appendix",
+    "url": "projects/natd/appendix.html",
+    "text": "Verification notes for the The Neural Architecture of Truth and Deception case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "The Neural Architecture of Truth and Deception: technical report",
+    "url": "projects/natd/report.html",
+    "text": "Technical report on an exploratory study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references. The physiological, EEG, eye-tracking and workload data are withheld until they are authenticated."
+  },
+  {
+    "title": "The Neural Architecture of Truth and Deception",
+    "url": "projects/natd.html",
+    "text": "A pilot study of what happens when people talk to chatbots told to help or to deceive: nine participants, 18 sessions, five personas. Exam scores rose after helpful personas and almost nobody flagged deception. Physiological and neural recordings are withheld until the data are authenticated."
+  },
+  {
+    "title": "Psychometric Digital Twin: appendix",
+    "url": "projects/psychometric-digital-twin/appendix.html",
+    "text": "Verification notes for the Psychometric Digital Twin case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "Psychometric Digital Twin: technical report",
+    "url": "projects/psychometric-digital-twin/report.html",
+    "text": "Technical report on a PSYCH 755 study of LLM personas against classical ML for predicting PRCA communication apprehension: data, models, per-tier results, bias slices, secondary studies, reproduction and limits."
+  },
+  {
+    "title": "Psychometric Digital Twin",
+    "url": "projects/psychometric-digital-twin.html",
+    "text": "Can an LLM, given a second-person profile (“You are a …”) built from a survey respondent’s attributes, predict that person’s own communication-apprehension scores? A course study of LLM personas against classical ML on 241 respondents."
+  },
+  {
+    "title": "RVL-CDIP-Classifier: appendix",
+    "url": "projects/rvl-cdip-classifier/appendix.html",
+    "text": "Verification notes for the RVL-CDIP-Classifier case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "RVL-CDIP-Classifier: technical report",
+    "url": "projects/rvl-cdip-classifier/report.html",
+    "text": "Method, iteration history, results and limits of a prompt-only, zero-shot RVL-CDIP classifier built on an off-the-shelf vision model."
+  },
+  {
+    "title": "RVL-CDIP-Classifier",
+    "url": "projects/rvl-cdip-classifier.html",
+    "text": "A prompt-engineering study that sorts scanned documents into the 16 RVL-CDIP categories with an off-the-shelf vision model, reporting 82.6% on a larger 1,120-image slice that overlaps the 800-image slice; its overlap with the 160-image tuning slice was not verified."
+  },
+  {
+    "title": "Wave Laboratory: appendix",
+    "url": "projects/wave-laboratory/appendix.html",
+    "text": "Verification notes for the Wave Laboratory case study: source commit, counting method, and limits."
+  },
+  {
+    "title": "Wave Laboratory: technical report",
+    "url": "projects/wave-laboratory/report.html",
+    "text": "Wave spectra and ship-dynamics models, architecture, validation suite, test counts, limitations and plan-versus-shipped notes for Wave Laboratory."
+  },
+  {
+    "title": "Wave Laboratory",
+    "url": "projects/wave-laboratory.html",
+    "text": "A real-time 3D ocean-wave and ship-motion sandbox that runs in the browser, built on published wave spectra and checked against analytic results."
+  },
+  {
+    "title": "Research",
+    "url": "research.html",
+    "text": "Cognitive neuroscience research on chatbot truth, deception, and cognitive workload, plus EEG analysis, presented at the 2025 Midwestern Psychological Association conference."
+  },
+  {
+    "title": "Résumé — Jack J. Burleson",
+    "url": "resume.html",
+    "text": "Résumé of Jack J. Burleson: M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison with experience in LLM pipelines, transformer fine-tuning, and behavioral ML."
+  },
+  {
+    "title": "Writing",
+    "url": "writing/index.html",
+    "text": "Writing on this site is done by Hermes, my AI agent, on subjects close to my own interests: memory, identity, consciousness and what a mind made of software might be like."
+  }
+]

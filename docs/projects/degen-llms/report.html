@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -13,13 +13,10 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
+code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: 1.5em;}
-div.column{flex: auto;}
-@media screen {
-div.columns{gap: min(4vw, 1.5em);}
-div.column{overflow-x: auto;}
-}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -74,7 +71,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <meta name="theme-color" content="#0e6f7a">
 <meta name="author" content="Jack J. Burleson">
 <link rel="preload" href="../../assets/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin="">
@@ -115,7 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=41d6e9f6ec">
+<link rel="stylesheet" href="../../styles.css?v=08e9eb1198">
 <meta property="og:title" content="The Mandalay Bay: technical report — Jack J. Burleson">
 <meta property="og:description" content="Architecture, shared-screen rule, save format, randomness, exact slot return calculation, test counts, bugs fixed and limitations for The Mandalay Bay.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -148,25 +145,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <li><a class="nav-link" href="../../resume.html">Résumé</a></li>
       <li hidden=""><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden=""><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg></span><span class="i-moon"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg></span></button></li>
     </ul>
+    <form class="site-search" role="search">
+      <label class="visually-hidden" for="site-search">Search this site</label>
+      <input id="site-search" type="search" placeholder="Search" autocomplete="off" enterkeyhint="search">
+      <ul class="search-results" hidden=""></ul>
+    </form>
   </nav>
 </header>
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <div class="page">
 <p><a href="../../projects/degen-llms.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>Case study</a></p>
 <div class="project-nav">
-<p><a href="../../projects/degen-llms.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/degen-llms/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="https://github.com/Exios66/degen-llms"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a> <a href="https://exios66.github.io/degen-llms/"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-play"></use></svg>Live demo</a></p>
+<p><a href="../../projects/degen-llms.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/degen-llms/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/degen-llms/appendix.html">Appendix</a> <a href="https://github.com/Exios66/degen-llms"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a> <a href="https://exios66.github.io/degen-llms/"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-play"></use></svg>Live demo</a></p>
 </div>
 <h1 class="page-title" id="the-mandalay-bay-technical-report">The Mandalay Bay: technical report</h1>
 <p><span class="kicker">Side project · game systems &amp; simulation</span></p>
 <div class="actions">
 <p><a href="https://exios66.github.io/degen-llms/" class="btn primary">Open the terminal</a> <a href="https://exios66.github.io/degen-llms/rpg/" class="btn">Walk the RPG</a></p>
 </div>
+<nav id="TOC" role="doc-toc" aria-label="Table of contents">
+  <p class="kicker">Contents</p>
+  <ul>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#system-and-data">System and data</a></li>
+    <li><a href="#iteration-history">Iteration history</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#figures">Figures</a></li>
+    <li><a href="#reproducibility">Reproducibility</a></li>
+    <li><a href="#engineering-quality">Engineering quality</a></li>
+    <li><a href="#limitations-and-next-steps">Limitations and next steps</a></li>
+  </ul>
+</nav>
 <h2 id="summary">Summary</h2>
 <p>The Mandalay Bay is a satirical choose-your-adventure resort and casino simulator with one chip wallet. It runs as a Python command-line program, as a browser terminal and as a Phaser pixel-art overworld. The repository is named degen-llms as a joke. There is no language model in it. It is a systems project: one economy, three front ends, a save format that crosses them, and tests around the parts most likely to drift.</p>
 <p>It is satire. Chips are fictional, no real money is involved, and it is not affiliated with MGM Resorts International or the real Mandalay Bay.</p>
 <h2 id="system-and-data">System and data</h2>
 <h3 id="surfaces">Surfaces</h3>
-<table class="caption-top">
+<div class="table-scroll"><table class="caption-top">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -196,10 +211,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Phaser overworld over the same modules</td>
 </tr>
 </tbody>
-</table>
-<p>By line count (<code>wc</code>, blank lines included) <code>docs/js</code> holds about 33k lines of JavaScript, and about 44k with <code>docs/rpg/js</code> added (the RPG layer is about 10k). The repository has about 23.6k lines of Python in all, but that includes tests (about 3.6k) and scripts (about 5k). The runtime <code>mandalay_bay</code> package is about 12.8k lines.</p>
+</table></div>
+<p>By line count (<code>wc</code>, blank lines included) <code>docs/js</code> holds about 33k lines of JavaScript, and about 44k with <code>docs/rpg/js</code> added (the RPG layer is about 10k). On main <code>80399bf</code> (30 October 2026) the repository has 27,389 lines of Python outside <code>docs/</code>, including 5,170 in <code>tests/</code> and 6,801 in <code>scripts/</code>. The runtime <code>mandalay_bay</code> package is 13,121 lines.</p>
 <h3 id="content-as-data">Content as data</h3>
-<table class="caption-top">
+<div class="table-scroll"><table class="caption-top">
 <thead>
 <tr class="header">
 <th>Content</th>
@@ -228,7 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>204</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="architecture">Architecture</h3>
 <figure class="diagram" role="img" aria-labelledby="degen-cap"><svg viewbox="0 0 800 380" aria-hidden="true" focusable="false"><defs><marker id="degen-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="16" y="30" width="200" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="116" y="60" text-anchor="middle" font-weight="600">Python CLI</text><text x="116" y="77" text-anchor="middle">mandalay_bay package</text><text x="116" y="94" text-anchor="middle">stdlib only</text><rect class="d-box" x="300" y="30" width="200" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="400" y="60" text-anchor="middle" font-weight="600">Browser terminal</text><text x="400" y="77" text-anchor="middle">app.js RENDERERS</text><text x="400" y="94" text-anchor="middle">vanilla ES modules</text><rect class="d-box" x="584" y="30" width="200" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="684" y="60" text-anchor="middle" font-weight="600">Phaser RPG /rpg/</text><text x="684" y="77" text-anchor="middle">TerminalHostOverlay</text><text x="684" y="94" text-anchor="middle">+ 4 bespoke screens</text><rect class="d-box d-accent" x="300" y="160" width="200" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="400" y="190" text-anchor="middle" font-weight="600">buildXRenderers(ctx)</text><text x="400" y="207" text-anchor="middle">shared UI factories</text><text x="400" y="224" text-anchor="middle">in docs/js/ui/</text><rect class="d-box" x="300" y="290" width="200" height="70" rx="8" fill="none" stroke="currentColor"></rect><text x="400" y="318" text-anchor="middle" font-weight="600">ChipWallet</text><text x="400" y="336" text-anchor="middle">one balance, 5 slots</text><path class="d-arrow" d="M400 160V116" marker-end="url(#degen-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M500 202H684V116" marker-end="url(#degen-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M400 244V288" marker-end="url(#degen-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M116 114V325H298" marker-end="url(#degen-ah)" fill="none" stroke="currentColor"></path><text class="d-muted" x="130" y="196" font-size="13">same save schema,</text><text class="d-muted" x="130" y="213" font-size="13">separate port</text><text class="d-muted" x="130" y="230" font-size="13">of the rules</text><text class="d-accent" x="595" y="190" text-anchor="middle" font-size="12">same renderers</text></svg><figcaption id="degen-cap">The Mandalay Bay architecture: a Python CLI and a browser terminal each implement the rules; shared UI factories feed both the terminal and the Phaser RPG overlay; each surface reads and writes the same five-slot wallet schema, kept in the CLI's per-user directory or the browser's localStorage.</figcaption></figure>
 <p><strong>The delegation rule.</strong> The RPG never reimplements a game screen. Casino, hotel, pool, shops, sportsbook, racing, cashier and the meta screens are each written once in <code>docs/js/ui/</code> as a <code>buildXRenderers(ctx)</code> factory. It returns a map from view name to render function. The terminal spreads those maps into its <code>RENDERERS</code> table. The RPG’s <code>TerminalHostOverlay</code> builds the same <code>ctx</code> and mounts the same functions inside an encounter panel. Four screens are drawn by the RPG itself because they read better in the world: blackjack, hold’em, roulette and the House of Blues rhythm game. They still use the shared stake picker for bet entry. The architecture note adds a direction: new logic goes in <code>docs/js/</code> first and the RPG consumes it, never the reverse.</p>
@@ -241,7 +256,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>estimate_base_game_rtp</code> in <code>mandalay_bay/activities/slots.py</code> does not simulate spins. It loops over every combination of symbols on the three reels. It multiplies the three symbol probabilities, runs the real payout function on that combination and sums probability times win. It returns the return to player and the hit frequency, excluding progressives. The result is exact, so a test can assert on it with no tolerance for sampling noise.</p>
 <p>The numbers are not realistic. A test named for the parody machine <code>fortune</code> pins its return between 155% and 185%, with a hit frequency of at least 28%. I also ran the estimator over all 37 machines in the catalog. Every one returns more than 100% in the base game: the lowest are <code>fortune</code> and <code>high_roller</code> at about 168%, and the highest is a salon machine at about 1,049%. Hit frequency ranges from about 4% to about 36%. These machines pay the player on average. That is the satire. Nothing here models real casino odds.</p>
 <h2 id="iteration-history">Iteration history</h2>
-<p>The changelog runs from 1.1.0 (2026-07-26) to 1.2.2 (2026-08-26), with pull requests numbered up to the 150s. I did not count commits.</p>
+<p>The changelog itself still ends at 1.2.2 (2026-08-26). Merged pull requests now run through #160, and the changelog does not yet have entries for #158–#160, so this page does not claim that it does. I did not count commits.</p>
 <div class="timeline">
 <ul>
 <li><strong>1.1.0, 2026-07-26</strong> — Trading Floor with 744 stored contracts, 337 sports events and 204 prediction scenarios, Arcade Alley cabinets, Vegas Strip Drive, craps and a lottery counter, and the walkable Strip overworld in the RPG. Rewards tier thresholds aligned to the docs: saves keep their lifetime totals and the tier is recomputed, so a player who had maxed the old ladder can drop until they wager more. Valet garage exit softlock fixed.</li>
@@ -260,7 +275,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>There are no performance benchmarks. The evidence is the test suite, the CI run list and the screenshots below.</p>
 <h3 id="test-counts">Test counts</h3>
 <p>These are collected, not pass rates. I did not run the suite for this report.</p>
-<table class="caption-top">
+<div class="table-scroll"><table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Suite</th>
@@ -271,13 +291,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td>pytest</td>
-<td>282 tests collected</td>
-<td><code>pytest --co</code> over <code>tests/</code></td>
+<td>379 <code>def test_</code> functions in 52 files under <code>tests/</code></td>
+<td>line-start grep on <code>80399bf</code>, not a fresh <code>pytest --co</code></td>
 </tr>
 <tr class="even">
-<td>Node smoke scripts</td>
-<td>12 scripts</td>
-<td><code>scripts/smoke-test-*.mjs</code></td>
+<td>Node scripts</td>
+<td>13 <code>scripts/smoke-test-*.mjs</code> and 5 <code>scripts/test-*-regressions.mjs</code></td>
+<td>18 scripts on <code>80399bf</code></td>
 </tr>
 <tr class="odd">
 <td>Browser smoke test</td>
@@ -285,8 +305,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>scripts/smoke-test-web.py</code></td>
 </tr>
 </tbody>
-</table>
-<p>CI (<code>.github/workflows/checks.yml</code>) runs pytest on Python 3.11. A second job runs on Node 22: an RPG world data check (<code>smoke-test-rpg.mjs</code>), a validation that every import under <code>docs/js</code> resolves, six more smoke scripts and the browser smoke test. That is seven of the 12 Node scripts; the other five are not in the workflow.</p>
+</table></div>
+<p>CI (<code>.github/workflows/checks.yml</code>) runs pytest on Python 3.11. The Node job loops over every <code>scripts/smoke-test-*.mjs</code> and <code>scripts/test-*-regressions.mjs</code>, then runs the browser smoke test. The old “7 of 12” description is obsolete. The live Pages build is deployed by hand from <code>gh-pages</code>, so the demo can lag main. It was not re-checked for drift on 30 October 2026.</p>
 <p><code>tests/test_save_version_migration.py</code> covers a version 3 save with no rewards state, version 7 tier fields, and a version 8 web save with an <code>rpg</code> block loading in the CLI.</p>
 <h2 id="figures">Figures</h2>
 <div class="quarto-figure quarto-figure-center">
@@ -330,7 +350,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <h2 id="limitations-and-next-steps">Limitations and next steps</h2>
 <ul>
-<li>The README is stale. It still says 14 slot machines and 200+ tests. The data files and <code>pytest --co</code> give the current numbers.</li>
+<li>The README still says “200+ tests”. It no longer says “14 slot machines”. The gap to the grep count above is larger than it was when this note said both. The data files still give 37 slot machines.</li>
 <li>Package metadata says version 1.0.0 while the changelog is at 1.2.2.</li>
 <li>The Pages deploy is manual from the <code>gh-pages</code> branch, so the live demo can lag <code>main</code>.</li>
 <li>Blackjack rule tests are small: <code>test_rules.py</code> has 9 tests and <code>test_hand.py</code> has 8.</li>
@@ -340,11 +360,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </div>
 
-</main>
+<nav class="project-pager" aria-label="Projects"><a class="pager-prev" href="../langtons-ant.html">← Langton's Ant</a></nav></main>
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="../../assets/js/site.js?v=857c7d4672" defer=""></script>
+<script src="../../assets/js/site.js?v=89b76baf98" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-github" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></symbol><symbol id="i-linkedin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></symbol><symbol id="i-mail" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></symbol><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-download" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></symbol><symbol id="i-map-pin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol><symbol id="i-layers" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></symbol><symbol id="i-brain" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M19.938 10.5a4 4 0 0 1 .585.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M19.967 17.484A4 4 0 0 1 18 18"></path></symbol><symbol id="i-scale" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></symbol><symbol id="i-waves" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></symbol><symbol id="i-database" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></symbol><symbol id="i-clock" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol></svg>
 
 <script>

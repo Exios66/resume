@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -13,13 +13,10 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
+code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: 1.5em;}
-div.column{flex: auto;}
-@media screen {
-div.columns{gap: min(4vw, 1.5em);}
-div.column{overflow-x: auto;}
-}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -74,7 +71,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <meta name="theme-color" content="#0e6f7a">
 <meta name="author" content="Jack J. Burleson">
 <link rel="preload" href="../../assets/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin="">
@@ -115,7 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=41d6e9f6ec">
+<link rel="stylesheet" href="../../styles.css?v=08e9eb1198">
 <meta property="og:title" content="Mailroom-ML: technical report — Jack J. Burleson">
 <meta property="og:description" content="Technical report on a ModernBERT document classifier: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -148,23 +145,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <li><a class="nav-link" href="../../resume.html">Résumé</a></li>
       <li hidden=""><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden=""><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg></span><span class="i-moon"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg></span></button></li>
     </ul>
+    <form class="site-search" role="search">
+      <label class="visually-hidden" for="site-search">Search this site</label>
+      <input id="site-search" type="search" placeholder="Search" autocomplete="off" enterkeyhint="search">
+      <ul class="search-results" hidden=""></ul>
+    </form>
   </nav>
 </header>
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <div class="page">
 <p><a href="../../projects/mailroom-ml.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>Case study</a></p>
 <div class="project-nav">
-<p><a href="../../projects/mailroom-ml.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/mailroom-ml/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="https://github.com/LLM-Mailroom-Services/mailroom-ml"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
+<p><a href="../../projects/mailroom-ml.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/mailroom-ml/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/mailroom-ml/appendix.html">Appendix</a> <a href="https://github.com/LLM-Mailroom-Services/mailroom-ml"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
 </div>
 <h1 class="page-title" id="mailroom-ml-technical-report">Mailroom-ML: technical report</h1>
 <p><span class="kicker">ModernBERT ingest classifier · training, calibration, routing</span></p>
+<nav id="TOC" role="doc-toc" aria-label="Table of contents">
+  <p class="kicker">Contents</p>
+  <ul>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#system-and-data">System and data</a></li>
+    <li><a href="#iteration-history">Iteration history</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#figures">Figures</a></li>
+    <li><a href="#reproducibility">Reproducibility</a></li>
+    <li><a href="#engineering-quality">Engineering quality</a></li>
+    <li><a href="#limitations-and-next-steps">Limitations and next steps</a></li>
+  </ul>
+</nav>
 <h2 id="summary">Summary</h2>
 <p>Mailroom-ML trains a hierarchical ModernBERT-base classifier for legal and insurance documents. It has one document-type head and one subclass head per type. Its job is to give a calibrated answer and a routing decision: either “this is safe to accept” or “send it to the LLM sorter”.</p>
-<p>On the final run, scored on the 323-document test split (541 windows), document-type accuracy is 0.9505 and window ECE is 0.0152. Under the routing gate, 74.3% of documents take the fast path, meaning they are handled without an LLM call. The fast-path and coverage numbers are optimistic, because the sweep that supports the 0.97 routing cutoff and the decode sweep both ran on this same split (see Routing and selective risk). Three of four acceptance gates are met. Contract subclass F1 is 0.162 against a floor of 0.20, so the subclass heads are not ready to act without the LLM.</p>
-<p>Numbers on this page labelled “test split” come from those 323 documents. The split was kept out of training, out of checkpoint selection (done on validation) and out of calibration fitting. It is not untouched, though. I used it to compare runs, to run the selective-risk sweep that supports the 0.97 cutoff, and to run the decode sweep. The 0.97 value itself is a preset in the project’s config, and the sweep recommended the same value. I name the project’s runs as follows: Run 3 is an early two-epoch run, Arm A and Arm B are two comparison runs (a one-epoch smoke run and a three-epoch run), and M9b is the final four-epoch run. The six figures are from Arm B, not from the final run. Where the two differ I say so.</p>
+<p>The current run is M9c (<code>eval_m9c-20261014-113614</code>), checked against main <code>01c2272</code> on 30 October 2026. On the 323-document test split (541 windows), document-type accuracy is 0.9598 (310 of 323) and window ECE is 0.0189. Conditional subclass accuracy is 0.7387 (229 of 310), short of the 0.75 gate. A confidence-only upper bound on gate acceptance is 0.3901 (126 of 323) at threshold 0.94. That is not a production fast-path rate: full guards accept fewer documents, and contract and correspondence are excluded from fast-path routing. The out-of-distribution flag rate is 5.57% (18 of 323). Primary serving is ONNX on CPU. The Modal serve app is a fallback.</p>
+<p>M9b is the previous four-epoch run, not the current one. Its document-type accuracy was 0.9505, its window ECE was 0.0152, and its fast path was 74.3% (240 of 323) at a 0.97 cutoff. Three of its four acceptance gates were met. Contract subclass F1 was 0.162 against a floor of 0.20. Those M9b sentences are history. Later sections that still quote 0.97, 74.3%, or the four-gate framing are describing M9b unless they say M9c.</p>
+<p>Numbers on this page labelled “test split” come from those 323 documents. The split was kept out of training, out of checkpoint selection (done on validation) and out of calibration fitting. It is not untouched. Run 3 is an early two-epoch run. Arm A and Arm B are two comparison runs (a one-epoch smoke run and a three-epoch run). The six figures are from Arm B. Source main does not contain an Arm B chart directory, only m9a-local charts, so the figures stay labelled as Arm B and were not re-plotted from M9c. Where a number is M9b rather than M9c, the text says so.</p>
 <h2 id="system-and-data">System and data</h2>
 <h3 id="stages-and-modules">Stages and modules</h3>
-<table class="caption-top">
+<div class="table-scroll"><table class="caption-top">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -234,7 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>deploy/onnx_export.py</code>, <code>deploy/onnx_parity_check.py</code>, <code>deploy/modal_app.py</code>, <code>deploy/serve_app.py</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="data">Data</h3>
 <p>The corpus has 3,302 documents in 55 document-type by subclass strata. The test split holds 323 of them, and the other 2,979 are split 90/10 into train and validation (2,680 and 299 documents; 5,068 windows in total). Splits are stratified by document type with a fixed seed. There are five trained document types: contract, merger agreement, corporate record, correspondence and insurance claim. A sixth label, <code>unknown</code>, exists only at inference as an abstention. The corpus was built from public sources; <a href="../../projects/digital-mailroom.html">the Digital-Mailroom case study</a> describes how.</p>
 <p>The test split contains 60 contracts, 47 corporate records, 85 pieces of correspondence, 114 insurance claims and 17 merger agreements. Several subclass cells have only a handful of examples, which limits what the subclass numbers can show.</p>
@@ -253,7 +269,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The early lesson came before Run 3. An earlier build used the filename as a fallback title. In that data, 42.8% of filenames carried the subclass name, and the insurance subclass F1 was a suspicious 1.0. I removed the fallback, republished the training set, and added a check to the build that fails if a filename-shaped title comes back.</p>
 <h2 id="results">Results</h2>
 <h3 id="final-run-test-split-323-documents-541-windows">Final run, test split (323 documents, 541 windows)</h3>
-<table class="caption-top">
+<div class="table-scroll"><table class="caption-top">
 <thead>
 <tr class="header">
 <th>Measure</th>
@@ -298,9 +314,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>0.575 s per document</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="run-comparison-test-split">Run comparison, test split</h3>
-<table class="caption-top">
+<div class="table-scroll"><table class="caption-top">
 <colgroup>
 <col style="width: 15%">
 <col style="width: 21%">
@@ -347,10 +363,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: right;">0.0152</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>On the 323 paired documents, the paired bootstrap gives a document-type difference of exactly 0.0000 between the final run and Arm B (all differences on this page are final minus Arm B), so the accuracy did not change. What changed is calibration and how many documents clear the gate. The fast-path rate rose by 0.44 (0.743 against 0.303), with a 95% interval of 0.38 to 0.50, which excludes zero. The comparison tool prints the opposite order, Arm B minus final, so its interval reads -0.50 to -0.38.</p>
 <h3 id="per-head-macro-f1-test-split">Per-head macro-F1, test split</h3>
-<table class="caption-top">
+<div class="table-scroll"><table class="caption-top">
 <thead>
 <tr class="header">
 <th>Head</th>
@@ -385,10 +401,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: right;">0.000</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The insurance score is high because that class is templated and has only six subclasses. Given the earlier leak, I treat a 1.000 as a prompt to keep looking, not as evidence of general skill. At the default decode, the merger-agreement result is a collapse: all 17 test merger agreements were assigned to one rare subclass that had 13 training windows, against 450 for the largest. Contract errors are different. The model spreads its answers over many subclasses and gets 14 of 53 right where the type was right, and services and supply contracts, with real support in training, are never recovered.</p>
 <h3 id="acceptance-gates-test-split">Acceptance gates, test split</h3>
-<table class="caption-top">
+<div class="table-scroll"><table class="caption-top">
 <thead>
 <tr class="header">
 <th>Gate</th>
@@ -423,7 +439,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>not met</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="routing-and-selective-risk">Routing and selective risk</h3>
 <p>The selective-risk sweep looks for the lowest confidence cutoff whose accepted set has a Wilson error bound within a 2% budget and a band calibration error under 0.05, with at least 30 observations. Lower cutoffs (0.87 to 0.96) met the error budget but failed the calibration check. On the final run it picks 0.97, accepts about 80% of windows (431 of 541) and reports a Wilson upper bound of 0.013 on the window error (1 miss in 431). That is a window-level figure. At the document level, I counted the per-document rows in the evaluation file: of the 240 documents on the fast path, none had the wrong document type, and 82 had the wrong subclass. Subclass labels on the fast path are therefore not reliable, and I treat the fast path as a document-type decision only.</p>
 <div class="caveat">
@@ -490,7 +506,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Seeds and pins: every split and shuffle uses seed 42; the final run’s recorded settings were 4 epochs, batch 4 with 8 gradient-accumulation steps, learning rate 2e-5, subclass head learning rate 1e-3, label smoothing 0.05, and maximum length 8,192. The paired bootstrap uses 2,000 resamples at seed 42. Data sources are pinned to revisions in <code>src/mailroom_ml/config.py</code>. Cloud training needs a Hugging Face token and a Modal account and is gated on an explicit budget flag.</p>
 <h2 id="engineering-quality">Engineering quality</h2>
 <ul>
-<li>485 test functions in 33 test files, plus a shared <code>conftest.py</code>, covering calibration, windowing, routing, provenance, OOD, dataset build, evaluation CLI, training and deployment code.</li>
+<li>493 <code>def test_</code> functions in 33 <code>test_*.py</code> files, plus a shared <code>conftest.py</code>, counted by a line-start grep on main <code>01c2272</code> (24 October 2026). They cover calibration, windowing, routing, provenance, OOD, dataset build, evaluation CLI, training and deployment code.</li>
 <li>CI on pushes to <code>main</code> and on pull requests: <code>ruff</code> and <code>pytest -m "not fullcorpus"</code>, with strict markers.</li>
 <li>Deploy-layer tests skip themselves when heavy extras are missing and never touch the network.</li>
 <li>Failure behaviour is explicit: if the model is missing, fails to load, or has a label mismatch, the document goes to the LLM path instead of getting a guess. Flagged out-of-distribution documents fail the fast path, and so do catch-all <code>other</code> predictions and subclasses with fewer than 5 training rows.</li>
@@ -508,11 +524,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </div>
 
-</main>
+<nav class="project-pager" aria-label="Projects"><a class="pager-prev" href="../digital-mailroom.html">← Digital-Mailroom</a><a class="pager-next" href="../mailroom-reloaded.html">Mailroom Reloaded →</a></nav></main>
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="../../assets/js/site.js?v=857c7d4672" defer=""></script>
+<script src="../../assets/js/site.js?v=89b76baf98" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-github" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></symbol><symbol id="i-linkedin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></symbol><symbol id="i-mail" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></symbol><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-download" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></symbol><symbol id="i-map-pin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol><symbol id="i-layers" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></symbol><symbol id="i-brain" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M19.938 10.5a4 4 0 0 1 .585.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M19.967 17.484A4 4 0 0 1 18 18"></path></symbol><symbol id="i-scale" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></symbol><symbol id="i-waves" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></symbol><symbol id="i-database" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></symbol><symbol id="i-clock" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol></svg>
 
 <script>

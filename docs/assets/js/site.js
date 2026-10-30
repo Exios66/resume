@@ -8,6 +8,68 @@
   var reduce = false;
   try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 
+  // Site search. The index is built at render time; without it the field stays a quiet input.
+  (function () {
+    var form = doc.querySelector(".site-search");
+    var input = form && form.querySelector("input");
+    var list = form && form.querySelector(".search-results");
+    if (!form || !input || !list) return;
+    var script = doc.querySelector('script[src*="assets/js/site.js"]');
+    var src = script ? script.getAttribute("src").split("?")[0] : "assets/js/site.js";
+    var indexUrl = src.replace(/assets\/js\/site\.js$/, "assets/search-index.json");
+    var siteRoot = src.replace(/assets\/js\/site\.js$/, "");
+    var pages = null;
+    function hide() { list.hidden = true; list.innerHTML = ""; }
+    function show(items) {
+      list.innerHTML = "";
+      items.forEach(function (item) {
+        var li = doc.createElement("li");
+        var a = doc.createElement("a");
+        a.setAttribute("href", siteRoot + item.url);
+        var title = doc.createElement("span");
+        title.className = "hit-title";
+        title.textContent = item.title;
+        a.appendChild(title);
+        if (item.text) {
+          var blurb = doc.createElement("span");
+          blurb.className = "hit-text";
+          blurb.textContent = item.text;
+          a.appendChild(blurb);
+        }
+        li.appendChild(a);
+        list.appendChild(li);
+      });
+      list.hidden = items.length === 0;
+    }
+    function ready(run) {
+      if (pages) { run(); return; }
+      fetch(indexUrl).then(function (res) { return res.ok ? res.json() : []; }).then(function (data) {
+        pages = data || [];
+        run();
+      }).catch(function () { pages = []; });
+    }
+    input.addEventListener("input", function () {
+      var q = input.value.trim().toLowerCase();
+      if (q.length < 2) { hide(); return; }
+      ready(function () {
+        var hits = [];
+        for (var i = 0; i < pages.length && hits.length < 8; i++) {
+          var page = pages[i];
+          var hay = (page.title + " " + page.text).toLowerCase();
+          if (hay.indexOf(q) !== -1) hits.push(page);
+        }
+        show(hits);
+      });
+    });
+    doc.addEventListener("click", function (event) {
+      if (!form.contains(event.target)) hide();
+    });
+    input.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") hide();
+    });
+    form.addEventListener("submit", function (event) { event.preventDefault(); });
+  })();
+
   var frame = 0;
   var tasks = [];
   /** Run all registered scroll tasks once per animation frame. */

@@ -17,6 +17,7 @@
     var script = doc.querySelector('script[src*="assets/js/site.js"]');
     var src = script ? script.getAttribute("src").split("?")[0] : "assets/js/site.js";
     var indexUrl = src.replace(/assets\/js\/site\.js$/, "assets/search-index.json");
+    var siteRoot = src.replace(/assets\/js\/site\.js$/, "");
     var pages = null;
     function hide() { list.hidden = true; list.innerHTML = ""; }
     function show(items) {
@@ -24,7 +25,7 @@
       items.forEach(function (item) {
         var li = doc.createElement("li");
         var a = doc.createElement("a");
-        a.href = item.url;
+        a.setAttribute("href", siteRoot + item.url);
         var title = doc.createElement("span");
         title.className = "hit-title";
         title.textContent = item.title;

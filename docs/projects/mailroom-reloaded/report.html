@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -13,13 +13,10 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
+code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: 1.5em;}
-div.column{flex: auto;}
-@media screen {
-div.columns{gap: min(4vw, 1.5em);}
-div.column{overflow-x: auto;}
-}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -74,7 +71,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <meta name="theme-color" content="#0e6f7a">
 <meta name="author" content="Jack J. Burleson">
 <link rel="preload" href="../../assets/fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin="">
@@ -115,7 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=41d6e9f6ec">
+<link rel="stylesheet" href="../../styles.css?v=08e9eb1198">
 <meta property="og:title" content="Mailroom Reloaded: technical report — Jack J. Burleson">
 <meta property="og:description" content="Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -148,22 +145,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <li><a class="nav-link" href="../../resume.html">Résumé</a></li>
       <li hidden=""><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden=""><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg></span><span class="i-moon"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg></span></button></li>
     </ul>
+    <form class="site-search" role="search">
+      <label class="visually-hidden" for="site-search">Search this site</label>
+      <input id="site-search" type="search" placeholder="Search" autocomplete="off" enterkeyhint="search">
+      <ul class="search-results" hidden=""></ul>
+    </form>
   </nav>
 </header>
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <div class="page">
 <p><a href="../../projects/mailroom-reloaded.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>Case study</a></p>
 <div class="project-nav">
-<p><a href="../../projects/mailroom-reloaded.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/mailroom-reloaded/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="https://github.com/Exios66/mailroom-reloaded"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
+<p><a href="../../projects/mailroom-reloaded.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/mailroom-reloaded/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/mailroom-reloaded/appendix.html">Appendix</a> <a href="https://github.com/Exios66/mailroom-reloaded"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
 </div>
 <h1 class="page-title" id="mailroom-reloaded-technical-report">Mailroom Reloaded: technical report</h1>
 <p><span class="kicker">Agentic document pipeline · deployable rebuild</span></p>
+<nav id="TOC" role="doc-toc" aria-label="Table of contents">
+  <p class="kicker">Contents</p>
+  <ul>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#system-and-data">System and data</a></li>
+    <li><a href="#iteration-history">Iteration history</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#figures">Figures</a></li>
+    <li><a href="#reproducibility">Reproducibility</a></li>
+    <li><a href="#engineering-quality">Engineering quality</a></li>
+    <li><a href="#limitations-and-next-steps">Limitations and next steps</a></li>
+  </ul>
+</nav>
 <h2 id="summary">Summary</h2>
 <p>Mailroom Reloaded is a single deployable service that ingests documents, classifies them, extracts structured fields and archives them with a verifiable audit trail. It is built on CrewAI Flows, but a deterministic driver, not the framework’s event engine, owns control flow. Agents are called at fixed points, and routing between them is plain threshold code. A clean text-layer document costs exactly two LLM calls.</p>
 <p>The package is version 0.4.2 and requires Python 3.11 or 3.12. No accuracy or cost results are committed to the repository, so this report publishes none. It describes what the system does and the evidence that it runs.</p>
 <h2 id="system-and-data">System and data</h2>
 <p>The canonical main path is <code>ingest</code>, <code>bert_primary</code>, <code>sort</code>, <code>gate_classify</code>, <code>extract</code>, <code>gate_extract</code>, then <code>report_catalog_archive</code> (<code>pipeline/state.py</code>). The two gates are pure route computations. <code>verify</code>, <code>boss</code>, <code>human_review</code> and an evaluation-only <code>grade</code> step are dispatched by the driver outside that tuple.</p>
-<table class="caption-top">
+<div class="table-scroll"><table class="caption-top">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -223,13 +238,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>pipeline/flow.py</code>, <code>review.py</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The driver is <code>MailroomFlow._drive_nodes</code> in <code>pipeline/flow.py</code>. The decorated <code>@start</code>, <code>@listen</code> and <code>@router</code> methods exist so the class is routable and plottable, and they delegate to the same guarded node implementations. The stated reasons for an explicit driver are that CrewAI rejects the literal self-loop wiring, and that crash resume and deadline enforcement need one deterministic traversal.</p>
 <h3 id="the-fast-path-and-its-failure-mode">The fast path and its failure mode</h3>
 <p><code>ingest</code> and <code>bert_primary</code> are local, so they add no LLM calls. If ModernBERT is flagged off, missing, given an oversized input, or raises, the adapter returns an “unavailable” verdict and the handoff forces a full sort. Classes listed under <code>defer_classes</code> (by default <code>contract</code> and <code>merger_agreement</code>) and multi-window verdicts also fall back to a full sort. The model comes from <a href="../../projects/mailroom-ml.html">Mailroom-ML</a> through the optional <code>bert</code> extra.</p>
 <h3 id="the-gates-and-their-escalation-paths">The gates and their escalation paths</h3>
 <p><code>BandGate</code> applies per-class thresholds from <code>config/taxonomy.yaml</code>. The global defaults are a high band of 0.95, a low band of 0.70, and <code>retry_max</code> of 2. Some classes override them.</p>
-<table class="caption-top">
+<div class="table-scroll"><table class="caption-top">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -289,7 +304,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>boss</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The arbiter’s verdict maps <code>accept</code> and <code>accept_with_caveats</code> to report, <code>re_extract</code> to a retry, and <code>escalate</code> to the boss. The boss can reassign the class once, after which the document is extracted again, send the document to human review, or accept it. If the arbiter asks for a re-extraction after the retries are spent, the document goes to human review.</p>
 <p>The gate slot is pluggable. A <code>LearnedGate</code> (logistic model stored as plain JSON) loads when <code>models/route_gate.json</code> exists. It overrides the band only inside the medium band and never a hard rule.</p>
 <h3 id="jev-the-opt-in-decision-model">Jev, the opt-in decision model</h3>
@@ -309,7 +324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="timeline">
 <ul>
 <li><strong>0.4.2 (2026-10-11)</strong> — fixed the <code>/ui</code> documents table at phone widths. <em>Verified at 420, 768 and 1280 px with no page-level horizontal overflow.</em></li>
-<li><strong>Unreleased</strong> — accessibility passes on <code>/ui</code> and <code>/tui</code> (a page heading, labelled tables, live regions, keyboard-reachable rows, focus rings, contrast fixes), a real provider probe behind <code>GET /ready</code>, and a fix so <code>mailroom eval</code> no longer drops rows whose filename has no supported suffix. <em>Dormant sandbox deep links removed from <code>/tui</code>.</em></li>
+<li><strong>Unreleased</strong> — accessibility passes on <code>/ui</code> and <code>/tui</code> (a page heading, labelled tables, live regions, keyboard-reachable rows, focus rings, contrast fixes), P6-B1–B5 operator commands (links, ready, config, replay, review queue), an operator SMS pager, llm-dojo-scoring re-vendored at v0.22.0, a <code>GET /ready</code> probe of the configured LLM provider, and a fix so <code>mailroom eval</code> no longer drops rows whose filename has no supported suffix. The release is still 0.4.2. Screenshots on this site are from <code>545d8b7</code> with the mock provider and were not re-shot against the current <code>/tui</code>.</li>
 <li><strong>v1 trim</strong> — an offline ingress simulator was moved off <code>main</code> onto a feature branch, leaving the core pipeline and the replay viewer. <em>Verified on merged <code>main</code>.</em></li>
 </ul>
 </div>
@@ -325,7 +340,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <h3 id="verification-run-on-merged-main-2026-10-11">Verification run on merged <code>main</code> (2026-10-11)</h3>
 <p>This used a mock LLM provider with four seeded documents. It tests plumbing, not model quality.</p>
-<table class="caption-top">
+<div class="table-scroll"><table class="caption-top">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Check</th>
@@ -339,7 +358,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td><code>uv run pytest -q</code></td>
-<td>1,597 passed, 3 skipped, 3 deselected, 0 failed</td>
+<td>1,597 passed, 3 skipped, 3 deselected, 0 failed (11 October 2026 snapshot, not re-run)</td>
 </tr>
 <tr class="odd">
 <td><code>node --test tests/tui/js/*.test.mjs</code></td>
@@ -358,7 +377,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>11 of 11 checks passed</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The changelog later records the TUI Node suite as 300 tests after removing dormant code, so the 290 above is the verification-time figure and the two differ because the code changed in between.</p>
 <h2 id="figures">Figures</h2>
 <div class="quarto-figure quarto-figure-center">
@@ -396,7 +415,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run mailroom eval <span class="at">--per-class</span> 20 <span class="at">--seed</span> 42 <span class="at">--split</span> test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h2 id="engineering-quality">Engineering quality</h2>
 <ul>
-<li><strong>Test suite.</strong> 1,134 <code>def test_</code> functions across 83 test files, counted by grep. The 1,597 in the verification run is higher because of parametrisation and because the Node suites are also wired into pytest.</li>
+<li><strong>Test suite.</strong> 1,288 line-start <code>def test_</code> functions (including <code>async def</code>) across 89 test files on main <code>0e1dbd0</code> (23 October 2026). The 1,597 in the 11 October verification run is a different counting method: a pytest session, including parametrized cases. A later demo log recorded 1,842 passed, 3 skipped and 3 deselected, and 378 TUI Node tests. That demo was not repeated as a clean main verification for this page.</li>
 <li><strong>Tiers.</strong> Agents, pipeline, eval, observability, API, deploy, intake, ingest, LLM, scoring, schemas, storage, TUI and <code>/ui</code>.</li>
 <li><strong>Dependency fence.</strong> A test fails if any <code>langgraph</code>, <code>langchain*</code>, <code>langfuse</code>, <code>braintrust</code> or <code>litellm</code> import appears under <code>src/</code> or in any dependency.</li>
 <li><strong>Prompt lock.</strong> A test checks the sha256 of every vendored prompt against its lineage file, so frozen prompts cannot drift silently.</li>
@@ -417,11 +436,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </div>
 
-</main>
+<nav class="project-pager" aria-label="Projects"><a class="pager-prev" href="../mailroom-ml.html">← Mailroom-ML</a><a class="pager-next" href="../rvl-cdip-classifier.html">RVL-CDIP-Classifier →</a></nav></main>
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="../../assets/js/site.js?v=857c7d4672" defer=""></script>
+<script src="../../assets/js/site.js?v=89b76baf98" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-github" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></symbol><symbol id="i-linkedin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></symbol><symbol id="i-mail" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></symbol><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-download" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></symbol><symbol id="i-map-pin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol><symbol id="i-layers" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></symbol><symbol id="i-brain" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M19.938 10.5a4 4 0 0 1 .585.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M19.967 17.484A4 4 0 0 1 18 18"></path></symbol><symbol id="i-scale" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></symbol><symbol id="i-waves" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></symbol><symbol id="i-database" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></symbol><symbol id="i-clock" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol></svg>
 
 <script>
