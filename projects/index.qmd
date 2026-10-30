@@ -7,7 +7,9 @@ description: "Selected work in document intelligence, data engineering, distribu
 
 # Projects {.page-title}
 
-Selected work in document intelligence, data engineering, distributed systems, model evaluation, behavioral machine learning, LLM agent design, and simulation. Each project has a short case study. Most also have a technical report with the full experiment history, metrics, and steps to reproduce the results.
+Selected work in document intelligence, data engineering, distributed systems, model evaluation, behavioral machine learning, LLM agent design, and simulation. Each project has a short case study. Most also have a technical report with the full experiment history, metrics, and steps to reproduce the results. Counts were checked against each source repository on 30 October 2026. The commit and the counting method are on that project's appendix.
+
+A case study links Code when the repository is public, Technical report when this site has one (or, for MapReduce, when the report lives in the source repo), Live demo or Live site when a deployed page exists, and Appendix for the verification notes.
 
 ## Document intelligence {.group-title}
 
@@ -82,7 +84,7 @@ A browser globe for flight tracking, built around a static data pipeline so that
 ### [MapReduce-Reloaded](mapreduce-reloaded.qmd)
 [In active development · distributed systems · Go & Python]{.kicker}
 
-A from-scratch rebuild of Google's 2004 MapReduce. All 23 of the paper's features are built in Go, each tied to a test, along with coordinator crash recovery and a chaos test whose output must match a single-machine run. Object storage, compression and benchmarks are planned.
+A from-scratch rebuild of Google's 2004 MapReduce. F1–F24 are built in Go, each tied to a test, with coordinator crash recovery, CircleCI, VersityGW object storage, compression and a benchmark harness. Packet drops are not built yet.
 
 [Go]{.tag} [Python]{.tag} [gRPC]{.tag} [Docker Compose]{.tag} [Fault tolerance]{.tag}
 :::

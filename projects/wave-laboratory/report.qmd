@@ -1,4 +1,6 @@
 ---
+toc: true
+toc-depth: 2
 pagetitle: "Wave Laboratory: technical report — Jack J. Burleson"
 description: "Wave spectra and ship-dynamics models, architecture, validation suite, test counts, limitations and plan-versus-shipped notes for Wave Laboratory."
 ---
@@ -8,7 +10,7 @@ description: "Wave spectra and ship-dynamics models, architecture, validation su
 [← Case study](../wave-laboratory.qmd){.back}
 
 ::: {.project-nav}
-[Case study](../wave-laboratory.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/Exios66/wave-laboratory) [Live demo](https://exios66.github.io/wave-laboratory/)
+[Case study](../wave-laboratory.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/wave-laboratory) [Live demo](https://exios66.github.io/wave-laboratory/)
 :::
 
 # Wave Laboratory: technical report {.page-title}
@@ -83,7 +85,7 @@ The GPU inverse-FFTs the same h₀ amplitudes the CPU uses. On each new sea the 
 
 ## Iteration history
 
-The repository has 131 commits, from 2026-10-01 to 2026-10-08. The plan document's status table lists what shipped in v0.1.
+The repository has 174 commits, from 2026-10-01 to 2026-10-24 (HEAD `4c7354e`). The plan document's status table lists what shipped in v0.1. Later October work added the catamaran, GPU spray, ambient world, scenery and anchors.
 
 ::: {.timeline}
 - **Core** — tooling, schema, deterministic fixed-step core. *Shipped.*
@@ -120,9 +122,9 @@ These are counts of test definitions found by grep, not a run result. I did not 
 
 | Suite | Count | Where |
 | --- | --- | --- |
-| Unit | 328 definitions in 44 files | `src/**/*.test.ts` |
+| Unit | 472 `it(` calls in 61 files | `src/**/*.test.ts` on `4c7354e` |
 | Validation | 25 definitions in 9 files | `src/**/*.validation.ts` |
-| Browser (Playwright) | 24 definitions in 2 files: 19 desktop, 5 mobile | `e2e/app.spec.ts`, `e2e/mobile.spec.ts` |
+| Browser (Playwright) | 27 `test(` calls in 2 files: 22 desktop, 5 mobile | `e2e/app.spec.ts`, `e2e/mobile.spec.ts` |
 
 The grep counts `it(` and `test(` at the start of a line, so parametrised and template-generated tests are undercounted. The Playwright config defines desktop Chromium at 1440 by 900, a Pixel 7 profile and an iPhone 14 viewport, so each browser test can run several times.
 
@@ -150,7 +152,7 @@ The grep counts `it(` and `test(` at the start of a line, so parametrised and te
 
 ```sh
 pnpm install
-pnpm dev            # http://localhost:5173
+pnpm dev            # local Vite server at http://localhost:5173, not a published URL
 pnpm test           # unit tests
 pnpm validate       # longer statistical physics validation
 pnpm build && pnpm test:e2e   # browser tests on desktop and phone viewports

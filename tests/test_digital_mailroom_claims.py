@@ -32,6 +32,11 @@ class DigitalMailroomPackageCountTests(unittest.TestCase):
         self.assertRegex(study, r"\b5 Python packages: entity extraction|\b5\s+Python packages\b")
         self.assertIn("5 Python packages addressing document-intelligence problems", visible_text(checks.DOCS / "resume.html"))
 
+    def test_mailroom_ml_links_are_named_once(self):
+        html = (checks.DOCS / "projects/digital-mailroom.html").read_text(encoding="utf-8")
+        self.assertNotIn("Mailroom-ML case study Mailroom-ML case study", html)
+        self.assertEqual(html.count(">Mailroom-ML case study<"), 2)
+
     def test_readme_and_both_project_cards_say_five_packages(self):
         readme = (checks.ROOT / "README.md").read_text(encoding="utf-8")
         line = next(l for l in readme.splitlines() if l.startswith("- [Digital-Mailroom]"))

@@ -1,0 +1,28 @@
+---
+pagetitle: "RVL-CDIP-Classifier appendix — Jack J. Burleson"
+description: "Verification notes for the RVL-CDIP-Classifier case study: source commit, counting method, and limits."
+---
+
+::: {.page}
+
+[← All projects](../index.qmd){.back}
+
+::: {.project-nav}
+[Case study](../rvl-cdip-classifier.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/RVL-CDIP-Classifier)
+:::
+
+# RVL-CDIP-Classifier: appendix {.page-title}
+
+[Verification notes · 30 October 2026]{.kicker}
+
+Checked against `Exios66/RVL-CDIP-Classifier` `6e55c0d` (14 October 2026) on 30 October 2026.
+
+## Prompt versions
+
+The case study's 29 registered prompt versions use labels v0 through v19. That is 20 labels. The remaining registrations are subversions, for example v11.8, not a twenty-first through twenty-ninth integer label.
+
+## Tests
+
+A line-start grep found 318 `def test_` functions. That matches the count already published on the case study's companion notes and was not a new pytest run.
+
+:::

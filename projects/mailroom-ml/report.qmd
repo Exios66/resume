@@ -1,4 +1,6 @@
 ---
+toc: true
+toc-depth: 2
 pagetitle: "Mailroom-ML: technical report — Jack J. Burleson"
 description: "Technical report on a ModernBERT document classifier: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits."
 ---
@@ -8,7 +10,7 @@ description: "Technical report on a ModernBERT document classifier: system and d
 [← Case study](../mailroom-ml.qmd){.back}
 
 ::: {.project-nav}
-[Case study](../mailroom-ml.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml)
+[Case study](../mailroom-ml.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml)
 :::
 
 # Mailroom-ML: technical report {.page-title}
@@ -19,9 +21,11 @@ description: "Technical report on a ModernBERT document classifier: system and d
 
 Mailroom-ML trains a hierarchical ModernBERT-base classifier for legal and insurance documents. It has one document-type head and one subclass head per type. Its job is to give a calibrated answer and a routing decision: either "this is safe to accept" or "send it to the LLM sorter".
 
-On the final run, scored on the 323-document test split (541 windows), document-type accuracy is 0.9505 and window ECE is 0.0152. Under the routing gate, 74.3% of documents take the fast path, meaning they are handled without an LLM call. The fast-path and coverage numbers are optimistic, because the sweep that supports the 0.97 routing cutoff and the decode sweep both ran on this same split (see Routing and selective risk). Three of four acceptance gates are met. Contract subclass F1 is 0.162 against a floor of 0.20, so the subclass heads are not ready to act without the LLM.
+The current run is M9c (`eval_m9c-20261014-113614`), checked against main `01c2272` on 30 October 2026. On the 323-document test split (541 windows), document-type accuracy is 0.9598 (310 of 323) and window ECE is 0.0189. Conditional subclass accuracy is 0.7387 (229 of 310), short of the 0.75 gate. A confidence-only upper bound on gate acceptance is 0.3901 (126 of 323) at threshold 0.94. That is not a production fast-path rate: full guards accept fewer documents, and contract and correspondence are excluded from fast-path routing. The out-of-distribution flag rate is 5.57% (18 of 323). Primary serving is ONNX on CPU. The Modal serve app is a fallback.
 
-Numbers on this page labelled "test split" come from those 323 documents. The split was kept out of training, out of checkpoint selection (done on validation) and out of calibration fitting. It is not untouched, though. I used it to compare runs, to run the selective-risk sweep that supports the 0.97 cutoff, and to run the decode sweep. The 0.97 value itself is a preset in the project's config, and the sweep recommended the same value. I name the project's runs as follows: Run 3 is an early two-epoch run, Arm A and Arm B are two comparison runs (a one-epoch smoke run and a three-epoch run), and M9b is the final four-epoch run. The six figures are from Arm B, not from the final run. Where the two differ I say so.
+M9b is the previous four-epoch run, not the current one. Its document-type accuracy was 0.9505, its window ECE was 0.0152, and its fast path was 74.3% (240 of 323) at a 0.97 cutoff. Three of its four acceptance gates were met. Contract subclass F1 was 0.162 against a floor of 0.20. Those M9b sentences are history. Later sections that still quote 0.97, 74.3%, or the four-gate framing are describing M9b unless they say M9c.
+
+Numbers on this page labelled "test split" come from those 323 documents. The split was kept out of training, out of checkpoint selection (done on validation) and out of calibration fitting. It is not untouched. Run 3 is an early two-epoch run. Arm A and Arm B are two comparison runs (a one-epoch smoke run and a three-epoch run). The six figures are from Arm B. Source main does not contain an Arm B chart directory, only m9a-local charts, so the figures stay labelled as Arm B and were not re-plotted from M9c. Where a number is M9b rather than M9c, the text says so.
 
 ## System and data
 
@@ -172,7 +176,7 @@ Seeds and pins: every split and shuffle uses seed 42; the final run's recorded s
 
 ## Engineering quality
 
-- 485 test functions in 33 test files, plus a shared `conftest.py`, covering calibration, windowing, routing, provenance, OOD, dataset build, evaluation CLI, training and deployment code.
+- 493 `def test_` functions in 33 `test_*.py` files, plus a shared `conftest.py`, counted by a line-start grep on main `01c2272` (24 October 2026). They cover calibration, windowing, routing, provenance, OOD, dataset build, evaluation CLI, training and deployment code.
 - CI on pushes to `main` and on pull requests: `ruff` and `pytest -m "not fullcorpus"`, with strict markers.
 - Deploy-layer tests skip themselves when heavy extras are missing and never touch the network.
 - Failure behaviour is explicit: if the model is missing, fails to load, or has a label mismatch, the document goes to the LLM path instead of getting a guess. Flagged out-of-distribution documents fail the fast path, and so do catch-all `other` predictions and subclasses with fewer than 5 training rows.

@@ -1,0 +1,32 @@
+---
+pagetitle: "Mailroom Reloaded appendix — Jack J. Burleson"
+description: "Verification notes for the Mailroom Reloaded case study: source commit, counting method, and limits."
+---
+
+::: {.page}
+
+[← All projects](../index.qmd){.back}
+
+::: {.project-nav}
+[Case study](../mailroom-reloaded.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/mailroom-reloaded)
+:::
+
+# Mailroom Reloaded: appendix {.page-title}
+
+[Verification notes · 30 October 2026]{.kicker}
+
+Checked against `Exios66/mailroom-reloaded` `0e1dbd0` on 30 October 2026.
+
+## Counts
+
+1,288 line-start `def test_` functions in 89 test files. The 11 October verification run (pytest 1,597 passed, 3 skipped; TUI Node 290) was not repeated. A later demo log recorded 1,842 passed and 378 TUI Node tests. That demo is not treated as a fresh main verification.
+
+## Unreleased, from the source changelog
+
+P6-B1–B5 operator commands, the operator SMS pager, llm-dojo-scoring re-vendored at v0.22.0, `/ui` and `/tui` contrast and focus work, and a `GET /ready` provider probe. The release version is still 0.4.2.
+
+## Screenshots
+
+The figures are from `545d8b7` with the mock provider. They were not re-shot against the current `/tui`.
+
+:::

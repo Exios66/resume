@@ -1,0 +1,30 @@
+---
+pagetitle: "Wave Laboratory appendix — Jack J. Burleson"
+description: "Verification notes for the Wave Laboratory case study: source commit, counting method, and limits."
+---
+
+::: {.page}
+
+[← All projects](../index.qmd){.back}
+
+::: {.project-nav}
+[Case study](../wave-laboratory.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/wave-laboratory) [Live demo](https://exios66.github.io/wave-laboratory/)
+:::
+
+# Wave Laboratory: appendix {.page-title}
+
+[Verification notes · 30 October 2026]{.kicker}
+
+Checked against `Exios66/wave-laboratory` `4c7354e` on 30 October 2026.
+
+## Counts
+
+174 commits, 1 October 2026 through 24 October 2026. 472 `it(` calls in 61 `src/**/*.test.ts` files. 25 validation tests, unchanged. Browser tests: 22 `test(` calls in `e2e/app.spec.ts` and 5 in `e2e/mobile.spec.ts`.
+
+`pnpm dev` prints a local Vite URL. That address is the dev server, not a page on this site.
+
+## Figures
+
+Six figures still hash-match the source `docs/screenshots/` tree as of the 29 October audit. Three portfolio-only captures (overview light, overview dark, rogue wave) predate the 9–24 October scenery merges and were not re-rendered for this pass. Treat them as earlier captures.
+
+:::

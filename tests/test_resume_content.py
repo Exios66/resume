@@ -111,8 +111,11 @@ class ResumeContentTests(unittest.TestCase):
         entries = self.entries("Professional Experience")
         expected = (
             ("UW–Madison Recreation & Wellbeing — Building Services", "Jun 2026 – Present"),
+            ("Avis/Budget — Driver", "Jun 2026 – Present"),
+            ("Wisconsin Union — Facilities Coordinator", "Jan 2026 – Present"),
             ("UW–Parkside — Undergrad Researcher, Cognitive Neuroscience Lab", "Jun 2024 – Aug 2025"),
-            ("Meijer Distribution — Logistics Coordinator", "Jul 2020 – Aug 2025"),
+            ("Meijer Distribution — Logistics Coordinator", "Jul 2023 – Aug 2025"),
+            ("Meijer Distribution — Retail Loader", "Jul 2020 – Jul 2023"),
         )
         self.assertEqual(len(entries), len(expected))
         for entry, (role, date) in zip(entries, expected):
@@ -131,7 +134,7 @@ class ResumeContentTests(unittest.TestCase):
         heads = [attrs for tag, attrs, _ in self.parser.elements
                  if "entry-head" in checks.classes(attrs)
                  and any("date" in checks.classes(a) for _, a in self.parser.children(attrs))]
-        self.assertEqual(len(heads), 5)
+        self.assertEqual(len(heads), 8)
         for head in heads:
             children = self.parser.children(head)
             main = self.one(children, class_name="head-main")
@@ -192,10 +195,10 @@ class ResumeContentTests(unittest.TestCase):
             "Digital-Mailroom": ("5 Python packages", "Enterprise Data Science division",
                                  "unified LangGraph pipeline", "reproducible Docker environment"),
             "mailroom-ml": ("ModernBERT document classifier", "data lineage tracking",
-                            "probability calibration", "ONNX export for FastAPI serving on Modal"),
+                            "probability calibration", "ONNX export for CPU serving", "Modal app as the fallback"),
             "RVL-CDIP-Classifier": ("16 RVL-CDIP categories", "300-DPI", "OpenRouter vision models",
-                                    "17+ prompt iterations", "cost projections"),
-            "Psychometric Digital Twin": ("252 matched survey participants", "factor analysis",
+                                    "29 prompt versions", "cost projections"),
+            "Psychometric Digital Twin": ("241 analysed respondents", "252 matched Prolific and Qualtrics records", "factor analysis",
                                           "Ollama/OpenRouter/vLLM", "bias by demographic group"),
             "Alignment-Gym": ("fictional law firm", "89 needle/decoy pairs", "9 plot beats",
                               "0–3 temptation ladder", "28 condition cells", "seed-invariant truth spine",
@@ -213,7 +216,7 @@ class ResumeContentTests(unittest.TestCase):
         page = self.one([(tag, attrs) for tag, attrs, _ in self.parser.elements], class_name="page")
         text = normalize(self.parser.text(page))
         for stale in (r"\b(?:10|ten|7|seven) Python packages\b", r"\b99\.4%",
-                      r"\bJan 2026 – Present\b", r"\bJul 2020 – Dec 2025\b", r"Avis Budget Group"):
+                      r"\bJul 2020 – Aug 2025\b", r"\bJul 2020 – Dec 2025\b", r"Avis Budget Group"):
             with self.subTest(stale=stale):
                 self.assertNotRegex(text, stale)
         self.assertFalse([attrs for tag, attrs, _ in self.parser.elements

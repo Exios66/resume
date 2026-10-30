@@ -134,6 +134,7 @@ class NatdTests(unittest.TestCase):
                  for t, a in parser.children(nav[0]) if t == "a"}
         self.assertEqual(links, {"Case study": study.resolve(),
                                  "Technical report": (checks.DOCS / REPORT).resolve(),
+                                 "Appendix": (checks.DOCS / "projects/natd/appendix.html").resolve(),
                                  "Code": CODE_URL})
         actions = [attrs for _, attrs, _ in parser.elements if "actions" in checks.classes(attrs)]
         hrefs = {checks.attr(a, "href") for t, a in parser.children(actions[0]) if t == "a"}

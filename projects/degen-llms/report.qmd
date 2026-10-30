@@ -1,4 +1,6 @@
 ---
+toc: true
+toc-depth: 2
 pagetitle: "The Mandalay Bay: technical report — Jack J. Burleson"
 description: "Architecture, shared-screen rule, save format, randomness, exact slot return calculation, test counts, bugs fixed and limitations for The Mandalay Bay."
 ---
@@ -8,7 +10,7 @@ description: "Architecture, shared-screen rule, save format, randomness, exact s
 [← Case study](../degen-llms.qmd){.back}
 
 ::: {.project-nav}
-[Case study](../degen-llms.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/Exios66/degen-llms) [Live demo](https://exios66.github.io/degen-llms/)
+[Case study](../degen-llms.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/degen-llms) [Live demo](https://exios66.github.io/degen-llms/)
 :::
 
 # The Mandalay Bay: technical report {.page-title}
@@ -35,7 +37,7 @@ It is satire. Chips are fictional, no real money is involved, and it is not affi
 | Browser terminal | `docs/index.html` | Hand-written vanilla JavaScript ES modules under `docs/js/`. Not Python compiled for the browser |
 | Pixel RPG | `docs/rpg/index.html` | Phaser overworld over the same modules |
 
-By line count (`wc`, blank lines included) `docs/js` holds about 33k lines of JavaScript, and about 44k with `docs/rpg/js` added (the RPG layer is about 10k). The repository has about 23.6k lines of Python in all, but that includes tests (about 3.6k) and scripts (about 5k). The runtime `mandalay_bay` package is about 12.8k lines.
+By line count (`wc`, blank lines included) `docs/js` holds about 33k lines of JavaScript, and about 44k with `docs/rpg/js` added (the RPG layer is about 10k). On main `80399bf` (30 October 2026) the repository has 27,389 lines of Python outside `docs/`, including 5,170 in `tests/` and 6,801 in `scripts/`. The runtime `mandalay_bay` package is 13,121 lines.
 
 ### Content as data
 
@@ -71,7 +73,7 @@ The numbers are not realistic. A test named for the parody machine `fortune` pin
 
 ## Iteration history
 
-The changelog runs from 1.1.0 (2026-07-26) to 1.2.2 (2026-08-26), with pull requests numbered up to the 150s. I did not count commits.
+The changelog itself still ends at 1.2.2 (2026-08-26). Merged pull requests now run through #160, and the changelog does not yet have entries for #158–#160, so this page does not claim that it does. I did not count commits.
 
 ::: {.timeline}
 - **1.1.0, 2026-07-26** — Trading Floor with 744 stored contracts, 337 sports events and 204 prediction scenarios, Arcade Alley cabinets, Vegas Strip Drive, craps and a lottery counter, and the walkable Strip overworld in the RPG. Rewards tier thresholds aligned to the docs: saves keep their lifetime totals and the tier is recomputed, so a player who had maxed the old ladder can drop until they wager more. Valet garage exit softlock fixed.
@@ -96,11 +98,11 @@ These are collected, not pass rates. I did not run the suite for this report.
 
 | Suite | Count | Source |
 | --- | --- | --- |
-| pytest | 282 tests collected | `pytest --co` over `tests/` |
-| Node smoke scripts | 12 scripts | `scripts/smoke-test-*.mjs` |
+| pytest | 379 `def test_` functions in 52 files under `tests/` | line-start grep on `80399bf`, not a fresh `pytest --co` |
+| Node scripts | 13 `scripts/smoke-test-*.mjs` and 5 `scripts/test-*-regressions.mjs` | 18 scripts on `80399bf` |
 | Browser smoke test | 1 script | `scripts/smoke-test-web.py` |
 
-CI (`.github/workflows/checks.yml`) runs pytest on Python 3.11. A second job runs on Node 22: an RPG world data check (`smoke-test-rpg.mjs`), a validation that every import under `docs/js` resolves, six more smoke scripts and the browser smoke test. That is seven of the 12 Node scripts; the other five are not in the workflow.
+CI (`.github/workflows/checks.yml`) runs pytest on Python 3.11. The Node job loops over every `scripts/smoke-test-*.mjs` and `scripts/test-*-regressions.mjs`, then runs the browser smoke test. The old "7 of 12" description is obsolete. The live Pages build is deployed by hand from `gh-pages`, so the demo can lag main. It was not re-checked for drift on 30 October 2026.
 
 `tests/test_save_version_migration.py` covers a version 3 save with no rewards state, version 7 tier fields, and a version 8 web save with an `rpg` block loading in the CLI.
 
@@ -137,7 +139,7 @@ The browser terminal is static files in `docs/`, so any static host can serve it
 
 ## Limitations and next steps
 
-- The README is stale. It still says 14 slot machines and 200+ tests. The data files and `pytest --co` give the current numbers.
+- The README still says "200+ tests". It no longer says "14 slot machines". The gap to the grep count above is larger than it was when this note said both. The data files still give 37 slot machines.
 - Package metadata says version 1.0.0 while the changelog is at 1.2.2.
 - The Pages deploy is manual from the `gh-pages` branch, so the live demo can lag `main`.
 - Blackjack rule tests are small: `test_rules.py` has 9 tests and `test_hand.py` has 8.

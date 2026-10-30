@@ -1,6 +1,6 @@
 ---
 pagetitle: "About — Jack J. Burleson"
-description: "Background, skills, and education of Jack J. Burleson, an M.S. candidate in Data Science in Human Behavior at UW–Madison."
+description: "Background, skills, and education of Jack J. Burleson, an M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison."
 ---
 
 ::: {.page}
@@ -42,7 +42,7 @@ I build AI systems from start to finish: multi-agent document pipelines, transfo
 :::
 
 ::: {.degree}
-*M.S. Candidate – Psychology & Data Science in Human Behavior* · **GPA: 3.85**
+*M.S. Candidate – Psychology: Data Science in Human Behavior* · **GPA: 3.85**
 :::
 
 - Graduate program in which roughly 95% of coursework is data science and data engineering — building on an undergraduate foundation in neuroscience research, experimental design, and statistical analysis.

@@ -45,7 +45,7 @@ Five Python packages and one LangGraph pipeline that joins legal-document routin
 ### [Mailroom-ML](projects/mailroom-ml.qmd)
 [Training, evaluation & calibration]{.kicker}
 
-A calibrated ModernBERT classifier that handles routine documents itself and sends uncertain ones to an LLM. Exported to ONNX and served with FastAPI on Modal.
+A calibrated ModernBERT classifier that handles routine documents itself and sends uncertain ones to an LLM. Primary serving is ONNX on CPU. A Modal app is the fallback.
 :::
 
 ::: {.card}

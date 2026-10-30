@@ -8,7 +8,7 @@ description: "A ModernBERT document classifier with calibrated confidence, a rou
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](mailroom-ml.qmd){aria-current="page"} [Technical report](mailroom-ml/report.qmd) [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml)
+[Case study](mailroom-ml.qmd){aria-current="page"} [Technical report](mailroom-ml/report.qmd) [Appendix](mailroom-ml/appendix.qmd) [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml)
 :::
 
 # Mailroom-ML {.page-title}
@@ -19,20 +19,20 @@ description: "A ModernBERT document classifier with calibrated confidence, a rou
 
 ::: {.stats}
 ::: {.stat}
-[95.05%]{.stat-value} [document-type accuracy on the 323-document test split (307 correct)]{.stat-label}
+[95.98%]{.stat-value} [document-type accuracy on the 323-document test split (310 correct), from M9c]{.stat-label}
 :::
 ::: {.stat}
-[0.0152]{.stat-value} [calibration error (ECE) on the 541 windows of that test split]{.stat-label}
+[0.0189]{.stat-value} [window calibration error (ECE) on the 541 windows of that test split, from M9c]{.stat-label}
 :::
 ::: {.stat}
-[74.3%]{.stat-value} [of test documents (240 of 323) take the fast path, meaning no LLM call; optimistic, see below]{.stat-label}
+[0.3901]{.stat-value} [confidence-only upper bound on gate acceptance (126 of 323). Not a production fast-path rate]{.stat-label}
 :::
 ::: {.stat}
-[3 of 4]{.stat-value} [acceptance gates met; contract subclass F1 is still short]{.stat-label}
+[0.7387]{.stat-value} [conditional subclass accuracy (229 of 310). The 0.75 gate is not met]{.stat-label}
 :::
 :::
 
-The 74.3% is the share of documents handled without an LLM. By my count from the per-document rows of the evaluation file, none of those 240 had the wrong document type, but 82 had the wrong subclass, so I treat the fast path as a document-type decision only. The gate's 0.97 confidence cutoff is a preset from the project's config, but the sweep that supports it ran on this same split, as did the decode sweep, so read the fast-path and coverage numbers as optimistic. The window-level error rate among accepted windows is in the routing section of the [technical report](mailroom-ml/report.qmd).
+The current model is M9c (`eval_m9c-20261014-113614`), published as [mailroom-modernbert-classifier](https://huggingface.co/Lucius-Morningstar/mailroom-modernbert-classifier). The 0.3901 figure is a confidence-only upper bound at a 0.94 threshold. Full guards accept fewer documents, and checkpoint policy excludes contract and correspondence from fast-path routing. Do not read 0.3901 as the share of documents that skip the LLM in production. The earlier M9b run reported a 74.3% fast path (240 of 323) at a 0.97 cutoff; that number is history, and it is not the current rate. M9b's window ECE was 0.0152 and its document-type accuracy was 0.9505 (307 of 323).
 
 ## The problem
 
@@ -52,30 +52,28 @@ I trained one ModernBERT encoder with a document-type head and one subclass head
 - **Calibration and routing.** Per-head temperature scaling, a selective-risk sweep that finds the confidence cutoff for a 2% error budget, and an out-of-distribution flag from an energy probe on the logits.
 - **Data lineage.** Every training set is pinned to a revision. A provenance module writes a byte-reproducible manifest with sha256 hashes and no timestamps, so a rebuild on the same inputs gives the same bytes.
 - **A leak audit.** Early on, the model's insurance subclass score looked too good. The audit showed that titles fell back to filenames, and 42.8% of filenames contained the subclass name. I removed the fallback and added a build-time check that fails if a filename-shaped title returns.
-- **ONNX export for serving.** An exported model is checked against the PyTorch one before it is promoted. In a CPU test on an Apple M2 with the Run 3 checkpoint (an earlier two-epoch run; I did not export the final one), the fp32 export matched PyTorch to within 4.25e-06 per head, and the int8 variant did not (see below).
-- **A test suite.** 485 test functions in 33 test files, plus a shared `conftest.py`, run in CI (ruff and pytest) on pushes to `main` and on pull requests. Tests for the heavy dependencies skip themselves when torch or Modal is absent, so the core suite runs anywhere.
+- **ONNX export for serving.** Primary serving is ONNX on CPU. The Modal serve app is an explicit fallback, not the main path. An exported model is checked against the PyTorch one before it is promoted. In a CPU test on an Apple M2 with the Run 3 checkpoint (an earlier two-epoch run), the fp32 export matched PyTorch to within 4.25e-06 per head, and the int8 variant did not. Whether an ONNX bundle for M9c sits in the source tree was not re-checked beyond the export and parity scripts.
+- **A test suite.** 493 `def test_` functions in 33 `test_*.py` files, plus a shared `conftest.py`, counted by a line-start grep on main `01c2272` (24 October 2026). Tests for the heavy dependencies skip themselves when torch or Modal is absent, so the core suite runs anywhere.
 
 ## Results
 
-The numbers below come from my final run. It trained for four epochs and was scored on a test split of 323 documents (541 windows). The test split was not used for training, for choosing the checkpoint epoch or for fitting calibration. It was used for more than one evaluation, though: I compared runs on it, ran a confidence sweep on it and ran the decode sweep described below on it. The 0.97 cutoff itself is a preset from the project's config, and the sweep landed on the same value.
+The current numbers are M9c, scored on the same 323-document test split (541 windows). The split was kept out of training. M9b, the previous four-epoch run, is kept below as history.
 
-| Measure | Result |
-| --- | --- |
-| Document-type accuracy | 0.9505 (307 of 323) |
-| Subclass accuracy, when the type is right | 0.6287 |
-| Window calibration error (ECE) | 0.0152, down from 0.0259 in the earlier run |
-| Documents passing the routing gate | 74.3% |
-| Out-of-distribution flag rate | 4.0% |
+| Measure | M9c (current) | M9b (history) |
+| --- | --- | --- |
+| Document-type accuracy | 0.9598 (310 of 323), met against 0.95 | 0.9505 (307 of 323) |
+| Subclass accuracy, when the type is right | 0.7387 (229 of 310), short of 0.75 | 0.6287 |
+| Window calibration error (ECE) | 0.0189 (band ECE 0.0659) | 0.0152 |
+| Gate acceptance | 0.3901 (126 of 323), confidence-only upper bound at 0.94 | 74.3% (240 of 323) at 0.97 |
+| Out-of-distribution flag rate | 5.57% (18 of 323) | 4.0% (13 of 323) |
 
-The sweep looks for the lowest confidence cutoff whose accepted windows have an error bound under 2% and a band calibration error under 0.05. Lower cutoffs (0.87 to 0.96) met the error budget but failed the calibration check, so on the final run it comes out at 0.97, which accepts about 80% of windows (431 of 541). Scoring on the L4 GPU took 0.575 seconds per document.
+M9c per-head subclass F1: insurance 1.000, corporate 0.7733, correspondence 0.5249 (met), contract 0.3589 (met against the old 0.20 floor), merger 0.1774 (still collapsed; it was 0.000 on M9b). The M9b "3 of 4 gates, contract still short" framing does not describe M9c. M9c's gates are document-type (met) and subclass (not met). No per-document M9c latency was found to replace M9b's 0.575 seconds per document on an L4, so that timing stays labelled as M9b.
 
 ::: {.caveat}
-**Heads up.** The sweep that supports the 0.97 cutoff ran over these same test windows, and so did the decode sweep. That makes the fast-path and coverage numbers optimistic: they describe an operating point, not a validated setting. The tool that writes deployment thresholds refuses to run on a pool that contains test documents, so real thresholds are fit on the validation split.
+**Heads up.** 0.3901 is not a production fast-path rate. It is a confidence-only upper bound. Full guards accept fewer documents, and contract and correspondence are excluded from fast-path routing by checkpoint policy. The old 74.3% figure is M9b.
 :::
 
-The subclass heads are the weak part. Insurance claims reach F1 of 1.000, but that class is highly templated (114 test documents), so I would not read it as general skill. Merger-agreement F1 is 0.000 because the model puts all 17 test merger agreements into one rare subclass. Contract subclass F1 is 0.162 against a 0.20 floor, and that is the one acceptance gate still failing. A decode-time adjustment I tried on the finished model did not fix it; the best setting reached 0.170. The next lever is more training data for the contract families that are missing, not more epochs.
-
-The figures are from an earlier 3-epoch run called Arm B, whose document-type accuracy is also 0.9505. "Arm A" and "Arm B" are the project's names for two comparison runs: Arm A was a one-epoch smoke run and Arm B a three-epoch run with a heavier document-type loss weight. "M9b" is the name of the final four-epoch run reported above.
+The figures below are from an earlier 3-epoch run called Arm B, whose document-type accuracy was 0.9505. They are two runs behind M9c (Arm B, then M9b, then M9c). Source main's `reports/charts/` contains m9a-local runs and not an Arm B, M9b, or M9c chart directory, so these files are kept as the labelled Arm B captures rather than re-plotted. "Arm A" was a one-epoch smoke run. "M9b" is the four-epoch run in the history column.
 
 ![Which type each test-split document was routed to, from the earlier 3-epoch Arm B run.](mailroom-ml/figures/confusion.svg){.fig fig-alt="Confusion matrix of document type for the 323 test-split documents. Insurance claims and merger agreements are classified 100% correctly. Contracts are 88% correct with most errors going to corporate records. Corporate records are 89% correct. Correspondence is 95% correct." width="100%"}
 

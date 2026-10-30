@@ -8,7 +8,7 @@ description: "A prompt-engineering study that sorts scanned documents into the 1
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](rvl-cdip-classifier.qmd){aria-current="page"} [Technical report](rvl-cdip-classifier/report.qmd) [Code](https://github.com/Exios66/RVL-CDIP-Classifier)
+[Case study](rvl-cdip-classifier.qmd){aria-current="page"} [Technical report](rvl-cdip-classifier/report.qmd) [Appendix](rvl-cdip-classifier/appendix.qmd) [Code](https://github.com/Exios66/RVL-CDIP-Classifier)
 :::
 
 # RVL-CDIP-Classifier {.page-title}
@@ -25,7 +25,7 @@ description: "A prompt-engineering study that sorts scanned documents into the 1
 [99.4%]{.stat-value} [on the 160-image slice I tuned against, so an optimistic number]{.stat-label}
 :::
 ::: {.stat}
-[29]{.stat-value} [registered prompt versions, v0 to v19]{.stat-label}
+[29]{.stat-value} [registered prompt versions. Labels run v0 to v19; subversions such as v11.8 make up the rest]{.stat-label}
 :::
 ::: {.stat}
 [≈ $0.0004]{.stat-value} [per image for the main model]{.stat-label}

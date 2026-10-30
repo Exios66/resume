@@ -1,4 +1,6 @@
 ---
+toc: true
+toc-depth: 2
 pagetitle: "Psychometric Digital Twin: technical report — Jack J. Burleson"
 description: "Technical report on a PSYCH 755 study of LLM personas against classical ML for predicting PRCA communication apprehension: data, models, per-tier results, bias slices, secondary studies, reproduction and limits."
 ---
@@ -8,7 +10,7 @@ description: "Technical report on a PSYCH 755 study of LLM personas against clas
 [← Case study](../psychometric-digital-twin.qmd){.back}
 
 ::: {.project-nav}
-[Case study](../psychometric-digital-twin.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/Exios66/psych755-jjb)
+[Case study](../psychometric-digital-twin.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/psych755-jjb)
 :::
 
 # Psychometric Digital Twin: technical report {.page-title}

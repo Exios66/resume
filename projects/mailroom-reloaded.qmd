@@ -8,7 +8,7 @@ description: "A compressed, deployment-ready Digital Mailroom on CrewAI Flows: a
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](mailroom-reloaded.qmd){aria-current="page"} [Technical report](mailroom-reloaded/report.qmd) [Code](https://github.com/Exios66/mailroom-reloaded)
+[Case study](mailroom-reloaded.qmd){aria-current="page"} [Technical report](mailroom-reloaded/report.qmd) [Appendix](mailroom-reloaded/appendix.qmd) [Code](https://github.com/Exios66/mailroom-reloaded)
 :::
 
 # Mailroom Reloaded {.page-title}
@@ -22,7 +22,7 @@ description: "A compressed, deployment-ready Digital Mailroom on CrewAI Flows: a
 [2]{.stat-value} [LLM calls for a clean text-layer document (sort, then extract)]{.stat-label}
 :::
 ::: {.stat}
-[1,597]{.stat-value} [tests passed, 3 skipped, in the main-branch verification run (the suite has 1,134 test functions in 83 files by grep)]{.stat-label}
+[1,288]{.stat-value} [`def test_` functions in 89 files on main 0e1dbd0. The 11 October run of 1,597 passed was not repeated]{.stat-label}
 :::
 :::
 

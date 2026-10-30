@@ -1,6 +1,6 @@
 ---
 pagetitle: "MapReduce-Reloaded — Jack J. Burleson"
-description: "A from-scratch rebuild of Google's MapReduce in Go, with a Python reference implementation: all 23 features of the 2004 paper, each tied to a named test, plus coordinator crash recovery, chaos testing and Prometheus metrics. In active development."
+description: "A from-scratch rebuild of Google's MapReduce in Go, with a Python coordinator: F1–F24 of the 2004 paper, CircleCI, S3-compatible storage, compression, benchmarks and a final report. In active development."
 ---
 
 ::: {.page}
@@ -8,7 +8,7 @@ description: "A from-scratch rebuild of Google's MapReduce in Go, with a Python 
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](mapreduce-reloaded.qmd){aria-current="page"} [Code](https://github.com/Exios66/MapReduce-Reloaded)
+[Case study](mapreduce-reloaded.qmd){aria-current="page"} [Technical report](https://github.com/Exios66/MapReduce-Reloaded/blob/main/docs/report.md) [Appendix](mapreduce-reloaded/appendix.qmd) [Code](https://github.com/Exios66/MapReduce-Reloaded)
 :::
 
 # MapReduce-Reloaded {.page-title}
@@ -22,20 +22,20 @@ A from-scratch rebuild of Google's MapReduce, as described by Dean and Ghemawat 
 :::
 
 ::: {.caveat}
-**Work in progress.** This page describes the code on 23 October 2026. Every feature of the paper is built in Go. The planned modern extensions (object storage and compression), the benchmarks and the final report are not built yet.
+**Work in progress.** Checked against main `ab65654` on 30 October 2026. F1–F24 are built, including the §5 performance experiments. Object storage (VersityGW, not MinIO), compression, the benchmark harness and `docs/report.md` are built. Dropping packets is not built yet. A full Python worker is not claimed here.
 :::
 
 ## At a glance
 
 ::: {.stats}
 ::: {.stat}
-[23 / 23]{.stat-value} [features of the paper built, each mapped to its code and a named test; a test fails if the mapping names a file or test that does not exist]{.stat-label}
+[24]{.stat-value} [features built, F1–F24 in docs/paper-mapping.md, each mapped to its code and a named test]{.stat-label}
 :::
 ::: {.stat}
-[350]{.stat-value} [passing tests: 146 in Go and 204 in Python]{.stat-label}
+[336 + 487]{.stat-value} [Go `func Test` and Python `def test_` functions, by grep on ab65654. Not a passing-run total]{.stat-label}
 :::
 ::: {.stat}
-[50]{.stat-value} [chaos runs in a row, with random worker kills, stalls and coordinator restarts, that still match single-machine output]{.stat-label}
+[5]{.stat-value} [default cluster chaos runs (`make chaos`). In-process default is 3. The soak flag can ask for 50]{.stat-label}
 :::
 :::
 
@@ -53,7 +53,7 @@ I wanted to understand those guarantees by building them, not by reading about t
 
 **One contract, two languages.** Go and Python share a gRPC and protobuf message contract, a documented on-disk record format with a checksum on every block, and a partition hash written out by hand in both languages. The built-in hash functions of both languages use a random seed per process, so two workers would disagree about which reducer gets a key. Test vectors and golden files hold both implementations to the same bytes.
 
-**Small, reviewable steps.** Each piece of work is one issue and one pull request, and each phase adds a short design record. A `make check` quality gate runs every linter and test before each push. There is no hosted CI.
+**Small, reviewable steps.** Each piece of work is one issue and one pull request, and each phase adds a short design record. A `make check` quality gate runs every linter and test before each push. CircleCI runs on pull requests.
 
 ## What I built
 
@@ -75,16 +75,14 @@ The chaos test runs word count while, at random moments, workers die, new ones j
 
 Its first runs failed on seed 7. The output held an extra `_temporary` directory: a reduce attempt that had already lost, to a backup copy or because its worker was declared dead, kept running and recreated the directory after the job had cleaned it up. Now the job creates that directory when it starts, and attempts never do. An attempt that runs after the job has finished fails and leaves nothing behind.
 
-The test runs in one process, so a "dead" worker behaves like a machine cut off from the network, not one that lost power. Killing containers and dropping packets need the Compose cluster, and that driver is not written yet.
+The in-process test is not the cluster driver. `scripts/chaos.sh` (`make chaos`, default 5 runs from seed 1) kills a worker, pauses one for 2–15 seconds, and crashes and restarts the coordinator on the Compose cluster. Dropping packets is not built yet.
 
 ## What is planned
 
-- S3-compatible object storage, run locally with MinIO, in place of the paper's GFS.
-- Compression for intermediate and output files.
-- A benchmark tool, and small-scale reruns of the paper's §5 experiments that compare the shapes of the graphs, not the absolute numbers.
-- A final report.
+- A standby coordinator, skew handling and Parquet input are still stretch goals.
+- A full Python worker is not claimed. The Python coordinator is built (`python/mapreduce_reloaded/coordinator/`, exercised by `py-e2e`). S3 uses VersityGW in the Compose `s3` profile (`make e2e-s3`), and `-intermediate-codec` and `-output-codec` accept none, zstd or snappy.
 
-Further extensions, such as a full Python coordinator and worker, a standby coordinator, skew handling and Parquet input, are stretch goals and may not be built.
+The §5 evaluation runs and the final report are in the source repository (`docs/report.md`), not only on this page.
 
 ## What I'm learning
 

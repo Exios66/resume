@@ -1,4 +1,6 @@
 ---
+toc: true
+toc-depth: 2
 pagetitle: "MORNINGSTAR: technical report — Jack J. Burleson"
 description: "Court structure, voting rules, runner design, executive layer, test counts, limitations and a proposed evaluation for MORNINGSTAR, a deliberative persona framework with no published evaluation."
 ---
@@ -8,7 +10,7 @@ description: "Court structure, voting rules, runner design, executive layer, tes
 [← Case study](../llm-personas.qmd){.back}
 
 ::: {.project-nav}
-[Case study](../llm-personas.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/Exios66/LLM_Personas)
+[Case study](../llm-personas.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/LLM_Personas)
 :::
 
 # MORNINGSTAR: technical report {.page-title}

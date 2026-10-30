@@ -32,7 +32,7 @@ An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages
 
 ## Adding a project
 
-1. Write `projects/<slug>.qmd` (case study) and, if there is enough material, `projects/<slug>/report.qmd`. Copy the structure of an existing project: back link, `.project-nav`, `.stats` tiles, figures with `fig-alt`.
+1. Write `projects/<slug>.qmd` (case study) and, if there is enough material, `projects/<slug>/report.qmd`. Copy the structure of an existing project: back link, `.project-nav`, `.stats` tiles, figures with `fig-alt`. Add `projects/<slug>/appendix.qmd` for the verification notes: source commit, how each count was taken, and anything too detailed for the case study. Link Code when the repository is public, Technical report when this site has a `report.qmd` (MapReduce links the report in its source repo), Live demo or Live site when a page is deployed, and Appendix on every project page.
 2. Copy figures into `projects/<slug>/figures/` and add a line to its `MANIFEST.txt` naming the source file.
 3. Check every number against the source repo before publishing. HTML comments are removed from the rendered pages, but they stay visible in this public source, so don't use them for private notes.
 4. Add a card to `projects/index.qmd`, and to `index.qmd` if the project should be featured.

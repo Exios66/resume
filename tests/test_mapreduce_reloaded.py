@@ -50,7 +50,8 @@ class MapReduceReloadedTests(unittest.TestCase):
         self.assertEqual(destination(page, links[0]), (checks.DOCS / PAGE).resolve())
         text = parser.text(cards[0])
         self.assertIn("In active development", text)
-        self.assertIn("Object storage, compression and benchmarks are planned.", text)
+        self.assertIn("Packet drops are not built yet.", text)
+        self.assertNotIn("Object storage, compression and benchmarks are planned.", text)
 
     def test_group_reuses_an_existing_icon_and_the_sprite_is_unchanged(self):
         _, index = self.read_page("projects/index.html")
@@ -69,7 +70,10 @@ class MapReduceReloadedTests(unittest.TestCase):
         nav = self.one(parser, "div", **{"class": "project-nav"})
         links = [attrs for tag, attrs in parser.children(nav) if tag == "a"]
         self.assertEqual({parser.text(link): destination(page, link) for link in links},
-                         {"Case study": page.resolve(), "Code": CODE_URL})
+                         {"Case study": page.resolve(),
+                          "Technical report": "https://github.com/Exios66/MapReduce-Reloaded/blob/main/docs/report.md",
+                          "Appendix": (checks.DOCS / "projects/mapreduce-reloaded/appendix.html").resolve(),
+                          "Code": CODE_URL})
         current = [link for link in links if checks.attr(link, "aria-current") == "page"]
         self.assertEqual(len(current), 1)
         back = self.one(parser, "a", **{"class": "back"})
@@ -93,7 +97,7 @@ class MapReduceReloadedTests(unittest.TestCase):
         _, parser = self.read_page()
         values = [parser.text(attrs) for _, attrs, _ in parser.elements
                   if "stat-value" in checks.classes(attrs)]
-        self.assertEqual(values, ["23 / 23", "350", "50"])
+        self.assertEqual(values, ["24", "336 + 487", "5"])
 
     def test_diagram_publishes_the_partial_without_geometry_loss(self):
         _, published = self.read_page()

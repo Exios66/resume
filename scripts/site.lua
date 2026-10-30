@@ -11,6 +11,50 @@ local NAV = {
   { label = "Résumé",   href = "resume.html",         section = "resume.html" },
 }
 
+-- Case-study order used for previous/next project links.
+local PROJECTS = {
+  { "digital-mailroom", "Digital-Mailroom" },
+  { "mailroom-ml", "Mailroom-ML" },
+  { "mailroom-reloaded", "Mailroom Reloaded" },
+  { "rvl-cdip-classifier", "RVL-CDIP-Classifier" },
+  { "mailroom-corpus-eda", "Mailroom-Corpus-EDA" },
+  { "aeroglobe", "AeroGlobe" },
+  { "mapreduce-reloaded", "MapReduce-Reloaded" },
+  { "psychometric-digital-twin", "Psychometric Digital Twin" },
+  { "natd", "NATD" },
+  { "llm-personas", "MORNINGSTAR" },
+  { "wave-laboratory", "Wave Laboratory" },
+  { "langtons-ant", "Langton's Ant" },
+  { "degen-llms", "The Mandalay Bay" },
+}
+
+--- Previous/next links between case studies, for a project page.
+-- @param path string Project-relative HTML path.
+-- @return string HTML nav, or empty when the page is not a project page.
+local function project_pager(path)
+  local slug = path:match("^projects/([^/]+)%.html$")
+  local up = ""
+  if not slug then
+    slug = path:match("^projects/([^/]+)/")
+    up = "../"
+  end
+  if not slug or slug == "index" then return "" end
+  local index
+  for i, item in ipairs(PROJECTS) do
+    if item[1] == slug then index = i break end
+  end
+  if not index then return "" end
+  local function link(item, class_name, arrow, before)
+    local label = before and (arrow .. item[2]) or (item[2] .. arrow)
+    return string.format('<a class="%s" href="%s%s.html">%s</a>', class_name, up, item[1], label)
+  end
+  local parts = { '<nav class="project-pager" aria-label="Projects">' }
+  if index > 1 then parts[#parts + 1] = link(PROJECTS[index - 1], "pager-prev", "← ", true) end
+  if index < #PROJECTS then parts[#parts + 1] = link(PROJECTS[index + 1], "pager-next", " →", false) end
+  parts[#parts + 1] = "</nav>"
+  return table.concat(parts)
+end
+
 --- Compute the current page's HTML path relative to the Quarto project root.
 -- @return string Input path with the project prefix removed and .qmd replaced by .html.
 local function page_path()
@@ -367,12 +411,17 @@ function Pandoc(doc)
       %s
       <li hidden><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden>%s</span><span class="i-moon">%s</span></button></li>
     </ul>
+    <form class="site-search" role="search">
+      <label class="visually-hidden" for="site-search">Search this site</label>
+      <input id="site-search" type="search" placeholder="Search" autocomplete="off" enterkeyhint="search">
+      <ul class="search-results" hidden></ul>
+    </form>
   </nav>
 </header>
 <main id="main">]], prefix, table.concat(links, "\n      "), icon_html("sun"), icon_html("moon"))
 
   -- The sprite goes after the footer so it never sits between the header and <main> in the layout.
-  local footer = [[
+  local footer = project_pager(path) .. [[
 </main>
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>

@@ -8,7 +8,7 @@ description: "Can an LLM, given a second-person profile (\"You are a ...\") buil
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](psychometric-digital-twin.qmd){aria-current="page"} [Technical report](psychometric-digital-twin/report.qmd) [Code](https://github.com/Exios66/psych755-jjb)
+[Case study](psychometric-digital-twin.qmd){aria-current="page"} [Technical report](psychometric-digital-twin/report.qmd) [Appendix](psychometric-digital-twin/appendix.qmd) [Code](https://github.com/Exios66/psych755-jjb)
 :::
 
 # Psychometric Digital Twin {.page-title}

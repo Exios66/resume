@@ -1,4 +1,6 @@
 ---
+toc: true
+toc-depth: 2
 pagetitle: "Mailroom-Corpus-EDA: technical report — Jack J. Burleson"
 description: "Sources and licences, identity and provenance design, label separation, split rule, intent hydration, audit pipeline, revision history, test results and limitations for the mailroom dataset and its audit repository."
 ---
@@ -8,7 +10,7 @@ description: "Sources and licences, identity and provenance design, label separa
 [← Case study](../mailroom-corpus-eda.qmd){.back}
 
 ::: {.project-nav}
-[Case study](../mailroom-corpus-eda.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/Exios66/Mailroom-Corpus-EDA) [Dataset](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset)
+[Case study](../mailroom-corpus-eda.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/Mailroom-Corpus-EDA) [Dataset](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset)
 :::
 
 # Mailroom-Corpus-EDA: technical report {.page-title}
@@ -145,7 +147,7 @@ Merger agreements are the long tail, with a mean near 22,000 tokens and a maximu
 | v9.1 | 3,302 | Moved label-derived counts out of the blind metadata, added a per-row presence code for every label field, and added context-window bands |
 | v9.2 | 3,302 | Published all six provenance regimes, removed an undocumented build-internal column, filled in relation fields on 23 heuristic rows, and corrected one audit |
 
-Neither v9.1 nor v9.2 added or removed a document, or changed an identifier or any document text. The changelog records zero drift.
+Neither v9.1 nor v9.2 added or removed a document, or changed an identifier or any document text. The changelog records zero drift. The published Hub tag is still v9.2. The changelog also has v9.3 (17 October 2026), a staging label-only revision over the v9.2.1 corporate rows, same 3,302 documents, on `feat/v9.3-staging-corporate-presence`. It had not been pushed to tags or the Hub when this page was checked, so this page does not call v9.3 the published revision.
 
 ### An audit that was wrong
 
@@ -153,7 +155,7 @@ After the v9.1 change moved the MAUD count to the ground-truth side, the integri
 
 ## Tests
 
-I ran the test suite in a fresh environment, with the latest versions of the dependencies and not the pinned ones. Of 200 tests, 185 passed, 14 skipped and 1 failed. The 14 skipped tests need the full dataset snapshot, which `run_all.py --phases P0` downloads. The failure is a contract test that reads a taxonomy file from a sibling checkout of another repository, which my environment did not have.
+A line-start grep on main `5f2252c` (24 October 2026) finds 310 `def test_` functions in 19 files. `src/` is 11,298 lines of Python across 28 files (`wc -l`). An older fresh-environment run, with unpinned dependencies, collected about 200 tests and finished 185 passed, 14 skipped and 1 failed. That run is history. The skipped tests needed the full dataset snapshot, and the failure was a contract test that read a taxonomy file from a sibling checkout this environment did not have.
 
 ## Limitations
 

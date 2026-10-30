@@ -1,0 +1,24 @@
+---
+pagetitle: "Langton's Ant appendix — Jack J. Burleson"
+description: "Verification notes for the Langton's Ant case study: source commit, counting method, and limits."
+---
+
+::: {.page}
+
+[← All projects](../index.qmd){.back}
+
+::: {.project-nav}
+[Case study](../langtons-ant.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/langtons-ant) [Live demo](https://exios66.github.io/langtons-ant/)
+:::
+
+# Langton's Ant: appendix {.page-title}
+
+[Verification notes · 30 October 2026]{.kicker}
+
+Checked against `Exios66/langtons-ant` `fc52838` (24 October 2026) on 30 October 2026.
+
+## Tests
+
+80 `it` or `test` calls across nine unit files: docs, golden, grid, highway, presets, restore, rule, serialize and simulation. A capture spec adds one more call. `tests/bench.test.ts` is the throughput benchmark and is not in the 80. The older "99 passing" figure was a run result and was not repeated, so 80 is a grep count, not a pass count.
+
+:::

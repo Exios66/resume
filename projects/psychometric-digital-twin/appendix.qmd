@@ -1,0 +1,24 @@
+---
+pagetitle: "Psychometric Digital Twin appendix — Jack J. Burleson"
+description: "Verification notes for the Psychometric Digital Twin case study: source commit, counting method, and limits."
+---
+
+::: {.page}
+
+[← All projects](../index.qmd){.back}
+
+::: {.project-nav}
+[Case study](../psychometric-digital-twin.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/psych755-jjb)
+:::
+
+# Psychometric Digital Twin: appendix {.page-title}
+
+[Verification notes · 30 October 2026]{.kicker}
+
+Checked against the case study and `Exios66/psych755-jjb` `100110f` (25 August 2026) on 30 October 2026.
+
+## Sample size
+
+241 respondents were analysed, from 252 matched Prolific and Qualtrics records. The résumé page now uses 241 as the analysed N. The repository's test-function grep (114 `def test_` functions) was not promoted into the case-study stats, which are about the survey, not the suite.
+
+:::

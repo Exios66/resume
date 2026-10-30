@@ -8,7 +8,7 @@ description: "A 3D flight-tracking globe in active development, with an early ve
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](aeroglobe.qmd){aria-current="page"} [Code](https://github.com/Exios66/aeroglobe) [Live site](https://exios66.github.io/aeroglobe/)
+[Case study](aeroglobe.qmd){aria-current="page"} [Appendix](aeroglobe/appendix.qmd) [Code](https://github.com/Exios66/aeroglobe) [Live site](https://exios66.github.io/aeroglobe/)
 :::
 
 # AeroGlobe {.page-title}
@@ -22,20 +22,20 @@ A browser-based 3D globe for flight tracking. It is a work in progress, and an e
 :::
 
 ::: {.caveat}
-**Work in progress.** The repository is being built right now, so this page will change. It describes the state of the code on 23 October 2026. The [live site](https://exios66.github.io/aeroglobe/) shows a short sample of real traffic, three OpenSky observations recorded when the site was built, and a labeled sample day of generated flights. It does not poll live data, and no real historical day is published yet.
+**Work in progress.** The repository is being built right now, so this page will change. Counts below are from main `935bd07` on 30 October 2026. The [live site](https://exios66.github.io/aeroglobe/) shows a short sample of real traffic, three OpenSky observations recorded when the site was built, and a labeled sample day of generated flights. It does not poll live data, and no real historical day is published yet. Whether the deployed build matches that commit was not re-checked.
 :::
 
 ## At a glance
 
 ::: {.stats}
 ::: {.stat}
-[395]{.stat-value} [passing tests in 42 files, with lint, type-checking and the production build all clean]{.stat-label}
+[305]{.stat-value} [`it(` calls in 43 test files on 935bd07. The 23 October "395 passing" figure was not re-run]{.stat-label}
 :::
 ::: {.stat}
 [4]{.stat-value} [stages in the data pipeline: normalize, segment, chunk, catalog]{.stat-label}
 :::
 ::: {.stat}
-[5,800]{.stat-value} [lines of TypeScript across the client, server, pipeline and shared code]{.stat-label}
+[6,211]{.stat-value} [lines of TypeScript outside test files, `wc -l`, on 935bd07]{.stat-label}
 :::
 :::
 

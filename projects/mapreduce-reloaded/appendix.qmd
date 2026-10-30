@@ -1,0 +1,36 @@
+---
+pagetitle: "MapReduce-Reloaded appendix — Jack J. Burleson"
+description: "Verification notes for the MapReduce-Reloaded case study: source commit, counting method, and limits."
+---
+
+::: {.page}
+
+[← All projects](../index.qmd){.back}
+
+::: {.project-nav}
+[Case study](../mapreduce-reloaded.qmd) [Technical report](https://github.com/Exios66/MapReduce-Reloaded/blob/main/docs/report.md) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/MapReduce-Reloaded)
+:::
+
+# MapReduce-Reloaded: appendix {.page-title}
+
+[Verification notes · 30 October 2026]{.kicker}
+
+Checked against `Exios66/MapReduce-Reloaded` `ab65654` on 30 October 2026.
+
+## What changed since the 23 October stamp
+
+F1–F24 are marked done in `docs/paper-mapping.md`, including the §5 performance experiments. CircleCI is configured. The Python coordinator is under `python/mapreduce_reloaded/coordinator/`. A full Python worker was not found. S3 is VersityGW in the Compose `s3` profile, not MinIO. Compression flags accept none, zstd or snappy. `docs/report.md` and the benchmark harness exist.
+
+## How the counts were taken
+
+336 Go `func Test` functions and 487 Python `def test_` functions, by grep. That is not a passing-run total. Cluster chaos defaults to 5 runs (`make chaos`). The in-process default is 3 (`-chaos.runs`). 50 is the soak flag, not the default.
+
+## Diagram
+
+The case-study diagram is the Go cluster path. It omits the host client, the S3 profile, the Python coordinator and the benchmarks on purpose.
+
+## Still not built
+
+Dropping packets. A standby coordinator, skew handling and Parquet input remain stretch goals.
+
+:::

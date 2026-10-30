@@ -73,7 +73,9 @@ class LangtonsAntTests(unittest.TestCase):
         nav = self.one(parser, "div", **{"class": "project-nav"})
         links = [attrs for tag, attrs in parser.children(nav) if tag == "a"]
         self.assertEqual({parser.text(link): destination(page, link) for link in links},
-                         {"Case study": page.resolve(), "Code": CODE_URL, "Live demo": DEMO_URL})
+                         {"Case study": page.resolve(),
+                          "Appendix": (checks.DOCS / "projects/langtons-ant/appendix.html").resolve(),
+                          "Code": CODE_URL, "Live demo": DEMO_URL})
         current = [link for link in links if checks.attr(link, "aria-current") == "page"]
         self.assertEqual(len(current), 1)
         self.assertEqual(destination(page, current[0]), page.resolve())
@@ -155,7 +157,7 @@ class LangtonsAntTests(unittest.TestCase):
         _, parser = self.read_page()
         values = [parser.text(attrs) for _, attrs, _ in parser.elements
                   if "stat-value" in checks.classes(attrs)]
-        self.assertEqual(values, ["99", "20", "64 × 64"])
+        self.assertEqual(values, ["80", "20", "64 × 64"])
 
     def test_description_canonical_and_sitemap_match_the_source(self):
         _, parser = self.read_page()

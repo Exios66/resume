@@ -1,4 +1,6 @@
 ---
+toc: true
+toc-depth: 2
 pagetitle: "Mailroom Reloaded: technical report — Jack J. Burleson"
 description: "Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published."
 ---
@@ -8,7 +10,7 @@ description: "Pipeline structure, durability, escalation gates, observability, d
 [← Case study](../mailroom-reloaded.qmd){.back}
 
 ::: {.project-nav}
-[Case study](../mailroom-reloaded.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/Exios66/mailroom-reloaded)
+[Case study](../mailroom-reloaded.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/mailroom-reloaded)
 :::
 
 # Mailroom Reloaded: technical report {.page-title}
@@ -84,7 +86,7 @@ The repository's changelog is the iteration record (141 commits in the history I
 
 ::: {.timeline}
 - **0.4.2 (2026-10-11)** — fixed the `/ui` documents table at phone widths. *Verified at 420, 768 and 1280 px with no page-level horizontal overflow.*
-- **Unreleased** — accessibility passes on `/ui` and `/tui` (a page heading, labelled tables, live regions, keyboard-reachable rows, focus rings, contrast fixes), a real provider probe behind `GET /ready`, and a fix so `mailroom eval` no longer drops rows whose filename has no supported suffix. *Dormant sandbox deep links removed from `/tui`.*
+- **Unreleased** — accessibility passes on `/ui` and `/tui` (a page heading, labelled tables, live regions, keyboard-reachable rows, focus rings, contrast fixes), P6-B1–B5 operator commands (links, ready, config, replay, review queue), an operator SMS pager, llm-dojo-scoring re-vendored at v0.22.0, a `GET /ready` probe of the configured LLM provider, and a fix so `mailroom eval` no longer drops rows whose filename has no supported suffix. The release is still 0.4.2. Screenshots on this site are from `545d8b7` with the mock provider and were not re-shot against the current `/tui`.
 - **v1 trim** — an offline ingress simulator was moved off `main` onto a feature branch, leaving the core pipeline and the replay viewer. *Verified on merged `main`.*
 :::
 
@@ -107,7 +109,7 @@ This used a mock LLM provider with four seeded documents. It tests plumbing, not
 | Check | Result |
 | --- | --- |
 | `ruff check .` | all checks passed |
-| `uv run pytest -q` | 1,597 passed, 3 skipped, 3 deselected, 0 failed |
+| `uv run pytest -q` | 1,597 passed, 3 skipped, 3 deselected, 0 failed (11 October 2026 snapshot, not re-run) |
 | `node --test tests/tui/js/*.test.mjs` | 290 pass, 0 fail |
 | replay-only subset of those | 96 pass, 0 fail |
 | `GET /v1/documents` | 4 documents, all archived |
@@ -153,7 +155,7 @@ uv run mailroom eval --per-class 20 --seed 42 --split test
 
 ## Engineering quality
 
-- **Test suite.** 1,134 `def test_` functions across 83 test files, counted by grep. The 1,597 in the verification run is higher because of parametrisation and because the Node suites are also wired into pytest.
+- **Test suite.** 1,288 line-start `def test_` functions (including `async def`) across 89 test files on main `0e1dbd0` (23 October 2026). The 1,597 in the 11 October verification run is a different counting method: a pytest session, including parametrized cases. A later demo log recorded 1,842 passed, 3 skipped and 3 deselected, and 378 TUI Node tests. That demo was not repeated as a clean main verification for this page.
 - **Tiers.** Agents, pipeline, eval, observability, API, deploy, intake, ingest, LLM, scoring, schemas, storage, TUI and `/ui`.
 - **Dependency fence.** A test fails if any `langgraph`, `langchain*`, `langfuse`, `braintrust` or `litellm` import appears under `src/` or in any dependency.
 - **Prompt lock.** A test checks the sha256 of every vendored prompt against its lineage file, so frozen prompts cannot drift silently.

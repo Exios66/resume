@@ -8,7 +8,7 @@ description: "A real-time 3D ocean-wave and ship-motion sandbox that runs in the
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](wave-laboratory.qmd){aria-current="page"} [Technical report](wave-laboratory/report.qmd) [Code](https://github.com/Exios66/wave-laboratory) [Live demo](https://exios66.github.io/wave-laboratory/)
+[Case study](wave-laboratory.qmd){aria-current="page"} [Technical report](wave-laboratory/report.qmd) [Appendix](wave-laboratory/appendix.qmd) [Code](https://github.com/Exios66/wave-laboratory) [Live demo](https://exios66.github.io/wave-laboratory/)
 :::
 
 # Wave Laboratory {.page-title}
@@ -31,7 +31,7 @@ The lab needs a browser with WebGL 2. It runs on desktop and on phones.
 [280]{.stat-value} [water columns, at most, sampled under a hull to integrate pressure]{.stat-label}
 :::
 ::: {.stat}
-[328 + 25]{.stat-value} [unit and long-running validation tests, counted by grep]{.stat-label}
+[472 + 25]{.stat-value} [`it(` calls in 61 src test files, plus 25 validation tests, on 4c7354e]{.stat-label}
 :::
 :::
 

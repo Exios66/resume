@@ -1,4 +1,6 @@
 ---
+toc: true
+toc-depth: 2
 pagetitle: "RVL-CDIP-Classifier: technical report — Jack J. Burleson"
 description: "Method, iteration history, results and limits of a prompt-only, zero-shot RVL-CDIP classifier built on an off-the-shelf vision model."
 ---
@@ -8,7 +10,7 @@ description: "Method, iteration history, results and limits of a prompt-only, ze
 [← Case study](../rvl-cdip-classifier.qmd){.back}
 
 ::: {.project-nav}
-[Case study](../rvl-cdip-classifier.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/Exios66/RVL-CDIP-Classifier)
+[Case study](../rvl-cdip-classifier.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/RVL-CDIP-Classifier)
 :::
 
 # RVL-CDIP-Classifier: technical report {.page-title}

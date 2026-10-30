@@ -8,7 +8,7 @@ description: "An early version of a browser simulator for Langton's ant and othe
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](langtons-ant.qmd){aria-current="page"} [Code](https://github.com/Exios66/langtons-ant) [Live demo](https://exios66.github.io/langtons-ant/)
+[Case study](langtons-ant.qmd){aria-current="page"} [Appendix](langtons-ant/appendix.qmd) [Code](https://github.com/Exios66/langtons-ant) [Live demo](https://exios66.github.io/langtons-ant/)
 :::
 
 # Langton's Ant {.page-title}
@@ -25,7 +25,7 @@ A browser simulator for Langton's ant and the wider family of two-dimensional Tu
 
 ::: {.stats}
 ::: {.stat}
-[99]{.stat-value} [passing tests in 9 files, covering the engine, the permalink and session code, and the presets; a throughput benchmark is skipped unless asked for]{.stat-label}
+[80]{.stat-value} [`it`/`test` calls in 9 unit files on fc52838. The older "99 passing" run was not repeated]{.stat-label}
 :::
 ::: {.stat}
 [20]{.stat-value} [preset machines in the gallery, each with its notation and a source]{.stat-label}

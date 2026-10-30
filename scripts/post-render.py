@@ -16,6 +16,7 @@
 """
 import hashlib
 import html
+import json
 import re
 import shutil
 import sys
@@ -145,13 +146,62 @@ def harden_diagram_pages():
             page.write_text(fixed, encoding="utf-8")
 
 
+def visible_text(fragment):
+    """Return element text with tags removed and whitespace collapsed."""
+    text = re.sub(r"<[^>]+>", " ", fragment)
+    return " ".join(html.unescape(text).split())
+
+
+def build_search_index():
+    """Write a small title-and-description index for the header search field."""
+    pages = []
+    for page in sorted(DOCS.rglob("*.html")):
+        if "site_libs" in page.parts:
+            continue
+        source = page.read_text(encoding="utf-8")
+        title = re.search(r"<title>([^<]*)</title>", source)
+        description = re.search(r'<meta name="description" content="([^"]*)"', source)
+        heading = re.search(r"<h1\b[^>]*>(.*?)</h1>", source, re.S)
+        name = visible_text(heading.group(1)) if heading else (html.unescape(title.group(1)) if title else page.stem)
+        pages.append({
+            "title": name,
+            "url": page.relative_to(DOCS).as_posix(),
+            "text": html.unescape(description.group(1)) if description else "",
+        })
+    target = DOCS / "assets" / "search-index.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(pages, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"post-render: indexed {len(pages)} pages")
+
+
+def wrap_tables(text):
+    """Give each top-level table a horizontal scroll container."""
+    if 'class="table-scroll"' in text:
+        return text
+    return re.sub(r"<table\b.*?</table>", lambda match: f'<div class="table-scroll">{match.group(0)}</div>', text, flags=re.S)
+
+
+def wrap_table_pages():
+    """Apply wrap_tables to every rendered page."""
+    for page in DOCS.rglob("*.html"):
+        if "site_libs" in page.parts:
+            continue
+        text = page.read_text(encoding="utf-8")
+        fixed = wrap_tables(text)
+        if fixed != text:
+            page.write_text(fixed, encoding="utf-8")
+
+
 def main():
-    """Prepare docs for GitHub Pages, remove the search index, and publish the PDF."""
+    """Prepare docs for GitHub Pages, build the search index, and publish the PDF."""
     DOCS.mkdir(exist_ok=True)
     (DOCS / ".nojekyll").touch()
+    # Quarto's own search.json is unused; the header reads assets/search-index.json.
     (DOCS / "search.json").unlink(missing_ok=True)
     dedupe_titles()
     harden_diagram_pages()
+    wrap_table_pages()
+    build_search_index()
     cache_bust_pages()
     publish_pdf()
 

@@ -55,7 +55,7 @@ Each project has a case study on the [portfolio](https://exios66.github.io/resum
 | **[RVL-CDIP-Classifier](https://exios66.github.io/resume/projects/rvl-cdip-classifier.html)** | Zero-shot document classification with vision LLMs, with tracked prompt versions and cost per page | — |
 | **[Mailroom-Corpus-EDA](https://exios66.github.io/resume/projects/mailroom-corpus-eda.html)** | The data engineering behind the mailroom dataset: 3,302 documents from public sources, with provenance, label separation and an audit pipeline | — |
 | **[AeroGlobe](https://exios66.github.io/resume/projects/aeroglobe.html)** | A 3D flight-tracking globe built around a static data pipeline, with an [early version live](https://exios66.github.io/aeroglobe/) | In active development |
-| **[MapReduce-Reloaded](https://exios66.github.io/resume/projects/mapreduce-reloaded.html)** | A from-scratch rebuild of Google's MapReduce in Go and Python, with all 23 of the paper's features and chaos-tested fault tolerance | In active development |
+| **[MapReduce-Reloaded](https://exios66.github.io/resume/projects/mapreduce-reloaded.html)** | A from-scratch rebuild of Google's MapReduce in Go and Python: F1–F24 of the paper, CircleCI, S3-compatible storage, compression, and a final report | In active development |
 | **[Psychometric Digital Twin](https://exios66.github.io/resume/projects/psychometric-digital-twin.html)** | LLM "digital twin" personas against seven classical models on 241 survey respondents — the personas did not beat simple baselines | — |
 | **[The Neural Architecture of Truth and Deception](https://exios66.github.io/resume/projects/natd.html)** | A pilot study of nine people and 18 sessions with helpful and deceitful chatbot personas; the physiological, EEG and eye-tracking data are withheld until authenticated | — |
 | **[MORNINGSTAR](https://exios66.github.io/resume/projects/llm-personas.html)** | A courtroom of LLM personas that argue, vote, and rule on engineering decisions | — |
@@ -66,9 +66,9 @@ Each project has a case study on the [portfolio](https://exios66.github.io/resum
 ## Background
 
 - **Education:** M.S. candidate, Psychology: Data Science in Human Behavior, UW–Madison (expected Dec 2026). B.S. Psychology, UW–Parkside (2020–2025).
-- **Now:** building services at UW–Madison Recreation & Wellbeing in Madison, alongside my capstone.
+- **Now:** building services at UW–Madison Recreation & Wellbeing, facilities coordinator at the Wisconsin Union, and driver at Avis/Budget in Madison, alongside my capstone.
 - **Research:** undergraduate researcher in a cognitive neuroscience lab at UW–Parkside (2024–2025), working with EEG and presenting at the 2025 Midwestern Psychological Association conference.
-- **Before that:** logistics coordinator at Meijer Distribution (2020–2025), promoted from Retail Loader.
+- **Before that:** logistics coordinator at Meijer Distribution (July 2023–August 2025), promoted from retail loader (July 2020–July 2023).
 
 ## How this repository is built
 

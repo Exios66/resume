@@ -1,0 +1,34 @@
+---
+pagetitle: "Mailroom-ML appendix — Jack J. Burleson"
+description: "Verification notes for the Mailroom-ML case study: source commit, counting method, and limits."
+---
+
+::: {.page}
+
+[← All projects](../index.qmd){.back}
+
+::: {.project-nav}
+[Case study](../mailroom-ml.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml)
+:::
+
+# Mailroom-ML: appendix {.page-title}
+
+[Verification notes · 30 October 2026]{.kicker}
+
+Checked against `LLM-Mailroom-Services/mailroom-ml` `01c2272` on 30 October 2026.
+
+## Current run
+
+M9c is `eval_m9c-20261014-113614`. Document-type accuracy 0.9598 (310/323). Conditional subclass accuracy 0.7387 (229/310), short of 0.75. Window ECE 0.0189. Out-of-distribution flags 5.57% (18/323). The 0.3901 acceptance figure is a confidence-only upper bound at threshold 0.94, not a production fast-path rate.
+
+M9b remains in the case study as history: 0.9505 document-type accuracy, ECE 0.0152, and a 74.3% fast path at 0.97.
+
+## Tests and serving
+
+493 line-start `def test_` functions in 33 `test_*.py` files. Primary serving is ONNX on CPU. The Modal serve app is a fallback. The weights are [mailroom-modernbert-classifier](https://huggingface.co/Lucius-Morningstar/mailroom-modernbert-classifier).
+
+## Figures
+
+The published figures are the earlier Arm B captures. Source main's `reports/charts/` has m9a-local runs and no Arm B, M9b or M9c chart directory, so they were not re-plotted from M9c.
+
+:::

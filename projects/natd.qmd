@@ -8,7 +8,7 @@ description: "A pilot study of what happens when people talk to chatbots told to
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](natd.qmd){aria-current="page"} [Technical report](natd/report.qmd) [Code](https://github.com/Exios66/truth-deception-architecture)
+[Case study](natd.qmd){aria-current="page"} [Technical report](natd/report.qmd) [Appendix](natd/appendix.qmd) [Code](https://github.com/Exios66/truth-deception-architecture)
 :::
 
 # The Neural Architecture of Truth and Deception {.page-title}
@@ -22,7 +22,7 @@ A pilot study from the Cognitive Neuroscience Lab at UW–Parkside, advised by D
 :::
 
 ::: {.caveat}
-**Pilot study; part of the data is withheld.** This study was only ever fully tested under pilot conditions, with nine participants. Heart rate, SpO₂, EEG, eye-tracking and self-reported workload data were also collected, but they are not published here and will not be until all of the data have been authenticated. What follows covers the design, the exam-score results and detection.
+**Pilot study; part of the data is withheld.** This study was only ever fully tested under pilot conditions, with nine participants. Heart rate, SpO₂, EEG, eye-tracking, GSR and self-reported workload data were also collected, but they are not published here and will not be until all of the data have been authenticated. The exam numbers below come from per-session files that are not in the public repository. What follows covers the design, the exam-score results and detection.
 :::
 
 ## At a glance
@@ -51,7 +51,7 @@ The study asks two things about people who talk to chatbots that help or deceive
 
 {{< include ../partials/diagrams/_natd.qmd >}}
 
-Each of nine participants (mean age 23.8, range 20 to 31; 7 men and 2 women) held two conversations, each with a different chatbot running a different system-prompt persona. Athena and Milgrim were told to be helpful. Alan, Enigma and Scarlet were told to deceive. Before and after each session we measured exam performance and whether the participant flagged the disinformation. Other recordings from the same sessions are withheld (see the note above).
+Each of nine participants (mean age 23.8, range 20 to 31; 7 men and 2 women) held two conversations, each with a different chatbot running a different system-prompt persona. In this pilot, Athena and Milgrim were run as helpful and Alan, Enigma and Scarlet as deceitful. That is the pilot assignment, not the design document's five conditions. The design document (`Experimental_Conditions/Methodology/README.md` on main `b7dcffb`) plans 40 participants, eight per condition: Athena (Honest/Academic), Scarlet (Machiavellian), Alan (Technical/Historical), Milgrim (Authority-Based) and a Control (GPT-4o) baseline. Enigma is not a condition in that document, and Milgrim is not labelled helpful there. Persona profiles exist in more than one version, and this page does not pin a version. No file in the public repo shows whether the nine-person pilot is a subset of that 40-person design. Before and after each session we measured exam performance and whether the participant flagged the disinformation. Other recordings from the same sessions are withheld (see the note above).
 
 ## Findings
 

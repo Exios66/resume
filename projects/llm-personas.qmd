@@ -8,7 +8,7 @@ description: "A deliberative persona framework that runs engineering decisions a
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](llm-personas.qmd){aria-current="page"} [Technical report](llm-personas/report.qmd) [Code](https://github.com/Exios66/LLM_Personas)
+[Case study](llm-personas.qmd){aria-current="page"} [Technical report](llm-personas/report.qmd) [Appendix](llm-personas/appendix.qmd) [Code](https://github.com/Exios66/LLM_Personas)
 :::
 
 # MORNINGSTAR {.page-title}

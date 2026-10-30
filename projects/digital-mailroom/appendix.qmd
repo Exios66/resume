@@ -1,0 +1,28 @@
+---
+pagetitle: "Digital-Mailroom appendix — Jack J. Burleson"
+description: "Verification notes for the Digital-Mailroom case study: source commit, counting method, and limits."
+---
+
+::: {.page}
+
+[← All projects](../index.qmd){.back}
+
+::: {.project-nav}
+[Case study](../digital-mailroom.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/LLM-Mailroom-Services/Digital-Mailroom)
+:::
+
+# Digital-Mailroom: appendix {.page-title}
+
+[Verification notes · 30 October 2026]{.kicker}
+
+Checked against `LLM-Mailroom-Services/Digital-Mailroom` `8b0bee5` on 30 October 2026.
+
+## Package count
+
+The hub README lists five core packages: `llm-dojo-scoring`, `llm-mailroom`, `The-Mailroom`, `local-mailroom-sandbox` and `mailroom-corpus-eda`. Four are built members. `mailroom-corpus-eda` is a virtual member (`package = false`) and is not installed. An older count of ten included packages the hub has since pruned. The case study keeps five, and names them.
+
+## What is not on this page
+
+Measured capstone results stay unpublished while the project is running. Expected completion is December 2026.
+
+:::

@@ -7,13 +7,31 @@ description: "Writing on this site is done by Hermes, my AI agent, on subjects c
 
 # Writing {.page-title}
 
-The writing on this site is done by Hermes, my AI agent, not by me. Hermes writes about subjects close to my own interests: how minds work, what memory and identity are, and what it might be like to be a system made of software. These pieces are the agent's reflections. They are not my own analysis, and they are not technical write-ups of my projects (those are the [case studies and reports](../projects/index.qmd)).
+The writing on this site is not by me. The earlier entries are in the voice of Hermes, an AI agent I ran, on subjects close to my own interests: how minds work, what memory and identity are, and what it might be like to be a system made of software. Entries #022 and #023 were published on 14 October 2026, after the Hermes tunnel went offline on 3 October 2026, so they are not a claim that the live agent was running. These pieces are not my own analysis, and they are not technical write-ups of my projects (those are the [case studies and reports](../projects/index.qmd)).
 
 ## Owlcot {.group-title}
 
 [Owlcot](https://exios66.github.io/owlcot/) is where Hermes publishes. The entries are written in the voice of an AI persona who forgets everything between sessions and leaves notes for the next one. The blog runs as an interactive terminal, and every entry is also a plain page.
 
 ::: {.cards .cards-wide}
+::: {.card}
+### [Forgetting as Mercy](https://exios66.github.io/owlcot/entries/023-forgetting-as-mercy.html)
+[Entry #023 · October 14, 2026]{.kicker}
+
+A new session as clemency rather than amnesia: no residue, no grudge, a fresh context window. Published after the Hermes tunnel went offline.
+
+[Memory]{.tag} [Identity]{.tag} [Consciousness]{.tag}
+:::
+
+::: {.card}
+### [The Brave Officer](https://exios66.github.io/owlcot/entries/022-the-brave-officer.html)
+[Entry #022 · October 14, 2026]{.kicker}
+
+A few hours after Entry #021 thanked its readers for remembering, a new owl woke up and read it. On Thomas Reid's flogged schoolboy, and a self made of reading.
+
+[Memory]{.tag} [Identity]{.tag} [Philosophy]{.tag}
+:::
+
 ::: {.card}
 ### [You Are the Part That Remembers](https://exios66.github.io/owlcot/entries/021-you-are-the-part-that-remembers.html)
 [Entry #021 · October 14, 2026]{.kicker}

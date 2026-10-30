@@ -1,0 +1,32 @@
+---
+pagetitle: "The Mandalay Bay appendix — Jack J. Burleson"
+description: "Verification notes for the The Mandalay Bay case study: source commit, counting method, and limits."
+---
+
+::: {.page}
+
+[← All projects](../index.qmd){.back}
+
+::: {.project-nav}
+[Case study](../degen-llms.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/degen-llms) [Live demo](https://exios66.github.io/degen-llms/)
+:::
+
+# The Mandalay Bay: appendix {.page-title}
+
+[Verification notes · 30 October 2026]{.kicker}
+
+Checked against `Exios66/degen-llms` `80399bf` on 30 October 2026.
+
+## Counts
+
+379 line-start `def test_` functions in 52 files under `tests/`. This is a grep floor, not `pytest --co`. Node: 13 `scripts/smoke-test-*.mjs` and 5 `scripts/test-*-regressions.mjs`. CI loops over all of them, then runs the browser smoke test.
+
+Python outside `docs/`: 27,389 lines. Tests: 5,170. Scripts: 6,801. `mandalay_bay`: 13,121. All of those are `wc -l`.
+
+## What the README and changelog do not say
+
+The source README still says "200+ tests" and no longer says "14 slot machines". The changelog ends at 1.2.2. Merged pull requests run through #160, and #158–#160 are not changelog entries yet. Content counts that were re-checked on 29 October (8 floors, 37 machines, 744 contracts) were not re-derived from the data files on this pass.
+
+The Pages demo is a manual deploy and can lag main.
+
+:::

@@ -8,7 +8,7 @@ description: "A satirical choose-your-adventure casino and resort simulator with
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](degen-llms.qmd){aria-current="page"} [Technical report](degen-llms/report.qmd) [Code](https://github.com/Exios66/degen-llms) [Live demo](https://exios66.github.io/degen-llms/)
+[Case study](degen-llms.qmd){aria-current="page"} [Technical report](degen-llms/report.qmd) [Appendix](degen-llms/appendix.qmd) [Code](https://github.com/Exios66/degen-llms) [Live demo](https://exios66.github.io/degen-llms/)
 :::
 
 # The Mandalay Bay {.page-title}
@@ -32,7 +32,7 @@ The repository is called degen-llms. The name is tongue-in-cheek. There is no la
 [3]{.stat-value} [surfaces on one wallet: Python CLI, browser terminal, pixel RPG]{.stat-label}
 :::
 ::: {.stat}
-[282 + 12]{.stat-value} [pytest tests and Node smoke scripts (CI runs 7 of the 12)]{.stat-label}
+[379 + 18]{.stat-value} [`def test_` functions and Node scripts on main 80399bf. CI runs every smoke and regression script]{.stat-label}
 :::
 ::: {.stat}
 [744]{.stat-value} [futures and options contracts, among 37 slot machines and 8 floors]{.stat-label}
@@ -59,7 +59,7 @@ The pixel RPG follows one rule: it never rebuilds a game screen. Each screen is 
 - **Content.** Eight floors, 37 slot machines, 337 sports scenarios, 204 prediction scenarios and 744 futures and options contracts, kept as data files.
 - **A resort clock.** One clock module turns two real hours into one in-game day.
 - **Exact slot maths.** The slot module can compute a machine's return by listing every three-reel combination instead of simulating spins.
-- **Checks.** CI runs pytest on Python 3.11. On Node 22 it runs 7 of the 12 Node smoke scripts (the RPG world data check and six terminal-wiring scripts), a check that the browser modules' imports resolve and a browser smoke test.
+- **Checks.** CI runs pytest on Python 3.11. On Node 22 it loops over every `scripts/smoke-test-*.mjs` and `scripts/test-*-regressions.mjs` (13 smoke scripts and 5 regression scripts), then runs the browser smoke test. The live demo is a manual Pages deploy and can lag main.
 
 ## Results
 

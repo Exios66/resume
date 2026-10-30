@@ -8,7 +8,7 @@ description: "Capstone with an industry partner: one LangGraph pipeline for docu
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](digital-mailroom.qmd){aria-current="page"}
+[Case study](digital-mailroom.qmd){aria-current="page"} [Appendix](digital-mailroom/appendix.qmd) [Code](https://github.com/LLM-Mailroom-Services/Digital-Mailroom)
 :::
 
 # Digital-Mailroom {.page-title}
@@ -44,7 +44,7 @@ The design is one LangGraph pipeline that joins legal-document routing, prompt e
 
 {{< include ../partials/diagrams/_digital-mailroom.qmd >}}
 
-I split the work into five packages so each part can be tested and swapped on its own.
+I split the work into five packages so each part can be tested and swapped on its own. On hub commit `8b0bee5` (26 October 2026) they are `llm-dojo-scoring`, `llm-mailroom`, `The-Mailroom`, `local-mailroom-sandbox` and `mailroom-corpus-eda`. The corpus package is a virtual member and is not installed as a build. Earlier packages were pruned, which is why an old count of ten is not the current hub.
 
 ## What I built
 
