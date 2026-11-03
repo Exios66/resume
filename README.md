@@ -4,7 +4,7 @@
 
 **Machine Learning · Data Science · AI Engineering & Safety**
 
-I build AI systems from start to finish: multi-agent document pipelines, fine-tuned and calibrated transformers, LLM evaluation, and behavioral prediction models.
+Hello! I build AI systems from start to finish: multi-agent document pipelines, fine-tuned and calibrated transformers, LLM evaluation, and behavioral prediction models.
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-exios66.github.io-0A66C2?style=flat-square&logo=githubpages&logoColor=white)](https://exios66.github.io/resume/)
 [![Résumé](https://img.shields.io/badge/Résumé-PDF-B31B1B?style=flat-square&logo=adobeacrobatreader&logoColor=white)](https://exios66.github.io/resume/assets/Jack_Burleson_Resume.pdf)
