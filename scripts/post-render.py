@@ -16,6 +16,7 @@
 """
 import hashlib
 import html
+import json
 import re
 import shutil
 import sys
@@ -112,6 +113,42 @@ def cache_bust_pages():
 
 SVG_SHAPE = re.compile(r"<(rect|circle|ellipse|path|line|polygon|polyline)(\s[^<>]*?)?(/?)>")
 DIAGRAM = re.compile(r'<figure class="diagram".*?</figure>', re.S)
+SEARCH_TAGS = re.compile(r"<[^>]+>")
+SEARCH_SCRIPTS = re.compile(r"<(script|style)\b.*?</\1>", re.S)
+
+
+def plain_text(fragment):
+    """Return tag-free, whitespace-collapsed text for the search index."""
+    return " ".join(html.unescape(SEARCH_TAGS.sub(" ", fragment)).split())
+
+
+def build_search_index():
+    """Write docs/search-index.json from the rendered pages.
+
+    Titles, descriptions and headings carry the weight; a short body excerpt
+    gives the search page something to match and to show as a snippet.
+    """
+    entries = []
+    for page in sorted(DOCS.rglob("*.html")):
+        rel = page.relative_to(DOCS).as_posix()
+        if rel == "search.html" or "site_libs" in page.parts:
+            continue
+        source = page.read_text(encoding="utf-8")
+        title = re.search(r"<title>(.*?)</title>", source, re.S)
+        description = re.search(r'<meta name="description" content="([^"]*)"', source)
+        main = re.search(r'<main id="main">(.*?)</main>', source, re.S)
+        body_source = main.group(1) if main else source
+        headings = " ".join(plain_text(h) for h in re.findall(r"<h[23][^>]*>(.*?)</h[23]>", body_source, re.S))
+        entries.append({
+            "u": rel,
+            "t": plain_text(title.group(1)) if title else rel,
+            "d": plain_text(description.group(1)) if description else "",
+            "h": headings[:400],
+            "b": plain_text(SEARCH_SCRIPTS.sub(" ", body_source))[:1200],
+        })
+    (DOCS / "search-index.json").write_text(
+        json.dumps(entries, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+
 
 
 def harden_shape(match):
@@ -153,6 +190,7 @@ def main():
     dedupe_titles()
     harden_diagram_pages()
     cache_bust_pages()
+    build_search_index()
     publish_pdf()
 
 

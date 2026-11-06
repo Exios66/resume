@@ -9,6 +9,25 @@ local NAV = {
   { label = "Research", href = "research.html",       section = "research.html" },
   { label = "Writing",  href = "writing/index.html",  section = "writing/" },
   { label = "Résumé",   href = "resume.html",         section = "resume.html" },
+  { label = "Search",   href = "search.html",         section = "search.html" },
+}
+
+-- Reading order for the previous/next pager; mirrors projects/index.qmd.
+local PROJECTS = {
+  { slug = "neuron-atlas", label = "Neuron Atlas" },
+  { slug = "digital-mailroom", label = "Digital-Mailroom" },
+  { slug = "mailroom-ml", label = "Mailroom-ML" },
+  { slug = "mailroom-reloaded", label = "Mailroom Reloaded" },
+  { slug = "rvl-cdip-classifier", label = "RVL-CDIP-Classifier" },
+  { slug = "mailroom-corpus-eda", label = "Mailroom-Corpus-EDA" },
+  { slug = "aeroglobe", label = "AeroGlobe" },
+  { slug = "mapreduce-reloaded", label = "MapReduce-Reloaded" },
+  { slug = "psychometric-digital-twin", label = "Psychometric Digital Twin" },
+  { slug = "natd", label = "The Neural Architecture of Truth and Deception" },
+  { slug = "llm-personas", label = "MORNINGSTAR" },
+  { slug = "wave-laboratory", label = "Wave Laboratory" },
+  { slug = "langtons-ant", label = "Langton's Ant" },
+  { slug = "degen-llms", label = "The Mandalay Bay" },
 }
 
 --- Compute the current page's HTML path relative to the Quarto project root.
@@ -344,6 +363,62 @@ function RawBlock(el)
   return strip_comments(el)
 end
 
+--- Add an "On this page" list to long report and appendix pages.
+-- Only level-2 headings are listed; fewer than three sections is not worth a box.
+-- @param div Pandoc Div with class "page".
+local function add_toc(div)
+  local entries = {}
+  for _, block in ipairs(div.content) do
+    if block.t == "Header" and block.level == 2 and block.identifier ~= "" then
+      entries[#entries + 1] = block
+    end
+  end
+  if #entries < 3 then return end
+  local items = {}
+  for _, header in ipairs(entries) do
+    local label = text_of(header):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;")
+    items[#items + 1] = string.format('<li><a href="#%s">%s</a></li>', header.identifier, label)
+  end
+  local toc = pandoc.RawBlock("html", string.format(
+    '<nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul>%s</ul></nav>',
+    table.concat(items)))
+  for i, block in ipairs(div.content) do
+    if block.t == "Header" and block.level == 2 then
+      table.insert(div.content, i, toc)
+      return
+    end
+  end
+end
+
+--- Add previous/next project links to a case study, report or appendix.
+-- @param div Pandoc Div with class "page".
+-- @param path string Project-relative page path.
+-- @param prefix string Relative path back to the site root.
+local function add_pager(div, path, prefix)
+  local slug = path:match("^projects/([^/]+)")
+  if not slug then return end
+  slug = slug:gsub("%.html$", "")
+  local index
+  for i, project in ipairs(PROJECTS) do
+    if project.slug == slug then index = i break end
+  end
+  if not index then return end
+  local function link(project, direction)
+    local icon = direction == "prev" and "arrow-left" or "arrow-right"
+    local label = direction == "prev" and "Previous project" or "Next project"
+    return string.format(
+      '<a class="pager-%s" href="%sprojects/%s.html" rel="%s">%s<span class="pager-text">'
+        .. '<span class="pager-label">%s</span><span class="pager-name">%s</span></span></a>',
+      direction, prefix, project.slug, direction, icon_html(icon), label, project.label)
+  end
+  local parts = {}
+  if PROJECTS[index - 1] then parts[#parts + 1] = link(PROJECTS[index - 1], "prev") end
+  if PROJECTS[index + 1] then parts[#parts + 1] = link(PROJECTS[index + 1], "next") end
+  if #parts == 0 then return end
+  div.content[#div.content + 1] = pandoc.RawBlock("html", string.format(
+    '<nav class="project-pager" aria-label="Project navigation">%s</nav>', table.concat(parts)))
+end
+
 --- Wrap the document in the site header, main landmark, and footer.
 -- Navigation links are relative to the page; the current section gets aria-current.
 -- @param doc Pandoc Document whose blocks will be modified in place.
@@ -353,6 +428,16 @@ function Pandoc(doc)
   local path = page_path()
   local _, depth = path:gsub("/", "")
   local prefix = string.rep("../", depth)
+
+  for _, block in ipairs(doc.blocks) do
+    if block.t == "Div" and has_class(block, "page") then
+      if path:match("^projects/[^/]+/report%.html$") or path:match("^projects/[^/]+/appendix%.html$") then
+        add_toc(block)
+      end
+      add_pager(block, path, prefix)
+      break
+    end
+  end
 
   local links = {}
   for _, item in ipairs(NAV) do

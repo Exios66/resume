@@ -26,12 +26,12 @@ Review follow-up: CodeRabbit flagged the October PDF's 252-participant figure. T
 | #65 | Wave Laboratory appendix | Open; separate validation, unit and browser tests. |
 | #70 | Stale MapReduce status | Local refresh: F24, CI, storage, compression and evaluation; removed unverifiable current test totals. |
 | #71 | Employment history | Needs owner decision on role inclusion and résumé master; do not silently rewrite the exported PDF. |
-| #72 | Degree title and PDF drift | Local: official colon wording fixed. PDF master/version and dropped bullet need owner confirmation. Keep issue open. |
+| #72 | Degree title and PDF drift | Web degree wording fixed; the owner corrected the PDF sample to 241. Remaining: the PDF still reports 17+ prompt iterations, and the master/dropped-bullet decisions stay open. |
 | #73 | Five vs ten hub packages | Closed with upstream workspace evidence; deployed site already says five. |
-| #74 | Résumé cohort / prompt counts | Local web correction; old PDF explicitly labeled October export. PDF replacement remains open. |
+| #74 | Résumé cohort / prompt counts | Web and PDF now agree on 241 respondents; the PDF still reports 17+ prompt iterations against 29 on the web. Prompt-count drift remains. |
 | #75 | Freshness / test counts | Local snapshot labels and review note; no claim to rerun every upstream project's tests. |
 | #76 | Owlcot #022/#023 / attribution | Verify authorship before inclusion; a curated selection need not pretend to be the complete feed. |
-| #77 | Search / navigation / print / tables | Mixed issue: print handler and mobile table scrolling already exist. Local category shortcuts and touch fixes; clarify nav policy. Larger search/TOC work remains open. |
+| #77 | Search / navigation / print / tables | Complete in the stacked PR: search page and index, report contents lists, previous/next pager, print action, mobile tables, touch targets. |
 | #78 | Links / appendices | External sweep: 65 original destinations, no observed 404; 10 DOI publisher 403s and LinkedIn 999 are inconclusive. Appendix work remains open. |
 | #79 | Additional stale MapReduce claims | Local correction of chaos driver, S3, compression, Python coordinator; scope the diagram explicitly. |
 | #80 | NATD provenance | Needs authenticated pilot source/run and persona-version evidence. Do not invent it or publish private records. |

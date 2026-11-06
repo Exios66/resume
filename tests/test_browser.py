@@ -8,6 +8,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import os
 from pathlib import Path
+import re
 from threading import Thread
 
 import pytest
@@ -154,6 +155,47 @@ def test_ecosystem_text_padding_and_code_font(site):
         page.keyboard.press("End")
         page.keyboard.press("ArrowRight")
         page.wait_for_function("document.querySelector('.diagram-ecosystem').scrollLeft > 0")
+    finally:
+        page.close()
+
+
+def test_site_search_contents_list_and_pager(site):
+    browser, base = site
+    page = browser.new_page(viewport={"width": 1280, "height": 900}, reduced_motion="reduce")
+    try:
+        page.goto(base + "search.html")
+        page.get_by_label("Search this site").fill("M9c")
+        expect(page.locator("#search-results a").first).to_be_visible()
+        case_study = page.locator('#search-results a[href$="projects/mailroom-ml.html"]')
+        expect(case_study).to_have_count(1)
+        case_study.click()
+        expect(page.get_by_role("heading", level=1)).to_have_text("Mailroom-ML")
+
+        page.goto(base + "search.html?q=corpus")
+        expect(page.get_by_label("Search this site")).to_have_value("corpus")
+        expect(page.locator("#search-results a").first).to_be_visible()
+
+        page.goto(base + "search.html")
+        page.get_by_label("Search this site").fill("zzzznothing")
+        expect(page.locator("#search-status")).to_contain_text("No pages match")
+
+        page.goto(base + "projects/mailroom-ml/report.html")
+        toc = page.locator("nav.page-toc")
+        expect(toc).to_be_visible()
+        links = toc.get_by_role("link")
+        assert links.count() >= 3
+        target = links.nth(2).get_attribute("href")
+        links.nth(2).click()
+        expect(page).to_have_url(re.compile(re.escape(target) + "$"))
+        assert page.evaluate("""(id) => {
+          const heading = document.getElementById(id);
+          const box = heading.getBoundingClientRect();
+          return box.top >= 0 && box.top < innerHeight / 2;
+        }""", target[1:])
+
+        page.goto(base + "projects/mailroom-ml.html")
+        page.locator(".project-pager a", has_text="Next project").click()
+        expect(page.get_by_role("heading", level=1)).to_have_text("Mailroom Reloaded")
     finally:
         page.close()
 

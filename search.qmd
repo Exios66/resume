@@ -1,0 +1,25 @@
+---
+pagetitle: "Search — Jack J. Burleson"
+description: "Search the project case studies, technical reports and appendices."
+---
+
+::: {.page}
+
+# Search {.page-title}
+
+[Projects, reports and appendices by name or topic]{.kicker}
+
+<form class="site-search" role="search" action="search.html" method="get">
+<label for="site-search-input">Search this site</label>
+<input id="site-search-input" name="q" type="search" autocomplete="off" spellcheck="false">
+</form>
+
+<p id="search-status" role="status" aria-live="polite"></p>
+
+<ul id="search-results" class="search-results"></ul>
+
+<noscript>
+<p>Search needs JavaScript. Browse the <a href="projects/index.qmd">projects index</a> instead.</p>
+</noscript>
+
+:::
