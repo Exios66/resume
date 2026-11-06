@@ -1,8 +1,8 @@
 """Layout checks for the downloadable résumé PDF.
 
-The PDF is the owner's own v16 export, published as is apart from the phone
-number: page 1 holds the summary, education and experience; page 2 holds the
-projects, then the technical skills. Extracted text breaks lines between words,
+The PDF is the owner's own v16 export, with the phone number removed and the
+analyzed respondent count corrected. Page 1 holds the summary, education and
+experience; page 2 holds the projects, then the technical skills. Extracted text breaks lines between words,
 so whitespace is stripped before matching.
 """
 
@@ -91,7 +91,7 @@ class ResumePdfLayout(unittest.TestCase):
     def test_project_figures_survive_pdf_export(self):
         second = self.pages[1]
         for text in ("5 Python packages", "16 RVL-CDIP categories", "17+ prompt iterations",
-                     "252 matched survey participants", "89 needle/decoy pairs",
+                     "241 complete respondents", "89 needle/decoy pairs",
                      "28 condition cells", "Dean & Ghemawat, OSDI 2004"):
             with self.subTest(text=text):
                 self.assertIn(squash(text), second)
