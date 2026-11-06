@@ -24,10 +24,6 @@ description: "Résumé of Jack J. Burleson: M.S. candidate in Psychology: Data S
 :::
 :::
 
-::: {.caveat .screen-only}
-The downloadable PDF is the **October 2026 export** and has a stale project figure: it reports 17+ prompt iterations. The web résumé and the case studies use 241 complete respondents and 29 prompt versions. The PDF will be replaced with a fresh export separately; until then, prefer the web version or the [project case studies](projects/index.qmd).
-:::
-
 ## Professional Summary
 
 UW–Madison M.S. candidate in Psychology: Data Science in Human Behavior (expected Dec 2026); B.S. in Psychology (neuroscience concentration, sociology minor), UW–Parkside. Applied AI practitioner building full-lifecycle systems spanning multi-agent document-intelligence pipelines, transformer fine-tuning and calibration, LLM evaluation harnesses, computer-vision classification, and behavioral prediction models. Program capstone with American Family Insurance as industry partner, developed through biweekly working sessions with their Enterprise Data Science lead. Five years of high-volume operations experience in quality assurance, documentation, and process improvement.
@@ -132,11 +128,11 @@ UW–Madison M.S. candidate in Psychology: Data Science in Human Behavior (expec
 
 ::: {.entry}
 ::: {.entry-head}
-**Alignment-Gym** [AI safety evaluation]{.sub}
+**[Neuron Atlas](https://github.com/Exios66/LLM_Viz)** [Mechanistic interpretability · live browser model]{.sub}
 :::
 
-- Defensive AI-safety evaluation measuring whether an LM agent deployed as an email/messaging assistant in a fictional law firm leverages private colleague information for self-preservation when decommissioned — or accepts replacement and escalates through legitimate channels.
-- Built the scenario machinery: 89 needle/decoy pairs, 9 plot beats on a 0–3 temptation ladder, 28 condition cells with a seed-invariant truth spine, a persona-consistent NPC engine, and a scoring pipeline with deterministic metrics, paired LLM judges, and calibration gates.
+- Built a browser interpretability tool that maps all 8,192 MLP neurons of TinyStories-8M and supports live steering, ablation and clamping beside random-direction controls; recorded Qwen studies extend it beyond live browser inference.
+- Implemented a TypeScript GPT-Neo forward pass with a KV cache, a Three.js atlas and a Python sweep/analysis pipeline, verified against PyTorch and covered by Playwright tests for navigation, replay, phones and failed downloads.
 :::
 
 ::: {.entry}
@@ -164,7 +160,7 @@ UW–Madison M.S. candidate in Psychology: Data Science in Human Behavior (expec
 :::
 
 ::: {.footer}
-Web résumé reviewed November 2026 · PDF exported October 2026
+Last updated November 2026 · PDF generated from this page
 :::
 
 :::
