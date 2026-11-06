@@ -54,7 +54,7 @@ Classical models see the tabular tiers; the LLM prompts add the open text.
 | Error in points | Mean absolute error on the 6–30 subscale |
 | Exact match | Predicted band equals the reported band |
 | Band accuracy | Low, moderate or high agreement |
-| Band F1 | Classification quality across low, moderate and high bands |
+| F1, per band | Classification quality within each band separately, not one aggregate score |
 | AUC | Ranking quality for low versus high apprehension |
 | Group error | Error computed within demographic groups |
 

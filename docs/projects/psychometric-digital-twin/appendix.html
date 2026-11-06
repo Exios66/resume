@@ -211,6 +211,10 @@ ul.task-list li input[type="checkbox"] {
 <p>Classical models see the tabular tiers; the LLM prompts add the open text.</p>
 <h2 id="metrics">Metrics</h2>
 <table class="caption-top">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Metric</th>
@@ -231,8 +235,8 @@ ul.task-list li input[type="checkbox"] {
 <td>Low, moderate or high agreement</td>
 </tr>
 <tr class="even">
-<td>Band F1</td>
-<td>Classification quality across low, moderate and high bands</td>
+<td>F1, per band</td>
+<td>Classification quality within each band separately, not one aggregate score</td>
 </tr>
 <tr class="odd">
 <td>AUC</td>

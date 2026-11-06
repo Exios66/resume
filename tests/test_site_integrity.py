@@ -52,13 +52,14 @@ class ReportContentsTests(unittest.TestCase):
                      if tag == "a" and any(parent is nav for _, parent in ancestors)]
             headings = {checks.attr(a, "id"): tag for tag, a, _ in elements if tag in ("h2", "h3")}
             ids = set(ID.findall(page.read_text(encoding="utf-8")))
+            targets = {checks.attr(link, "href")[1:] for link in links}
             self.assertGreaterEqual(len(links), 3, f"{checks.rel(page)} lists too few sections")
+            self.assertEqual(targets, {i for i, tag in headings.items() if tag == "h2" and i},
+                             f"{checks.rel(page)} contents list omits sections")
             for link in links:
                 href = checks.attr(link, "href")
                 self.assertTrue(href.startswith("#"), f"{checks.rel(page)}: {href}")
                 self.assertIn(href[1:], ids, f"{checks.rel(page)}: broken {href}")
-                self.assertEqual(headings.get(href[1:]), "h2",
-                                 f"{checks.rel(page)}: {href} is not a level-2 heading")
         self.assertGreaterEqual(checked, 9)
 
 
