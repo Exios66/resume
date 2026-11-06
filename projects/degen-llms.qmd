@@ -8,7 +8,7 @@ description: "A satirical choose-your-adventure casino and resort simulator with
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](degen-llms.qmd){aria-current="page"} [Technical report](degen-llms/report.qmd) [Code](https://github.com/Exios66/degen-llms) [Live demo](https://exios66.github.io/degen-llms/)
+[Case study](degen-llms.qmd){aria-current="page"} [Technical report](degen-llms/report.qmd) [Appendix](degen-llms/appendix.qmd) [Code](https://github.com/Exios66/degen-llms) [Live demo](https://exios66.github.io/degen-llms/)
 :::
 
 # The Mandalay Bay {.page-title}

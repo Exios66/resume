@@ -1,0 +1,68 @@
+---
+pagetitle: "Langton's Ant: appendix — Jack J. Burleson"
+description: "Supporting notes for the Langton's Ant case study: the full 20-machine preset gallery, rule notations and the determinism check."
+---
+
+::: {.page}
+
+[← Case study](../langtons-ant.qmd){.back}
+
+::: {.project-nav}
+[Case study](../langtons-ant.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/langtons-ant) [Live demo](https://exios66.github.io/langtons-ant/)
+:::
+
+# Langton's Ant: appendix {.page-title}
+
+[Preset gallery · rule notations · determinism]{.kicker}
+
+Supporting material for the [Langton's Ant case study](../langtons-ant.qmd). The machines and their milestones come from the cited literature and the GollyGang rule table repository; they are not my results.
+
+## The 20 presets
+
+| Name | Rule | Space | Known milestone |
+| --- | --- | --- | --- |
+| Classic Langton's Ant | `RL` | 1 state × 2 colors | Highway onset ≈ 9,977 steps |
+| RLR | `RLR` | 1 × 3 | Chaotic growth; no known highway |
+| LLRR | `LLRR` | 1 × 4 | Ever-growing bilateral symmetry |
+| LRRL | `LRRL` | 1 × 4 | Chiral mirror of LLRR |
+| LRRRRRLLR | `LRRRRRLLR` | 1 × 8 | Fills a solid square, spirals through it |
+| RRLLLRLLLRRR | `RRLLLRLLLRRR` | 1 × 12 | Marching filled triangle |
+| LLLR | `LLLR` | 1 × 4 | Proven harmonic highways |
+| LLRLRL | `LLRLRL` | 1 × 6 | Infinitely many highways |
+| LLRRRL | `LLRRRL` | 1 × 6 | Provably no extended highway |
+| Jeronimus | triple table | 2 × 2 | Highway after ≈ 8.36 × 10⁹ steps |
+| Perfectionist | triple table | 3 × 2 | Highway after ≈ 15.5 × 10⁶ steps |
+| NKS p.185(e) | triple table | 4 × 2 | Proved periodic |
+| Commons Chaos→Highway | `121021110111` | 2 × 2 | Texture first, highway later |
+| Base-φ Counter | triple table | 3 × 2 | Logarithmic growth |
+| LLRRRLRLRLLR | `LLRRRLRLRLLR` | 1 × 12 | Convoluted diagonal highway |
+| Brady Busy Beaver | triple table | 2 × 2 | Halts at step 121 |
+| Brady Sigma Champion | triple table | 2 × 2 | Halts after 37 painted cells |
+| Fay Champion | triple table | 2 × 3 | Halts after 59,348,218 steps |
+| Commons Spiral | `111180121010` | 2 × 2 | Intricate spiral texture |
+| Commons Fibonacci Spiral | `181181121010` | 2 × 2 | Order that reads like geometry |
+
+## Rule notations
+
+| Notation | Grammar | Example |
+| --- | --- | --- |
+| Ant string | `L` `R` `N` `U` sequence per color | `RL`, `LLRR` |
+| Triples | `(write, turn, next-state)` per state and color | `{{{1,2,0},{0,8,0}}}` |
+| Decimal ID | Wikipedia-Commons 2-color encoding | `111180121010` |
+
+Turn codes are 0 (halt), 1, 2, 4 and 8, or absolute headings `N` `E` `S` `W`. Color 0 turns right, matching the GollyGang convention.
+
+## Determinism check
+
+From a blank grid, 11,000 steps of the classic ant hash to the committed value `6219b3fb` (FNV-1a). The same test passes on the Linux re-run, so it does not depend on the machine.
+
+## Reproduce
+
+```sh
+npm ci
+npm test
+```
+
+The benchmark is gated: `RUN_BENCH=1 npx vitest run tests/bench.test.ts`.
+
+:::

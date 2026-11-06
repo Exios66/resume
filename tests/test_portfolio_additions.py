@@ -101,7 +101,9 @@ class PortfolioAdditionTests(unittest.TestCase):
                 nav = self.one(parser, "div", **{"class": "project-nav"})
                 links = [attrs for tag, attrs in parser.children(nav) if tag == "a"]
                 if "aeroglobe" in name:
-                    expected = {"Case study": page.resolve(), "Code": "https://github.com/Exios66/aeroglobe",
+                    expected = {"Case study": page.resolve(),
+                                "Appendix": (checks.DOCS / "projects/aeroglobe/appendix.html").resolve(),
+                                "Code": "https://github.com/Exios66/aeroglobe",
                                 "Live site": "https://exios66.github.io/aeroglobe/"}
                 else:
                     expected = {"Case study": study, "Technical report": report,

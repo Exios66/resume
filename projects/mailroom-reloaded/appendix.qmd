@@ -1,0 +1,45 @@
+---
+pagetitle: "Mailroom Reloaded: appendix — Jack J. Burleson"
+description: "Supporting notes for Mailroom Reloaded: routing gate bands, defer classes, the opt-in Jev gate and the verification scope."
+---
+
+::: {.page}
+
+[← Case study](../mailroom-reloaded.qmd){.back}
+
+::: {.project-nav}
+[Case study](../mailroom-reloaded.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/mailroom-reloaded)
+:::
+
+# Mailroom Reloaded: appendix {.page-title}
+
+[Gate configuration · deferral policy · verification scope]{.kicker}
+
+Supporting tables for the [Mailroom Reloaded case study](../mailroom-reloaded.qmd). These are configuration values, not measured outcomes.
+
+## Routing gate
+
+| Setting | Value |
+| --- | ---: |
+| High-confidence band | 0.95 |
+| Low-confidence band | 0.70 |
+| Maximum retries | 2 |
+| Judge high band | 0.95 |
+
+A document above the high band can take the deterministic path; below the low band it goes to the LLM or human review. The bands are configuration, and a real deployment has to fit them on its own validation split.
+
+## Deferral policy
+
+Contract and merger-agreement documents defer by class, regardless of confidence. The classifier work showed why: subclass heads for those classes are the weakest, so a confident-looking answer is not a reliable one.
+
+## Opt-in Jev gate
+
+The Jev decision model is off by default and only acts on the medium-confidence band once `models/jev_calibration.json` exists. It never overrides a hard rule. Its threshold is 0.8. All of this is opt-in; without the calibration file the gate is inert.
+
+## Verification scope
+
+The case study and technical report preserve a dated verification run. They are not a current passing-test total, because the suite has changed since. The repository has no hosted CI; the local suite is the gate.
+
+Screenshots in the report come from a seeded demo run with the mock provider. They show the interface, not document quality, and `/ui` and `/tui` have changed since the capture.
+
+:::

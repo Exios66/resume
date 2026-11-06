@@ -1,0 +1,67 @@
+---
+pagetitle: "Wave Laboratory: appendix — Jack J. Burleson"
+description: "Supporting notes for Wave Laboratory: the wave models, validation scope and what the lab does not model."
+---
+
+::: {.page}
+
+[← Case study](../wave-laboratory.qmd){.back}
+
+::: {.project-nav}
+[Case study](../wave-laboratory.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/wave-laboratory) [Live demo](https://exios66.github.io/wave-laboratory/)
+:::
+
+# Wave Laboratory: appendix {.page-title}
+
+[Wave models · validation scope · limits]{.kicker}
+
+Supporting notes for the [Wave Laboratory case study](../wave-laboratory.qmd). The counts below are the October 2026 audit snapshot unless a section says otherwise.
+
+## Wave models
+
+| Component | Model |
+| --- | --- |
+| Energy spectrum | JONSWAP, Pierson–Moskowitz, Bretschneider |
+| Shallow water | TMA depth correction |
+| Fetch-limited growth | Hasselmann |
+| Directional spread | Published spreading functions |
+| Dispersion | Finite depth and surface tension |
+| Surface synthesis | Four inverse FFT cascades, 1 km to centimetre scales |
+| Crest sharpening | Choppy sideways displacement |
+| Rogue waves | NewWave focusing |
+| Water optics | Jerlov water types, Snell's window |
+
+The GPU and CPU read the same amplitudes; the app compares one texel with the CPU result on each new sea and fails the browser tests if they disagree.
+
+## Validation scope
+
+| Suite | Count at the snapshot |
+| --- | ---: |
+| Long-running validation tests | 25 in 9 files |
+| Unit and component tests | Several hundred declarations; not re-counted here |
+| Browser tests | Desktop and mobile Playwright, including axe |
+
+Unit-test declarations are not a passing-test total. The repository's own README badge and the local grep count use different methods, so this appendix reports the validation suite only.
+
+## Reference case
+
+The Draupner crest is the reference: 18.5 m in a sea with 11.9 m significant wave height. The rogue-wave preset targets that shape on purpose.
+
+## What is not modelled
+
+- Current shear with depth and wave refraction by currents.
+- Floodwater sloshing inside damaged compartments.
+- Certified seakeeping calculations; this is a teaching and exploration tool.
+- A WebGPU backend; the shipped renderer is WebGL 2 behind an interface.
+
+## Reproduce
+
+```sh
+pnpm install
+pnpm test
+pnpm test:e2e
+```
+
+The staged plan's Stokes, cnoidal, Boussinesq and scripting phases are not built.
+
+:::

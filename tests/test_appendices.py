@@ -6,28 +6,38 @@ import test_links as checks
 from test_portfolio_additions import ContentParser, destination
 
 SITE = "https://exios66.github.io/resume/"
+ALL = ("aeroglobe", "degen-llms", "digital-mailroom", "langtons-ant", "llm-personas",
+       "mailroom-corpus-eda", "mailroom-ml", "mailroom-reloaded", "natd",
+       "psychometric-digital-twin", "rvl-cdip-classifier", "wave-laboratory")
 CASES = {
     "mailroom-ml": ("0.9598", "0.7387", "0.3589", "0.1774", "541", "0.94"),
     "mailroom-corpus-eda": ("3,302", "1,100", "22,591", "2,530", "323"),
+    "langtons-ant": ("6219b3fb", "9,977", "20"),
+    "rvl-cdip-classifier": ("82.6%", "99.4%", "29"),
+    "wave-laboratory": ("25 in 9 files", "18.5 m", "11.9 m"),
+    "natd": ("nine-participant", "withheld", "#80"),
+    "llm-personas": ("13", "12", "not internally consistent"),
 }
 
 
-def page(name):
-    path = checks.DOCS / "projects" / name / "appendix.html"
+def page(slug):
+    path = checks.DOCS / "projects" / slug / "appendix.html"
     assert path.is_file(), f"Missing appendix: {path}"
     return path, ContentParser(path)
 
 
-def test_each_appendix_links_case_study_report_and_back():
-    for slug in CASES:
+def test_every_appendix_links_case_study_report_and_back():
+    all_projects = (checks.DOCS / "projects").resolve()
+    for slug in ALL:
         path, parser = page(slug)
-        expected_study = (checks.DOCS / "projects" / f"{slug}.html").resolve()
+        study = all_projects / f"{slug}.html"
         back = next(a for tag, a, _ in parser.elements if "back" in checks.classes(a))
-        assert destination(path, back) == expected_study
+        assert destination(path, back) == study
         links = {parser.text(a): destination(path, a) for tag, a, _ in parser.elements
                  if tag == "a" and "back" not in checks.classes(a)}
-        assert links["Case study"] == expected_study
-        assert links["Technical report"] == (checks.DOCS / "projects" / slug / "report.html").resolve()
+        assert links["Case study"] == study
+        if (checks.DOCS / "projects" / slug / "report.html").is_file():
+            assert links["Technical report"] == all_projects / slug / "report.html"
         nav = next(a for tag, a, _ in parser.elements if "project-nav" in checks.classes(a))
         current = [a for tag, a in parser.children(nav)
                    if tag == "a" and checks.attr(a, "aria-current") == "page"]
@@ -36,19 +46,24 @@ def test_each_appendix_links_case_study_report_and_back():
 
 
 def test_case_study_and_report_link_the_appendix():
-    for slug in CASES:
+    for slug in ALL:
         appendix = (checks.DOCS / "projects" / slug / "appendix.html").resolve()
-        for name in (f"projects/{slug}.html", f"projects/{slug}/report.html"):
+        pages = [f"projects/{slug}.html"]
+        if (checks.DOCS / "projects" / slug / "report.html").is_file():
+            pages.append(f"projects/{slug}/report.html")
+        for name in pages:
             assert appendix in checks.linked_targets(checks.DOCS / name), name
 
 
-def test_appendix_numbers_and_sitemap_entries():
+def test_appendix_numbers_sitemap_and_no_images():
     for slug, claims in CASES.items():
         _, parser = page(slug)
         text = " ".join(t for t, _ in parser.text_fragments)
         for claim in claims:
             assert claim in text, (slug, claim)
-        assert not any(tag == "img" for tag, _, _ in parser.elements)
+    for slug in ALL:
+        _, parser = page(slug)
+        assert not any(tag == "img" for tag, _, _ in parser.elements), slug
     locations = [n.text for n in ET.parse(checks.DOCS / "sitemap.xml").findall("{*}url/{*}loc")]
-    for slug in CASES:
+    for slug in ALL:
         assert locations.count(f"{SITE}projects/{slug}/appendix.html") == 1

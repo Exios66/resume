@@ -8,7 +8,7 @@ description: "Wave spectra and ship-dynamics models, architecture, validation su
 [← Case study](../wave-laboratory.qmd){.back}
 
 ::: {.project-nav}
-[Case study](../wave-laboratory.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/Exios66/wave-laboratory) [Live demo](https://exios66.github.io/wave-laboratory/)
+[Case study](../wave-laboratory.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/wave-laboratory) [Live demo](https://exios66.github.io/wave-laboratory/)
 :::
 
 # Wave Laboratory: technical report {.page-title}

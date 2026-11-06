@@ -1,0 +1,63 @@
+---
+pagetitle: "AeroGlobe: appendix — Jack J. Burleson"
+description: "Supporting notes for the AeroGlobe case study: pipeline stages, data sources and licences, snapshot counts and the built-versus-planned checklist."
+---
+
+::: {.page}
+
+[← Case study](../aeroglobe.qmd){.back}
+
+::: {.project-nav}
+[Case study](../aeroglobe.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/aeroglobe) [Live site](https://exios66.github.io/aeroglobe/)
+:::
+
+# AeroGlobe: appendix {.page-title}
+
+[Static data pipeline · snapshot notes]{.kicker}
+
+These notes support the [AeroGlobe case study](../aeroglobe.qmd) and describe the 23 October 2026 snapshot. They are a scope record, not a live status page.
+
+## Pipeline stages
+
+| Stage | Input | Output |
+| --- | --- | --- |
+| Normalize | OpenSky state vectors or adsb.lol day files | One record shape |
+| Segment | Normalized observations | Per-aircraft tracks and flights |
+| Chunk | Flights | Hourly JSON chunks with a size limit |
+| Catalog | Chunks | The manifest the browser loads |
+
+## Data sources
+
+| Source | Use | Terms |
+| --- | --- | --- |
+| OpenSky snapshots | A few real observations for the live demo | OpenSky terms; rate-limited |
+| adsb.lol daily files | Full historical days, built on the owner's machine | ODbL, © adsb.lol contributors |
+| Generated fixtures | Deterministic offline tests and the labeled sample day | Project code |
+
+A full global day needs about 10 GB of disk and roughly 6 GB of RAM at build time.
+
+## Built versus planned at the snapshot
+
+| Built | Planned, not built |
+| --- | --- |
+| Globe client with search, filters and flight cards | A published real historical day |
+| Playback, track replay and trails | Off-main-thread decoding and a transport bar |
+| Static pipeline, catalog and hourly chunks | Inferred routes and a time-zone overlay |
+| OpenSky snapshot and fixture commands | Per-aircraft history and a browser logbook |
+| Reference airport, airline and time-zone tables | — |
+
+## Snapshot counts
+
+The case study lists 395 passing tests in 42 files, about 5,800 lines of TypeScript, and a clean lint, type-check and production build. Those are the 23 October 2026 figures; they are not a current passing-test total.
+
+## Reproduce
+
+```sh
+npm install
+DATA_SOURCE=fixtures npm run build     # offline, deterministic sample data
+npm run build:check
+```
+
+The live deployment is built from the `gh-pages` branch; the repository documents the build-time snapshot fallback and the optional data branch.
+
+:::
