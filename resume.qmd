@@ -25,7 +25,7 @@ description: "Résumé of Jack J. Burleson: M.S. candidate in Psychology: Data S
 :::
 
 ::: {.caveat .screen-only}
-The downloadable PDF is the **October 2026 export**. This web résumé was reviewed in November 2026; the [project case studies](projects/index.qmd) include newer work and fuller evaluation context.
+The downloadable PDF is the **October 2026 export** and has two stale project figures: it reports 252 participants and 17+ prompt iterations. The web résumé and the case studies use 241 complete respondents and 29 prompt versions. The PDF will be replaced with a fresh export separately; until then, prefer the web version or the [project case studies](projects/index.qmd).
 :::
 
 ## Professional Summary

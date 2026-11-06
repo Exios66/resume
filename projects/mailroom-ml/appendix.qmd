@@ -1,0 +1,114 @@
+---
+pagetitle: "Mailroom-ML: appendix — Jack J. Burleson"
+description: "Supporting tables for the Mailroom-ML M9c release: evaluation protocol, release gates, per-head results, cohorts and selective-risk checks."
+---
+
+::: {.page}
+
+[← Case study](../mailroom-ml.qmd){.back}
+
+::: {.project-nav}
+[Case study](../mailroom-ml.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml)
+:::
+
+# Mailroom-ML: appendix {.page-title}
+
+[M9c supporting tables · evaluation protocol, gates, per-head results]{.kicker}
+
+These tables support the [Mailroom-ML case study](../mailroom-ml.qmd). Every number below comes from the held-out test report for run `m9c-20261014-113614`, or from the trainer configuration recorded in it. They are copied, not re-run here.
+
+## Evaluation protocol
+
+| Setting | Value |
+| --- | --- |
+| Run tag | `m9c-20261014-113614` |
+| Model | `answerdotai/ModernBERT-base`, hierarchical heads |
+| Documents | 323 held-out test documents |
+| Windows | 541 (8,192 tokens, 512-token overlap) |
+| Seed | 42 |
+| Reported by | `training/eval/eval_modernbert.py`, `--subset test --sample 0` |
+
+Training configuration for this arm: 6 epochs, batch 8 with gradient accumulation 4, learning rate 2e-5, subclass-head learning rate 1e-3, document-type loss weight 0.5, logit adjustment 0.5, label smoothing 0.05, warmup fraction 0.06.
+
+## Headline metrics
+
+| Metric | Value | Denominator |
+| --- | ---: | --- |
+| Document-type accuracy | 0.9598 | 310 of 323 |
+| Conditional subclass accuracy | 0.7387 | 229 of 310 scorable |
+| Window calibration ECE | 0.0189 | 541 windows |
+| Window band ECE | 0.0659 | 541 windows |
+| Confidence-only acceptance | 0.3901 | 126 of 323 |
+| OOD flag rate | 0.0557 | 18 of 323 |
+| Latency | 0.573 s per document | One NVIDIA L4 GPU |
+
+The calibration figure is a window-level ECE, not a document-level probability check. The acceptance figure is confidence-only; it omits the support, catch-all, head-exclusion and subclass-projection guards, so the full gate can accept fewer documents.
+
+## Release gates
+
+| Gate | Actual | Threshold | Result |
+| --- | ---: | ---: | --- |
+| Contract test macro-F1 | 0.3589 | ≥ 0.20 | Met |
+| Correspondence test macro-F1 | 0.5249 | ≥ 0.25 | Met |
+| Document-type test accuracy | 0.9598 | ≥ 0.89 | Met |
+| Window ECE, document type | 0.0189 | ≤ 0.05 | Met |
+
+Two report-only targets sit outside that gate set. Document-type accuracy clears 0.95 (0.9598). Conditional subclass accuracy does not reach 0.75 (0.7387), so passing the release gates is not a blanket subclass-quality claim.
+
+## Per-head results
+
+| Head | Test macro-F1 |
+| --- | ---: |
+| Insurance claim | 1.0000 |
+| Corporate record | 0.7733 |
+| Correspondence | 0.5249 |
+| Contract | 0.3589 |
+| Merger agreement | 0.1774 |
+
+Insurance claims are a near-balanced, highly templated control head, so 1.0000 is not general skill. Merger agreement remains the weakest head.
+
+Calibrated ECE by head, from checkpoint selection on the **validation** split rather than the test split:
+
+| Head | Calibrated ECE (validation) |
+| --- | ---: |
+| Insurance claim | 0.0000 |
+| Document type | 0.0163 |
+| Merger agreement | 0.0402 |
+| Corporate record | 0.0465 |
+| Contract | 0.0552 |
+| Correspondence | 0.1045 |
+
+## Cohorts and selective risk
+
+| Cohort | Documents | Document-type accuracy | Mean window agreement | Window ECE |
+| --- | ---: | ---: | ---: | ---: |
+| Single-window | 274 | 0.9599 | 1.0000 | 0.0259 |
+| Multi-window | 49 | 0.9592 | 0.9799 | 0.0163 |
+
+The global selective-risk sweep reports its error budget as met at a 0.94 threshold, with coverage of about 0.843 at that pick. The multi-window cohort alone does **not** meet the budget and returns no threshold. Both figures come from the same test pool used for other checks, so treat them as diagnostics, not as independently validated deployment thresholds.
+
+## Test-split composition
+
+| Document type | Documents |
+| --- | ---: |
+| Insurance claim | 114 |
+| Correspondence | 85 |
+| Contract | 60 |
+| Corporate record | 47 |
+| Merger agreement | 17 |
+
+Several subclass cells hold only a handful of documents, which limits what the subclass numbers can show.
+
+## Sources
+
+- [Held-out test report](https://github.com/LLM-Mailroom-Services/mailroom-ml/blob/01c2272f7ee6625b9196c25095346812d39d42ff/reports/TEST-EVAL/TEST-EVAL-REPORT-m9c-20261014-113614.md)
+- [Source README](https://github.com/LLM-Mailroom-Services/mailroom-ml/blob/01c2272f7ee6625b9196c25095346812d39d42ff/README.md)
+- [Tagged model](https://huggingface.co/Lucius-Morningstar/mailroom-modernbert-classifier/tree/m9c-20261014-113614)
+
+## Scope
+
+::: {.caveat}
+**One checkpoint, one test pool.** These tables describe a single release, not a production service level. The test split informed run comparisons, the selective-risk sweep and the decode sweep, so the coverage figures are optimistic. Contract and correspondence stay off the fast path by checkpoint policy.
+:::
+
+:::

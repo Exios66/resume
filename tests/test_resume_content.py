@@ -220,6 +220,15 @@ class ResumeContentTests(unittest.TestCase):
                           if tag == "a" and checks.attr(attrs, "href").startswith("tel:")])
         self.assertNotRegex(text, r"(?<!\d)(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}(?!\d)")
 
+    def test_pdf_caveat_names_the_specific_stale_figures(self):
+        caveat = self.one([(tag, attrs) for tag, attrs, _ in self.parser.elements
+                           if tag == "div" and "caveat" in checks.classes(attrs)])
+        text = normalize(self.parser.text(caveat))
+        for claim in ("October 2026 export", "252 participants", "17+ prompt iterations",
+                      "241 complete respondents", "29 prompt versions"):
+            with self.subTest(claim=claim):
+                self.assertIn(claim, text)
+
 
 if __name__ == "__main__":
     unittest.main()

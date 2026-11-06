@@ -99,7 +99,8 @@ local function text_of(el)
 end
 
 local NAV_ICONS = {
-  ["case study"] = "book-open", ["technical report"] = "file-text", ["code"] = "code", ["live demo"] = "play",
+  ["case study"] = "book-open", ["technical report"] = "file-text", ["appendix"] = "file-text",
+  ["code"] = "code", ["live demo"] = "play",
   ["live site"] = "play",
 }
 local GROUP_ICONS = {

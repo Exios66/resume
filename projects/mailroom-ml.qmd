@@ -8,7 +8,7 @@ description: "A ModernBERT document classifier with calibrated confidence, a rou
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](mailroom-ml.qmd){aria-current="page"} [Technical report](mailroom-ml/report.qmd) [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml) [Model](https://huggingface.co/Lucius-Morningstar/mailroom-modernbert-classifier/tree/m9c-20261014-113614) [Training data](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-modernbert-training)
+[Case study](mailroom-ml.qmd){aria-current="page"} [Technical report](mailroom-ml/report.qmd) [Appendix](mailroom-ml/appendix.qmd) [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml) [Model](https://huggingface.co/Lucius-Morningstar/mailroom-modernbert-classifier/tree/m9c-20261014-113614) [Training data](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-modernbert-training)
 :::
 
 # Mailroom-ML {.page-title}

@@ -8,7 +8,7 @@ description: "Historical technical report through Mailroom-ML M9b: system and da
 [← Case study](../mailroom-ml.qmd){.back}
 
 ::: {.project-nav}
-[Case study](../mailroom-ml.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml)
+[Case study](../mailroom-ml.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml)
 :::
 
 # Mailroom-ML: technical report {.page-title}

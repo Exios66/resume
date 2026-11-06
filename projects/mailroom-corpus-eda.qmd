@@ -8,7 +8,7 @@ description: "The data engineering behind the mailroom dataset: 3,302 documents 
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](mailroom-corpus-eda.qmd){aria-current="page"} [Technical report](mailroom-corpus-eda/report.qmd) [Code](https://github.com/Exios66/Mailroom-Corpus-EDA) [Dataset](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset)
+[Case study](mailroom-corpus-eda.qmd){aria-current="page"} [Technical report](mailroom-corpus-eda/report.qmd) [Appendix](mailroom-corpus-eda/appendix.qmd) [Code](https://github.com/Exios66/Mailroom-Corpus-EDA) [Dataset](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset)
 :::
 
 # Mailroom-Corpus-EDA {.page-title}

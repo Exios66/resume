@@ -4,19 +4,21 @@ Snapshot: **35 open issues**, retrieved from `Exios66/resume` in four cursor-pag
 
 After evidence-backed closure of #73 and #87: **33 remain open**. The quick fixes below are implemented locally, not merged or published.
 
+Review follow-up: CodeRabbit flagged the October PDF's 252-participant figure. The PDF was not rebuilt (that is a résumé-master decision); the web caveat now names both stale figures and a regression test pins the disclosure.
+
 | Issue | Request | Disposition / remaining boundary |
 | --- | --- | --- |
 | #20 | Dataset citation | Local: versioned repository citation, with configuration and source-license context; no invented DOI/publication. |
 | #25 | ModernBERT Hub URL | Local: separately linked the verified prepared dataset and tagged classifier; corrected the issue's model/data ambiguity. |
 | #33 | Algorithmic modeling / visualization | Broad project idea; #89 implements one related project, not the whole idea. |
-| #53 | Appendices parent | Larger work: no dedicated appendices exist; reports are not automatically substitutes. |
+| #53 | Appendices parent | In progress: reusable appendix pattern landed for two projects; eleven sub-issues still need verified additive material. |
 | #54 | AeroGlobe appendix | Open; needs source-backed supporting material. |
 | #55 | Mandalay Bay appendix | Open; needs source-backed supporting material. |
 | #56 | Digital-Mailroom appendix | Open; no unpublished partner data. |
 | #57 | Langton's Ant appendix | Open; retain literature attribution and benchmark scope. |
 | #58 | MORNINGSTAR appendix | Open; distinguish self-reported decisions from evaluated quality. |
-| #59 | Corpus EDA appendix | Open; pin dataset revision and label provenance. |
-| #60 | Mailroom-ML appendix | Open; distinguish current M9c from M9b history. |
+| #59 | Corpus EDA appendix | Local: published v9.2 configuration, provenance, source-licence and context-band tables. |
+| #60 | Mailroom-ML appendix | Local: M9c protocol, gates, per-head, cohort and selective-risk tables. |
 | #61 | Mailroom Reloaded appendix | Open; distinguish demo captures from evaluation. |
 | #62 | NATD appendix | Open; authentication/privacy constraints prohibit publishing withheld signals. |
 | #63 | Psychometric Digital Twin appendix | Open; no respondent-level private records. |

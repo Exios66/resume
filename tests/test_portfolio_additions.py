@@ -105,6 +105,7 @@ class PortfolioAdditionTests(unittest.TestCase):
                                 "Live site": "https://exios66.github.io/aeroglobe/"}
                 else:
                     expected = {"Case study": study, "Technical report": report,
+                                "Appendix": (checks.DOCS / "projects/mailroom-corpus-eda/appendix.html").resolve(),
                                 "Code": "https://github.com/Exios66/Mailroom-Corpus-EDA", "Dataset": DATASET_URL}
                 self.assertEqual(len(links), len(expected), "No duplicate or unsupported project tabs")
                 self.assertEqual({parser.text(link): destination(page, link) for link in links}, expected)
