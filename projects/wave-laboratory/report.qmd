@@ -128,6 +128,8 @@ The grep counts `it(` and `test(` at the start of a line, so parametrised and te
 
 ## Figures
 
+The `overview-light`, `overview-dark` and `rogue-wave` captures below were made for this portfolio and predate the 9–24 October 2026 render and scenery merges. They show the interface at that point, not the current deployed build.
+
 ![Light theme overview with a moderate sea and a container ship.](figures/overview-light.jpg){.fig fig-alt="The app in light theme: a container ship with a white wake on a blue-green sea, scene list on the left, sea-state panel on the right and playback controls below." width="100%"}
 
 ![Dark theme hurricane preset with a tanker and a carrier.](figures/overview-dark.jpg){.fig fig-alt="The app in dark theme in a hurricane. Rain streaks across a grey sea, a dark hull is faintly visible, and the sea-state panel reports an 11.23 m significant height and sea state 8." width="100%"}
