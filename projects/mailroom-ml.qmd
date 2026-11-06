@@ -38,7 +38,7 @@ The M9b results below and the [technical report](mailroom-ml/report.qmd) preserv
 
 ## Published artifacts
 
-- **[Trained model: mailroom-modernbert-classifier](https://huggingface.co/Lucius-Morningstar/mailroom-modernbert-classifier/tree/m9c-20261014-113614).** The M9c tag resolves to Hub revision `0910ad7b32cf5e0cfa2a2c1f82c36091589efff2`, checked on 6 November 2026. The Hub card still describes the older M9a comparison, so use the tagged evaluation artifact and source report for the M9c numbers.
+- **[Trained model: mailroom-modernbert-classifier](https://huggingface.co/Lucius-Morningstar/mailroom-modernbert-classifier/tree/m9c-20261014-113614).** The M9c tag resolves to Hub revision `0910ad7`, checked on 6 November 2026. The Hub card still describes the older M9a comparison, so use the tagged evaluation artifact and source report for the M9c numbers.
 - **[Prepared training set: mailroom-modernbert-training](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-modernbert-training).** A separate dataset with document-level train/validation/test splits and precomputed training/validation windows. It is not the classifier repository, and it is distinct from the public evaluation/ingress corpus, `mailroom-dataset`.
 
 | M9c held-out measurement | Result | Scope |
