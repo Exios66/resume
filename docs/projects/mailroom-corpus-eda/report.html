@@ -390,6 +390,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>All 1,000 correspondence rows have an intent, and 25 are flagged for review. The model pass is checkpointed, so a rerun skips rows that already have a label.</p>
 <h3 id="split-rule-and-determinism">Split rule and determinism</h3>
 <p>A document goes to the test set when the MD5 of its filename modulo 10 is zero. That gives 2,979 train and 323 test rows, stable across rebuilds. Random state is fixed at 42, rows are sorted before export, and a rebuild of the JSONL and parquet files is byte-identical. The interactive Plotly figures are the one exception, because each embeds a random identifier, so the committed files are treated as canonical.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/test-share-per-stratum.jpg" class="fig img-fluid" style="width:100.0%" alt="Horizontal bars of test-set share for each of the 55 strata with a dashed line at 10%. Ten strata at the top have no test documents, four more are drawn in red well short of the line, and the rest run from about 6% to 24%."></p>
+<figcaption>Test share for each of the 55 strata, against the 10% the split rule aims for.</figcaption>
+</figure>
+</div>
 <h3 id="export-hardening">Export hardening</h3>
 <p>Metadata keys are uniform and string-typed, and absence is an empty string. JSON Lines output escapes the Unicode line separators (U+2028, U+2029 and NEL), because some readers split records on them. A verification script compares a local export byte for byte against the Hub.</p>
 <h2 id="results">Results</h2>
@@ -402,6 +408,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <h3 id="composition">Composition</h3>
 <p>The largest class is 7.2 times the smallest, and the largest stratum is 557 times the smallest. One merger-agreement stratum, a mixed cash and stock election, has a single document. Ten strata have no test document and five have fewer than ten documents in total.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="figures/doc-types-and-subclasses.jpg" class="fig img-fluid" style="width:100.0%" alt="Two horizontal bar charts over the five document classes. Left: documents per class, with insurance claims at 1,100, correspondence at 1,000, contracts at 600, corporate records at 450 and merger agreements at 152. Right: distinct subclasses per class, with contracts at 26, corporate records at 10, correspondence at 8, insurance claims at 6 and merger agreements at 5."></p>
+<figcaption>Documents per class on the left; distinct subclasses per class on the right.</figcaption>
+</figure>
+</div>
 <h3 id="text-and-token-geometry">Text and token geometry</h3>
 <p>Token counts use a characters-divided-by-four heuristic.</p>
 <table class="caption-top">
