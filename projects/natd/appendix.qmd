@@ -1,0 +1,50 @@
+---
+pagetitle: "NATD: appendix — Jack J. Burleson"
+description: "Publication scope for The Neural Architecture of Truth and Deception: what the pilot supports, what stays withheld until authentication, and which provenance questions remain open."
+---
+
+::: {.page}
+
+[← Case study](../natd.qmd){.back}
+
+::: {.project-nav}
+[Case study](../natd.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/truth-deception-architecture)
+:::
+
+# NATD: appendix {.page-title}
+
+[Publication scope · withheld data · open provenance]{.kicker}
+
+This appendix records what can and cannot be published from the pilot. It deliberately contains no participant-level data and no new analysis.
+
+## What the pilot supports
+
+| Supported | Not supported |
+| --- | --- |
+| A nine-participant, 18-session pilot with helpful and deceitful chatbot personas | A confirmatory effect estimate |
+| Exam-score changes after the helpful versus deceitful condition | Generalisation beyond this pilot |
+| A single flag rate for the deceitful personas | Detecting deception in general |
+| A protocol and question bank other researchers can inspect | Claims about EEG or physiology |
+
+The case study keeps the caveats visible: the sample is tiny, the design is a pilot, and gains from a low baseline need care.
+
+## Withheld until authentication
+
+Physiology, EEG, eye-tracking, workload and the per-session source files stay unpublished until every recording is authenticated against its session. The repository does not contain them, so this site does not link to them. The instruments in the design include EEG, eye tracking, a pulse oximeter and GSR sensors.
+
+## Provenance questions still open
+
+Issue [#80](https://github.com/Exios66/resume/issues/80) records the unresolved points and this appendix does not paper over them:
+
+- The linked repository does not contain the per-session exam CSVs behind the published numbers.
+- The design document describes a larger five-condition study with a control condition, while the pilot used five named personas.
+- Persona profiles exist in several versions, and the site does not pin one.
+- The relationship between the nine-person pilot and the larger design is not documented in the repository.
+
+Until those are resolved, the exam figures on the case study should be read as pilot observations, not as a reproducible analysis.
+
+## Citation
+
+Any reuse should cite the case study and the repository together, and should not present the pilot as a validated deception-detection result.
+
+:::

@@ -8,7 +8,7 @@ description: "An early version of a browser simulator for Langton's ant and othe
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](langtons-ant.qmd){aria-current="page"} [Code](https://github.com/Exios66/langtons-ant) [Live demo](https://exios66.github.io/langtons-ant/)
+[Case study](langtons-ant.qmd){aria-current="page"} [Appendix](langtons-ant/appendix.qmd) [Code](https://github.com/Exios66/langtons-ant) [Live demo](https://exios66.github.io/langtons-ant/)
 :::
 
 # Langton's Ant {.page-title}

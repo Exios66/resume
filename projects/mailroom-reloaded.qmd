@@ -8,7 +8,7 @@ description: "A compressed, deployment-ready Digital Mailroom on CrewAI Flows: a
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](mailroom-reloaded.qmd){aria-current="page"} [Technical report](mailroom-reloaded/report.qmd) [Code](https://github.com/Exios66/mailroom-reloaded)
+[Case study](mailroom-reloaded.qmd){aria-current="page"} [Technical report](mailroom-reloaded/report.qmd) [Appendix](mailroom-reloaded/appendix.qmd) [Code](https://github.com/Exios66/mailroom-reloaded)
 :::
 
 # Mailroom Reloaded {.page-title}

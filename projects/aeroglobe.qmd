@@ -8,7 +8,7 @@ description: "A 3D flight-tracking globe in active development, with an early ve
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](aeroglobe.qmd){aria-current="page"} [Code](https://github.com/Exios66/aeroglobe) [Live site](https://exios66.github.io/aeroglobe/)
+[Case study](aeroglobe.qmd){aria-current="page"} [Appendix](aeroglobe/appendix.qmd) [Code](https://github.com/Exios66/aeroglobe) [Live site](https://exios66.github.io/aeroglobe/)
 :::
 
 # AeroGlobe {.page-title}

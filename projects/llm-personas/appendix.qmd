@@ -1,0 +1,58 @@
+---
+pagetitle: "MORNINGSTAR: appendix — Jack J. Burleson"
+description: "Supporting scope notes for MORNINGSTAR: the self-reported deliberation counts, the case-ID schema, and what the system has not measured."
+---
+
+::: {.page}
+
+[← Case study](../llm-personas.qmd){.back}
+
+::: {.project-nav}
+[Case study](../llm-personas.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/LLM_Personas)
+:::
+
+# MORNINGSTAR: appendix {.page-title}
+
+[Self-reported metrics · schema · limits]{.kicker}
+
+Supporting notes for the [MORNINGSTAR case study](../llm-personas.qmd). Everything here is self-reported by the system; none of it is an independent quality measure.
+
+## Reported deliberation counts
+
+| Measure | Reported |
+| --- | ---: |
+| Deliberations | 13 |
+| Decisions | 12 |
+| Unanimous | 8 |
+| Split | 3 |
+| Tie-breakers | 0 |
+
+The three outcome categories add up to 11, not 12, so the metrics file is not internally consistent. The discrepancy is recorded rather than smoothed over.
+
+One model plays every seat. Unanimity therefore says little about deliberation quality: it may reflect a consistent persona rather than agreement among independent judges.
+
+## Case and proceeding schema
+
+| Field | Shape |
+| --- | --- |
+| Case ID | `2026-DEL-005-001`: year, category, case number, deliberation number |
+| Feasibility tiers | F0 to F5; F3 and above require deliberation, F4 a transcript, F5 a full record |
+| Proceedings | Standard, expedited, special-interest hearing, contempt hearing |
+| Special-interest hearing | Testimony and findings, no final vote |
+
+The feasibility labels are not fully consistent across the rules files: `courtroom/RULES.md` calls F0 “Trivial” while `core/MFAF.md` calls it “Infrastructural”.
+
+## What has not been measured
+
+| Missing evidence | Why it matters |
+| --- | --- |
+| A single-prompt baseline | Without it, the courtroom structure has no measured benefit |
+| A second model or independent judges | Unanimity from one model is not agreement |
+| A tamper-evident log in the live path | The hash-chain library exists but the runner does not call it |
+| An external evaluation of rulings | The system grades its own output |
+
+## Status
+
+The July 2026 docket and the 13-deliberation metrics file are the only outcome records. The overdue F4+ specialist review is documented in `state/current.md`. Both are reported as-is, with no quality claim attached.
+
+:::

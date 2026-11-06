@@ -1,0 +1,66 @@
+---
+pagetitle: "Psychometric Digital Twin: appendix — Jack J. Burleson"
+description: "Supporting notes for the Psychometric Digital Twin: cohort, model roster, tier definitions and the evaluation metrics."
+---
+
+::: {.page}
+
+[← Case study](../psychometric-digital-twin.qmd){.back}
+
+::: {.project-nav}
+[Case study](../psychometric-digital-twin.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/psych755-jjb)
+:::
+
+# Psychometric Digital Twin: appendix {.page-title}
+
+[Cohort · models · tiers · metrics]{.kicker}
+
+Supporting definitions for the [Psychometric Digital Twin case study](../psychometric-digital-twin.qmd). No respondent-level records appear here.
+
+## Cohort
+
+| Step | Count |
+| --- | ---: |
+| Matched Prolific and Qualtrics records | 252 |
+| Complete on both PRCA-24 subscales | 241 |
+| LLM runs | Single passes, not cross-validated |
+| Classical models | 5-fold cross-validated |
+
+## Model roster
+
+| Family | Members |
+| --- | --- |
+| Classical | Ridge, Elastic Net, k-NN, random forest, histogram gradient boosting, XGBoost, small neural net |
+| LLM | Llama 3.1 8B Instruct, Llama 3.2 3B Instruct, DeepSeek-R1-Distill-Llama-8B, Llama 3.3 70B Instruct (AWQ) |
+
+Llama 3.2 3B base could not follow the output format and is excluded from the scores.
+
+## Prompt tiers
+
+| Tier | Adds |
+| --- | --- |
+| 1 | Demographics |
+| 2 | Employment |
+| 3 | Survey location |
+| 4 | Transit and ride-share habits |
+| 5 | Two open-text answers (LLMs only) |
+
+Classical models see the tabular tiers; the LLM prompts add the open text.
+
+## Metrics
+
+| Metric | Meaning |
+| --- | --- |
+| Error in points | Mean absolute error on the 6–30 subscale |
+| Exact match | Predicted band equals the reported band |
+| Band accuracy | Low, moderate or high agreement |
+| F1 and AUC | Ranking quality, including low versus high |
+| Group error | Error computed within demographic groups |
+
+The constant-guess baseline is 4.93 points by my calculation from the cohort table. The best classical model (Ridge at the transit tier) reaches 4.49; the best pooled LLM run reaches 5.02, so it does not clear the constant.
+
+## Scope
+
+The LLM runs are single passes and the test split is small. Group comparisons are descriptive, not causal. The report carries the full tables and the commands.
+
+:::

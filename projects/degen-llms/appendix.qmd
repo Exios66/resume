@@ -1,0 +1,47 @@
+---
+pagetitle: "The Mandalay Bay: appendix — Jack J. Burleson"
+description: "Supporting notes for The Mandalay Bay: game inventory, save format and the RNG/return disclosure."
+---
+
+::: {.page}
+
+[← Case study](../degen-llms.qmd){.back}
+
+::: {.project-nav}
+[Case study](../degen-llms.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/degen-llms) [Live demo](https://exios66.github.io/degen-llms/)
+:::
+
+# The Mandalay Bay: appendix {.page-title}
+
+[Game inventory · save format · return disclosure]{.kicker}
+
+Supporting material for [The Mandalay Bay case study](../degen-llms.qmd). Counts are the October 2026 snapshot and can move with content updates.
+
+## Game inventory
+
+| Surface | Contents |
+| --- | --- |
+| Casino floor | 8 themed floors, table games, sports book, arcade, slots |
+| Slot catalog | 37 machines |
+| Trading floor | 744 stored contracts, 337 sports events, 204 prediction scenarios |
+| Resort | Hotel, pool complex, dining, rewards programme |
+| Pixel RPG | Walkable Strip overworld and hosted games |
+| Save system | 5 slots; web save format version 8 |
+
+## Save and clock rules
+
+- The browser save, the terminal game and the RPG share one chip wallet. Play chips only; nothing is purchasable.
+- The resort clock maps two real hours to one in-game day.
+- The save stores lifetime totals; rewards tiers are recomputed on load, so a player who had maxed an old ladder can drop until they wager more.
+
+## Randomness and returns
+
+The fortune games report a return-to-player band of 155–185%, with every one of the 37 machines above 100%. That is deliberate for a play-money arcade, not a claim about real casino economics.
+
+Randomness runs through `Math.random` in the browser build; the repository documents where it is called. There is no cryptographic RNG, no provable fairness and no real-money settlement.
+
+## Snapshot boundaries
+
+Test and line counts on the case study and report are dated and were not re-counted for this appendix. The deployed Pages build is manual, so the live demo can lag `main`.
+
+:::

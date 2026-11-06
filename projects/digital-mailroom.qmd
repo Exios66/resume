@@ -8,7 +8,7 @@ description: "Capstone with an industry partner: one LangGraph pipeline for docu
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](digital-mailroom.qmd){aria-current="page"} [Code](https://github.com/LLM-Mailroom-Services/Digital-Mailroom)
+[Case study](digital-mailroom.qmd){aria-current="page"} [Appendix](digital-mailroom/appendix.qmd) [Code](https://github.com/LLM-Mailroom-Services/Digital-Mailroom)
 :::
 
 # Digital-Mailroom {.page-title}

@@ -1,0 +1,53 @@
+---
+pagetitle: "Digital-Mailroom: appendix — Jack J. Burleson"
+description: "Supporting notes for the Digital-Mailroom case study: the public corpus sources and the partner-data boundary."
+---
+
+::: {.page}
+
+[← Case study](../digital-mailroom.qmd){.back}
+
+::: {.project-nav}
+[Case study](../digital-mailroom.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/LLM-Mailroom-Services/Digital-Mailroom)
+:::
+
+# Digital-Mailroom: appendix {.page-title}
+
+[Public corpus · partner boundary]{.kicker}
+
+Supporting notes for the [Digital-Mailroom case study](../digital-mailroom.qmd). The capstone publishes no measured results here; these tables describe the data boundary and where the public corpus comes from.
+
+## Public and non-public
+
+| Public on this site | Not published |
+| --- | --- |
+| The capstone problem framing and pipeline description | The partner's documents |
+| The public-source corpus and its provenance | Internal partner metrics |
+| The classifier work that feeds the pipeline | Non-public evaluation results |
+| Reproduction notes for the public pieces | Anything under a partner confidentiality agreement |
+
+The industry partner scoped the problem and met with me through the capstone. Their data was never used to build the corpus.
+
+## Corpus sources
+
+The public corpus has 3,302 documents. No partner documents are included.
+
+| Class | Rows | Source | Terms |
+| --- | ---: | --- | --- |
+| Insurance claim | 1,100 | CMS DE-SynPUF, GNOTHEIA, BDR, INSURBIAS | Apache-2.0, MIT, CC BY 4.0 |
+| Correspondence | 1,000 | Deduplicated Enron email | Research use; real named-person PII |
+| Contract | 600 | CUAD v1 (509) and SEC EDGAR EX-10 (91) | CC BY 4.0; public domain |
+| Corporate record | 450 | SEC EDGAR S-1 and 8-K exhibits | Public domain |
+| Merger agreement | 152 | MAUD v1 | CC BY 4.0 |
+
+The [Corpus EDA appendix](../mailroom-corpus-eda/appendix.qmd) records label provenance, configuration counts and context bands. The [dataset card](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset/tree/v9.2) carries the versioned citation.
+
+## Where the code lives
+
+The linked repository is the integration workspace: one lockfile and one virtual environment wiring the standalone packages together. Package code is authored and released from its own repository, then imported, so a fix belongs upstream rather than in the workspace copy.
+
+## Status
+
+Measured capstone results remain unpublished while the project is running, with expected completion in December 2026. This appendix will not carry numbers before the partner-facing report exists.
+
+:::
