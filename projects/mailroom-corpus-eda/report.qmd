@@ -65,7 +65,7 @@ I excluded three candidate insurance samples because they carry a non-commercial
 
 `run_all.py` runs all seven phases, or any subset with `--phases`. The summary JSON is written only by a full run, because a subset run once overwrote the full-corpus summary with partial numbers.
 
-The `src/mailroom_eda/` package is about 9,400 lines of Python. Its modules cover identity, the evaluation contract, matter grouping, the integrity audit, ground-truth quality rules, the intent backfill, token budgets, export and the Hub client.
+The `src/mailroom_eda/` package is about 21,100 lines of Python at the 6 November 2026 snapshot (revision 32d34a2). Its modules cover identity, the evaluation contract, matter grouping, the integrity audit, ground-truth quality rules, the intent backfill, token budgets, export and the Hub client.
 
 ## Method
 
@@ -159,7 +159,7 @@ After the v9.1 change moved the MAUD count to the ground-truth side, the integri
 
 ## Tests
 
-I ran the test suite in a fresh environment, with the latest versions of the dependencies and not the pinned ones. Of 200 tests, 185 passed, 14 skipped and 1 failed. The 14 skipped tests need the full dataset snapshot, which `run_all.py --phases P0` downloads. The failure is a contract test that reads a taxonomy file from a sibling checkout of another repository, which my environment did not have.
+I ran the test suite in a fresh environment, with the latest versions of the dependencies and not the pinned ones. That older run had 200 tests, of which 185 passed, 14 skipped and 1 failed. The current revision declares 594 `def test_` functions in 26 files; that is a count, not a passing run. The 14 skipped tests need the full dataset snapshot, which `run_all.py --phases P0` downloads. The 14 skipped tests need the full dataset snapshot, which `run_all.py --phases P0` downloads. The failure is a contract test that reads a taxonomy file from a sibling checkout of another repository, which my environment did not have.
 
 ## Limitations
 

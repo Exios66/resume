@@ -56,7 +56,7 @@ The design rule that shaped the most work is label separation. The main configur
 - **Fixing correspondence intent.** Many email rows had no intent label. I hydrated them by an exact match on a hash of the normalised body against a larger Enron corpus and against AESLC, ran a constrained model pass on the rest, and recorded which path produced each label. All 1,000 rows now have one of eight intents.
 - **Hardened export.** The exporter keeps metadata types uniform and handles the Unicode line separators that break JSON Lines readers. A byte-verify script compares a local export against what is on the Hub.
 - **An audit pipeline.** Integrity, composition, 30 static figures, 18 interactive figures, 17 tables, and a summary report, all rerunnable.
-- **Tests.** About 200 test functions cover identity, the integrity audit, ground-truth quality rules, fixtures and the revision builders.
+- **Tests.** 594 `def test_` declarations in 26 files at the 6 November 2026 snapshot cover identity, the integrity audit, ground-truth quality rules, fixtures and the revision builders. They are counted, not run.
 
 ## Results
 

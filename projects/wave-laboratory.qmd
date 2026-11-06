@@ -31,7 +31,7 @@ The lab needs a browser with WebGL 2. It runs on desktop and on phones.
 [280]{.stat-value} [water columns, at most, sampled under a hull to integrate pressure]{.stat-label}
 :::
 ::: {.stat}
-[328 + 25]{.stat-value} [unit and long-running validation test declarations in the October 2026 audit, counted by grep; not a current passing-test count]{.stat-label}
+[481 + 25]{.stat-value} [unit and validation test declarations at the 24 October 2026 snapshot, counted by grep; not a current passing-test count]{.stat-label}
 :::
 :::
 

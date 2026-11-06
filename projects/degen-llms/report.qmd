@@ -35,7 +35,7 @@ It is satire. Chips are fictional, no real money is involved, and it is not affi
 | Browser terminal | `docs/index.html` | Hand-written vanilla JavaScript ES modules under `docs/js/`. Not Python compiled for the browser |
 | Pixel RPG | `docs/rpg/index.html` | Phaser overworld over the same modules |
 
-By line count (`wc`, blank lines included) `docs/js` holds about 33k lines of JavaScript, and about 44k with `docs/rpg/js` added (the RPG layer is about 10k). The repository has about 23.6k lines of Python in all, but that includes tests (about 3.6k) and scripts (about 5k). The runtime `mandalay_bay` package is about 12.8k lines.
+By line count (`wc`, blank lines included) `docs/js` holds about 33k lines of JavaScript, and about 44k with `docs/rpg/js` added (the RPG layer is about 10k). The repository has about 27.4k lines of Python in all, including about 5.2k in tests and 6.8k in scripts. The runtime package itself is much smaller.
 
 ### Content as data
 
@@ -71,7 +71,7 @@ The numbers are not realistic. A test named for the parody machine `fortune` pin
 
 ## Iteration history
 
-The changelog runs from 1.1.0 (2026-07-26) to 1.2.2 (2026-08-26), with pull requests numbered up to the 150s. I did not count commits.
+The changelog runs from 1.1.0 (2026-07-26) to 1.2.2 (2026-08-26). Merge history at the 30 October 2026 snapshot reaches the 160s, and the source changelog does not yet describe the later merges. I did not count commits.
 
 ::: {.timeline}
 - **1.1.0, 2026-07-26** — Trading Floor with 744 stored contracts, 337 sports events and 204 prediction scenarios, Arcade Alley cabinets, Vegas Strip Drive, craps and a lottery counter, and the walkable Strip overworld in the RPG. Rewards tier thresholds aligned to the docs: saves keep their lifetime totals and the tier is recomputed, so a player who had maxed the old ladder can drop until they wager more. Valet garage exit softlock fixed.
@@ -96,11 +96,11 @@ These are collected, not pass rates. I did not run the suite for this report.
 
 | Suite | Count | Source |
 | --- | --- | --- |
-| pytest | 282 tests collected | `pytest --co` over `tests/` |
+| pytest | 379 `def test_` declarations at the 30 October 2026 snapshot | grep over `tests/`; not a collected or passing count |
 | Node smoke scripts | 12 scripts | `scripts/smoke-test-*.mjs` |
 | Browser smoke test | 1 script | `scripts/smoke-test-web.py` |
 
-CI (`.github/workflows/checks.yml`) runs pytest on Python 3.11. A second job runs on Node 22: an RPG world data check (`smoke-test-rpg.mjs`), a validation that every import under `docs/js` resolves, six more smoke scripts and the browser smoke test. That is seven of the 12 Node scripts; the other five are not in the workflow.
+CI (`.github/workflows/checks.yml`) runs pytest on Python 3.11. A second job runs on Node 22: a validation that every import under `docs/js` resolves, the browser smoke test, and all 18 Node scripts (13 smoke, 5 regression).
 
 `tests/test_save_version_migration.py` covers a version 3 save with no rewards state, version 7 tier fields, and a version 8 web save with an `rpg` block loading in the CLI.
 
@@ -137,7 +137,7 @@ The browser terminal is static files in `docs/`, so any static host can serve it
 
 ## Limitations and next steps
 
-- The README is stale. It still says 14 slot machines and 200+ tests. The data files and `pytest --co` give the current numbers.
+- The README lags the code: it still says “200+ tests”, while the 30 October snapshot declares 379 pytest tests. The data files and the test tree are the authority.
 - Package metadata says version 1.0.0 while the changelog is at 1.2.2.
 - The Pages deploy is manual from the `gh-pages` branch, so the live demo can lag `main`.
 - Blackjack rule tests are small: `test_rules.py` has 9 tests and `test_hand.py` has 8.

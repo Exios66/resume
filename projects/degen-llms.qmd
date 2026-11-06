@@ -32,7 +32,7 @@ The repository is called degen-llms. The name is tongue-in-cheek. There is no la
 [3]{.stat-value} [surfaces on one wallet: Python CLI, browser terminal, pixel RPG]{.stat-label}
 :::
 ::: {.stat}
-[282 + 12]{.stat-value} [pytest tests and Node smoke scripts (CI runs 7 of the 12)]{.stat-label}
+[379 + 18]{.stat-value} [pytest test declarations and Node smoke/regression scripts at the 30 October 2026 snapshot]{.stat-label}
 :::
 ::: {.stat}
 [744]{.stat-value} [futures and options contracts, among 37 slot machines and 8 floors]{.stat-label}
@@ -59,7 +59,7 @@ The pixel RPG follows one rule: it never rebuilds a game screen. Each screen is 
 - **Content.** Eight floors, 37 slot machines, 337 sports scenarios, 204 prediction scenarios and 744 futures and options contracts, kept as data files.
 - **A resort clock.** One clock module turns two real hours into one in-game day.
 - **Exact slot maths.** The slot module can compute a machine's return by listing every three-reel combination instead of simulating spins.
-- **Checks.** CI runs pytest on Python 3.11. On Node 22 it runs 7 of the 12 Node smoke scripts (the RPG world data check and six terminal-wiring scripts), a check that the browser modules' imports resolve and a browser smoke test.
+- **Checks.** CI runs pytest on Python 3.11. On Node 22 it runs a check that every browser module import resolves, the browser smoke test, and all 18 Node smoke and regression scripts. The earlier "7 of 12" description is superseded.
 
 ## Results
 

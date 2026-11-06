@@ -398,7 +398,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run mailroom eval <span class="at">--per-class</span> 20 <span class="at">--seed</span> 42 <span class="at">--split</span> test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h2 id="engineering-quality">Engineering quality</h2>
 <ul>
-<li><strong>Test suite.</strong> 1,134 <code>def test_</code> functions across 83 test files, counted by grep. The 1,597 in the verification run is higher because of parametrisation and because the Node suites are also wired into pytest.</li>
+<li><strong>Test suite.</strong> The 1 November 2026 revision declares 1,276 <code>def test_</code> functions across 89 test files, counted by grep. The 1,597 in the 11 October verification run is higher because of parametrisation and because the Node suites are also wired into pytest.</li>
 <li><strong>Tiers.</strong> Agents, pipeline, eval, observability, API, deploy, intake, ingest, LLM, scoring, schemas, storage, TUI and <code>/ui</code>.</li>
 <li><strong>Dependency fence.</strong> A test fails if any <code>langgraph</code>, <code>langchain*</code>, <code>langfuse</code>, <code>braintrust</code> or <code>litellm</code> import appears under <code>src/</code> or in any dependency.</li>
 <li><strong>Prompt lock.</strong> A test checks the sha256 of every vendored prompt against its lineage file, so frozen prompts cannot drift silently.</li>

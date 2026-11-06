@@ -313,7 +313,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p><code>run_all.py</code> runs all seven phases, or any subset with <code>--phases</code>. The summary JSON is written only by a full run, because a subset run once overwrote the full-corpus summary with partial numbers.</p>
-<p>The <code>src/mailroom_eda/</code> package is about 9,400 lines of Python. Its modules cover identity, the evaluation contract, matter grouping, the integrity audit, ground-truth quality rules, the intent backfill, token budgets, export and the Hub client.</p>
+<p>The <code>src/mailroom_eda/</code> package is about 21,100 lines of Python at the 6 November 2026 snapshot (revision 32d34a2). Its modules cover identity, the evaluation contract, matter grouping, the integrity audit, ground-truth quality rules, the intent backfill, token budgets, export and the Hub client.</p>
 <h2 id="method">Method</h2>
 <h3 id="label-separation">Label separation</h3>
 <p>The blind configuration is the surface a model sees, so nothing derived from a label may appear on it. An early revision still carried two integers in the blind metadata, a contract clause count and a merger annotation count. Both are functions of the hidden labels and leak a weak signal: a non-zero count says the document has labelled clauses. The v9.1 revision moved them into the ground-truth configuration. The hardened release code never restages the blind configuration, so labels cannot ride along with it.</p>
@@ -488,7 +488,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 id="an-audit-that-was-wrong">An audit that was wrong</h3>
 <p>After the v9.1 change moved the MAUD count to the ground-truth side, the integrity audit kept reading it from the blind metadata. It regenerated its report without error and printed a count-consistency result of 0 of 152. Nothing was wrong with the data. The audit was looking in the old place. The v9.2 revision reads the ground-truth count, restores the correct 152 of 152, and pins the case with a regression test.</p>
 <h2 id="tests">Tests</h2>
-<p>I ran the test suite in a fresh environment, with the latest versions of the dependencies and not the pinned ones. Of 200 tests, 185 passed, 14 skipped and 1 failed. The 14 skipped tests need the full dataset snapshot, which <code>run_all.py --phases P0</code> downloads. The failure is a contract test that reads a taxonomy file from a sibling checkout of another repository, which my environment did not have.</p>
+<p>I ran the test suite in a fresh environment, with the latest versions of the dependencies and not the pinned ones. That older run had 200 tests, of which 185 passed, 14 skipped and 1 failed. The current revision declares 594 <code>def test_</code> functions in 26 files; that is a count, not a passing run. The 14 skipped tests need the full dataset snapshot, which <code>run_all.py --phases P0</code> downloads. The 14 skipped tests need the full dataset snapshot, which <code>run_all.py --phases P0</code> downloads. The failure is a contract test that reads a taxonomy file from a sibling checkout of another repository, which my environment did not have.</p>
 <h2 id="limitations">Limitations</h2>
 <ul>
 <li><strong>Evaluation corpus, not a training set.</strong> The 90/10 split is for reproducible sampling and is not stratified, so ten strata have no test documents.</li>

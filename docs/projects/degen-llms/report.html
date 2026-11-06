@@ -199,7 +199,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>By line count (<code>wc</code>, blank lines included) <code>docs/js</code> holds about 33k lines of JavaScript, and about 44k with <code>docs/rpg/js</code> added (the RPG layer is about 10k). The repository has about 23.6k lines of Python in all, but that includes tests (about 3.6k) and scripts (about 5k). The runtime <code>mandalay_bay</code> package is about 12.8k lines.</p>
+<p>By line count (<code>wc</code>, blank lines included) <code>docs/js</code> holds about 33k lines of JavaScript, and about 44k with <code>docs/rpg/js</code> added (the RPG layer is about 10k). The repository has about 27.4k lines of Python in all, including about 5.2k in tests and 6.8k in scripts. The runtime package itself is much smaller.</p>
 <h3 id="content-as-data">Content as data</h3>
 <table class="caption-top">
 <thead>
@@ -243,7 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>estimate_base_game_rtp</code> in <code>mandalay_bay/activities/slots.py</code> does not simulate spins. It loops over every combination of symbols on the three reels. It multiplies the three symbol probabilities, runs the real payout function on that combination and sums probability times win. It returns the return to player and the hit frequency, excluding progressives. The result is exact, so a test can assert on it with no tolerance for sampling noise.</p>
 <p>The numbers are not realistic. A test named for the parody machine <code>fortune</code> pins its return between 155% and 185%, with a hit frequency of at least 28%. I also ran the estimator over all 37 machines in the catalog. Every one returns more than 100% in the base game: the lowest are <code>fortune</code> and <code>high_roller</code> at about 168%, and the highest is a salon machine at about 1,049%. Hit frequency ranges from about 4% to about 36%. These machines pay the player on average. That is the satire. Nothing here models real casino odds.</p>
 <h2 id="iteration-history">Iteration history</h2>
-<p>The changelog runs from 1.1.0 (2026-07-26) to 1.2.2 (2026-08-26), with pull requests numbered up to the 150s. I did not count commits.</p>
+<p>The changelog runs from 1.1.0 (2026-07-26) to 1.2.2 (2026-08-26). Merge history at the 30 October 2026 snapshot reaches the 160s, and the source changelog does not yet describe the later merges. I did not count commits.</p>
 <div class="timeline">
 <ul>
 <li><strong>1.1.0, 2026-07-26</strong> — Trading Floor with 744 stored contracts, 337 sports events and 204 prediction scenarios, Arcade Alley cabinets, Vegas Strip Drive, craps and a lottery counter, and the walkable Strip overworld in the RPG. Rewards tier thresholds aligned to the docs: saves keep their lifetime totals and the tier is recomputed, so a player who had maxed the old ladder can drop until they wager more. Valet garage exit softlock fixed.</li>
@@ -263,6 +263,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 id="test-counts">Test counts</h3>
 <p>These are collected, not pass rates. I did not run the suite for this report.</p>
 <table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Suite</th>
@@ -273,8 +278,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td>pytest</td>
-<td>282 tests collected</td>
-<td><code>pytest --co</code> over <code>tests/</code></td>
+<td>379 <code>def test_</code> declarations at the 30 October 2026 snapshot</td>
+<td>grep over <code>tests/</code>; not a collected or passing count</td>
 </tr>
 <tr class="even">
 <td>Node smoke scripts</td>
@@ -288,7 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>CI (<code>.github/workflows/checks.yml</code>) runs pytest on Python 3.11. A second job runs on Node 22: an RPG world data check (<code>smoke-test-rpg.mjs</code>), a validation that every import under <code>docs/js</code> resolves, six more smoke scripts and the browser smoke test. That is seven of the 12 Node scripts; the other five are not in the workflow.</p>
+<p>CI (<code>.github/workflows/checks.yml</code>) runs pytest on Python 3.11. A second job runs on Node 22: a validation that every import under <code>docs/js</code> resolves, the browser smoke test, and all 18 Node scripts (13 smoke, 5 regression).</p>
 <p><code>tests/test_save_version_migration.py</code> covers a version 3 save with no rewards state, version 7 tier fields, and a version 8 web save with an <code>rpg</code> block loading in the CLI.</p>
 <h2 id="figures">Figures</h2>
 <div class="quarto-figure quarto-figure-center">
@@ -332,7 +337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <h2 id="limitations-and-next-steps">Limitations and next steps</h2>
 <ul>
-<li>The README is stale. It still says 14 slot machines and 200+ tests. The data files and <code>pytest --co</code> give the current numbers.</li>
+<li>The README lags the code: it still says “200+ tests”, while the 30 October snapshot declares 379 pytest tests. The data files and the test tree are the authority.</li>
 <li>Package metadata says version 1.0.0 while the changelog is at 1.2.2.</li>
 <li>The Pages deploy is manual from the <code>gh-pages</code> branch, so the live demo can lag <code>main</code>.</li>
 <li>Blackjack rule tests are small: <code>test_rules.py</code> has 9 tests and <code>test_hand.py</code> has 8.</li>

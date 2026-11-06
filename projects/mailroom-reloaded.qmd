@@ -22,7 +22,7 @@ description: "A compressed, deployment-ready Digital Mailroom on CrewAI Flows: a
 [2]{.stat-value} [LLM calls for a clean text-layer document (sort, then extract)]{.stat-label}
 :::
 ::: {.stat}
-[1,597]{.stat-value} [tests passed, 3 skipped, in the main-branch verification run (the suite has 1,134 test functions in 83 files by grep)]{.stat-label}
+[1,597]{.stat-value} [tests passed in the 11 October 2026 verification run; the 1 November revision declares 1,276 test functions in 89 files]{.stat-label}
 :::
 :::
 

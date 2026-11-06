@@ -83,7 +83,7 @@ The GPU inverse-FFTs the same h₀ amplitudes the CPU uses. On each new sea the 
 
 ## Iteration history
 
-The October 2026 audit snapshot had 131 commits, from 2026-10-01 to 2026-10-08. This report records that snapshot, not the current repository's commit or test counts. The plan document's status table lists what shipped in v0.1.
+The current snapshot (revision 4c7354e, 24 October 2026) has 174 commits. The earlier report recorded 131 commits from 2026-10-01 to 2026-10-08; this page now uses the later count. The plan document's status table lists what shipped in v0.1.
 
 ::: {.timeline}
 - **Core** — tooling, schema, deterministic fixed-step core. *Shipped.*
@@ -120,9 +120,9 @@ These are counts of test definitions found by grep, not a run result. I did not 
 
 | Suite | Count | Where |
 | --- | --- | --- |
-| Unit | 328 definitions in 44 files | `src/**/*.test.ts` |
+| Unit | 481 definitions in `src/**/*.test.ts` | Counted by grep at the 24 October snapshot |
 | Validation | 25 definitions in 9 files | `src/**/*.validation.ts` |
-| Browser (Playwright) | 24 definitions in 2 files: 19 desktop, 5 mobile | `e2e/app.spec.ts`, `e2e/mobile.spec.ts` |
+| Browser (Playwright) | 27 definitions in 2 files: 22 desktop, 5 mobile | `e2e/app.spec.ts`, `e2e/mobile.spec.ts` |
 
 The grep counts `it(` and `test(` at the start of a line, so parametrised and template-generated tests are undercounted. The Playwright config defines desktop Chromium at 1440 by 900, a Pixel 7 profile and an iPhone 14 viewport, so each browser test can run several times.
 

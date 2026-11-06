@@ -285,7 +285,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 id="the-gpu-and-cpu-cross-check">The GPU and CPU cross-check</h3>
 <p>The GPU inverse-FFTs the same h₀ amplitudes the CPU uses. On each new sea the renderer reads one texel back, compares it with the CPU transform and calls <code>console.error</code> on a mismatch, which <code>e2e/app.spec.ts</code> fails on. Devices without 32-bit float render targets use half-float and skip the readback. The GPU draws only elevation and horizontal displacement; slope, Jacobian and foam are finite differences of the displaced surface, and pressure and orbital velocity stay on the CPU.</p>
 <h2 id="iteration-history">Iteration history</h2>
-<p>The October 2026 audit snapshot had 131 commits, from 2026-10-01 to 2026-10-08. This report records that snapshot, not the current repository’s commit or test counts. The plan document’s status table lists what shipped in v0.1.</p>
+<p>The current snapshot (revision 4c7354e, 24 October 2026) has 174 commits. The earlier report recorded 131 commits from 2026-10-01 to 2026-10-08; this page now uses the later count. The plan document’s status table lists what shipped in v0.1.</p>
 <div class="timeline">
 <ul>
 <li><strong>Core</strong> — tooling, schema, deterministic fixed-step core. <em>Shipped.</em></li>
@@ -364,8 +364,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td>Unit</td>
-<td>328 definitions in 44 files</td>
-<td><code>src/**/*.test.ts</code></td>
+<td>481 definitions in <code>src/**/*.test.ts</code></td>
+<td>Counted by grep at the 24 October snapshot</td>
 </tr>
 <tr class="even">
 <td>Validation</td>
@@ -374,7 +374,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td>Browser (Playwright)</td>
-<td>24 definitions in 2 files: 19 desktop, 5 mobile</td>
+<td>27 definitions in 2 files: 22 desktop, 5 mobile</td>
 <td><code>e2e/app.spec.ts</code>, <code>e2e/mobile.spec.ts</code></td>
 </tr>
 </tbody>

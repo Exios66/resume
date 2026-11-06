@@ -29,13 +29,13 @@ A browser-based 3D globe for flight tracking. It is a work in progress, and an e
 
 ::: {.stats}
 ::: {.stat}
-[395]{.stat-value} [passing tests in 42 files, with lint, type-checking and the production build all clean]{.stat-label}
+[282]{.stat-value} [test declarations in 43 files at the 30 October 2026 snapshot; not a current passing-test total]{.stat-label}
 :::
 ::: {.stat}
 [4]{.stat-value} [stages in the data pipeline: normalize, segment, chunk, catalog]{.stat-label}
 :::
 ::: {.stat}
-[5,800]{.stat-value} [lines of TypeScript across the client, server, pipeline and shared code]{.stat-label}
+[8,090]{.stat-value} [lines of TypeScript at the same snapshot]{.stat-label}
 :::
 :::
 
