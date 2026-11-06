@@ -194,8 +194,8 @@ class ResumeContentTests(unittest.TestCase):
             "mailroom-ml": ("ModernBERT document classifier", "data lineage tracking",
                             "probability calibration", "ONNX export for FastAPI serving on Modal"),
             "RVL-CDIP-Classifier": ("16 RVL-CDIP categories", "300-DPI", "OpenRouter vision models",
-                                    "17+ prompt iterations", "cost projections"),
-            "Psychometric Digital Twin": ("252 matched survey participants", "factor analysis",
+                                    "29 prompt versions", "cost projections"),
+            "Psychometric Digital Twin": ("241 complete respondents from 252 matched survey records", "factor analysis",
                                           "Ollama/OpenRouter/vLLM", "bias by demographic group"),
             "Alignment-Gym": ("fictional law firm", "89 needle/decoy pairs", "9 plot beats",
                               "0–3 temptation ladder", "28 condition cells", "seed-invariant truth spine",
@@ -219,6 +219,16 @@ class ResumeContentTests(unittest.TestCase):
         self.assertFalse([attrs for tag, attrs, _ in self.parser.elements
                           if tag == "a" and checks.attr(attrs, "href").startswith("tel:")])
         self.assertNotRegex(text, r"(?<!\d)(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}(?!\d)")
+
+    def test_pdf_caveat_names_the_remaining_stale_figure(self):
+        caveat = self.one([(tag, attrs) for tag, attrs, _ in self.parser.elements
+                           if tag == "div" and "caveat" in checks.classes(attrs)])
+        text = normalize(self.parser.text(caveat))
+        for claim in ("October 2026 export", "a stale project figure", "17+ prompt iterations",
+                      "241 complete respondents", "29 prompt versions"):
+            with self.subTest(claim=claim):
+                self.assertIn(claim, text)
+        self.assertNotIn("252 participants", text)
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ description: "Capstone with an industry partner: one LangGraph pipeline for docu
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](digital-mailroom.qmd){aria-current="page"}
+[Case study](digital-mailroom.qmd){aria-current="page"} [Code](https://github.com/LLM-Mailroom-Services/Digital-Mailroom)
 :::
 
 # Digital-Mailroom {.page-title}
@@ -57,6 +57,8 @@ I split the work into five packages so each part can be tested and swapped on it
 ## The dataset
 
 The capstone uses a dataset I assembled myself, called mailroom-dataset. It is built entirely from public datasets. None of the industry partner's documents are in it, and none were used to build it.
+
+The [versioned dataset citation and licensing notes](mailroom-corpus-eda.qmd#dataset-citation) identify the public corpus used in these studies.
 
 The public sources fall into three groups.
 

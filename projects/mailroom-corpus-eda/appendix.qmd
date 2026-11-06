@@ -1,0 +1,95 @@
+---
+pagetitle: "Mailroom-Corpus-EDA: appendix — Jack J. Burleson"
+description: "Supporting tables for the mailroom dataset: published configurations, class composition, sources and licences, label provenance and context-window bands."
+---
+
+::: {.page}
+
+[← Case study](../mailroom-corpus-eda.qmd){.back}
+
+::: {.project-nav}
+[Case study](../mailroom-corpus-eda.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/Mailroom-Corpus-EDA) [Dataset](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset)
+:::
+
+# Mailroom-Corpus-EDA: appendix {.page-title}
+
+[Published v9.2 tables · configuration, provenance, sources and licences]{.kicker}
+
+These tables support the [Mailroom-Corpus-EDA case study](../mailroom-corpus-eda.qmd). They describe the published `v9.2` revision of [mailroom-dataset](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset/tree/v9.2) and come from its dataset card. No documents or participant-level records are reproduced here.
+
+## Published configurations
+
+| Configuration | Rows | Contents |
+| --- | ---: | --- |
+| `default` | 3,302 | Four columns only: filename, document text, prompt, metadata. No label column. |
+| `ground_truth` | 3,302 | Labels, identity hashes, evaluation contract and matter grouping, joined on filename. |
+| `bundles` | 50 | Synthetic bundle families over real anchors, flagged as constructed. |
+| `streams` | 62 | Interleaved ingress stream with distractors. |
+| `fixtures` | 32 | Recovery and adversarial fixtures. |
+
+`ground_truth` carries 35 top-level columns; the nested `gt_fields` object holds 34 keys, 32 scalar and two matter lists.
+
+## Class composition
+
+| Document class | Rows | Share |
+| --- | ---: | ---: |
+| Insurance claim | 1,100 | 33.3% |
+| Correspondence | 1,000 | 30.3% |
+| Contract | 600 | 18.2% |
+| Corporate record | 450 | 13.6% |
+| Merger agreement | 152 | 4.6% |
+
+## Sources and licences
+
+| Class | Source | Licence |
+| --- | --- | --- |
+| Contract | CUAD v1 (509) plus SEC EDGAR EX-10 exhibits (91) | CC BY 4.0; US public domain |
+| Merger agreement | MAUD v1, Zenodo 7500064 | CC BY 4.0 |
+| Corporate record | SEC EDGAR S-1 and 8-K exhibits | US public domain |
+| Correspondence | Deduplicated Enron corpus, 247,523-row pool | Research use; contains real named-individual PII |
+| Insurance claim | CMS DE-SynPUF, GNOTHEIA, BDR and INSURBIAS narratives | Apache-2.0, MIT, CC BY 4.0 |
+
+These are the component terms. Citing the combined corpus does not replace them; see [Cite the dataset](../mailroom-corpus-eda.qmd#dataset-citation).
+
+## How labels were produced
+
+| Annotation method | Rows |
+| --- | ---: |
+| Synthetic | 1,100 |
+| Source-native | 661 |
+| Heuristic | 646 |
+| LLM zero-shot | 637 |
+| Verified join | 162 |
+| Human annotated | 96 |
+
+Every label-bearing field also carries a presence code, so an empty value is never ambiguous:
+
+| Presence code | Fields | Share |
+| --- | ---: | ---: |
+| Populated | 22,591 | 34.2% |
+| Not applicable | 41,338 | 62.6% |
+| Schema-documented absence | 2,020 | 3.1% |
+| Pending annotation | 91 | 0.1% |
+
+No field is an undocumented gap. The 91 pending entries are the SEC EDGAR EX-10 contracts, whose CUAD clause labels wait on a separate annotation pass.
+
+## Context-window bands
+
+| Band | Rows |
+| --- | ---: |
+| Up to 4k tokens | 2,530 |
+| Up to 16k | 428 |
+| Up to 32k | 120 |
+| Over 32k | 224 |
+
+## Split and held-out test
+
+The reproducible split puts a document in the test set when the MD5 of its filename, modulo 10, is zero. That gives 323 test documents and 2,979 for training and validation, split 2,680 / 299 at 90/10 and stratified by document type with seed 42. The split is an evaluation partition, not a claim that the corpus was designed as a training set.
+
+## Scope
+
+::: {.caveat}
+**Counts belong to one published revision.** These tables describe `v9.2`. A later rebuild would change them, so pin the revision when reproducing results. Ten strata have no test documents, and the largest class is 7.2 times the smallest, so per-stratum results need their own denominators.
+:::
+
+:::

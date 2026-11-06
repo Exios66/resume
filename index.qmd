@@ -45,14 +45,14 @@ Five Python packages and one LangGraph pipeline that joins legal-document routin
 ### [Mailroom-ML](projects/mailroom-ml.qmd)
 [Training, evaluation & calibration]{.kicker}
 
-A calibrated ModernBERT classifier that handles routine documents itself and sends uncertain ones to an LLM. Exported to ONNX and served with FastAPI on Modal.
+A calibrated ModernBERT classifier with a guarded fast path and an LLM fallback. Includes ONNX CPU serving and a Modal fallback; evaluation coverage is not a production routing rate.
 :::
 
 ::: {.card}
-### [RVL-CDIP-Classifier](projects/rvl-cdip-classifier.qmd)
-[Vision LLMs & prompt engineering]{.kicker}
+### [Neuron Atlas](projects/neuron-atlas.qmd)
+[Mechanistic interpretability · live browser model]{.kicker}
 
-Zero-shot document classification with vision LLMs: 29 tracked prompt versions, accuracy checked on larger slices than the tuning set, and the cost of every page measured.
+Explore and steer all 8,192 neurons of TinyStories-8M in the browser, with random-direction controls and replayable findings. Larger Qwen studies are recorded offline.
 :::
 
 ::: {.card}

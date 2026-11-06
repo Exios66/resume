@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="A from-scratch rebuild of Google’s MapReduce in Go, with a Python reference implementation: all 23 features of the 2004 paper, each tied to a named test, plus coordinator crash recovery, chaos testing and Prometheus metrics. In active development.">
+<meta name="description" content="A from-scratch MapReduce rebuild: a Go cluster and Python reference, a 24-item paper mapping, S3 storage, compression, fault injection and a small-scale VM evaluation. In active development.">
 
 <title>MapReduce-Reloaded — Jack J. Burleson</title>
 <style>
@@ -80,15 +80,15 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=41d6e9f6ec">
+<link rel="stylesheet" href="../styles.css?v=5d59e12795">
 <meta property="og:title" content="MapReduce-Reloaded — Jack J. Burleson">
-<meta property="og:description" content="A from-scratch rebuild of Google’s MapReduce in Go, with a Python reference implementation: all 23 features of the 2004 paper, each tied to a named test, plus coordinator crash recovery, chaos testing and Prometheus metrics. In active development.">
+<meta property="og:description" content="A from-scratch MapReduce rebuild: a Go cluster and Python reference, a 24-item paper mapping, S3 storage, compression, fault injection and a small-scale VM evaluation. In active development.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta property="og:site_name" content="Jack J. Burleson">
 <meta property="og:image:alt" content="Jack J. Burleson — Machine Learning · Data Science · AI Engineering &amp; Safety">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="MapReduce-Reloaded — Jack J. Burleson">
-<meta name="twitter:description" content="A from-scratch rebuild of Google’s MapReduce in Go, with a Python reference implementation: all 23 features of the 2004 paper, each tied to a named test, plus coordinator crash recovery, chaos testing and Prometheus metrics. In active development.">
+<meta name="twitter:description" content="A from-scratch MapReduce rebuild: a Go cluster and Python reference, a 24-item paper mapping, S3 storage, compression, fault injection and a small-scale VM evaluation. In active development.">
 <meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://exios66.github.io/resume/projects/mapreduce-reloaded.html">
@@ -119,7 +119,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="page">
 <p><a href="../projects/index.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>All projects</a></p>
 <div class="project-nav">
-<p><a href="../projects/mapreduce-reloaded.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="https://github.com/Exios66/MapReduce-Reloaded"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
+<p><a href="../projects/mapreduce-reloaded.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="https://github.com/Exios66/MapReduce-Reloaded"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a> <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/report.md"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a></p>
 </div>
 <h1 class="page-title" id="mapreduce-reloaded">MapReduce-Reloaded</h1>
 <p><span class="kicker">In active development · big data &amp; distributed systems · Go &amp; Python</span></p>
@@ -128,18 +128,18 @@ ul.task-list li input[type="checkbox"] {
 <p><a href="https://github.com/Exios66/MapReduce-Reloaded" class="btn primary">View the code</a></p>
 </div>
 <div class="caveat">
-<p><strong>Work in progress.</strong> This page describes the code on 23 October 2026. Every feature of the paper is built in Go. The planned modern extensions (object storage and compression), the benchmarks and the final report are not built yet.</p>
+<p><strong>Work in progress.</strong> Reviewed on 6 November 2026 against <a href="https://github.com/Exios66/MapReduce-Reloaded/tree/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387">revision 4dd1ca4⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>. Object storage, compression, benchmarks and the final report are now built. Python workers and full cross-language interoperability remain stretch work. The evaluation below is reported by the source repository, not rerun for this page.</p>
 </div>
 <h2 id="at-a-glance">At a glance</h2>
 <div class="stats">
 <div class="stat">
-<p><span class="stat-value">23 / 23</span> <span class="stat-label">features of the paper built, each mapped to its code and a named test; a test fails if the mapping names a file or test that does not exist</span></p>
+<p><span class="stat-value">24</span> <span class="stat-label">items in the paper mapping: F1–F23 plus the F24 performance experiments</span></p>
 </div>
 <div class="stat">
-<p><span class="stat-value">350</span> <span class="stat-label">passing tests: 146 in Go and 204 in Python</span></p>
+<p><span class="stat-value">4</span> <span class="stat-label">one-CPU worker containers on the course VM, not four independent machines</span></p>
 </div>
 <div class="stat">
-<p><span class="stat-value">50</span> <span class="stat-label">chaos runs in a row, with random worker kills, stalls and coordinator restarts, that still match single-machine output</span></p>
+<p><span class="stat-value">3.8×</span> <span class="stat-label">reported word-count speedup from one to four workers on 1 GiB inputs</span></p>
 </div>
 </div>
 <h2 id="the-problem">The problem</h2>
@@ -147,9 +147,10 @@ ul.task-list li input[type="checkbox"] {
 <p>I wanted to understand those guarantees by building them, not by reading about them. The aim is a faithful rebuild: every feature in the paper, each with a test that proves it works, then extended with what a 2026 system would use instead of 2004 infrastructure.</p>
 <h2 id="approach">Approach</h2>
 <figure class="diagram" role="img" aria-labelledby="mr-cap"><svg viewbox="0 0 800 264" aria-hidden="true" focusable="false"><defs><marker id="mr-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="0" y="30" width="150" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="75.0" y="60" text-anchor="middle" font-weight="600">mr CLI</text><text x="75.0" y="79" text-anchor="middle">submits a job,</text><text x="75.0" y="98" text-anchor="middle">or runs it</text><text x="75.0" y="117" text-anchor="middle">-local (oracle)</text><rect class="d-box d-accent" x="190" y="30" width="190" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="285.0" y="60" text-anchor="middle" font-weight="600">Coordinator</text><text x="285.0" y="79" text-anchor="middle">task table</text><text x="285.0" y="98" text-anchor="middle">write-ahead log</text><text x="285.0" y="117" text-anchor="middle">heartbeats, backups</text><rect class="d-box" x="420" y="30" width="170" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="505.0" y="60" text-anchor="middle" font-weight="600">Map tasks</text><text x="505.0" y="79" text-anchor="middle">split → map</text><text x="505.0" y="98" text-anchor="middle">R partition files</text><text x="505.0" y="117" text-anchor="middle">shuffle server</text><rect class="d-box" x="630" y="30" width="170" height="120" rx="8" fill="none" stroke="currentColor"></rect><text x="715.0" y="60" text-anchor="middle" font-weight="600">Reduce tasks</text><text x="715.0" y="79" text-anchor="middle">fetch partitions</text><text x="715.0" y="98" text-anchor="middle">merge sort, reduce</text><text x="715.0" y="117" text-anchor="middle">part-r-NNNNN</text><path class="d-arrow" d="M150 90.0H188" marker-end="url(#mr-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M380 90.0H418" marker-end="url(#mr-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M590 90.0H628" marker-end="url(#mr-ah)" fill="none" stroke="currentColor"></path><rect class="d-box" x="190" y="195" width="190" height="62" rx="8" stroke-dasharray="5 4" fill="none" stroke="currentColor"></rect><text x="285.0" y="225" text-anchor="middle" font-weight="600">Status page</text><text x="285.0" y="244" text-anchor="middle">HTTP, /metrics</text><path class="d-arrow" d="M285.0 150V193" marker-end="url(#mr-ah)" fill="none" stroke="currentColor"></path><rect class="d-box" x="420" y="195" width="170" height="62" rx="8" stroke-dasharray="5 4" fill="none" stroke="currentColor"></rect><text x="505.0" y="225" text-anchor="middle" font-weight="600">Prometheus</text><text x="505.0" y="244" text-anchor="middle">Grafana dashboard</text><path class="d-arrow" d="M380 226.0H418" marker-end="url(#mr-ah)" fill="none" stroke="currentColor"></path><text class="d-muted" x="0" y="216" font-size="13">Go and Python share</text><text class="d-muted" x="0" y="234" font-size="13">the protobuf contract,</text><text class="d-muted" x="0" y="252" font-size="13">file format and hash</text><text class="d-muted" x="630" y="216" font-size="13">Workers run map and</text><text class="d-muted" x="630" y="234" font-size="13">reduce tasks; 4 run in</text><text class="d-muted" x="630" y="252" font-size="13">the Compose cluster</text></svg><figcaption id="mr-cap">MapReduce-Reloaded as built so far: mr submit sends a job to the coordinator, or mr run -local runs it in one process, which every other mode must match byte for byte. The coordinator keeps the task table, logs each decision to a write-ahead log, and tracks workers by heartbeat. Workers ask it for tasks over gRPC; map tasks write R partition files and serve them, and reduce tasks fetch their partition from every map task, sort, reduce and write one output file each. The coordinator serves a status page, the coordinator and every worker export Prometheus metrics, and an optional Grafana dashboard shows them.</figcaption></figure>
+<p>The diagram shows the core task and shuffle path only. It does not attempt to draw the S3 backend, alternative Python coordinator or benchmark harness.</p>
 <p><strong>A single-machine oracle first.</strong> The first working version runs the whole job in one process (<code>mr run -local</code>). Every later version, distributed or fault tolerant, must produce exactly the same output files. The tests check each version against it.</p>
-<p><strong>One contract, two languages.</strong> Go and Python share a gRPC and protobuf message contract, a documented on-disk record format with a checksum on every block, and a partition hash written out by hand in both languages. The built-in hash functions of both languages use a random seed per process, so two workers would disagree about which reducer gets a key. Test vectors and golden files hold both implementations to the same bytes.</p>
-<p><strong>Small, reviewable steps.</strong> Each piece of work is one issue and one pull request, and each phase adds a short design record. A <code>make check</code> quality gate runs every linter and test before each push. There is no hosted CI.</p>
+<p><strong>One contract, two languages.</strong> Go and Python share a gRPC and protobuf message contract, a documented on-disk record format with a checksum on every block, and a fixed FNV-1a partition hash implemented in both languages. Language-specific hash behavior is not the contract: shared test vectors and golden files hold both implementations to the same bytes for uncompressed jobs.</p>
+<p><strong>Small, reviewable steps.</strong> Each piece of work is one issue and one pull request, and each phase adds a short design record. The local <code>make check</code> quality gate runs linters and tests, and CircleCI runs checks on pull requests.</p>
 <h2 id="what-i-built">What I built</h2>
 <ul>
 <li><strong>The programming model and the data path (§2–§4.4).</strong> Input splitting on record boundaries, partitioning by <code>hash(key) mod R</code>, a combiner, an external merge sort for data larger than memory, pluggable input and output formats, and atomic commits, so a half-written output file is never visible.</li>
@@ -165,19 +166,53 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Locality and status (§3.4, §4.8).</strong> The scheduler prefers to run a map task on the host that holds its input. The coordinator serves a status page, the coordinator and workers export Prometheus metrics, an optional monitoring profile adds Prometheus and a Grafana dashboard, and logs can be written as structured JSON.</li>
 <li><strong>The paper’s example programs (§2.3, §5).</strong> Grep, word count, URL access frequency, reverse web-link graph, term vectors, inverted index and distributed sort, each with a test.</li>
 <li><strong>A Docker Compose cluster.</strong> One coordinator and four workers, with Prometheus and Grafana as an optional profile, and a memory limit on each service so the whole cluster fits on one 8 GB virtual machine. An end-to-end script checks the cluster’s output against the oracle.</li>
+<li><strong>Storage, compression and user jobs.</strong> S3-compatible storage with object-store commit semantics, zstd and Snappy codecs, and Go job files interpreted by workers. A Python coordinator can run with Go workers; a Python worker is not implemented.</li>
 </ul>
 <h2 id="what-chaos-testing-found">What chaos testing found</h2>
 <p>The chaos test runs word count while, at random moments, workers die, new ones join, workers stall for 50–250 ms and the coordinator restarts from its log. A run passes only if the output files and the counters equal single-machine mode. Each run’s choices come from a seed, so a failure can be replayed.</p>
 <p>Its first runs failed on seed 7. The output held an extra <code>_temporary</code> directory: a reduce attempt that had already lost, to a backup copy or because its worker was declared dead, kept running and recreated the directory after the job had cleaned it up. Now the job creates that directory when it starts, and attempts never do. An attempt that runs after the job has finished fails and leaves nothing behind.</p>
-<p>The test runs in one process, so a “dead” worker behaves like a machine cut off from the network, not one that lost power. Killing containers and dropping packets need the Compose cluster, and that driver is not written yet.</p>
+<p>The original test runs in one process, so a “dead” worker behaves like a machine cut off from the network, not one that lost power. The repository now also has a seeded <code>make chaos</code> driver for container kills, pauses and coordinator crashes in Compose. Dropped-packet fault injection remains out of scope.</p>
+<h2 id="evaluation-at-small-scale">Evaluation at small scale</h2>
+<p>The <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/evaluation.md">evaluation⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> compares the paper’s mechanisms, not its absolute throughput: four containers share one 4-vCPU, 8 GB VM and one disk, versus roughly 1,800 machines in the paper.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Experiment</th>
+<th>Reported observation</th>
+<th>Limit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scaling, 1 GiB input</td>
+<td>Four workers: word count 3.8×, sort 2.9× and grep 2.3× faster than one</td>
+<td>Median of three runs; shared-disk bottleneck</td>
+</tr>
+<tr class="even">
+<td>Backup tasks with an injected slow worker</td>
+<td>17.6 s without backups, 11.2 s with them</td>
+<td>Three runs per setting, fixed setting order; not drift-controlled</td>
+</tr>
+<tr class="odd">
+<td>Backup tasks without a slow worker</td>
+<td>Mean difference −0.11 s, 95% interval −0.38 to +0.16 s</td>
+<td>Ten interleaved pairs; does not prove zero cost</td>
+</tr>
+<tr class="even">
+<td>Worker loss</td>
+<td>Every measured job finished with a checksum matching the normal run</td>
+<td>Agreement with a baseline, not an independent correctness proof</td>
+</tr>
+</tbody>
+</table>
+<p>The <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/report.md">final report⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> links the raw results, design decisions and reproduction steps.</p>
 <h2 id="what-is-planned">What is planned</h2>
-<ul>
-<li>S3-compatible object storage, run locally with MinIO, in place of the paper’s GFS.</li>
-<li>Compression for intermediate and output files.</li>
-<li>A benchmark tool, and small-scale reruns of the paper’s §5 experiments that compare the shapes of the graphs, not the absolute numbers.</li>
-<li>A final report.</li>
-</ul>
-<p>Further extensions, such as a full Python coordinator and worker, a standby coordinator, skew handling and Parquet input, are stretch goals and may not be built.</p>
+<p>Python workers and a complete Go/Python interoperability matrix, coordinator high availability, skew handling and Parquet input remain stretch goals. LATE-style speculation is built as an opt-in mode, but its E7 evaluation has not been run; there is no measured claim that it is faster.</p>
 <h2 id="what-im-learning">What I’m learning</h2>
 <ul>
 <li>Build the oracle first. Once a simple version defines the right answer, every harder version is a test against it, not a judgement call.</li>

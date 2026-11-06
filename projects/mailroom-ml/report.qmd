@@ -1,6 +1,6 @@
 ---
 pagetitle: "Mailroom-ML: technical report — Jack J. Burleson"
-description: "Technical report on a ModernBERT document classifier: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits."
+description: "Historical technical report through Mailroom-ML M9b: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits. See the case study for M9c."
 ---
 
 ::: {.page}
@@ -8,12 +8,16 @@ description: "Technical report on a ModernBERT document classifier: system and d
 [← Case study](../mailroom-ml.qmd){.back}
 
 ::: {.project-nav}
-[Case study](../mailroom-ml.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml)
+[Case study](../mailroom-ml.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml)
 :::
 
 # Mailroom-ML: technical report {.page-title}
 
 [ModernBERT ingest classifier · training, calibration, routing]{.kicker}
+
+::: {.caveat}
+**Historical report through M9b.** “Final run” on this page means the four-epoch M9b run in this original comparison, not the current model release. The later M9c release has different accuracy, calibration, routing and release-gate results; see the [updated case study](../mailroom-ml.qmd). The tables and figures below retain their original experiment scope.
+:::
 
 ## Summary
 

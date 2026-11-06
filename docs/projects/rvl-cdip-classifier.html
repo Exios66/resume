@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=41d6e9f6ec">
+<link rel="stylesheet" href="../styles.css?v=5d59e12795">
 <meta property="og:title" content="RVL-CDIP-Classifier — Jack J. Burleson">
 <meta property="og:description" content="A prompt-engineering study that sorts scanned documents into the 16 RVL-CDIP categories with an off-the-shelf vision model, reporting 82.6% on a larger 1,120-image slice that overlaps the 800-image slice; its overlap with the 160-image tuning slice was not verified.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -138,6 +138,7 @@ ul.task-list li input[type="checkbox"] {
 <p><span class="stat-value">≈ $0.0004</span> <span class="stat-label">per image for the main model</span></p>
 </div>
 </div>
+<p>The 29-version registry includes subversions such as <code>v11.8</code> and <code>v17.2</code>; “v0 to v19” names the endpoints, not 20 consecutive integer-only entries.</p>
 <h2 id="the-problem">The problem</h2>
 <p>RVL-CDIP is the standard benchmark for document-type classification: scanned pages from a tobacco-litigation archive, sorted into 16 classes such as invoice, memo, letter and budget. Models trained for it usually need labeled data and a fine-tuning pipeline. I wanted to know how far a general-purpose vision model could get with no training at all, using only the prompt, and what that would cost.</p>
 <h2 id="approach">Approach</h2>

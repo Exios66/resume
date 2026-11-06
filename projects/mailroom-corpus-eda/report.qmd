@@ -8,10 +8,12 @@ description: "Sources and licences, identity and provenance design, label separa
 [← Case study](../mailroom-corpus-eda.qmd){.back}
 
 ::: {.project-nav}
-[Case study](../mailroom-corpus-eda.qmd) [Technical report](report.qmd){aria-current="page"} [Code](https://github.com/Exios66/Mailroom-Corpus-EDA) [Dataset](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset)
+[Case study](../mailroom-corpus-eda.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/Mailroom-Corpus-EDA) [Dataset](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset)
 :::
 
 # Mailroom-Corpus-EDA: technical report {.page-title}
+
+For the versioned corpus reference and source-license context, see [Cite the dataset](../mailroom-corpus-eda.qmd#dataset-citation).
 
 [Data engineering · dataset build, audit & publishing]{.kicker}
 

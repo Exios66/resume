@@ -105,6 +105,7 @@ class PortfolioAdditionTests(unittest.TestCase):
                                 "Live site": "https://exios66.github.io/aeroglobe/"}
                 else:
                     expected = {"Case study": study, "Technical report": report,
+                                "Appendix": (checks.DOCS / "projects/mailroom-corpus-eda/appendix.html").resolve(),
                                 "Code": "https://github.com/Exios66/Mailroom-Corpus-EDA", "Dataset": DATASET_URL}
                 self.assertEqual(len(links), len(expected), "No duplicate or unsupported project tabs")
                 self.assertEqual({parser.text(link): destination(page, link) for link in links}, expected)
@@ -137,7 +138,8 @@ class PortfolioAdditionTests(unittest.TestCase):
         self.assertIn("Work in progress", parser.text(caveat))
         self.assertIn("no real historical day is published yet", parser.text(caveat))
         caveat_links = [checks.attr(attrs, "href") for tag, attrs in parser.children(caveat) if tag == "a"]
-        self.assertEqual(caveat_links, ["https://exios66.github.io/aeroglobe/"])
+        self.assertEqual(caveat_links, ["https://github.com/Exios66/aeroglobe/blob/935bd07515b6fd857f0ff449618c6f244fb49353/README.md",
+                                       "https://exios66.github.io/aeroglobe/"])
         planned = self.one(parser, "h2", id="what-is-planned")
         self.assertEqual(parser.text(planned), "What is planned")
         body = self.one(parser, "div", **{"class": "page"})

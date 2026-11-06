@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=41d6e9f6ec">
+<link rel="stylesheet" href="../styles.css?v=5d59e12795">
 <meta property="og:title" content="Mailroom-ML — Jack J. Burleson">
 <meta property="og:description" content="A ModernBERT document classifier with calibrated confidence, a routing gate that decides which documents can skip an LLM, and a leak audit that caught a label leak in my own training data.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -119,26 +119,74 @@ ul.task-list li input[type="checkbox"] {
 <div class="page">
 <p><a href="../projects/index.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>All projects</a></p>
 <div class="project-nav">
-<p><a href="../projects/mailroom-ml.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../projects/mailroom-ml/report.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="https://github.com/LLM-Mailroom-Services/mailroom-ml"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
+<p><a href="../projects/mailroom-ml.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../projects/mailroom-ml/report.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../projects/mailroom-ml/appendix.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Appendix</a> <a href="https://github.com/LLM-Mailroom-Services/mailroom-ml"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a> <a href="https://huggingface.co/Lucius-Morningstar/mailroom-modernbert-classifier/tree/m9c-20261014-113614">Model</a> <a href="https://huggingface.co/datasets/Lucius-Morningstar/mailroom-modernbert-training">Training data</a></p>
 </div>
 <h1 class="page-title" id="mailroom-ml">Mailroom-ML</h1>
 <p><span class="kicker">ML training, evaluation &amp; calibration</span></p>
 <h2 id="at-a-glance">At a glance</h2>
 <div class="stats">
 <div class="stat">
-<p><span class="stat-value">95.05%</span> <span class="stat-label">document-type accuracy on the 323-document test split (307 correct)</span></p>
+<p><span class="stat-value">95.98%</span> <span class="stat-label">M9c document-type accuracy on 323 test documents (310 correct)</span></p>
 </div>
 <div class="stat">
-<p><span class="stat-value">0.0152</span> <span class="stat-label">calibration error (ECE) on the 541 windows of that test split</span></p>
+<p><span class="stat-value">0.0189</span> <span class="stat-label">M9c window calibration error (ECE), not document-level calibration</span></p>
 </div>
 <div class="stat">
-<p><span class="stat-value">74.3%</span> <span class="stat-label">of test documents (240 of 323) take the fast path, meaning no LLM call; optimistic, see below</span></p>
+<p><span class="stat-value">39.01%</span> <span class="stat-label">M9c confidence-only acceptance upper bound (126 of 323); not production fast-path coverage</span></p>
 </div>
 <div class="stat">
-<p><span class="stat-value">3 of 4</span> <span class="stat-label">acceptance gates met; contract subclass F1 is still short</span></p>
+<p><span class="stat-value">4 of 4</span> <span class="stat-label">M9c release gates met; this does not certify every subclass</span></p>
 </div>
 </div>
-<p>The 74.3% is the share of documents handled without an LLM. By my count from the per-document rows of the evaluation file, none of those 240 had the wrong document type, but 82 had the wrong subclass, so I treat the fast path as a document-type decision only. The gate’s 0.97 confidence cutoff is a preset from the project’s config, but the sweep that supports it ran on this same split, as did the decode sweep, so read the fast-path and coverage numbers as optimistic. The window-level error rate among accepted windows is in the routing section of the <a href="../projects/mailroom-ml/report.html">technical report</a>.</p>
+<p>The current published release is <strong>M9c (<code>m9c-20261014-113614</code>)</strong>, reviewed on 6 November 2026 against <a href="https://github.com/LLM-Mailroom-Services/mailroom-ml/blob/01c2272f7ee6625b9196c25095346812d39d42ff/README.md">the source README at 01c2272⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> and its <a href="https://github.com/LLM-Mailroom-Services/mailroom-ml/blob/01c2272f7ee6625b9196c25095346812d39d42ff/reports/TEST-EVAL/TEST-EVAL-REPORT-m9c-20261014-113614.md">held-out test report⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>. Conditional subclass accuracy is 229 of 310 scorable documents (73.87%). The 39.01% confidence-only figure omits support, catch-all, head-exclusion and subclass-projection guards; the full gate can accept fewer documents. Contract and correspondence remain excluded from fast-path routing by checkpoint policy.</p>
+<p>The M9b results below and the <a href="../projects/mailroom-ml/report.html">technical report</a> preserve the earlier experiment history. They are not the current release’s metrics, and none of these evaluation runs was rerun for this site refresh.</p>
+<h2 id="published-artifacts">Published artifacts</h2>
+<ul>
+<li><strong><a href="https://huggingface.co/Lucius-Morningstar/mailroom-modernbert-classifier/tree/m9c-20261014-113614">Trained model: mailroom-modernbert-classifier⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>.</strong> The M9c tag resolves to Hub revision <code>0910ad7</code>, checked on 6 November 2026. The Hub card still describes the older M9a comparison, so use the tagged evaluation artifact and source report for the M9c numbers.</li>
+<li><strong><a href="https://huggingface.co/datasets/Lucius-Morningstar/mailroom-modernbert-training">Prepared training set: mailroom-modernbert-training⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>.</strong> A separate dataset with document-level train/validation/test splits and precomputed training/validation windows. It is not the classifier repository, and it is distinct from the public evaluation/ingress corpus, <code>mailroom-dataset</code>.</li>
+</ul>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>M9c held-out measurement</th>
+<th>Result</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Document-type accuracy</td>
+<td>95.98% (310 / 323)</td>
+<td>Documents</td>
+</tr>
+<tr class="even">
+<td>Conditional subclass accuracy</td>
+<td>73.87% (229 / 310)</td>
+<td>Only documents with a correct type</td>
+</tr>
+<tr class="odd">
+<td>Calibration error (ECE)</td>
+<td>0.0189</td>
+<td>541 windows, not 323 document probabilities</td>
+</tr>
+<tr class="even">
+<td>Confidence-only acceptance</td>
+<td>39.01% (126 / 323)</td>
+<td>Upper bound before production guards</td>
+</tr>
+<tr class="odd">
+<td>OOD flag rate</td>
+<td>5.57% (18 / 323)</td>
+<td>Diagnostic on this test pool</td>
+</tr>
+</tbody>
+</table>
+<p>The four specified #112 release gates pass. The separate report-only subclass target of 0.75 is not met (0.7387); passing the release gates is not a blanket subclass-quality claim. A reported M9c test-window sweep selects 0.94, but test-pool sweeps are diagnostics, not independently validated deployment thresholds.</p>
 <h2 id="the-problem">The problem</h2>
 <p>A mailroom model reads incoming legal and insurance documents and decides what each one is. A large language model (LLM) can do that well, but it costs money on every document. Many documents are easy. A cheap classifier could handle those and pass only the hard or unfamiliar ones to the LLM.</p>
 <p>That plan only works if the classifier knows when it is unsure. A model that is 95% accurate overall but wrong with high confidence on some documents would quietly send errors downstream. So the project was less about raw accuracy than about three questions. Are its confidence scores honest? Can I pick a cutoff with a known error rate? Can I trust the training data to measure any of this?</p>
@@ -151,11 +199,11 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Calibration and routing.</strong> Per-head temperature scaling, a selective-risk sweep that finds the confidence cutoff for a 2% error budget, and an out-of-distribution flag from an energy probe on the logits.</li>
 <li><strong>Data lineage.</strong> Every training set is pinned to a revision. A provenance module writes a byte-reproducible manifest with sha256 hashes and no timestamps, so a rebuild on the same inputs gives the same bytes.</li>
 <li><strong>A leak audit.</strong> Early on, the model’s insurance subclass score looked too good. The audit showed that titles fell back to filenames, and 42.8% of filenames contained the subclass name. I removed the fallback and added a build-time check that fails if a filename-shaped title returns.</li>
-<li><strong>ONNX export for serving.</strong> An exported model is checked against the PyTorch one before it is promoted. In a CPU test on an Apple M2 with the Run 3 checkpoint (an earlier two-epoch run; I did not export the final one), the fp32 export matched PyTorch to within 4.25e-06 per head, and the int8 variant did not (see below).</li>
-<li><strong>A test suite.</strong> 485 test functions in 33 test files, plus a shared <code>conftest.py</code>, run in CI (ruff and pytest) on pushes to <code>main</code> and on pull requests. Tests for the heavy dependencies skip themselves when torch or Modal is absent, so the core suite runs anywhere.</li>
+<li><strong>ONNX export for CPU serving.</strong> An exported model is checked against the PyTorch one before promotion; the Modal serving app is a fallback. In the historical Apple M2 test with the earlier Run 3 checkpoint, fp32 matched PyTorch to within 4.25e-06 per head and int8 did not. That check is not evidence of M9c export parity.</li>
+<li><strong>A test suite.</strong> The earlier audit counted 485 test functions in 33 files, not a current passing-test total. CI runs ruff and pytest; heavy-dependency tests can skip when torch or Modal is absent.</li>
 </ul>
-<h2 id="results">Results</h2>
-<p>The numbers below come from my final run. It trained for four epochs and was scored on a test split of 323 documents (541 windows). The test split was not used for training, for choosing the checkpoint epoch or for fitting calibration. It was used for more than one evaluation, though: I compared runs on it, ran a confidence sweep on it and ran the decode sweep described below on it. The 0.97 cutoff itself is a preset from the project’s config, and the sweep landed on the same value.</p>
+<h2 id="earlier-results-m9b">Earlier results: M9b</h2>
+<p>The numbers below come from the earlier M9b run. It trained for four epochs and was scored on a test split of 323 documents (541 windows). The test split was not used for training, for choosing the checkpoint epoch or for fitting calibration. It was used for more than one evaluation, though: I compared runs on it, ran a confidence sweep on it and ran the decode sweep described below on it. The 0.97 cutoff itself is a preset from the project’s config, and the sweep landed on the same value.</p>
 <table class="caption-top">
 <colgroup>
 <col style="width: 50%">
@@ -190,12 +238,13 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<p>The sweep looks for the lowest confidence cutoff whose accepted windows have an error bound under 2% and a band calibration error under 0.05. Lower cutoffs (0.87 to 0.96) met the error budget but failed the calibration check, so on the final run it comes out at 0.97, which accepts about 80% of windows (431 of 541). Scoring on the L4 GPU took 0.575 seconds per document.</p>
+<p>The M9b sweep looks for the lowest confidence cutoff whose accepted windows have an error bound under 2% and a band calibration error under 0.05. Lower cutoffs (0.87 to 0.96) met the error budget but failed the calibration check, so it comes out at 0.97, which accepts about 80% of windows (431 of 541). Scoring on the L4 GPU took 0.575 seconds per document.</p>
 <div class="caveat">
 <p><strong>Heads up.</strong> The sweep that supports the 0.97 cutoff ran over these same test windows, and so did the decode sweep. That makes the fast-path and coverage numbers optimistic: they describe an operating point, not a validated setting. The tool that writes deployment thresholds refuses to run on a pool that contains test documents, so real thresholds are fit on the validation split.</p>
 </div>
-<p>The subclass heads are the weak part. Insurance claims reach F1 of 1.000, but that class is highly templated (114 test documents), so I would not read it as general skill. Merger-agreement F1 is 0.000 because the model puts all 17 test merger agreements into one rare subclass. Contract subclass F1 is 0.162 against a 0.20 floor, and that is the one acceptance gate still failing. A decode-time adjustment I tried on the finished model did not fix it; the best setting reached 0.170. The next lever is more training data for the contract families that are missing, not more epochs.</p>
-<p>The figures are from an earlier 3-epoch run called Arm B, whose document-type accuracy is also 0.9505. “Arm A” and “Arm B” are the project’s names for two comparison runs: Arm A was a one-epoch smoke run and Arm B a three-epoch run with a heavier document-type loss weight. “M9b” is the name of the final four-epoch run reported above.</p>
+<p>The M9b subclass heads were the weak part. Insurance claims reached F1 of 1.000, but that class is highly templated (114 test documents), so I would not read it as general skill. Merger-agreement F1 was 0.000 because the model put all 17 test merger agreements into one rare subclass. Contract subclass F1 was 0.162 against a 0.20 floor, leaving one acceptance gate failing. A decode-time adjustment did not fix it; the best setting reached 0.170. M9c later passed the release gates, but that does not make every subclass reliable.</p>
+<p>The figures are from an earlier 3-epoch run called Arm B, whose document-type accuracy is also 0.9505. “Arm A” and “Arm B” are the project’s names for two comparison runs: Arm A was a one-epoch smoke run and Arm B a three-epoch run with a heavier document-type loss weight. “M9b” is the four-epoch run in the historical table, not the later M9c release.</p>
+<p>These saved Arm B charts illustrate the earlier error analysis, not the current M9c checkpoint. Their original chart directories are not present in the current source tree, so the manifest records historical provenance rather than a currently reproducible upstream chart path.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img src="mailroom-ml/figures/confusion.svg" class="fig img-fluid" style="width:100.0%" alt="Confusion matrix of document type for the 323 test-split documents. Insurance claims and merger agreements are classified 100% correctly. Contracts are 88% correct with most errors going to corporate records. Corporate records are 89% correct. Correspondence is 95% correct."></p>

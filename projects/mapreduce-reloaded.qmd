@@ -1,6 +1,6 @@
 ---
 pagetitle: "MapReduce-Reloaded — Jack J. Burleson"
-description: "A from-scratch rebuild of Google's MapReduce in Go, with a Python reference implementation: all 23 features of the 2004 paper, each tied to a named test, plus coordinator crash recovery, chaos testing and Prometheus metrics. In active development."
+description: "A from-scratch MapReduce rebuild: a Go cluster and Python reference, a 24-item paper mapping, S3 storage, compression, fault injection and a small-scale VM evaluation. In active development."
 ---
 
 ::: {.page}
@@ -8,7 +8,7 @@ description: "A from-scratch rebuild of Google's MapReduce in Go, with a Python 
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](mapreduce-reloaded.qmd){aria-current="page"} [Code](https://github.com/Exios66/MapReduce-Reloaded)
+[Case study](mapreduce-reloaded.qmd){aria-current="page"} [Code](https://github.com/Exios66/MapReduce-Reloaded) [Technical report](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/report.md)
 :::
 
 # MapReduce-Reloaded {.page-title}
@@ -22,20 +22,20 @@ A from-scratch rebuild of Google's MapReduce, as described by Dean and Ghemawat 
 :::
 
 ::: {.caveat}
-**Work in progress.** This page describes the code on 23 October 2026. Every feature of the paper is built in Go. The planned modern extensions (object storage and compression), the benchmarks and the final report are not built yet.
+**Work in progress.** Reviewed on 6 November 2026 against [revision 4dd1ca4](https://github.com/Exios66/MapReduce-Reloaded/tree/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387). Object storage, compression, benchmarks and the final report are now built. Python workers and full cross-language interoperability remain stretch work. The evaluation below is reported by the source repository, not rerun for this page.
 :::
 
 ## At a glance
 
 ::: {.stats}
 ::: {.stat}
-[23 / 23]{.stat-value} [features of the paper built, each mapped to its code and a named test; a test fails if the mapping names a file or test that does not exist]{.stat-label}
+[24]{.stat-value} [items in the paper mapping: F1–F23 plus the F24 performance experiments]{.stat-label}
 :::
 ::: {.stat}
-[350]{.stat-value} [passing tests: 146 in Go and 204 in Python]{.stat-label}
+[4]{.stat-value} [one-CPU worker containers on the course VM, not four independent machines]{.stat-label}
 :::
 ::: {.stat}
-[50]{.stat-value} [chaos runs in a row, with random worker kills, stalls and coordinator restarts, that still match single-machine output]{.stat-label}
+[3.8×]{.stat-value} [reported word-count speedup from one to four workers on 1 GiB inputs]{.stat-label}
 :::
 :::
 
@@ -49,11 +49,13 @@ I wanted to understand those guarantees by building them, not by reading about t
 
 {{< include ../partials/diagrams/_mapreduce-reloaded.qmd >}}
 
+The diagram shows the core task and shuffle path only. It does not attempt to draw the S3 backend, alternative Python coordinator or benchmark harness.
+
 **A single-machine oracle first.** The first working version runs the whole job in one process (`mr run -local`). Every later version, distributed or fault tolerant, must produce exactly the same output files. The tests check each version against it.
 
-**One contract, two languages.** Go and Python share a gRPC and protobuf message contract, a documented on-disk record format with a checksum on every block, and a partition hash written out by hand in both languages. The built-in hash functions of both languages use a random seed per process, so two workers would disagree about which reducer gets a key. Test vectors and golden files hold both implementations to the same bytes.
+**One contract, two languages.** Go and Python share a gRPC and protobuf message contract, a documented on-disk record format with a checksum on every block, and a fixed FNV-1a partition hash implemented in both languages. Language-specific hash behavior is not the contract: shared test vectors and golden files hold both implementations to the same bytes for uncompressed jobs.
 
-**Small, reviewable steps.** Each piece of work is one issue and one pull request, and each phase adds a short design record. A `make check` quality gate runs every linter and test before each push. There is no hosted CI.
+**Small, reviewable steps.** Each piece of work is one issue and one pull request, and each phase adds a short design record. The local `make check` quality gate runs linters and tests, and CircleCI runs checks on pull requests.
 
 ## What I built
 
@@ -68,6 +70,7 @@ I wanted to understand those guarantees by building them, not by reading about t
 - **Locality and status (§3.4, §4.8).** The scheduler prefers to run a map task on the host that holds its input. The coordinator serves a status page, the coordinator and workers export Prometheus metrics, an optional monitoring profile adds Prometheus and a Grafana dashboard, and logs can be written as structured JSON.
 - **The paper's example programs (§2.3, §5).** Grep, word count, URL access frequency, reverse web-link graph, term vectors, inverted index and distributed sort, each with a test.
 - **A Docker Compose cluster.** One coordinator and four workers, with Prometheus and Grafana as an optional profile, and a memory limit on each service so the whole cluster fits on one 8 GB virtual machine. An end-to-end script checks the cluster's output against the oracle.
+- **Storage, compression and user jobs.** S3-compatible storage with object-store commit semantics, zstd and Snappy codecs, and Go job files interpreted by workers. A Python coordinator can run with Go workers; a Python worker is not implemented.
 
 ## What chaos testing found
 
@@ -75,16 +78,24 @@ The chaos test runs word count while, at random moments, workers die, new ones j
 
 Its first runs failed on seed 7. The output held an extra `_temporary` directory: a reduce attempt that had already lost, to a backup copy or because its worker was declared dead, kept running and recreated the directory after the job had cleaned it up. Now the job creates that directory when it starts, and attempts never do. An attempt that runs after the job has finished fails and leaves nothing behind.
 
-The test runs in one process, so a "dead" worker behaves like a machine cut off from the network, not one that lost power. Killing containers and dropping packets need the Compose cluster, and that driver is not written yet.
+The original test runs in one process, so a "dead" worker behaves like a machine cut off from the network, not one that lost power. The repository now also has a seeded `make chaos` driver for container kills, pauses and coordinator crashes in Compose. Dropped-packet fault injection remains out of scope.
+
+## Evaluation at small scale
+
+The [evaluation](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/evaluation.md) compares the paper's mechanisms, not its absolute throughput: four containers share one 4-vCPU, 8 GB VM and one disk, versus roughly 1,800 machines in the paper.
+
+| Experiment | Reported observation | Limit |
+| --- | --- | --- |
+| Scaling, 1 GiB input | Four workers: word count 3.8×, sort 2.9× and grep 2.3× faster than one | Median of three runs; shared-disk bottleneck |
+| Backup tasks with an injected slow worker | 17.6 s without backups, 11.2 s with them | Three runs per setting, fixed setting order; not drift-controlled |
+| Backup tasks without a slow worker | Mean difference −0.11 s, 95% interval −0.38 to +0.16 s | Ten interleaved pairs; does not prove zero cost |
+| Worker loss | Every measured job finished with a checksum matching the normal run | Agreement with a baseline, not an independent correctness proof |
+
+The [final report](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/report.md) links the raw results, design decisions and reproduction steps.
 
 ## What is planned
 
-- S3-compatible object storage, run locally with MinIO, in place of the paper's GFS.
-- Compression for intermediate and output files.
-- A benchmark tool, and small-scale reruns of the paper's §5 experiments that compare the shapes of the graphs, not the absolute numbers.
-- A final report.
-
-Further extensions, such as a full Python coordinator and worker, a standby coordinator, skew handling and Parquet input, are stretch goals and may not be built.
+Python workers and a complete Go/Python interoperability matrix, coordinator high availability, skew handling and Parquet input remain stretch goals. LATE-style speculation is built as an opt-in mode, but its E7 evaluation has not been run; there is no measured claim that it is faster.
 
 ## What I'm learning
 

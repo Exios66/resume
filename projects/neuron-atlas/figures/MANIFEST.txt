@@ -1,0 +1,1 @@
+steering-studio.jpg <- source repo: Exios66/LLM_Viz/docs/screenshot.jpg at a58000861b424280158cea728cf7b29edaf385d1; copied without modification on 2026-11-06. Historical TinyStories steering view, not a capture of the current live deployment.
