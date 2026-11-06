@@ -33,6 +33,91 @@
     onScroll(function () { header.classList.toggle("is-scrolled", scrollTop() > 8); });
   }
 
+  // Site search: filter the generated page index and render results in place.
+  (function () {
+    var input = doc.getElementById("site-search-input");
+    var list = doc.getElementById("search-results");
+    var status = doc.getElementById("search-status");
+    if (!input || !list || !status) return;
+    var pages = null;
+
+    function node(tag, text) {
+      var el = doc.createElement(tag);
+      if (text) el.textContent = text;
+      return el;
+    }
+
+    function snippet(page, tokens) {
+      var body = page.b || "";
+      var at = -1;
+      for (var i = 0; i < tokens.length && at < 0; i++) at = body.toLowerCase().indexOf(tokens[i]);
+      if (at < 0) return body.slice(0, 150);
+      var start = Math.max(0, at - 60);
+      return (start ? "…" : "") + body.slice(start, start + 170).trim() + "…";
+    }
+
+    function render(query) {
+      var tokens = query.toLowerCase().split(/\s+/).filter(function (t) { return t.length > 1; });
+      list.textContent = "";
+      if (!tokens.length) { status.textContent = ""; return; }
+      var hits = [];
+      pages.forEach(function (page) {
+        var title = (page.t || "").toLowerCase();
+        var headings = (page.h || "").toLowerCase();
+        var description = (page.d || "").toLowerCase();
+        var body = (page.b || "").toLowerCase();
+        var score = 0;
+        for (var i = 0; i < tokens.length; i++) {
+          var token = tokens[i];
+          var found = 0;
+          if (title.indexOf(token) >= 0) found += 8;
+          if (headings.indexOf(token) >= 0) found += 3;
+          if (description.indexOf(token) >= 0) found += 2;
+          if (body.indexOf(token) >= 0) found += 1;
+          if (!found) return;
+          score += found;
+        }
+        hits.push({ page: page, score: score });
+      });
+      hits.sort(function (a, b) { return b.score - a.score || a.page.t.localeCompare(b.page.t); });
+      status.textContent = hits.length
+        ? hits.length + (hits.length === 1 ? " page matches “" : " pages match “") + query + "”"
+        : "No pages match “" + query + "”.";
+      hits.slice(0, 10).forEach(function (hit) {
+        var item = node("li");
+        var link = node("a");
+        link.href = hit.page.u;
+        link.appendChild(node("span", hit.page.t));
+        link.className = "result-title";
+        item.appendChild(link);
+        item.appendChild(node("span", hit.page.u.replace(/^.*\/docs\//, "").replace(/\.html$/, "").replace(/\//g, " / ")));
+        item.appendChild(node("p", snippet(hit.page, tokens)));
+        list.appendChild(item);
+      });
+    }
+
+    var params = new URLSearchParams(location.search);
+    var initial = params.get("q") || "";
+    input.value = initial;
+    fetch("search-index.json").then(function (response) {
+      if (!response.ok) throw new Error("no index");
+      return response.json();
+    }).then(function (data) {
+      pages = data;
+      render(input.value);
+    }).catch(function () { status.textContent = "Search is unavailable right now."; });
+
+    input.addEventListener("input", function () { render(input.value); });
+    input.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") { input.value = ""; render(""); }
+    });
+    input.form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      try { history.replaceState(null, "", "?q=" + encodeURIComponent(input.value)); } catch (e) {}
+      render(input.value);
+    });
+  })();
+
   if (reduce) return;
 
   // Reading progress on technical reports. Scroll-driven CSS animation where supported.

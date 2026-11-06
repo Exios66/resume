@@ -27,7 +27,7 @@ end
 
 local destinations = {
   "index.html", "about.html", "projects/index.html",
-  "research.html", "writing/index.html", "resume.html",
+  "research.html", "writing/index.html", "resume.html", "search.html",
 }
 
 local cases = {
