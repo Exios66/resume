@@ -54,7 +54,7 @@ class ResumePdfLayout(unittest.TestCase):
 
     def test_no_tuning_slice_or_stale_figures(self):
         text = "".join(self.pages)
-        for stale in ("99.4%", "AVISBUDGETGROUP", "7PYTHONPACKAGES", "ALIGNMENT-GYM"):
+        for stale in ("99.4%", "17+", "AVISBUDGETGROUP", "7PYTHONPACKAGES", "ALIGNMENT-GYM"):
             self.assertNotIn(stale, text)
 
     def test_summary_precedes_education(self):
