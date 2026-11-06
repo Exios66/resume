@@ -1,4 +1,4 @@
-"""Regressions for the résumé content and page split, which follow the owner's v16 PDF.
+"""Regressions for the résumé content and page split. The PDF is generated from this page.
 
 Run from the repository root: python3 -m pytest -q tests/test_resume_content.py
 Reads committed source and HTML; no render, browser, or network is needed.
@@ -11,13 +11,13 @@ import test_links as checks
 from test_portfolio_additions import ContentParser
 
 
-# Names and links follow v16: Alignment-Gym (a private repository) and MapReduce-Reloaded are not links.
+# MapReduce-Reloaded stays unlinked; every other project links its public repository.
 PROJECT_REPOS = (
     ("Digital-Mailroom", "https://github.com/LLM-Mailroom-Services/Digital-Mailroom"),
     ("mailroom-ml", "https://github.com/LLM-Mailroom-Services/mailroom-ml"),
     ("RVL-CDIP-Classifier", "https://github.com/Exios66/RVL-CDIP-Classifier"),
     ("Psychometric Digital Twin", "https://github.com/Exios66/psych755-jjb"),
-    ("Alignment-Gym", None),
+    ("Neuron Atlas", "https://github.com/Exios66/LLM_Viz"),
     ("MapReduce-Reloaded", None),
 )
 SECTIONS = ("Professional Summary", "Education", "Professional Experience",
@@ -197,9 +197,8 @@ class ResumeContentTests(unittest.TestCase):
                                     "29 prompt versions", "cost projections"),
             "Psychometric Digital Twin": ("241 complete respondents from 252 matched survey records", "factor analysis",
                                           "Ollama/OpenRouter/vLLM", "bias by demographic group"),
-            "Alignment-Gym": ("fictional law firm", "89 needle/decoy pairs", "9 plot beats",
-                              "0–3 temptation ladder", "28 condition cells", "seed-invariant truth spine",
-                              "paired LLM judges", "calibration gates"),
+            "Neuron Atlas": ("8,192", "random-direction controls", "TypeScript GPT-Neo",
+                             "KV cache", "Playwright"),
             "MapReduce-Reloaded": ("Dean & Ghemawat, OSDI 2004", "gRPC coordinator/worker protocol",
                                    "Docker Compose", "same protobuf contract and file format"),
         }
@@ -219,17 +218,6 @@ class ResumeContentTests(unittest.TestCase):
         self.assertFalse([attrs for tag, attrs, _ in self.parser.elements
                           if tag == "a" and checks.attr(attrs, "href").startswith("tel:")])
         self.assertNotRegex(text, r"(?<!\d)(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}(?!\d)")
-
-    def test_pdf_caveat_names_the_remaining_stale_figure(self):
-        caveat = self.one([(tag, attrs) for tag, attrs, _ in self.parser.elements
-                           if tag == "div" and "caveat" in checks.classes(attrs)])
-        text = normalize(self.parser.text(caveat))
-        for claim in ("October 2026 export", "a stale project figure", "17+ prompt iterations",
-                      "241 complete respondents", "29 prompt versions"):
-            with self.subTest(claim=claim):
-                self.assertIn(claim, text)
-        self.assertNotIn("252 participants", text)
-
 
 if __name__ == "__main__":
     unittest.main()

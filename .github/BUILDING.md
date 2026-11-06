@@ -25,7 +25,7 @@ An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages
 - `styles.css` holds the whole design: light/dark themes, mobile layout, print layout. Fonts (Newsreader for the display headings, Inter for text and UI, JetBrains Mono for code) are self-hosted in `assets/fonts/`.
 - `partials/` holds the head metadata (JSON-LD `Person` schema, theme bootstrapping), skip link, and the small theme-toggle script.
 - `assets/js/site.js` is the only site script file: a hairline under the sticky header (wide screens only), a reading-progress bar on technical reports, and a fade-in for project cards below the fold. The fade is skipped on deep links, reloads and back/forward navigation, and all motion is off under `prefers-reduced-motion` and in print.
-- `scripts/post-render.py` runs after every render. It recreates `docs/.nojekyll`, removes the repeated site name from page titles, adds a `?v=<hash>` to the `styles.css` and `site.js` links, and copies `assets/Jack_Burleson_Resume.pdf` to `docs/assets/` unchanged. That PDF is the owner's own two-page résumé, exported from their résumé document; the render never rebuilds it from `resume.html`.
+- `scripts/post-render.py` runs after every render. It recreates `docs/.nojekyll`, removes the repeated site name from page titles, adds a `?v=<hash>` to the `styles.css` and `site.js` links, and copies `assets/Jack_Burleson_Resume.pdf` to `docs/assets/` unchanged. That PDF is generated from `resume.html` by `scripts/make-resume-pdf.py` (Chromium print, two pages), so the web résumé and the download stay in step.
 - `scripts/og-image.html` + `scripts/make-og.py` regenerate the social preview image `assets/og-image.png`.
 - `partials/diagrams/_*.qmd` are inline SVG architecture diagrams. Pages pull them in with `{{< include >}}`. They draw with `currentColor` and CSS classes, so they follow the light/dark theme. The leading underscore stops Quarto from rendering them as pages.
 - `docs/` holds the built site. Do not edit it by hand.
@@ -48,7 +48,7 @@ pip install pypdf
 Then:
 
 1. Edit the `.qmd` files.
-2. To change the downloadable résumé, replace `assets/Jack_Burleson_Resume.pdf` with the new export, and edit `resume.qmd` to match it.
+2. To change the downloadable résumé, edit `resume.qmd`, run `quarto render resume.qmd`, then `python scripts/make-resume-pdf.py` to rewrite `assets/Jack_Burleson_Resume.pdf`.
 3. Run `quarto render`. This rebuilds `docs/` and copies the PDF into it.
 4. Commit and push, including `docs/`.
 

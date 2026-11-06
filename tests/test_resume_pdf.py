@@ -18,7 +18,7 @@ except ImportError:  # pragma: no cover - optional dependency
 ROOT = Path(__file__).resolve().parents[1]
 PDF = ROOT / "docs" / "assets" / "Jack_Burleson_Resume.pdf"
 PROJECTS = ("Digital-Mailroom", "mailroom-ml", "RVL-CDIP-Classifier",
-            "Psychometric Digital Twin", "Alignment-Gym", "MapReduce-Reloaded")
+            "Psychometric Digital Twin", "Neuron Atlas", "MapReduce-Reloaded")
 
 
 def squash(text):
@@ -54,7 +54,7 @@ class ResumePdfLayout(unittest.TestCase):
 
     def test_no_tuning_slice_or_stale_figures(self):
         text = "".join(self.pages)
-        for stale in ("99.4%", "AVISBUDGETGROUP", "7PYTHONPACKAGES"):
+        for stale in ("99.4%", "AVISBUDGETGROUP", "7PYTHONPACKAGES", "ALIGNMENT-GYM"):
             self.assertNotIn(stale, text)
 
     def test_summary_precedes_education(self):
@@ -90,9 +90,9 @@ class ResumePdfLayout(unittest.TestCase):
 
     def test_project_figures_survive_pdf_export(self):
         second = self.pages[1]
-        for text in ("5 Python packages", "16 RVL-CDIP categories", "17+ prompt iterations",
-                     "241 complete respondents", "89 needle/decoy pairs",
-                     "28 condition cells", "Dean & Ghemawat, OSDI 2004"):
+        for text in ("5 Python packages", "16 RVL-CDIP categories", "29 prompt versions",
+                     "241 complete respondents", "8,192", "random-direction controls",
+                     "Dean & Ghemawat, OSDI 2004"):
             with self.subTest(text=text):
                 self.assertIn(squash(text), second)
 
@@ -102,13 +102,14 @@ class ResumePdfLayout(unittest.TestCase):
             "https://github.com/LLM-Mailroom-Services/mailroom-ml",
             "https://github.com/Exios66/RVL-CDIP-Classifier",
             "https://github.com/Exios66/psych755-jjb",
+            "https://github.com/Exios66/LLM_Viz",
         )
         links = [annotation.get_object().get("/A", {}).get("/URI")
                  for annotation in self.reader.pages[1].get("/Annots", [])]
         for url in expected:
             with self.subTest(url=url):
                 self.assertIn(url, links)
-        # Alignment-Gym is a private repository; the PDF must not link to it.
+        # The old private Alignment-Gym repository must not appear in the PDF.
         self.assertFalse([url for url in links if url and "alignment-gym" in url.lower()])
         self.assertEqual(sorted(url for url in links if url), sorted(expected))
 
@@ -119,7 +120,7 @@ class ResumePdfLayout(unittest.TestCase):
         self.assertFalse([url for url in links if url and url.startswith("tel:")])
         self.assertNotRegex(self.raw_pages[0], r"(?<!\d)\d{3}[-.\s]\d{3}[-.\s]\d{4}(?!\d)")
         header = " ".join(self.raw_pages[0].split())
-        for text in ("Madison, WI – Open to Relocation", "jackjburleson@proton.me",
+        for text in ("Madison, WI · Open to Relocation", "jackjburleson@proton.me",
                      "linkedin.com/in/jackjburleson", "Portfolio"):
             with self.subTest(text=text):
                 self.assertIn(text, header)
