@@ -77,6 +77,12 @@ The corpus is imbalanced, and the audit says so plainly. The largest class is 7.
 - Deterministic builds pay for themselves. Because a rebuild gives the same bytes, a change that should not touch any row is something I can prove, not something I hope.
 - Public sources need unglamorous work: checking licences, handling odd characters, and writing down the known gaps instead of hiding them.
 
+## Cite the dataset {#dataset-citation}
+
+*mailroom-dataset* (revision `v9.2`) [Data set]. Hugging Face, repository `Lucius-Morningstar/mailroom-dataset`. [Versioned dataset and card](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset/tree/v9.2). Accessed 6 November 2026.
+
+This is a repository citation, not a claim of a peer-reviewed publication or a DOI. Record the revision and configuration used (`default` or `ground_truth`) when reproducing results. The dataset card records the component sources and their separate license and attribution requirements; citing the combined corpus does not replace those obligations.
+
 ## Stack
 
 [Python]{.tag} [pandas]{.tag} [PyArrow]{.tag} [Hugging Face Hub]{.tag} [Plotly]{.tag} [matplotlib]{.tag} [pytest]{.tag}

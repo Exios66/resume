@@ -1,6 +1,6 @@
 ---
 pagetitle: "About — Jack J. Burleson"
-description: "Background, skills, and education of Jack J. Burleson, an M.S. candidate in Data Science in Human Behavior at UW–Madison."
+description: "Background, skills, and education of Jack J. Burleson, an M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison."
 ---
 
 ::: {.page}
@@ -15,6 +15,7 @@ I build AI systems from start to finish: multi-agent document pipelines, transfo
 
 - **Document AI:** reading, sorting, and extracting information from real-world paperwork. See the [document-intelligence projects](projects/index.qmd).
 - **Evaluation and calibration:** held-out testing, confidence that means something, and honest error analysis.
+- **Mechanistic interpretability:** testing what model interventions actually change, with matched controls. See [Neuron Atlas](projects/neuron-atlas.qmd).
 - **Simulation and graphics:** physics-based, interactive software in the browser. See [Wave Laboratory](projects/wave-laboratory.qmd).
 - **Behavior and cognition:** what predicts how people act, and where models of people go wrong.
 
@@ -42,7 +43,7 @@ I build AI systems from start to finish: multi-agent document pipelines, transfo
 :::
 
 ::: {.degree}
-*M.S. Candidate – Psychology & Data Science in Human Behavior* · **GPA: 3.85**
+*M.S. Candidate – Psychology: Data Science in Human Behavior* · **GPA: 3.85**
 :::
 
 - Graduate program in which roughly 95% of coursework is data science and data engineering — building on an undergraduate foundation in neuroscience research, experimental design, and statistical analysis.
@@ -70,6 +71,6 @@ I build AI systems from start to finish: multi-agent document pipelines, transfo
 - **CITI Program:** IRB Training for Students and Faculty [2025]{.date}
 :::
 
-[Download the full résumé](resume.qmd){.btn .primary}
+[View the full résumé](resume.qmd){.btn .primary}
 
 :::

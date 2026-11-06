@@ -336,7 +336,7 @@ class PortfolioRegressionTests(unittest.TestCase):
                                 self.assertIn(reference, local_ids, "SVG marker references must resolve in the diagram")
 
     def test_new_projects_are_discoverable_from_home_about_and_project_cards(self):
-        featured = {"digital-mailroom", "mailroom-ml", "rvl-cdip-classifier", "wave-laboratory"}
+        featured = {"digital-mailroom", "mailroom-ml", "neuron-atlas", "wave-laboratory"}
         for name, slugs in (("index.html", featured), ("projects/index.html", set(self.STUDY_SLUGS))):
             with self.subTest(page=name):
                 page = DOCS / name

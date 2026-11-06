@@ -83,7 +83,7 @@ The GPU inverse-FFTs the same h₀ amplitudes the CPU uses. On each new sea the 
 
 ## Iteration history
 
-The repository has 131 commits, from 2026-10-01 to 2026-10-08. The plan document's status table lists what shipped in v0.1.
+The October 2026 audit snapshot had 131 commits, from 2026-10-01 to 2026-10-08. This report records that snapshot, not the current repository's commit or test counts. The plan document's status table lists what shipped in v0.1.
 
 ::: {.timeline}
 - **Core** — tooling, schema, deterministic fixed-step core. *Shipped.*

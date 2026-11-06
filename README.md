@@ -49,13 +49,14 @@ Each project has a case study on the [portfolio](https://exios66.github.io/resum
 
 | Project | What it is | Stage |
 | --- | --- | --- |
+| **[Neuron Atlas](https://exios66.github.io/resume/projects/neuron-atlas.html)** | A live TinyStories neuron explorer with matched random-direction controls and replayable steering findings, plus recorded Qwen studies | Interactive study |
 | **[Digital-Mailroom](https://exios66.github.io/resume/projects/digital-mailroom.html)** | Five Python packages and one LangGraph pipeline for document routing, prompt experiments, scoring, and deployment | Capstone |
 | **[Mailroom-ML](https://exios66.github.io/resume/projects/mailroom-ml.html)** | A calibrated ModernBERT classifier that handles routine documents and knows when to hand off to an LLM | — |
 | **[Mailroom Reloaded](https://exios66.github.io/resume/projects/mailroom-reloaded.html)** | The mailroom rebuilt as one deployable service, with an audit log of every decision | — |
 | **[RVL-CDIP-Classifier](https://exios66.github.io/resume/projects/rvl-cdip-classifier.html)** | Zero-shot document classification with vision LLMs, with tracked prompt versions and cost per page | — |
 | **[Mailroom-Corpus-EDA](https://exios66.github.io/resume/projects/mailroom-corpus-eda.html)** | The data engineering behind the mailroom dataset: 3,302 documents from public sources, with provenance, label separation and an audit pipeline | — |
 | **[AeroGlobe](https://exios66.github.io/resume/projects/aeroglobe.html)** | A 3D flight-tracking globe built around a static data pipeline, with an [early version live](https://exios66.github.io/aeroglobe/) | In active development |
-| **[MapReduce-Reloaded](https://exios66.github.io/resume/projects/mapreduce-reloaded.html)** | A from-scratch rebuild of Google's MapReduce in Go and Python, with all 23 of the paper's features and chaos-tested fault tolerance | In active development |
+| **[MapReduce-Reloaded](https://exios66.github.io/resume/projects/mapreduce-reloaded.html)** | A from-scratch MapReduce rebuild with a 24-item paper mapping, S3 storage, compression, fault injection and a small-scale VM evaluation | In active development |
 | **[Psychometric Digital Twin](https://exios66.github.io/resume/projects/psychometric-digital-twin.html)** | LLM "digital twin" personas against seven classical models on 241 survey respondents — the personas did not beat simple baselines | — |
 | **[The Neural Architecture of Truth and Deception](https://exios66.github.io/resume/projects/natd.html)** | A pilot study of nine people and 18 sessions with helpful and deceitful chatbot personas; the physiological, EEG and eye-tracking data are withheld until authenticated | — |
 | **[MORNINGSTAR](https://exios66.github.io/resume/projects/llm-personas.html)** | A courtroom of LLM personas that argue, vote, and rule on engineering decisions | — |

@@ -13,6 +13,8 @@ description: "Sources and licences, identity and provenance design, label separa
 
 # Mailroom-Corpus-EDA: technical report {.page-title}
 
+For the versioned corpus reference and source-license context, see [Cite the dataset](../mailroom-corpus-eda.qmd#dataset-citation).
+
 [Data engineering · dataset build, audit & publishing]{.kicker}
 
 ::: {.actions}

@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=41d6e9f6ec">
+<link rel="stylesheet" href="../../styles.css?v=5d59e12795">
 <meta property="og:title" content="Wave Laboratory: technical report — Jack J. Burleson">
 <meta property="og:description" content="Wave spectra and ship-dynamics models, architecture, validation suite, test counts, limitations and plan-versus-shipped notes for Wave Laboratory.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -283,7 +283,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 id="the-gpu-and-cpu-cross-check">The GPU and CPU cross-check</h3>
 <p>The GPU inverse-FFTs the same h₀ amplitudes the CPU uses. On each new sea the renderer reads one texel back, compares it with the CPU transform and calls <code>console.error</code> on a mismatch, which <code>e2e/app.spec.ts</code> fails on. Devices without 32-bit float render targets use half-float and skip the readback. The GPU draws only elevation and horizontal displacement; slope, Jacobian and foam are finite differences of the displaced surface, and pressure and orbital velocity stay on the CPU.</p>
 <h2 id="iteration-history">Iteration history</h2>
-<p>The repository has 131 commits, from 2026-10-01 to 2026-10-08. The plan document’s status table lists what shipped in v0.1.</p>
+<p>The October 2026 audit snapshot had 131 commits, from 2026-10-01 to 2026-10-08. This report records that snapshot, not the current repository’s commit or test counts. The plan document’s status table lists what shipped in v0.1.</p>
 <div class="timeline">
 <ul>
 <li><strong>Core</strong> — tooling, schema, deterministic fixed-step core. <em>Shipped.</em></li>

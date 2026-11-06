@@ -32,6 +32,8 @@ description: "A prompt-engineering study that sorts scanned documents into the 1
 :::
 :::
 
+The 29-version registry includes subversions such as `v11.8` and `v17.2`; “v0 to v19” names the endpoints, not 20 consecutive integer-only entries.
+
 ## The problem
 
 RVL-CDIP is the standard benchmark for document-type classification: scanned pages from a tobacco-litigation archive, sorted into 16 classes such as invoice, memo, letter and budget. Models trained for it usually need labeled data and a fine-tuning pipeline. I wanted to know how far a general-purpose vision model could get with no training at all, using only the prompt, and what that would cost.

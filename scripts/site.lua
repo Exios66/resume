@@ -103,6 +103,7 @@ local NAV_ICONS = {
   ["live site"] = "play",
 }
 local GROUP_ICONS = {
+  { "mechanistic interpretability", "brain" },
   { "document intelligence", "layers" }, { "data engineering", "database" }, { "big data", "layers" },
   { "behavioral machine learning", "brain" },
   { "cognitive neuroscience", "brain" },

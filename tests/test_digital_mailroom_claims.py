@@ -34,8 +34,11 @@ class DigitalMailroomPackageCountTests(unittest.TestCase):
 
     def test_readme_and_both_project_cards_say_five_packages(self):
         readme = (checks.ROOT / "README.md").read_text(encoding="utf-8")
-        line = next(l for l in readme.splitlines() if l.startswith("- [Digital-Mailroom]"))
-        self.assertIn("five Python packages", line)
+        lines = [line for line in readme.splitlines()
+                 if "[Digital-Mailroom](" in line]
+        self.assertTrue(lines, "README must link the Digital-Mailroom case study")
+        for line in lines:
+            self.assertRegex(line, r"[Ff]ive Python packages")
         for name in ("index.html", "projects/index.html"):
             with self.subTest(page=name):
                 self.assertIn("Five Python packages and one LangGraph pipeline"
