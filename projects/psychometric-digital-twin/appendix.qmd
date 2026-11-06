@@ -54,7 +54,8 @@ Classical models see the tabular tiers; the LLM prompts add the open text.
 | Error in points | Mean absolute error on the 6–30 subscale |
 | Exact match | Predicted band equals the reported band |
 | Band accuracy | Low, moderate or high agreement |
-| F1 and AUC | Ranking quality, including low versus high |
+| Band F1 | Classification quality across low, moderate and high bands |
+| AUC | Ranking quality for low versus high apprehension |
 | Group error | Error computed within demographic groups |
 
 The constant-guess baseline is 4.93 points by my calculation from the cohort table. The best classical model (Ridge at the transit tier) reaches 4.49; the best pooled LLM run reaches 5.02, so it does not clear the constant.

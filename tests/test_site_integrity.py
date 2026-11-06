@@ -39,20 +39,26 @@ class ReportContentsTests(unittest.TestCase):
         checked = 0
         for page in project_pages():
             is_report = page.name in ("report.html", "appendix.html")
-            navs = self.navs(page)
+            elements = checks.parse(page)
+            navs = [(attributes, ancestors) for tag, attributes, ancestors in elements
+                    if tag == "nav" and "page-toc" in checks.classes(attributes)]
             if not is_report:
                 self.assertEqual(navs, [], f"{checks.rel(page)} should not carry a contents list")
                 continue
             checked += 1
             self.assertEqual(len(navs), 1, f"{checks.rel(page)} needs one contents list")
             nav, _ = navs[0]
+            links = [a for tag, a, ancestors in elements
+                     if tag == "a" and any(parent is nav for _, parent in ancestors)]
+            headings = {checks.attr(a, "id"): tag for tag, a, _ in elements if tag in ("h2", "h3")}
             ids = set(ID.findall(page.read_text(encoding="utf-8")))
-            hrefs = [checks.attr(a, "href") for tag, a, _ in checks.parse(page)
-                     if tag == "a" and checks.attr(a, "href").startswith("#")]
-            entries = [h for h in hrefs if h[1:] in ids]
-            self.assertGreaterEqual(len(entries), 3, f"{checks.rel(page)} lists too few sections")
-            for target in entries:
-                self.assertIn(target[1:], ids)
+            self.assertGreaterEqual(len(links), 3, f"{checks.rel(page)} lists too few sections")
+            for link in links:
+                href = checks.attr(link, "href")
+                self.assertTrue(href.startswith("#"), f"{checks.rel(page)}: {href}")
+                self.assertIn(href[1:], ids, f"{checks.rel(page)}: broken {href}")
+                self.assertEqual(headings.get(href[1:]), "h2",
+                                 f"{checks.rel(page)}: {href} is not a level-2 heading")
         self.assertGreaterEqual(checked, 9)
 
 
