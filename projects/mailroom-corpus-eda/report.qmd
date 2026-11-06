@@ -107,6 +107,8 @@ All 1,000 correspondence rows have an intent, and 25 are flagged for review. The
 
 A document goes to the test set when the MD5 of its filename modulo 10 is zero. That gives 2,979 train and 323 test rows, stable across rebuilds. Random state is fixed at 42, rows are sorted before export, and a rebuild of the JSONL and parquet files is byte-identical. The interactive Plotly figures are the one exception, because each embeds a random identifier, so the committed files are treated as canonical.
 
+![Test share for each of the 55 strata, against the 10% the split rule aims for.](figures/test-share-per-stratum.jpg){.fig fig-alt="Horizontal bars of test-set share for each of the 55 strata with a dashed line at 10%. Ten strata at the top have no test documents, four more are drawn in red well short of the line, and the rest run from about 6% to 24%." width="100%"}
+
 ### Export hardening
 
 Metadata keys are uniform and string-typed, and absence is an empty string. JSON Lines output escapes the Unicode line separators (U+2028, U+2029 and NEL), because some readers split records on them. A verification script compares a local export byte for byte against the Hub.
@@ -123,6 +125,8 @@ Metadata keys are uniform and string-typed, and absence is an empty string. JSON
 ### Composition
 
 The largest class is 7.2 times the smallest, and the largest stratum is 557 times the smallest. One merger-agreement stratum, a mixed cash and stock election, has a single document. Ten strata have no test document and five have fewer than ten documents in total.
+
+![Documents per class on the left; distinct subclasses per class on the right.](figures/doc-types-and-subclasses.jpg){.fig fig-alt="Two horizontal bar charts over the five document classes. Left: documents per class, with insurance claims at 1,100, correspondence at 1,000, contracts at 600, corporate records at 450 and merger agreements at 152. Right: distinct subclasses per class, with contracts at 26, corporate records at 10, correspondence at 8, insurance claims at 6 and merger agreements at 5." width="100%"}
 
 ### Text and token geometry
 
