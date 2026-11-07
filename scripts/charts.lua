@@ -248,12 +248,25 @@ function DRAW.bars(spec, rows)
   local sx = linear(lo, hi, GUTTER + (lo < 0 and LABEL_ROOM or 0), W - RIGHT)
   local out = { x_axis(ticks, sx, top, bottom, spec.unit) }
   if lo < 0 then out[#out + 1] = line("zero", sx(0), top, sx(0), bottom, PAINT.muted) end
+  local signed = spec.signed == "true"
   if spec.ref then
+    -- Draw the reference line in segments, leaving a gap at any row whose value
+    -- label it would cross (the label's halo is too thin to hide a line).
     local rx = sx(tonumber(spec.ref))
-    out[#out + 1] = line("ref", rx, top - 6, rx, bottom, PAINT.muted)
+    local y0 = top - 6
+    for i, v in ipairs(vals) do
+      local width = utf8.len(M.fmt(v, spec.unit, signed)) * 7.5
+      local vx = sx(v)
+      local l0, l1 = v >= 0 and vx + 6 or vx - 6 - width, v >= 0 and vx + 6 + width or vx - 6
+      if rx >= l0 - 3 and rx <= l1 + 3 then
+        local y = top + (i - 1) * BAND
+        if y + 8 > y0 then out[#out + 1] = line("ref", rx, y0, rx, y + 8, PAINT.muted) end
+        y0 = y + BAND - 8
+      end
+    end
+    out[#out + 1] = line("ref", rx, y0, rx, bottom, PAINT.muted)
     out[#out + 1] = text("ref-label", rx, top - 12, "end", spec["ref-label"] or M.fmt(tonumber(spec.ref), spec.unit))
   end
-  local signed = spec.signed == "true"
   for i, row in ipairs(rows) do
     local y = top + (i - 1) * BAND
     local v, color = vals[i], color_of(row)

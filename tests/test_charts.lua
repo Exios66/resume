@@ -114,7 +114,20 @@ end
 local MAPRED = rows_of({ "Job", "Speedup" }, { { "word count", "3.8×" }, { "sort", "2.9×" }, { "grep", "2.3×" } })
 local mr = CHARTS.render({ kind = "bars", title = "Speedup", label = "Job", value = "Speedup",
   unit = "×", min = "0", max = "4", ref = "4", ["ref-label"] = "ideal 4×" }, MAPRED)
-assert_eq(count(mr, '<line class="ref"'), 1, "reference line")
+assert(count(mr, '<line class="ref"') >= 1, "reference line")
+-- The ref line must not run through a value label: "3.8×" sits right where the 4× line is.
+do
+  local wx, wy, wbody = mr:match('<text class="val" x="([%d%.]+)" y="([%d%.]+)" text%-anchor="start">(3%.8×)</text>')
+  assert(wx, "word count value label")
+  wx, wy = tonumber(wx), tonumber(wy)
+  local wend = wx + utf8.len(wbody) * 7.5
+  for x1, y1, y2 in mr:gmatch('<line class="ref" x1="([%d%.]+)" y1="([%d%.]+)" x2="[%d%.]+" y2="([%d%.]+)"') do
+    x1, y1, y2 = tonumber(x1), tonumber(y1), tonumber(y2)
+    local crosses_x = x1 >= wx - 2 and x1 <= wend + 2
+    local crosses_y = y1 <= wy and y2 >= wy - 10
+    assert(not (crosses_x and crosses_y), "ref line crosses the 3.8× label")
+  end
+end
 assert(not mr:find("chart-legend", 1, true), "single series has no legend")
 
 local HEADS = rows_of({ "Head", "Arm B", "Final" }, {
