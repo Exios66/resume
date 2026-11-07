@@ -77,7 +77,7 @@ end
 
 --- Format a value for labels and tooltips.
 -- @param n number Value.
--- @param unit string|nil Suffix such as " pts", "%" or "×".
+-- @param unit string|nil Suffix such as "pts", "%" or "×".
 -- @param signed boolean|nil Prefix positive values with "+".
 -- @return string Text using a typographic minus for negatives.
 function M.fmt(n, unit, signed)
@@ -86,7 +86,11 @@ function M.fmt(n, unit, signed)
   if int then body = group_thousands(int) .. frac end
   local sign = ""
   if n < 0 then sign = MINUS elseif signed and n > 0 then sign = "+" end
-  return sign .. body .. (unit or "")
+  unit = unit or ""
+  -- Word units ("pts", "M") get a space; symbols ("%", "×") stay attached. Pandoc
+  -- cannot parse a fenced-div attribute that starts with a space, so pages write "pts".
+  if unit:match("^%a") then unit = " " .. unit end
+  return sign .. body .. unit
 end
 
 -- ------------------------------------------------------------------ drawing

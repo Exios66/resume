@@ -44,8 +44,8 @@ assert_eq(CHARTS.nice_ticks(-3.6, 14.5, 5), { -5, 0, 5, 10, 15 }, "signed ticks"
 assert_eq(CHARTS.nice_ticks(0, 4, 4), { 0, 1, 2, 3, 4 }, "speedup ticks")
 
 -- fmt
-assert_eq(CHARTS.fmt(-3.6, " pts", true), "−3.6 pts", "negative signed")
-assert_eq(CHARTS.fmt(14.5, " pts", true), "+14.5 pts", "positive signed")
+assert_eq(CHARTS.fmt(-3.6, "pts", true), "−3.6 pts", "negative signed")
+assert_eq(CHARTS.fmt(14.5, "pts", true), "+14.5 pts", "positive signed")
 assert_eq(CHARTS.fmt(0.9505), "0.9505", "plain decimal")
 assert_eq(CHARTS.fmt(4.0, "×"), "4×", "integer with unit")
 assert_eq(CHARTS.fmt(0, nil, true), "0", "zero carries no sign")
@@ -84,7 +84,7 @@ local NATD = rows_of({ "Persona", "Type", "Sessions", "Mean exam change (points)
   { "Scarlet", "Deceitful", "5", "−3.6" },
 })
 local natd = CHARTS.render({ kind = "bars", title = "Exam change by persona", label = "Persona",
-  value = "Mean exam change (points)", series = "Type", unit = " pts", signed = "true" }, NATD)
+  value = "Mean exam change (points)", series = "Type", unit = "pts", signed = "true" }, NATD)
 assert_eq(count(natd, '<g class="mark"'), 5, "NATD mark count")
 assert(natd:find('<figure class="chart chart-bars">', 1, true), "figure wrapper")
 assert(natd:find('<div class="chart-body" tabindex="0"', 1, true), "scrollable body")
@@ -144,7 +144,7 @@ local BENCH = rows_of({ "Benchmark", "README", "Re-runs" }, {
 })
 local sp = CHARTS.render({ kind = "strip", title = "Steps per second", label = "Benchmark", from = "README",
   to = "Re-runs", ["from-mode"] = "first", ["to-mode"] = "all", ["from-name"] = "README (Apple M2)",
-  ["to-name"] = "Re-runs", unit = " M steps/s" }, BENCH)
+  ["to-name"] = "Re-runs", unit = "M steps/s" }, BENCH)
 assert_eq(count(sp, '<g class="panel"'), 2, "one panel per row")
 assert_eq(count(sp, '<circle class="dot c2"'), 2, "README markers")
 assert_eq(count(sp, '<circle class="dot c1"'), 6, "re-run markers")
