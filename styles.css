@@ -314,7 +314,8 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 
 /* ---------- Print ---------- */
 @media print {
-  @page { size: letter; margin: .4in .5in; }
+  @page { size: letter; margin: .45in .5in; }
+  @page resume { size: letter; margin: .4in .5in; }
   /* Paper is always light. The extra selectors out-rank both dark token blocks (0,2,0), so a
      page printed from the dark theme (OS preference or toggle) is still dark ink on white. */
   :root:root:root, :root[data-theme="dark"]:root, :root:not([data-theme="light"]):root {
@@ -324,9 +325,11 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
     --chart-1: #008b9a; --chart-2: #4f5fc4; --chart-1-soft: #6cb2bb;
     color-scheme: light;
   }
-  /* 9.2pt / 1.28 with .4in top and bottom margins leaves page 1 ~68px of slack in Linux Chromium,
-     which lays text out wider than macOS (at 9.6pt / 1.33 page 1 overflowed by 119px there). */
-  body { background: #fff; color: #111; font-size: 9.2pt; line-height: 1.28; }
+  body { background: #fff; color: #111; font-size: 9.6pt; line-height: 1.33; }
+  /* Résumé only: 9.2pt / 1.28 on the named "resume" page (.4in top and bottom margins) leaves page 1
+     ~68px of slack in Linux Chromium, which lays text out wider than macOS (at 9.6pt / 1.33 page 1
+     overflowed by 119px there). Reports keep the 9.6pt print size. */
+  .page.resume-page { page: resume; font-size: 9.2pt; line-height: 1.28; }
   .page { background: #fff; margin: 0; padding: 0; max-width: none; box-shadow: none; border: 0; border-radius: 0; }
   .skip-link, .site-header, .site-footer, .actions, .footer, .screen-only,
   .page-toc, .project-pager, .site-search, .search-suggest, .search-results, #search-status { display: none; }

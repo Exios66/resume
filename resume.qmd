@@ -3,7 +3,7 @@ pagetitle: "Résumé — Jack J. Burleson"
 description: "Résumé of Jack J. Burleson: M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison with experience in LLM pipelines, transformer fine-tuning, and behavioral ML."
 ---
 
-::: {.page}
+::: {.page .resume-page}
 
 ::: {.hero}
 <div class="name" role="heading" aria-level="1">Jack J. Burleson</div>
