@@ -66,7 +66,7 @@ Each of nine participants (mean age 23.8, SD 3.3, range 20 to 31; 7 men and 2 wo
 | Learning | Introductory and exit exams adapted from Common Core and AP formats | Exam score (%) before and after each conversation |
 | Detection | Participant response | Whether the participant flagged the disinformation |
 
-The persona profiles, question database and scripts are in the [project repository](https://github.com/Exios66/truth-deception-architecture).
+The persona profiles, question database and scripts are in the [project repository](https://github.com/Exios66/truth-deception-architecture). The per-session data files these results come from are not in that repository, so the numbers here cannot be checked against it. The repository's methodology plan also describes a larger study than this pilot: 40 participants in five conditions (Athena, Scarlet, Alan, Milgrim and a GPT-4o control), with Milgrim described as authority-based. The pilot used no control condition and added Enigma, and the helpful and deceitful grouping on this page is the pilot's.
 
 **Analysis.** All results use the supplied per-session CSV files as the source of truth. Analyses are descriptive and run at session level: Welch t-tests, Mann-Whitney tests, t-based 95% confidence intervals for mean change, exact Clopper-Pearson intervals for proportions, Spearman correlations, and an ordinary least squares adjustment for baseline score. Because each participant contributes two sessions, I add a within-participant contrast where the design allows it. The mixed-effects model in the earlier draft report was not refit for this version, so those p-values would be too small if read as independent tests.
 

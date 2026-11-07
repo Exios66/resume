@@ -65,7 +65,7 @@ I have no accuracy or cost numbers to publish for this service yet. The harness 
 ![The ledger command in the cyan theme, listing six hash-chained entries, followed by a successful chain verification.](mailroom-reloaded/figures/ledger.jpg){.fig fig-alt="A cyan terminal page with a table with columns seq, kind, run, doc, ts and hash, with cyan column headings. Rows are one pinned entry, one run_opened entry and four doc_closed entries. Below the table, the text 6 entries, then the command ledger verify, then a green line reading chain ok, 6 entries, head #6, and a grey line reading merkle: run not closed." width="100%"}
 
 ::: {.caveat}
-**Heads up.** The screenshots come from a demo run on a mock LLM provider with seeded documents, so the counts and costs in them describe the demo, not model quality.
+**Heads up.** The screenshots come from a demo run on a mock LLM provider with seeded documents, so the counts and costs in them describe the demo, not model quality. They were captured on 11 October 2026 at revision `545d8b7`; `/tui` has since had accessibility and contrast fixes, so the current page differs in detail.
 :::
 
 ## What I learned

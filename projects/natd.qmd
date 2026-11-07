@@ -22,7 +22,7 @@ A pilot study from the Cognitive Neuroscience Lab at UW–Parkside, advised by D
 :::
 
 ::: {.caveat}
-**Pilot study; part of the data is withheld.** This study was only ever fully tested under pilot conditions, with nine participants. Heart rate, SpO₂, EEG, eye-tracking and self-reported workload data were also collected, but they are not published here and will not be until all of the data have been authenticated. What follows covers the design, the exam-score results and detection.
+**Pilot study; part of the data is withheld.** This study was only ever fully tested under pilot conditions, with nine participants. Heart rate, SpO₂, EEG, eye-tracking and self-reported workload data were also collected, but they are not published here and will not be until all of the data have been authenticated. What follows covers the design, the exam-score results and detection. The per-session exam files are not in the public project repository, and the pilot differs from the 40-participant plan written there (see the [report](natd/report.qmd#method)).
 :::
 
 ## At a glance
