@@ -119,7 +119,10 @@ class SearchTests(unittest.TestCase):
         self.assertEqual(len(listed), len(set(listed)))
         for entry in entries:
             self.assertTrue(entry["t"])
-            self.assertNotIn("<", entry["b"] + entry["h"])
+            # Markup must be stripped; literal text such as "/summon <domain>-expert" is fine,
+            # because the search page inserts results with textContent.
+            self.assertNotRegex(entry["b"] + entry["h"],
+                                r"</?(?:a|p|div|span|nav|svg|use|script|style|li|ul|ol|h[1-6]|table|t[rdh]|code|em|strong|figure|img)\b[^<>]*>")
             self.assertIn(entry["u"], {p.relative_to(checks.DOCS).as_posix() for p in pages()})
 
 
