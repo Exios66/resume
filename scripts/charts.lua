@@ -105,6 +105,7 @@ local RIGHT = 56       -- room for value labels after the plot
 local BAND = 40        -- row height (also the hit-area height)
 local BAR = 20         -- bar thickness (dataviz cap is 24)
 local R = 5            -- dot radius (8px minimum diameter)
+local LABEL_ROOM = 64  -- plot inset that keeps a value label left of the data clear of row labels
 
 local function esc(s)
   return (tostring(s):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"))
@@ -244,7 +245,7 @@ function DRAW.bars(spec, rows)
   local lo, hi, ticks = domain(spec, vals, true)
   local top = spec.ref and 26 or 10
   local bottom = top + #rows * BAND
-  local sx = linear(lo, hi, GUTTER, W - RIGHT)
+  local sx = linear(lo, hi, GUTTER + (lo < 0 and LABEL_ROOM or 0), W - RIGHT)
   local out = { x_axis(ticks, sx, top, bottom, spec.unit) }
   if lo < 0 then out[#out + 1] = line("zero", sx(0), top, sx(0), bottom, PAINT.muted) end
   if spec.ref then
@@ -274,7 +275,7 @@ function DRAW.dumbbell(spec, rows)
   for i = 1, #rows do all[#all + 1] = a[i]; all[#all + 1] = b[i] end
   local lo, hi, ticks = domain(spec, all, false)
   local top, bottom = 10, 10 + #rows * BAND
-  local sx = linear(lo, hi, GUTTER, W - RIGHT)
+  local sx = linear(lo, hi, GUTTER + LABEL_ROOM, W - RIGHT)
   local out = { x_axis(ticks, sx, top, bottom, spec.unit) }
   for i, row in ipairs(rows) do
     local y = top + (i - 1) * BAND
@@ -283,7 +284,8 @@ function DRAW.dumbbell(spec, rows)
     out[#out + 1] = mark(M.fmt(a[i], spec.unit) .. " → " .. M.fmt(b[i], spec.unit), row[spec.label],
       hit(0, y, W, BAND) .. row_label(row[spec.label], cy)
       .. line("link", fx, cy, tx, cy, PAINT.muted) .. dot("c1s", fx, cy) .. dot("c1", tx, cy)
-      .. text("val", math.max(fx, tx) + 10, cy + 4.5, "start", M.fmt(b[i], spec.unit)))
+      .. (tx >= fx and text("val", tx + 10, cy + 4.5, "start", M.fmt(b[i], spec.unit))
+        or text("val", tx - 10, cy + 4.5, "end", M.fmt(b[i], spec.unit))))
   end
   return out, bottom + 28, { spec["from-name"] or spec.from, spec["to-name"] or spec.to }, nil
 end

@@ -27,6 +27,7 @@ An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages
 - `assets/js/site.js` is the only site script file: a hairline under the sticky header (wide screens only), a soft light that follows the pointer over cards (fine pointers only, decorative), a reading-progress bar on technical reports, and a fade-in for project cards below the fold. The fade is skipped on deep links, reloads and back/forward navigation, and all motion is off under `prefers-reduced-motion` and in print.
 - `scripts/post-render.py` runs after every render. It recreates `docs/.nojekyll`, removes the repeated site name from page titles, adds a `?v=<hash>` to the `styles.css` and `site.js` links, and copies `assets/Jack_Burleson_Resume.pdf` to `docs/assets/` unchanged. That PDF is generated from `resume.html` by `scripts/make-resume-pdf.py` (Chromium print, two pages), so the web résumé and the download stay in step.
 - `scripts/og-image.html` + `scripts/make-og.py` regenerate the social preview image `assets/og-image.png`.
+- `scripts/charts.lua` turns a table wrapped in a `::: {.chart}` block into an inline SVG chart at render time, and keeps the table directly below it as the accessible source of every value. Kinds: `bars` (negative values and an optional `ref` line), `dumbbell` (`from` to `to`), `step` (log2 x-axis) and `strip` (one panel per row). Colors come from the `--chart-1`, `--chart-2` and `--chart-1-soft` tokens in `styles.css`, validated for colour-blind separation and contrast in both themes; `site.js` adds one hover and keyboard tooltip. Write units without a leading space (`unit="pts"`): Pandoc stops parsing a fenced div whose attribute starts with a space. Design and plan: `.github/specs/2026-11-07-interactive-charts-*.md`.
 - `partials/diagrams/_*.qmd` are inline SVG architecture diagrams. Pages pull them in with `{{< include >}}`. They draw with `currentColor` and CSS classes, so they follow the light/dark theme. The leading underscore stops Quarto from rendering them as pages.
 - `docs/` holds the built site. Do not edit it by hand.
 
@@ -36,6 +37,7 @@ An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages
 2. Copy figures into `projects/<slug>/figures/` and add a line to its `MANIFEST.txt` naming the source file.
 3. Check every number against the source repo before publishing. HTML comments are removed from the rendered pages, but they stay visible in this public source, so don't use them for private notes.
 4. Add a card to `projects/index.qmd`, and to `index.qmd` if the project should be featured.
+5. To chart a table, wrap it: `::: {.chart kind="bars" title="…" label="<category column>" value="<number column>"}` … `:::`. Column names match the header text exactly; a missing column, a cell without a number or a one-row table stops the render with an error naming the page. `lua tests/test_charts.lua` and `tests/test_charts.py` cover the renderer and the published charts.
 
 ## Update the site
 
@@ -56,7 +58,7 @@ Then:
 
 Use `quarto preview` while writing. The header and footer appear there too.
 
-Run the checks with `lua tests/test_site.lua`, `node --test tests/theme.test.cjs tests/icons.test.cjs`, and `RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q tests`. `tests/icons.test.cjs` reads the rendered `docs/` and checks that every icon sizes itself and the stylesheet and script links are cache-busted. `tests/test_links.py` checks the rendered `docs/` for broken internal links, images without alt text, and strings that must never be published.
+Run the checks with `lua tests/test_site.lua`, `lua tests/test_charts.lua`, `node --test tests/theme.test.cjs tests/icons.test.cjs`, and `RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q tests`. `tests/icons.test.cjs` reads the rendered `docs/` and checks that every icon sizes itself and the stylesheet and script links are cache-busted. `tests/test_links.py` checks the rendered `docs/` for broken internal links, images without alt text, and strings that must never be published.
 
 For real-browser regression checks alone, run `RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q tests/test_browser.py`. The test serves `docs/` under a subpath and checks every page in both themes at 320, 375, 768 and 1280 px, plus project navigation, keyboard access, diagram text bounds, image loading, no-JavaScript access and two-page résumé printing. Without the environment flag, these browser checks are explicitly skipped. Capture screenshots or a recording for visual changes and report coverage limits as described in `AGENTS.md`.
 

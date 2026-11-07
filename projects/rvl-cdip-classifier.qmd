@@ -85,7 +85,7 @@ The two changes the simulation favoured, and the vote preamble on the tuning sli
 ::: {.chart kind="dumbbell" title="Measured exact-match accuracy before and after each change" label="Change" from="Before" to="After" unit="%" min="60" max="100"}
 | Change | Before | After |
 | --- | ---: | ---: |
-| Escalation to a stronger model, 48-image low-confidence slice | 66.7% | 62.5% |
+| Escalation, 48-image low-confidence slice | 66.7% | 62.5% |
 | Worked examples, 48-image slice | 68.8% | 64.6% |
 | v19 vote preamble, tuning slice | 97.5% | 96.9% |
 :::

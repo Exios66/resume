@@ -756,7 +756,7 @@ h2:not(.group-title)::before {
 .chart svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--sans); font-size: 13px; }
 .chart text { fill: var(--muted); }
 .chart text.cat { fill: var(--ink); }
-.chart text.val { fill: var(--ink); font-weight: 600; }
+.chart text.val { fill: var(--ink); font-weight: 600; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
 .chart text.tick { font-size: 12px; font-variant-numeric: tabular-nums; }
 .chart text.axis-note, .chart text.ref-label { font-size: 12px; }
 .chart .grid { stroke: var(--rule); stroke-width: 1; }

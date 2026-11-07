@@ -105,6 +105,11 @@ local s0, s1 = bar_x(m["Scarlet · Deceitful"])
 assert(zero and a0 == zero and a1 > zero, "positive bar grows right from zero")
 assert(s0 == zero and s1 < zero, "negative bar grows left from zero")
 assert(m["Scarlet · Deceitful"]:find('class="bar c2"', 1, true), "deceitful uses chart-2")
+for _, who in ipairs({ "Scarlet · Deceitful", "Alan · Deceitful" }) do
+  local vx, body = m[who]:match('<text class="val" x="([%d%.]+)" y="[%d%.]+" text%-anchor="end">([^<]*)</text>')
+  assert(vx, who .. ": negative value label is end-anchored")
+  assert(tonumber(vx) - utf8.len(body) * 7.5 >= 190, who .. ": negative value label clears the row labels")
+end
 
 local MAPRED = rows_of({ "Job", "Speedup" }, { { "word count", "3.8×" }, { "sort", "2.9×" }, { "grep", "2.3×" } })
 local mr = CHARTS.render({ kind = "bars", title = "Speedup", label = "Job", value = "Speedup",
@@ -125,6 +130,12 @@ local from_x = tonumber(merger:match('<circle class="dot c1s" cx="([%d%.]+)"'))
 local to_x = tonumber(merger:match('<circle class="dot c1" cx="([%d%.]+)"'))
 assert(from_x and to_x and to_x < from_x, "merger_agreement falls from Arm B to Final")
 assert(merger:find('data-tip-value="0.2381 → 0"', 1, true), "dumbbell tip shows both values")
+local mlabel_x = tonumber(merger:match('<text class="val" x="([%d%.]+)" y="[%d%.]+" text%-anchor="end"'))
+assert(mlabel_x and mlabel_x < to_x and mlabel_x - 2 * 7.5 >= 190, "a fall is labelled left of the final dot, clear of row labels")
+local contract = marks(db)["contract"]
+local cto = tonumber(contract:match('<circle class="dot c1" cx="([%d%.]+)"'))
+local clabel_x = tonumber(contract:match('<text class="val" x="([%d%.]+)" y="[%d%.]+" text%-anchor="start"'))
+assert(clabel_x and clabel_x > cto, "a rise is labelled right of the final dot")
 
 local WINDOWS = rows_of({ "Context window", "Documents that fit" }, {
   { "4,096", "76.6%" }, { "16,384", "89.6%" }, { "32,768", "93.2%" }, { "65,536", "95.0%" }, { "131,072", "99.8%" },
