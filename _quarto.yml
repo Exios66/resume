@@ -29,6 +29,7 @@ format:
     toc: false
     page-layout: full
     filters:
+      - scripts/charts.lua
       - scripts/site.lua
     title-block-style: none
     minimal: false

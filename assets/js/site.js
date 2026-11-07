@@ -12,6 +12,87 @@
       chart.scrollLeft += event.key === 'ArrowRight' ? 40 : -40;
     });
   });
+  // Cards: a soft light follows the pointer. Decorative, fine pointers only.
+  try {
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      doc.addEventListener("pointermove", function (event) {
+        var card = event.target.closest && event.target.closest(".card");
+        if (!card) return;
+        var box = card.getBoundingClientRect();
+        card.style.setProperty("--mx", Math.round(event.clientX - box.left) + "px");
+        card.style.setProperty("--my", Math.round(event.clientY - box.top) + "px");
+      }, { passive: true });
+    }
+  } catch (e) {}
+
+  // Charts: one shared tooltip for hover and keyboard focus. Every value it shows is
+  // also in the table under the chart, so it only ever adds convenience.
+  (function () {
+    var marks = doc.querySelectorAll(".chart .mark");
+    if (!marks.length) return;
+    var tip = doc.createElement("div");
+    var value = doc.createElement("strong");
+    var label = doc.createElement("span");
+    tip.className = "chart-tooltip";
+    tip.setAttribute("role", "tooltip");
+    tip.hidden = true;
+    tip.appendChild(value);
+    tip.appendChild(label);
+    doc.body.appendChild(tip);
+    var current = null;
+
+    /** Show the tooltip for a mark, above its shape and inside the viewport. */
+    function show(mark) {
+      current = mark;
+      value.textContent = mark.getAttribute("data-tip-value") || "";
+      label.textContent = mark.getAttribute("data-tip-label") || "";
+      tip.hidden = false;
+      place();
+    }
+    /** Re-anchor the tooltip to its mark; hide it once the mark is out of view. */
+    function place() {
+      if (!current) return;
+      var box = (current.querySelector(".bar, .dot") || current).getBoundingClientRect();
+      var body = current.closest(".chart-body");
+      var view = body ? body.getBoundingClientRect() : { left: 0, right: window.innerWidth };
+      // Anchor to the part of the shape that is visible inside its chart.
+      var left = Math.max(box.left, view.left), right = Math.min(box.right, view.right);
+      var cx = (left + right) / 2;
+      if (right <= left || box.bottom < 0 || box.top > window.innerHeight) {
+        tip.hidden = true;
+        return;
+      }
+      tip.hidden = false;
+      var x = cx - tip.offsetWidth / 2;
+      x = Math.max(8, Math.min(x, window.innerWidth - tip.offsetWidth - 8));
+      var y = box.top - tip.offsetHeight - 10;
+      if (y < 8) y = box.bottom + 10;
+      // Never below the viewport; if it is taller than the space, pin it to the top.
+      y = Math.max(8, Math.min(y, window.innerHeight - tip.offsetHeight - 8));
+      tip.style.left = Math.round(x) + "px";
+      tip.style.top = Math.round(y) + "px";
+    }
+    /** Hide the tooltip, or only if it belongs to the given mark. */
+    function hide(mark) {
+      if (mark && mark !== current) return;
+      tip.hidden = true;
+      current = null;
+    }
+    Array.prototype.forEach.call(marks, function (mark) {
+      mark.addEventListener("pointerenter", function () { show(mark); });
+      mark.addEventListener("pointerleave", function () { hide(mark); });
+      mark.addEventListener("focus", function () { show(mark); });
+      mark.addEventListener("blur", function () { hide(mark); });
+    });
+    doc.addEventListener("keydown", function (event) { if (event.key === "Escape") hide(); });
+    // Page or chart scrolling (including the scroll that brings a focused mark into
+    // view) moves the mark, so the tooltip follows it, or hides once it is out of view.
+    window.addEventListener("scroll", place, { passive: true });
+    Array.prototype.forEach.call(doc.querySelectorAll(".chart-body"), function (body) {
+      body.addEventListener("scroll", place, { passive: true });
+    });
+  })();
+
   var reduce = false;
   try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 

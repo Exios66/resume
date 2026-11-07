@@ -332,3 +332,118 @@ def test_mailroom_accessible_link_names_and_print_action(site):
         assert not page.url.endswith("#")
     finally:
         page.close()
+
+
+CHART_PAGES = [
+    "projects/natd.html", "projects/natd/report.html", "projects/mailroom-ml/report.html",
+    "projects/mailroom-corpus-eda/report.html", "projects/rvl-cdip-classifier.html",
+    "projects/mapreduce-reloaded.html", "projects/langtons-ant.html",
+]
+
+
+def test_chart_tooltip_hover_and_keyboard(site):
+    browser, base = site
+    page = browser.new_page(viewport={"width": 1280, "height": 900})
+    try:
+        page.goto(base + "projects/natd.html")
+        tip = page.locator(".chart-tooltip")
+        first = page.locator(".chart .mark").first
+        first.scroll_into_view_if_needed()
+        first.hover()
+        expect(tip).to_be_visible()
+        expect(tip).to_contain_text("+14.5 pts")
+        expect(tip).to_contain_text("Athena")
+        page.mouse.move(0, 0)
+        expect(tip).to_be_hidden()
+        last = page.locator(".chart .mark").last
+        last.focus()
+        expect(tip).to_be_visible()
+        expect(tip).to_contain_text("−3.6 pts")
+        box, tip_box = last.bounding_box(), tip.bounding_box()
+        assert 0 <= tip_box["x"] and tip_box["x"] + tip_box["width"] <= 1280
+        page.keyboard.press("Escape")
+        expect(tip).to_be_hidden()
+        assert box["height"] >= 24
+    finally:
+        page.close()
+
+
+def test_charts_dark_theme_and_no_script(site):
+    browser, base = site
+    page = browser.new_page(color_scheme="dark")
+    try:
+        page.goto(base + "projects/mapreduce-reloaded.html")
+        expect(page.locator(".chart .bar.c1").first).to_have_css("fill", "rgb(42, 163, 176)")
+        expect(page.locator(".chart text.cat").first).to_have_css("fill", "rgb(230, 237, 239)")
+        # Value labels carry a halo in the surface color, so the reference line cannot cut through them.
+        label = page.locator(".chart text.val").first
+        expect(label).to_have_css("paint-order", "stroke")
+        expect(label).to_have_css("stroke", "rgb(19, 28, 32)")
+    finally:
+        page.close()
+    context = browser.new_context(java_script_enabled=False)
+    page = context.new_page()
+    try:
+        for path in CHART_PAGES:
+            page.goto(base + path)
+            charts = page.locator("figure.chart svg")
+            assert charts.count() >= 1, f"{path}: no chart without JavaScript"
+            for chart in charts.all():
+                expect(chart).to_be_visible()
+                assert chart.bounding_box()["height"] > 60, path
+            expect(page.locator(".chart-tooltip")).to_have_count(0)
+    finally:
+        context.close()
+
+
+def test_charts_scroll_on_phone(site):
+    browser, base = site
+    page = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
+    try:
+        for path in CHART_PAGES:
+            page.goto(base + path)
+            for body in page.locator(".chart-body").all():
+                assert body.evaluate("el => el.scrollWidth > el.clientWidth"), path
+                body.focus()
+                page.keyboard.press("ArrowRight")
+                page.wait_for_function("el => el.scrollLeft > 0", arg=body.element_handle())
+                outside = body.evaluate("""el => {
+                    const svg = el.querySelector('svg').getBoundingClientRect();
+                    return [...el.querySelectorAll('svg text')].filter(t => {
+                        const b = t.getBoundingClientRect();
+                        return b.left < svg.left - 1 || b.right > svg.right + 1 || b.top < svg.top - 1 || b.bottom > svg.bottom + 1;
+                    }).map(t => t.textContent);
+                }""")
+                assert outside == [], f"{path}: text outside the chart: {outside}"
+    finally:
+        page.close()
+
+
+def test_chart_tooltip_hides_on_sideways_scroll_and_stays_on_screen(site):
+    browser, base = site
+    page = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/natd.html")
+        mark = page.locator("figure.chart g.mark").first
+        mark.focus()
+        tip = page.locator(".chart-tooltip")
+        expect(tip).to_be_visible()
+        box = tip.bounding_box()
+        assert 0 <= box["y"] and box["y"] + box["height"] <= 812, box
+        def follows_mark():
+            if tip.is_hidden():
+                return True
+            t, m = tip.bounding_box(), mark.locator(".bar, .dot").first.bounding_box()
+            return t["x"] < m["x"] + m["width"] and m["x"] < t["x"] + t["width"]
+        body = page.locator(".chart-body").first
+        body.evaluate("el => { el.scrollLeft = 80; }")
+        page.wait_for_timeout(100)
+        assert follows_mark(), "tooltip stays over its mark after a sideways scroll"
+        body.evaluate("el => { el.scrollLeft = el.scrollWidth; }")
+        page.wait_for_timeout(100)
+        assert follows_mark(), "tooltip follows or hides when its mark scrolls away"
+        page.mouse.wheel(0, 300)
+        page.wait_for_timeout(200)
+        assert follows_mark(), "tooltip follows its mark on page scroll"
+    finally:
+        page.close()

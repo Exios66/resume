@@ -91,6 +91,16 @@ The [evaluation](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2
 | Backup tasks without a slow worker | Mean difference −0.11 s, 95% interval −0.38 to +0.16 s | Ten interleaved pairs; does not prove zero cost |
 | Worker loss | Every measured job finished with a checksum matching the normal run | Agreement with a baseline, not an independent correctness proof |
 
+The scaling run, set against the ideal of four times faster with four workers:
+
+::: {.chart kind="bars" title="Speedup with four workers over one, 1 GiB input" label="Job" value="Speedup" unit="×" min="0" max="4" ref="4" ref-label="ideal 4×"}
+| Job | Speedup |
+| --- | ---: |
+| Word count | 3.8× |
+| Sort | 2.9× |
+| Grep | 2.3× |
+:::
+
 The [final report](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/report.md) links the raw results, design decisions and reproduction steps.
 
 ## What is planned

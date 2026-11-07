@@ -96,6 +96,7 @@ On the 323 paired documents, the paired bootstrap gives a document-type differen
 
 ### Per-head macro-F1, test split
 
+::: {.chart kind="dumbbell" title="Per-head subclass macro-F1, Arm B to final run (test split)" label="Head" from="Arm B" to="Final" min="0" max="1"}
 | Head | Arm B | Final |
 | --- | ---: | ---: |
 | contract | 0.0195 | 0.162 |
@@ -103,6 +104,7 @@ On the 323 paired documents, the paired bootstrap gives a document-type differen
 | correspondence | 0.1289 | 0.351 |
 | insurance_claim | 0.9889 | 1.000 |
 | merger_agreement | 0.2381 | 0.000 |
+:::
 
 The insurance score is high because that class is templated and has only six subclasses. Given the earlier leak, I treat a 1.000 as a prompt to keep looking, not as evidence of general skill. At the default decode, the merger-agreement result is a collapse: all 17 test merger agreements were assigned to one rare subclass that had 13 training windows, against 450 for the largest. Contract errors are different. The model spreads its answers over many subclasses and gets 14 of 53 right where the type was right, and services and supply contracts, with real support in training, are never recovered.
 
