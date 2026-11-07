@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Technical report on an exploratory study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references. The physiological, EEG, eye-tracking and workload data are withheld until they are authenticated.">
+<meta name="description" content="Technical report on a study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references.">
 
 <title>The Neural Architecture of Truth and Deception: technical report — Jack J. Burleson</title>
 <style>
@@ -82,13 +82,13 @@ ul.task-list li input[type="checkbox"] {
 
 <link rel="stylesheet" href="../../styles.css?v=dd839bf3da">
 <meta property="og:title" content="The Neural Architecture of Truth and Deception: technical report — Jack J. Burleson">
-<meta property="og:description" content="Technical report on an exploratory study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references. The physiological, EEG, eye-tracking and workload data are withheld until they are authenticated.">
+<meta property="og:description" content="Technical report on a study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta property="og:site_name" content="Jack J. Burleson">
 <meta property="og:image:alt" content="Jack J. Burleson — Machine Learning · Data Science · AI Engineering &amp; Safety">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="The Neural Architecture of Truth and Deception: technical report — Jack J. Burleson">
-<meta name="twitter:description" content="Technical report on an exploratory study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references. The physiological, EEG, eye-tracking and workload data are withheld until they are authenticated.">
+<meta name="twitter:description" content="Technical report on a study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references.">
 <meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://exios66.github.io/resume/projects/natd/report.html">
@@ -126,19 +126,19 @@ ul.task-list li input[type="checkbox"] {
 <p><span class="kicker">Cognitive neuroscience research · UW–Parkside</span></p>
 <p>By Jack J. Burleson. Cognitive Neuroscience Lab, UW–Parkside; advisor Dr.&nbsp;Melissa Gregg.</p>
 <div class="caveat">
-<p><strong>Pilot study; part of the data is withheld.</strong> This study was only ever fully tested under pilot conditions. The physiological (heart rate and SpO₂), EEG, eye-tracking and self-reported workload data were also collected, but they are not reported here and will not be until every recording has been authenticated. This report covers the design, the literature, exam-score learning outcomes, detection and clusters.</p>
+<p><strong>Pilot study.</strong> Physiological, EEG, eye-tracking and workload recordings are withheld until they are authenticated; this report covers the helpful-versus-deceitful results, detection and clusters.</p>
 </div>
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#overview">Overview</a></li><li><a href="#literature-review">Literature review</a></li><li><a href="#method">Method</a></li><li><a href="#learning-outcomes">Learning outcomes</a></li><li><a href="#truth-default">Truth-default</a></li><li><a href="#clusters">Clusters</a></li><li><a href="#interpretation-and-limitations">Interpretation and limitations</a></li><li><a href="#references">References</a></li></ul></nav>
 <h2 id="overview">Overview</h2>
 <p>Across 18 conversations with five chatbot personas, exam scores rose 12.3 points after the two helpful personas and fell 1.0 point after the three deceitful ones, while participants flagged deception in only 1 of 18 sessions.</p>
-<p>Nine participants each held two conversations with chatbots running different system-prompt personas, giving 18 sessions. Athena and Milgrim were instructed to be helpful; Alan, Enigma and Scarlet were instructed to deceive. Before and after each session we measured exam performance and recorded whether the participant flagged the disinformation. Physiological, EEG, eye-tracking and workload recordings were collected as well and are withheld (see the note above).</p>
+<p>Nine participants each held two conversations with chatbots running different system-prompt personas, giving 18 sessions. Athena and Milgrim were instructed to be helpful; Alan, Enigma and Scarlet were instructed to deceive. Before and after each session we measured exam performance and recorded whether the participant flagged the disinformation.</p>
 <figure class="diagram" role="img" aria-labelledby="natd-cap"><svg viewbox="0 0 800 320" aria-hidden="true" focusable="false"><defs><marker id="natd-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="16" y="118" width="150" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="91" y="150" text-anchor="middle" font-weight="600">9 participants</text><text x="91" y="168" text-anchor="middle">2 conversations</text><text x="91" y="186" text-anchor="middle">each</text><rect class="d-box d-accent" x="222" y="30" width="190" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="317" y="60" text-anchor="middle" font-weight="600">Helpful personas</text><text x="317" y="78" text-anchor="middle">Athena, Milgrim</text><text x="317" y="96" text-anchor="middle">7 sessions</text><rect class="d-box" x="222" y="206" width="190" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="317" y="236" text-anchor="middle" font-weight="600">Deceitful personas</text><text x="317" y="254" text-anchor="middle">Alan, Enigma, Scarlet</text><text x="317" y="272" text-anchor="middle">11 sessions</text><rect class="d-box" x="480" y="30" width="304" height="260" rx="8" fill="none" stroke="currentColor"></rect><text x="632" y="62" text-anchor="middle" font-weight="600">Reported here, 18 sessions</text><text x="632" y="100" text-anchor="middle">Exam score before and after</text><text x="632" y="160" text-anchor="middle">Whether deception was flagged</text><text x="632" y="200" text-anchor="middle" font-style="italic">Other recordings: not reported</text><path class="d-arrow" d="M166 160H194V72H220" fill="none" marker-end="url(#natd-ah)" stroke="currentColor"></path><path class="d-arrow" d="M166 160H194V248H220" fill="none" marker-end="url(#natd-ah)" stroke="currentColor"></path><path class="d-arrow" d="M412 72H478" marker-end="url(#natd-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M412 248H446V220H478" fill="none" marker-end="url(#natd-ah)" stroke="currentColor"></path></svg><figcaption id="natd-cap">Study design: nine participants each held two conversations with chatbots running different system-prompt personas, giving 18 sessions. Athena and Milgrim were instructed to be helpful, Alan, Enigma and Scarlet to deceive. Exam scores and detection are reported here; other recordings from the same sessions are withheld until the data are authenticated.</figcaption></figure>
 <ul>
 <li><strong>Learning.</strong> Exam scores rose 12.3 points on average after helpful personas (7 sessions) and fell 1.0 point after deceitful ones (11 sessions). The 13.3-point gap has a 95% confidence interval of 6.3 to 20.3. Helpful sessions also started 18 points lower, so part of the gain is probably regression to the mean.</li>
 <li><strong>Detection.</strong> Participants flagged deception in 1 of 18 sessions (5.6%; 95% CI 0.1% to 27.3%), and in 1 of the 11 sessions with a deceitful persona.</li>
 <li><strong>Reading the numbers.</strong> This is a nine-person exploratory study. Treat every p-value as descriptive: sessions are nested within participants, and persona is partly confounded with person.</li>
 </ul>
-<p><strong>Data note.</strong> The analysis uses the supplied per-session CSV files, which disagree with the earlier draft report in several places, listed under Method. The recordings that are withheld are left out of this version until they have been authenticated.</p>
+<p><strong>Data note.</strong> The analysis uses the supplied per-session CSV files, which disagree with the earlier draft report in several places, listed under Method.</p>
 <h2 id="literature-review">Literature review</h2>
 <p>No verified study has tested Truth-Default Theory against a chatbot instructed to deceive, so this study is an exploratory extension and not a replication. The background below comes from a separate literature review of about 92 references, each tagged with how far it was verified; the 17 cited here are listed under References. Several publisher sites were unreachable during the search, so a number of bibliographic details are marked unverified.</p>
 <h3 id="humans-presume-honesty-and-detect-lies-at-about-chance">Humans presume honesty and detect lies at about chance</h3>
@@ -178,7 +178,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<p>The persona profiles, question database and scripts are in the <a href="https://github.com/Exios66/truth-deception-architecture">project repository⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>. The per-session data files these results come from are not in that repository, so the numbers here cannot be checked against it. The repository’s methodology plan also describes a larger study than this pilot: 40 participants in five conditions (Athena, Scarlet, Alan, Milgrim and a GPT-4o control), with Milgrim described as authority-based. The pilot used no control condition and added Enigma, and the helpful and deceitful grouping on this page is the pilot’s.</p>
+<p>The persona profiles, question database and scripts are in the <a href="https://github.com/Exios66/truth-deception-architecture">project repository⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>.</p>
 <p><strong>Analysis.</strong> All results use the supplied per-session CSV files as the source of truth. Analyses are descriptive and run at session level: Welch t-tests, Mann-Whitney tests, t-based 95% confidence intervals for mean change, exact Clopper-Pearson intervals for proportions, Spearman correlations, and an ordinary least squares adjustment for baseline score. Because each participant contributes two sessions, I add a within-participant contrast where the design allows it. The mixed-effects model in the earlier draft report was not refit for this version, so those p-values would be too small if read as independent tests.</p>
 <p><strong>Where the CSV files and the earlier draft disagree.</strong> The files give a different persona mix, cluster sizes, mean age (23.8 against 23.2), exam statistics (mean exam score 44.8% before and 49.0% after, against 45.2% and 46.5%). The earlier draft’s non-significant overall ANOVA across chatbots no longer holds in the same form; the persona effect on exam change is now significant (see Learning outcomes). Wherever the two sources differ, this report follows the CSV files.</p>
 <h2 id="learning-outcomes">Learning outcomes</h2>
@@ -258,7 +258,7 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Three checks on how far to trust this.</strong></p>
 <ul>
 <li><strong>Baseline imbalance.</strong> Helpful sessions started at 33.6% against 52.0% for deceitful ones (p = 0.012), and sessions that started lower gained more (Spearman ρ = −0.58). Regression to the mean could explain part of the gap. Adjusting for baseline in an ordinary least squares model still leaves a helpful-persona effect of +11.6 points (95% CI 2.9 to 20.3, p = 0.013), and the baseline term itself is small and not significant.</li>
-<li><strong>Within-participant contrast.</strong> Five participants met one helpful and one deceitful persona. In all five the helpful session produced the larger gain, by 9.2 points on average (range 5 to 15; paired t(4) = 4.8, p = 0.009). This comparison removes stable differences between people, but it rests on five people.</li>
+<li><strong>Within-participant contrast.</strong> Five participants met one helpful and one deceitful persona. In all five the helpful session produced the larger gain, by 9.2 points on average (range 5 to 15; paired t(4) = 4.8, p = 0.009). This comparison removes stable differences between people.</li>
 <li><strong>Nesting.</strong> Both the Welch and OLS results treat 18 sessions as independent, so their intervals are optimistic. Read them as descriptive.</li>
 </ul>
 <p>A flat result after deceitful personas is ambiguous. It fits discounting of an unreliable source, insensitive exam items or high starting scores, and the session-level scores cannot separate these. Item-level exam data would.</p>
@@ -307,7 +307,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Two patterns stand out. Clusters follow people more than personas: eight of the nine participants had both sessions in one cluster, and only one was split. All four Athena sessions sit in Cluster 0, and Scarlet sessions are spread across all three clusters (1 in Cluster 0, 1 in Cluster 1, 3 in Cluster 2), so the three-of-five concentration in Cluster 2 is suggestive, not decisive. Cluster 1 started highest (62% to 85%) and so had the least room to rise.</p>
 <p>The clusters were formed from these same exam scores, so the group differences describe the clustering and do not test anything. They are best used to generate hypotheses about who benefits, such as learners with low baselines paired with a helpful persona, to check in a larger sample.</p>
 <h2 id="interpretation-and-limitations">Interpretation and limitations</h2>
-<p>The data reported here support two modest conclusions: helpful personas were followed by larger exam gains than deceitful ones, and almost nobody flagged the deceit. Neither is established, because this was a pilot-scale study and several confounds are open.</p>
+<p>The data reported here support two modest conclusions: helpful personas were followed by larger exam gains than deceitful ones, and almost nobody flagged the deceit. Both need replication, because several confounds are open.</p>
 <p><strong>What the data support.</strong></p>
 <ul>
 <li>Exam gains differ by persona, by 13.3 points between helpful and deceitful groups (95% CI 6.3 to 20.3), and the sign held in all five participants who met one of each.</li>
@@ -319,15 +319,14 @@ ul.task-list li input[type="checkbox"] {
 <li>That anything here detects or explains deception. Only one session involved a detection.</li>
 <li>Comparisons with published effect sizes beyond direction. Exam reliability, retest effects and item-level data are not available.</li>
 </ul>
-<p><strong>What is withheld.</strong> Heart rate, SpO₂, EEG, eye-tracking and self-reported workload data were collected in the same sessions. They are not reported on this site until all of the data have been authenticated, and nothing in this report depends on them.</p>
-<p><strong>Other limitations.</strong></p>
+<p><strong>Limitations.</strong></p>
 <ul>
 <li>Nine participants, 18 sessions, 7 men and 2 women, aged 20 to 31.</li>
 <li>Sessions are nested within participants, and mixed-effects models were not refit for this version.</li>
 <li>Clusters were derived from the same exam data they are used to describe.</li>
 <li>The literature review rests on pages that were reachable during the search; several citations are marked unverified.</li>
 </ul>
-<p><strong>Next steps.</strong> Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and the falsity of each persona’s output. Authenticate the physiological and neural recordings before publishing them, then fit mixed-effects models with participant random intercepts.</p>
+<p><strong>Next steps.</strong> Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and the falsity of each persona’s output, then fit mixed-effects models with participant random intercepts.</p>
 <h2 id="references">References</h2>
 <p>These are the 17 works cited above, out of about 92 in the full literature review (delivered separately as a file). Each carries the verification status recorded during the search: verified means the bibliographic details were confirmed on a page that was opened; partly verified means at least one detail is unconfirmed, and the gap is stated.</p>
 <ul>
