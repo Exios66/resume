@@ -70,7 +70,7 @@ def test_every_page_layout_and_resources(site, width, theme):
             failures = page.evaluate("""() => {
               const failures = [];
               if (document.documentElement.scrollWidth > innerWidth + 1) failures.push('page overflow');
-              for (const el of document.querySelectorAll('.nav-link, .theme-toggle, .project-jump a')) {
+              for (const el of document.querySelectorAll('.nav-link, .theme-toggle, .project-jump a, .btn')) {
                 if (el.getBoundingClientRect().height < 44) failures.push('small touch target: ' + el.textContent);
               }
               for (const card of document.querySelectorAll('.card')) {
@@ -169,6 +169,14 @@ def test_site_search_contents_list_and_pager(site):
     page = browser.new_page(viewport={"width": 1280, "height": 900}, reduced_motion="reduce")
     try:
         page.goto(base + "search.html")
+        page.get_by_label("Search this site").fill("mailroom")
+        expect(page.locator("#search-status")).to_contain_text('pages match')
+        matches = int(page.locator("#search-status").inner_text().split()[0])
+        assert matches > 10
+        expect(page.locator("#search-results li")).to_have_count(matches)
+        snippet = page.locator('#search-results a[href$="projects/digital-mailroom/appendix.html"] + span + p')
+        expect(snippet).not_to_contain_text("Case study Case study")
+
         page.get_by_label("Search this site").fill("M9c")
         expect(page.locator("#search-results a").first).to_be_visible()
         case_study = page.locator('#search-results a[href$="projects/mailroom-ml.html"]')

@@ -124,6 +124,7 @@ a.chip:hover { text-decoration: none; filter: brightness(.95); }
 .actions p { display: contents; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .5em;
+  min-height: 44px;
   padding: 8px 18px;
   font-size: .88rem;
   font-weight: 600;

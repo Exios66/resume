@@ -20,6 +20,7 @@ import json
 import re
 import shutil
 import sys
+from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -114,12 +115,53 @@ def cache_bust_pages():
 SVG_SHAPE = re.compile(r"<(rect|circle|ellipse|path|line|polygon|polyline)(\s[^<>]*?)?(/?)>")
 DIAGRAM = re.compile(r'<figure class="diagram".*?</figure>', re.S)
 SEARCH_TAGS = re.compile(r"<[^>]+>")
-SEARCH_SCRIPTS = re.compile(r"<(script|style)\b.*?</\1>", re.S)
 
 
 def plain_text(fragment):
     """Return tag-free, whitespace-collapsed text for the search index."""
     return " ".join(html.unescape(SEARCH_TAGS.sub(" ", fragment)).split())
+
+
+class SearchBodyParser(HTMLParser):
+    """Extract page content without navigation, decorative SVGs, or scripts."""
+
+    VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+    EXCLUDED = {"back", "project-nav", "project-pager", "page-toc"}
+    BLOCKS = {"p", "div", "section", "article", "h1", "h2", "h3", "h4", "h5", "h6", "li", "tr", "td", "th", "br"}
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.stack = []
+        self.parts = []
+
+    def handle_starttag(self, tag, attrs):
+        classes = dict(attrs).get("class", "").split()
+        skip = bool(self.stack and self.stack[-1][1]) or tag in {"nav", "script", "style", "svg"} or bool(self.EXCLUDED.intersection(classes))
+        if not skip and tag in self.BLOCKS:
+            self.parts.append(" ")
+        if tag not in self.VOID:
+            self.stack.append((tag, skip))
+
+    def handle_startendtag(self, tag, attrs):
+        pass
+
+    def handle_endtag(self, tag):
+        if self.stack and not self.stack[-1][1] and tag in self.BLOCKS:
+            self.parts.append(" ")
+        for i in range(len(self.stack) - 1, -1, -1):
+            if self.stack[i][0] == tag:
+                del self.stack[i:]
+                break
+
+    def handle_data(self, data):
+        if not self.stack or not self.stack[-1][1]:
+            self.parts.append(data)
+
+
+def search_body(fragment):
+    parser = SearchBodyParser()
+    parser.feed(fragment)
+    return " ".join("".join(parser.parts).split())
 
 
 def build_search_index():
@@ -144,7 +186,7 @@ def build_search_index():
             "t": plain_text(title.group(1)) if title else rel,
             "d": plain_text(description.group(1)) if description else "",
             "h": headings[:400],
-            "b": plain_text(SEARCH_SCRIPTS.sub(" ", body_source))[:1200],
+            "b": search_body(body_source)[:1200],
         })
     (DOCS / "search-index.json").write_text(
         json.dumps(entries, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
