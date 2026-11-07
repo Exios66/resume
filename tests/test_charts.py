@@ -86,15 +86,28 @@ class ChartPageTests(unittest.TestCase):
                     self.assertIsNotNone(table, "the chart's table must follow it")
 
     def test_tip_values_match_table_cells(self):
+        """Each mark's values come from its own row, in column order (from before to)."""
+        mark = re.compile(r'data-tip-value="([^"]*)" data-tip-label="([^"]*)"')
         for path in PAGES:
             for figure, table in chart_and_table(page(path)):
-                cells = set(numbers(strip_tags(table)))
-                tips = re.findall(r'data-tip-value="([^"]*)"', figure)
+                body = re.sub(r"<thead>.*?</thead>", "", table, flags=re.S)
+                rows = []
+                for tr in re.findall(r"<tr\b.*?</tr>", body, re.S):
+                    cells = [" ".join(strip_tags(c).split()) for c in re.findall(r"<td[^>]*>(.*?)</td>", tr, re.S)]
+                    rows.append((cells[0], numbers(" ".join(cells))))
+                tips = mark.findall(figure)
                 self.assertTrue(tips, path)
-                for tip in tips:
-                    for value in numbers(tip):
-                        with self.subTest(path=path, tip=tip):
-                            self.assertTrue(any(abs(value - c) < 1e-9 for c in cells), f"{value} not in table")
+                for tip, label in tips:
+                    label = label.replace("&amp;", "&")
+                    with self.subTest(path=path, label=label, tip=tip):
+                        owners = [nums for first, nums in rows if label == first or label.startswith(first + " ")]
+                        self.assertEqual(len(owners), 1, "mark must name exactly one table row")
+                        row_nums, at = owners[0], 0
+                        for value in numbers(tip):
+                            while at < len(row_nums) and abs(row_nums[at] - value) > 1e-9:
+                                at += 1
+                            self.assertLess(at, len(row_nums), f"{value} not in its row, in column order")
+                            at += 1
 
     def test_new_tables_come_from_prose(self):
         for path, header in (("projects/rvl-cdip-classifier.html", "Before"),

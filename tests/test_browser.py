@@ -386,7 +386,9 @@ def test_charts_dark_theme_and_no_script(site):
     try:
         for path in CHART_PAGES:
             page.goto(base + path)
-            for chart in page.locator("figure.chart svg").all():
+            charts = page.locator("figure.chart svg")
+            assert charts.count() >= 1, f"{path}: no chart without JavaScript"
+            for chart in charts.all():
                 expect(chart).to_be_visible()
                 assert chart.bounding_box()["height"] > 60, path
             expect(page.locator(".chart-tooltip")).to_have_count(0)
@@ -413,5 +415,35 @@ def test_charts_scroll_on_phone(site):
                     }).map(t => t.textContent);
                 }""")
                 assert outside == [], f"{path}: text outside the chart: {outside}"
+    finally:
+        page.close()
+
+
+def test_chart_tooltip_hides_on_sideways_scroll_and_stays_on_screen(site):
+    browser, base = site
+    page = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/natd.html")
+        mark = page.locator("figure.chart g.mark").first
+        mark.focus()
+        tip = page.locator(".chart-tooltip")
+        expect(tip).to_be_visible()
+        box = tip.bounding_box()
+        assert 0 <= box["y"] and box["y"] + box["height"] <= 812, box
+        def follows_mark():
+            if tip.is_hidden():
+                return True
+            t, m = tip.bounding_box(), mark.locator(".bar, .dot").first.bounding_box()
+            return t["x"] < m["x"] + m["width"] and m["x"] < t["x"] + t["width"]
+        body = page.locator(".chart-body").first
+        body.evaluate("el => { el.scrollLeft = 80; }")
+        page.wait_for_timeout(100)
+        assert follows_mark(), "tooltip stays over its mark after a sideways scroll"
+        body.evaluate("el => { el.scrollLeft = el.scrollWidth; }")
+        page.wait_for_timeout(100)
+        assert follows_mark(), "tooltip follows or hides when its mark scrolls away"
+        page.mouse.wheel(0, 300)
+        page.wait_for_timeout(200)
+        assert follows_mark(), "tooltip follows its mark on page scroll"
     finally:
         page.close()

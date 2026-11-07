@@ -200,8 +200,41 @@ local tbl = { t = "Table",
   bodies = { { body = { { cells = { cell("sort"), cell("2.9×") } }, { cells = { cell("grep"), cell("2.3×") } } } } } }
 local out = Div({ classes = { "chart" }, attributes = { kind = "bars", title = "S", label = "Job", value = "Speedup" },
   content = { { t = "Para" }, tbl } })
-assert(out[1].format == "html" and out[1].text:find('class="chart chart-bars"', 1, true), "filter emits the chart")
-assert(out[2] == tbl, "filter keeps the table after the chart")
+assert_eq(out[1].t, "Para", "filter keeps other blocks in the wrapper")
+assert(out[2].format == "html" and out[2].text:find('class="chart chart-bars"', 1, true), "filter emits the chart before the table")
+assert(out[3] == tbl, "filter keeps the table after the chart")
+
+-- review fixes
+assert_eq(CHARTS.parse_numbers(".5"), { 0.5 }, "leading-dot decimal")
+assert_eq(CHARTS.parse_numbers("−.5 and -.25"), { -0.5, -0.25 }, "signed leading-dot decimals")
+assert_eq(CHARTS.parse_numbers("v1.5"), { 1.5 }, "ordinary decimal unchanged")
+local capped = CHARTS.render({ kind = "dumbbell", title = "T", label = "L", from = "A", to = "B", min = "60", max = "98" },
+  rows_of({ "L", "A", "B" }, { { "x", "61", "98" }, { "y", "70", "80" } }))
+assert(capped:find('>98</text>', 1, true) and not capped:find('>100</text>', 1, true), "configured max ends the axis")
+fails('must start at zero', { kind = "bars", label = "Job", value = "Speedup", min = "2" }, MAPRED)
+assert(db:find('aria%-label="Per%-head macro%-F1: contract 0%.0195 to 0%.162'), "dumbbell summary names its values")
+assert(sp:find("Classic RL ant, one ant 19.65M steps/s to 4.28M steps/s, 10.63M steps/s, 13.18M steps/s", 1, true)
+  or sp:find("Classic RL ant, one ant 19.65 M steps/s to 4.28 M steps/s, 10.63 M steps/s, 13.18 M steps/s", 1, true),
+  "strip summary names every plotted value and honours from-mode")
+-- No two hit areas in a chart may overlap (strip points 0.29 and 0.31 sit 13px apart).
+local function spans(svg)
+  local out = {}
+  for x, y, w, h in svg:gmatch('<rect class="hit" x="([%d%.%-]+)" y="([%d%.%-]+)" width="([%d%.]+)" height="([%d%.]+)"') do
+    out[#out + 1] = { tonumber(x), tonumber(y), tonumber(x) + tonumber(w), tonumber(y) + tonumber(h) }
+  end
+  return out
+end
+for name, svg in pairs({ strip = sp, step = st }) do
+  local s = spans(svg)
+  for i = 1, #s do for j = i + 1, #s do
+    local A, B = s[i], s[j]
+    local overlap = math.min(A[3], B[3]) - math.max(A[1], B[1]) > 0.11 and math.min(A[4], B[4]) - math.max(A[2], B[2]) > 0.11
+    assert(not overlap, name .. ": hit areas " .. i .. " and " .. j .. " overlap")
+  end end
+end
+local multi = CHARTS.render({ kind = "strip", title = "T", label = "L", from = "A", to = "B", ["from-mode"] = "all", ["to-mode"] = "all" },
+  rows_of({ "L", "A", "B" }, { { "x", "1, 2", "3" }, { "y", "4", "5 and 6" } }))
+assert_eq(count(multi, '<circle class="dot c2"'), 3, "from-mode all plots every from value")
 assert_eq(Div({ classes = { "note" }, attributes = {}, content = {} }), nil, "other divs untouched")
 
 print("chart unit tests passed")

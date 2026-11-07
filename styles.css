@@ -786,8 +786,10 @@ h2:not(.group-title)::before {
   .page figure.chart::after { content: "Scroll sideways to see the whole chart."; display: block; margin-top: 6px; font-size: .78rem; font-style: italic; color: var(--muted); }
 }
 @media (forced-colors: active) {
-  .chart :is(.bar, .dot) { fill: CanvasText; }
-  .chart .line.c1 { stroke: CanvasText; }
+  /* As specific as the series rules and later in the file, so it wins in every browser. */
+  .chart svg :is(.bar, .dot) { fill: CanvasText; }
+  .chart svg .dot { stroke: Canvas; }
+  .chart svg .line.c1 { stroke: CanvasText; }
 }
 @media print {
   .chart-body { overflow: visible; }

@@ -19,6 +19,17 @@ function M.parse_numbers(text)
   while true do
     local a, b, digits = s:find("(%d[%d,]*%.?%d*)", pos)
     if not a then break end
+    -- A decimal point with no digit before it (".5", "−.5") belongs to the number.
+    if a > 1 and s:sub(a - 1, a - 1) == "." and not (a > 2 and s:sub(a - 2, a - 2):match("%d")) then
+      local frac = s:match("^%d+", a)
+      local before = a > 2 and s:sub(a - 2, a - 2) or ""
+      local before2 = a > 3 and s:sub(a - 3, a - 3) or ""
+      local n = tonumber("0." .. frac)
+      if before == "-" and not before2:match("[%w]") then n = -n end
+      out[#out + 1] = n
+      pos = a + #frac
+      goto continue
+    end
     -- A comma that is not followed by exactly three digits separates two numbers.
     local first = digits:match("^(%d+[%.%d]*)") or digits
     local clean = digits
@@ -35,6 +46,7 @@ function M.parse_numbers(text)
     if before == "-" and not before2:match("[%w]") then n = -n end
     out[#out + 1] = n
     pos = b + 1
+    ::continue::
   end
   return out
 end
@@ -233,6 +245,10 @@ local function domain(spec, list, include_zero)
   hi = tonumber(spec.max) or hi
   local ticks = M.nice_ticks(lo, hi, 5)
   if spec.min then ticks[1] = lo end
+  if spec.max then
+    while #ticks > 1 and ticks[#ticks] > hi + 1e-9 do ticks[#ticks] = nil end
+    if ticks[#ticks] < hi - 1e-9 then ticks[#ticks + 1] = hi end
+  end
   return ticks[1], ticks[#ticks], ticks
 end
 
@@ -242,6 +258,9 @@ function DRAW.bars(spec, rows)
   column(spec, rows, spec.label); column(spec, rows, spec.value)
   local vals = values(spec, rows, spec.value)
   local color_of, legend = series_colors(spec, rows)
+  if tonumber(spec.min) and tonumber(spec.min) > 0 then
+    fail(spec, "a bar chart must start at zero (min=\"" .. spec.min .. "\")")
+  end
   local lo, hi, ticks = domain(spec, vals, true)
   local top = spec.ref and 26 or 10
   local bottom = top + #rows * BAND
@@ -323,11 +342,16 @@ function DRAW.step(spec, rows)
   end
   out[#out + 1] = string.format('<path class="line c1" d="%s" fill="none" stroke="%s" stroke-width="2"/>',
     table.concat(d, " "), PAINT.c1)
-  local gap = (sx(l2(xs[#xs])) - sx(l2(xs[1]))) / (#xs - 1)
+  local px = {}
+  for i = 1, #xs do px[i] = sx(l2(xs[i])) end
   for i, row in ipairs(rows) do
-    local x = sx(l2(xs[i]))
+    local x = px[i]
     local short = xs[i] >= 1024 and (M.fmt(xs[i] / 1024) .. "K") or M.fmt(xs[i])
-    local body = hit(x - math.max(24, gap / 2) / 2 - gap / 4, top, math.max(24, gap / 2) + gap / 2, bottom - top)
+    -- Each hit column runs to the midpoints with its neighbours, so the readout
+    -- always snaps to the nearest window and the columns never overlap.
+    local x0 = i > 1 and (px[i - 1] + x) / 2 or x - (px[2] - x) / 2
+    local x1 = i < #px and (x + px[i + 1]) / 2 or x + (x - px[i - 1]) / 2
+    local body = hit(x0, top, x1 - x0, bottom - top)
       .. dot("c1", x, sy(ys[i])) .. text("tick", x, bottom + 18, "middle", short)
     if i == #rows then body = body .. text("val", x, sy(ys[i]) - 12, "middle", M.fmt(ys[i], spec.unit)) end
     out[#out + 1] = mark(M.fmt(ys[i], spec.unit), row[spec.label] .. " tokens", body)
@@ -344,17 +368,27 @@ function DRAW.strip(spec, rows)
   for i, row in ipairs(rows) do
     local y = 8 + (i - 1) * PANEL
     local cy = y + 18
-    local list = { a[i] }
+    local list, from_count = {}, 0
+    for _, v in ipairs(type(a[i]) == "table" and a[i] or { a[i] }) do list[#list + 1] = v; from_count = from_count + 1 end
     for _, v in ipairs(type(b[i]) == "table" and b[i] or { b[i] }) do list[#list + 1] = v end
     local maxv = 0
     for _, v in ipairs(list) do maxv = math.max(maxv, v) end
     local ticks = M.nice_ticks(0, maxv, 4)
     local sx = linear(0, ticks[#ticks], GUTTER, W - RIGHT)
     local panel = { row_label(row[spec.label], cy), x_axis(ticks, sx, y + 2, y + 34, nil) }
+    -- Hit areas are 24px wide but stop at the midpoint with the nearest other
+    -- point, so close values never steal each other's tooltip.
+    local xs = {}
+    for j, v in ipairs(list) do xs[j] = sx(v) end
     for j, v in ipairs(list) do
-      local color, who = j == 1 and "c2" or "c1", j == 1 and from_name or to_name
+      local color, who = j <= from_count and "c2" or "c1", j <= from_count and from_name or to_name
+      local x0, x1 = xs[j] - 12, xs[j] + 12
+      for k, other in ipairs(xs) do
+        if k ~= j and other < xs[j] then x0 = math.max(x0, (other + xs[j]) / 2) end
+        if k ~= j and other > xs[j] then x1 = math.min(x1, (other + xs[j]) / 2) end
+      end
       panel[#panel + 1] = mark(M.fmt(v, spec.unit), row[spec.label] .. " · " .. who,
-        hit(sx(v) - 12, cy - 12, 24, 24) .. dot(color, sx(v), cy))
+        hit(x0, cy - 12, x1 - x0, 24) .. dot(color, xs[j], cy))
     end
     out[#out + 1] = '<g class="panel">' .. table.concat(panel) .. "</g>"
   end
@@ -366,8 +400,17 @@ local function summary(spec, rows)
   local parts = {}
   for _, row in ipairs(rows) do
     local cells = {}
-    for _, key in ipairs({ spec.value, spec.from, spec.to }) do
-      if key and row[key] then cells[#cells + 1] = row[key] end
+    -- Plotted values only, formatted as on the chart, honouring from-mode / to-mode.
+    local cols = { { spec.value, "first" }, { spec.from, spec["from-mode"] }, { spec.to, spec["to-mode"] } }
+    for k = 1, 3 do
+      local key, mode = cols[k][1], cols[k][2]
+      if key and row[key] then
+        local nums, shown = M.parse_numbers(row[key]), {}
+        for n, v in ipairs(nums) do
+          if mode == "all" or n == 1 then shown[#shown + 1] = M.fmt(v, spec.unit) end
+        end
+        cells[#cells + 1] = table.concat(shown, ", ")
+      end
     end
     parts[#parts + 1] = row[spec.label] .. " " .. table.concat(cells, " to ")
   end
@@ -419,9 +462,9 @@ function Div(el)
   local spec = {}
   for k, v in pairs(el.attributes) do spec[k] = v end
   spec.file = quarto and quarto.doc and quarto.doc.input_file or nil
-  local tbl
-  for _, block in ipairs(el.content) do
-    if block.t == "Table" or block.tag == "Table" then tbl = block; break end
+  local tbl, at
+  for i, block in ipairs(el.content) do
+    if block.t == "Table" or block.tag == "Table" then tbl, at = block, i; break end
   end
   if not tbl then fail(spec, "a .chart block needs a table") end
   local headers = cells_text(tbl.head.rows[1])
@@ -433,5 +476,11 @@ function Div(el)
       rows[#rows + 1] = row
     end
   end
-  return { pandoc.RawBlock("html", M.render(spec, rows)), tbl }
+  -- Keep every authored block; the figure goes directly before the charted table.
+  local out = {}
+  for i, block in ipairs(el.content) do
+    if i == at then out[#out + 1] = pandoc.RawBlock("html", M.render(spec, rows)) end
+    out[#out + 1] = block
+  end
+  return out
 end

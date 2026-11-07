@@ -47,11 +47,28 @@
       value.textContent = mark.getAttribute("data-tip-value") || "";
       label.textContent = mark.getAttribute("data-tip-label") || "";
       tip.hidden = false;
-      var box = (mark.querySelector(".bar, .dot") || mark).getBoundingClientRect();
-      var x = box.left + box.width / 2 - tip.offsetWidth / 2;
+      place();
+    }
+    /** Re-anchor the tooltip to its mark; hide it once the mark is out of view. */
+    function place() {
+      if (!current) return;
+      var box = (current.querySelector(".bar, .dot") || current).getBoundingClientRect();
+      var body = current.closest(".chart-body");
+      var view = body ? body.getBoundingClientRect() : { left: 0, right: window.innerWidth };
+      // Anchor to the part of the shape that is visible inside its chart.
+      var left = Math.max(box.left, view.left), right = Math.min(box.right, view.right);
+      var cx = (left + right) / 2;
+      if (right <= left || box.bottom < 0 || box.top > window.innerHeight) {
+        tip.hidden = true;
+        return;
+      }
+      tip.hidden = false;
+      var x = cx - tip.offsetWidth / 2;
       x = Math.max(8, Math.min(x, window.innerWidth - tip.offsetWidth - 8));
       var y = box.top - tip.offsetHeight - 10;
       if (y < 8) y = box.bottom + 10;
+      // Never below the viewport; if it is taller than the space, pin it to the top.
+      y = Math.max(8, Math.min(y, window.innerHeight - tip.offsetHeight - 8));
       tip.style.left = Math.round(x) + "px";
       tip.style.top = Math.round(y) + "px";
     }
@@ -68,7 +85,12 @@
       mark.addEventListener("blur", function () { hide(mark); });
     });
     doc.addEventListener("keydown", function (event) { if (event.key === "Escape") hide(); });
-    window.addEventListener("scroll", function () { hide(); }, { passive: true });
+    // Page or chart scrolling (including the scroll that brings a focused mark into
+    // view) moves the mark, so the tooltip follows it, or hides once it is out of view.
+    window.addEventListener("scroll", place, { passive: true });
+    Array.prototype.forEach.call(doc.querySelectorAll(".chart-body"), function (body) {
+      body.addEventListener("scroll", place, { passive: true });
+    });
   })();
 
   var reduce = false;

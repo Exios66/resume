@@ -114,7 +114,7 @@ assert(CHARTS.fmt(0.9505) == "0.9505"); assert(CHARTS.fmt(4.0, "×") == "4×")
 
 **Interfaces:**
 - Consumes: Task 2 attributes; spec table of charts (titles, columns, encodings).
-- New tables (numbers verbatim from the page prose): RVL-CDIP "Measured before and after" (`Change | Before | After`: Escalation to a stronger model, 48-image low-confidence slice | 66.7% | 62.5%; Worked examples, 48-image slice | 68.8% | 64.6%; v19 vote preamble, tuning slice | 97.5% | 96.9%); MapReduce "Speedup with four workers" (`Job | Speedup`: word count 3.8×; sort 2.9×; grep 2.3×).
+- New tables (numbers verbatim from the page prose): RVL-CDIP "Measured before and after" (`Change | Before | After`: Escalation to a stronger model, 48-image low-confidence slice | 66.7% | 62.5%; Worked examples, 48-image slice | 68.8% | 64.6%; Escalation of v19, tuning slice | 97.5% | 96.9%); MapReduce "Speedup with four workers" (`Job | Speedup`: word count 3.8×; sort 2.9×; grep 2.3×).
 
 - [ ] **Step 1: Write failing tests** in `tests/test_charts.py`:
   - `test_each_page_has_its_chart` — for the 7 built pages, exactly the expected count of `figure.chart` (NATD case study 1, NATD report 1, others 1 each) and each figure's next element sibling is a `table`.

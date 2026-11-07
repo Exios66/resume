@@ -28,7 +28,7 @@ below).
 New tables (numbers taken only from the sentences already on each page):
 
 - RVL-CDIP: Escalation to a stronger model, 48-image low-confidence slice 66.7% →
-  62.5%; Worked examples, 48-image slice 68.8% → 64.6%; v19 vote preamble, tuning
+  62.5%; Worked examples, 48-image slice 68.8% → 64.6%; Escalation of v19, tuning
   slice 97.5% → 96.9%.
 - MapReduce: word count 3.8×, sort 2.9×, grep 2.3×.
 
@@ -57,7 +57,7 @@ legends and axes use `--ink`/`--muted`, never a chart color.
 ### Markup
 
 ```markdown
-::: {.chart kind="bars" label="Persona" value="Mean exam change (points)" series="Type" title="Exam change by persona" unit=" pts"}
+::: {.chart kind="bars" label="Persona" value="Mean exam change (points)" series="Type" title="Exam change by persona" unit="pts"}
 | Persona | Type | Sessions | Mean exam change (points) |
 | --- | --- | --- | --- |
 ...
