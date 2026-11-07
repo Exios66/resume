@@ -91,7 +91,7 @@
       status.textContent = hits.length
         ? hits.length + (hits.length === 1 ? " page matches “" : " pages match “") + query + "”"
         : "No pages match “" + query + "”.";
-      hits.slice(0, 10).forEach(function (hit) {
+      hits.forEach(function (hit) {
         var item = node("li");
         var link = node("a");
         link.href = hit.page.u;
