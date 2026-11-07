@@ -249,10 +249,16 @@ class PortfolioAdditionTests(unittest.TestCase):
     def test_rvl_simulation_table_keeps_predictions_separate_from_measured_outcomes(self):
         _, parser = self.read_page("projects/rvl-cdip-classifier.html")
         self.one(parser, "h2", id="what-the-simulations-showed")
-        table = self.one(parser, "table")
-        rows = [[parser.text(cell) for tag, cell in parser.children(row) if tag in {"th", "td"}]
-                for tag, row in parser.children(table) if tag == "tr"]
-        self.assertEqual(rows[0], ["Question", "What the simulation said", "What I measured"])
+        # The page also carries the measured before/after chart table; pick the simulation table by its header.
+        tables = [attrs for element, attrs, _ in parser.elements if element == "table"]
+        simulation = []
+        for table in tables:
+            rows = [[parser.text(cell) for tag, cell in parser.children(row) if tag in {"th", "td"}]
+                    for tag, row in parser.children(table) if tag == "tr"]
+            if rows and rows[0] == ["Question", "What the simulation said", "What I measured"]:
+                simulation.append(rows)
+        self.assertEqual(len(simulation), 1, "Expected one simulation table")
+        rows = simulation[0]
         cases = (
             ("majority voting", ("85.0%", "86.3%"), ("Not tested on a live run",)),
             ("stronger model", ("91.9%", "1.8 times", "90%"),

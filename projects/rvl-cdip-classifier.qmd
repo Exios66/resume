@@ -80,6 +80,16 @@ The repository's Monte Carlo scripts treat every recorded run as a draw from a p
 | Which prompt changes were real? | A paired bootstrap on shared images puts v0 to v11.8 at +13.0 points (95% interval 10.1 to 15.9, 898 images). | This one is a test of measured runs, not a forecast. |
 | Would retries and a fallback model cover API failures? | With a fallback, 0.11% of calls fail, against about 2.9% without one. Extra retries barely matter. | Modelled only. |
 
+Both changes the simulation favoured lowered measured accuracy, and escalation did so on the tuning slice too:
+
+::: {.chart kind="dumbbell" title="Measured exact-match accuracy before and after each change" label="Change" from="Before" to="After" unit="%" min="60" max="100"}
+| Change | Before | After |
+| --- | ---: | ---: |
+| Escalation, 48-image low-confidence slice | 66.7% | 62.5% |
+| Worked examples, 48-image slice | 68.8% | 64.6% |
+| Escalation of v19, tuning slice | 97.5% | 96.9% |
+:::
+
 Four findings stood out.
 
 - **Voting fixes noisy errors, not consistent ones.** The simulated gain concentrates in classes like handwritten (84.1% to 90.8% at 25 reads). Letter barely moves (74.2% to 75.7%) and budget stays near 70%. When the model is wrong about a page every time, asking again does not help. The method also resamples recorded runs, and only 945 of the 1,512 images have more than one, so the rest cannot change.

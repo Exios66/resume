@@ -83,6 +83,7 @@ Helpful personas were followed by a 12.3-point exam gain, deceitful ones by a 1.
 
 Welch's t-test on session-level change gives a difference of 13.3 points (95% CI 6.3 to 20.3; t(14.5) = 4.04, p = 0.001; Mann-Whitney p = 0.004). Helpful sessions gained significantly (+12.3, SD 6.3, p = 0.002); deceitful sessions did not change (−1.0, SD 7.5, p = 0.67).
 
+::: {.chart kind="bars" title="Mean exam change by persona (points)" label="Persona" value="Mean exam change (points)" series="Type" unit="pts" signed="true" summary="Mean exam change by persona: Athena +14.5, Milgrim +9.3 (helpful); Enigma +4.7, Alan −2.3, Scarlet −3.6 points (deceitful). Full values in the table below."}
 | Persona | Type | Sessions | Mean exam change (points) |
 | --- | --- | --- | --- |
 | Athena | Helpful | 4 | +14.5 |
@@ -90,6 +91,7 @@ Welch's t-test on session-level change gives a difference of 13.3 points (95% CI
 | Enigma | Deceitful | 3 | +4.7 |
 | Alan | Deceitful | 3 | −2.3 |
 | Scarlet | Deceitful | 5 | −3.6 |
+:::
 
 By persona the order is Athena +14.5, Milgrim +9.3, Enigma +4.7, Alan −2.3 and Scarlet −3.6 points (ANOVA p = 0.012; Kruskal-Wallis p = 0.037). Only Athena's interval, 4.3 to 24.7, clears zero on its own. Enigma gained 4.7 points despite a deceitful prompt, which a simple helpful-versus-deceitful reading would not predict.
 

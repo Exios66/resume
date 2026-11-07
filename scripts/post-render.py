@@ -167,8 +167,9 @@ def search_body(fragment):
 def build_search_index():
     """Write docs/search-index.json from the rendered pages.
 
-    Titles, descriptions and headings carry the weight; a short body excerpt
-    gives the search page something to match and to show as a snippet.
+    Titles, descriptions and headings carry the weight; the whole page text
+    (without navigation, scripts or SVG) is matched and shown as a snippet,
+    so a word deep in a report is still found.
     """
     entries = []
     for page in sorted(DOCS.rglob("*.html")):
@@ -186,7 +187,7 @@ def build_search_index():
             "t": plain_text(title.group(1)) if title else rel,
             "d": plain_text(description.group(1)) if description else "",
             "h": headings[:400],
-            "b": search_body(body_source)[:1200],
+            "b": search_body(body_source),
         })
     (DOCS / "search-index.json").write_text(
         json.dumps(entries, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")

@@ -132,6 +132,7 @@ The largest class is 7.2 times the smallest, and the largest stratum is 557 time
 
 Token counts use a characters-divided-by-four heuristic.
 
+::: {.chart kind="step" title="Share of documents that fit each context window" label="Context window" value="Documents that fit" axis-label="Documents that fit" unit="%" min="70" max="100"}
 | Context window | Documents that fit |
 | ---: | ---: |
 | 4,096 | 76.6% |
@@ -139,6 +140,7 @@ Token counts use a characters-divided-by-four heuristic.
 | 32,768 | 93.2% |
 | 65,536 | 95.0% |
 | 131,072 | 99.8% |
+:::
 
 Merger agreements are the long tail, with a mean near 22,000 tokens and a maximum near 63,000. Insurance claims are short, about 690 characters on average.
 

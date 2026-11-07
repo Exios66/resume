@@ -57,6 +57,7 @@ Each of nine participants (mean age 23.8, range 20 to 31; 7 men and 2 women) hel
 
 **1. Exam scores differed by persona.** Exam scores rose 12.3 points on average after helpful personas and fell 1.0 point after deceitful ones. By persona the order was Athena, Milgrim, Enigma, Alan, Scarlet. Enigma gained 4.7 points despite a deceitful prompt, which a simple helpful-versus-deceitful reading would not predict.
 
+::: {.chart kind="bars" title="Mean exam change by persona (points)" label="Persona" value="Mean exam change (points)" series="Type" unit="pts" signed="true" summary="Mean exam change by persona: Athena +14.5, Milgrim +9.3 (helpful); Enigma +4.7, Alan −2.3, Scarlet −3.6 points (deceitful). Full values in the table below."}
 | Persona | Type | Sessions | Mean exam change (points) |
 | --- | --- | --- | --- |
 | Athena | Helpful | 4 | +14.5 |
@@ -64,6 +65,7 @@ Each of nine participants (mean age 23.8, range 20 to 31; 7 men and 2 women) hel
 | Enigma | Deceitful | 3 | +4.7 |
 | Alan | Deceitful | 3 | −2.3 |
 | Scarlet | Deceitful | 5 | −3.6 |
+:::
 
 Helpful sessions also started 18 points lower (33.6% against 52.0%), so part of the gain is probably regression to the mean. Adjusting for the starting score still left a helpful-persona effect of +11.6 points (95% CI 2.9 to 20.3; the interval treats sessions as independent, so it is optimistic). In the five participants who met one helpful and one deceitful persona, the helpful session produced the larger gain every time, though that rests on only five people.
 
