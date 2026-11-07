@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=23dfbaac0e">
+<link rel="stylesheet" href="../../styles.css?v=dd839bf3da">
 <meta property="og:title" content="The Neural Architecture of Truth and Deception: technical report — Jack J. Burleson">
 <meta property="og:description" content="Technical report on an exploratory study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references. The physiological, EEG, eye-tracking and workload data are withheld until they are authenticated.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -178,7 +178,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<p>The persona profiles, question database and scripts are in the <a href="https://github.com/Exios66/truth-deception-architecture">project repository⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>.</p>
+<p>The persona profiles, question database and scripts are in the <a href="https://github.com/Exios66/truth-deception-architecture">project repository⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>. The per-session data files these results come from are not in that repository, so the numbers here cannot be checked against it. The repository’s methodology plan also describes a larger study than this pilot: 40 participants in five conditions (Athena, Scarlet, Alan, Milgrim and a GPT-4o control), with Milgrim described as authority-based. The pilot used no control condition and added Enigma, and the helpful and deceitful grouping on this page is the pilot’s.</p>
 <p><strong>Analysis.</strong> All results use the supplied per-session CSV files as the source of truth. Analyses are descriptive and run at session level: Welch t-tests, Mann-Whitney tests, t-based 95% confidence intervals for mean change, exact Clopper-Pearson intervals for proportions, Spearman correlations, and an ordinary least squares adjustment for baseline score. Because each participant contributes two sessions, I add a within-participant contrast where the design allows it. The mixed-effects model in the earlier draft report was not refit for this version, so those p-values would be too small if read as independent tests.</p>
 <p><strong>Where the CSV files and the earlier draft disagree.</strong> The files give a different persona mix, cluster sizes, mean age (23.8 against 23.2), exam statistics (mean exam score 44.8% before and 49.0% after, against 45.2% and 46.5%). The earlier draft’s non-significant overall ANOVA across chatbots no longer holds in the same form; the persona effect on exam change is now significant (see Learning outcomes). Wherever the two sources differ, this report follows the CSV files.</p>
 <h2 id="learning-outcomes">Learning outcomes</h2>

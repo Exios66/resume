@@ -11,8 +11,10 @@ description: "Search the project case studies, technical reports and appendices.
 
 <form class="site-search" role="search" action="search.html" method="get">
 <label for="site-search-input">Search this site</label>
-<input id="site-search-input" name="q" type="search" autocomplete="off" spellcheck="false">
+<input id="site-search-input" name="q" type="search" autocomplete="off" spellcheck="false" placeholder="A project, method or tool, e.g. calibration">
 </form>
+
+<p class="search-suggest">Try <a class="chip" href="search.html?q=calibration">calibration</a> <a class="chip" href="search.html?q=LangGraph">LangGraph</a> <a class="chip" href="search.html?q=EEG">EEG</a> <a class="chip" href="search.html?q=Hugging+Face">Hugging Face</a> <a class="chip" href="search.html?q=MapReduce">MapReduce</a></p>
 
 <p id="search-status" role="status" aria-live="polite"></p>
 

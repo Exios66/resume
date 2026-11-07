@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=23dfbaac0e">
+<link rel="stylesheet" href="../../styles.css?v=dd839bf3da">
 <meta property="og:title" content="Mailroom-Corpus-EDA: technical report — Jack J. Burleson">
 <meta property="og:description" content="Sources and licences, identity and provenance design, label separation, split rule, intent hydration, audit pipeline, revision history, test results and limitations for the mailroom dataset and its audit repository.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -165,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#summary">Summary</a></li><li><a href="#system-and-data">System and data</a></li><li><a href="#method">Method</a></li><li><a href="#results">Results</a></li><li><a href="#tests">Tests</a></li><li><a href="#limitations">Limitations</a></li><li><a href="#reproduce">Reproduce</a></li></ul></nav>
 <h2 id="summary">Summary</h2>
-<p>Mailroom-Corpus-EDA is the audit and publishing repository for the mailroom dataset, a corpus of 3,302 legal and insurance documents in five classes and 55 strata. The repository downloads the published dataset, checks its structure and provenance, measures its composition, draws 30 static and 18 interactive figures, audits correspondence intent coverage, and holds the helpers that build and publish new revisions to the Hugging Face Hub. The current published revision is the Hub tag <code>v9.2</code>.</p>
+<p>Mailroom-Corpus-EDA is the audit and publishing repository for the mailroom dataset, a corpus of 3,302 legal and insurance documents in five classes and 55 strata. The repository downloads the published dataset, checks its structure and provenance, measures its composition, draws 30 static and 18 interactive figures, audits correspondence intent coverage, and holds the helpers that build and publish new revisions to the Hugging Face Hub. This report describes the Hub tag <code>v9.2</code>. The current published revision is <code>v9.3</code>, released in November 2026: it adds corporate presence-layer labels over the same 3,302 documents and routes merger agreements to their own specialist. A <code>v9.4</code> revision is staged and not yet published.</p>
 <p>It is an evaluation and ingress-simulation corpus for the mailroom projects. It is not a training set, and the report says where that matters.</p>
 <h2 id="system-and-data">System and data</h2>
 <h3 id="sources">Sources</h3>
@@ -483,9 +483,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: right;">3,302</td>
 <td>Published all six provenance regimes, removed an undocumented build-internal column, filled in relation fields on 23 heuristic rows, and corrected one audit</td>
 </tr>
+<tr class="odd">
+<td>v9.3</td>
+<td style="text-align: right;">3,302</td>
+<td>Label-only: built on the corporate relabel published as <code>corporate-labels-v9.2.1</code>, added presence codes for corporate entity fields, and routed the 152 merger agreements to <code>merger_agreement_specialist</code></td>
+</tr>
 </tbody>
 </table>
-<p>Neither v9.1 nor v9.2 added or removed a document, or changed an identifier or any document text. The changelog records zero drift.</p>
+<p>None of v9.1, v9.2 or v9.3 added or removed a document, or changed an identifier or any document text. The changelog records zero drift. The tables and counts in this report and its appendix are for <code>v9.2</code>.</p>
 <h3 id="an-audit-that-was-wrong">An audit that was wrong</h3>
 <p>After the v9.1 change moved the MAUD count to the ground-truth side, the integrity audit kept reading it from the blind metadata. It regenerated its report without error and printed a count-consistency result of 0 of 152. Nothing was wrong with the data. The audit was looking in the old place. The v9.2 revision reads the ground-truth count, restores the correct 152 of 152, and pins the case with a regression test.</p>
 <h2 id="tests">Tests</h2>
