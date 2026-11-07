@@ -12,6 +12,19 @@
       chart.scrollLeft += event.key === 'ArrowRight' ? 40 : -40;
     });
   });
+  // Cards: a soft light follows the pointer. Decorative, fine pointers only.
+  try {
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      doc.addEventListener("pointermove", function (event) {
+        var card = event.target.closest && event.target.closest(".card");
+        if (!card) return;
+        var box = card.getBoundingClientRect();
+        card.style.setProperty("--mx", Math.round(event.clientX - box.left) + "px");
+        card.style.setProperty("--my", Math.round(event.clientY - box.top) + "px");
+      }, { passive: true });
+    }
+  } catch (e) {}
+
   var reduce = false;
   try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 
