@@ -126,6 +126,29 @@ class SearchTests(unittest.TestCase):
             self.assertIn(entry["u"], {p.relative_to(checks.DOCS).as_posix() for p in pages()})
 
 
+class SearchBodyTests(unittest.TestCase):
+    """The text extractor behind docs/search-index.json, on small HTML fixtures."""
+
+    @classmethod
+    def setUpClass(cls):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("post_render", checks.DOCS.parent / "scripts" / "post-render.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        cls.search_body = staticmethod(module.search_body)
+
+    def test_block_boundaries_keep_words_apart(self):
+        self.assertEqual(self.search_body("<pre>alpha</pre><pre>beta</pre>"), "alpha beta")
+        self.assertEqual(self.search_body("first<br/>second<br>third"), "first second third")
+
+    def test_markup_is_stripped_but_escaped_tag_text_stays(self):
+        self.assertEqual(self.search_body("<p>Run <code>&lt;script&gt;</code> here.</p>"), "Run <script> here.")
+        self.assertEqual(self.search_body('<nav class="page-toc">Contents</nav><p>Body</p>'), "Body")
+
+    def test_valueless_class_attribute_does_not_crash(self):
+        self.assertEqual(self.search_body("<div class>Text</div>"), "Text")
+
+
 class RenderingIntegrityTests(unittest.TestCase):
     def test_no_page_has_duplicate_ids(self):
         for page in pages():

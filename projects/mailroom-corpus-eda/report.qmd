@@ -23,7 +23,7 @@ For the versioned corpus reference and source-license context, see [Cite the dat
 
 ## Summary
 
-Mailroom-Corpus-EDA is the audit and publishing repository for the mailroom dataset, a corpus of 3,302 legal and insurance documents in five classes and 55 strata. The repository downloads the published dataset, checks its structure and provenance, measures its composition, draws 30 static and 18 interactive figures, audits correspondence intent coverage, and holds the helpers that build and publish new revisions to the Hugging Face Hub. The current published revision is the Hub tag `v9.2`.
+Mailroom-Corpus-EDA is the audit and publishing repository for the mailroom dataset, a corpus of 3,302 legal and insurance documents in five classes and 55 strata. The repository downloads the published dataset, checks its structure and provenance, measures its composition, draws 30 static and 18 interactive figures, audits correspondence intent coverage, and holds the helpers that build and publish new revisions to the Hugging Face Hub. This report describes the Hub tag `v9.2`. The current published revision is `v9.3`, released in November 2026: it adds corporate presence-layer labels over the same 3,302 documents and routes merger agreements to their own specialist. A `v9.4` revision is staged and not yet published.
 
 It is an evaluation and ingress-simulation corpus for the mailroom projects. It is not a training set, and the report says where that matters.
 
@@ -152,8 +152,9 @@ Merger agreements are the long tail, with a mean near 22,000 tokens and a maximu
 | v9 | 3,302 | Added 650 correspondence, 411 corporate records, 91 contracts and 150 insurance claims |
 | v9.1 | 3,302 | Moved label-derived counts out of the blind metadata, added a per-row presence code for every label field, and added context-window bands |
 | v9.2 | 3,302 | Published all six provenance regimes, removed an undocumented build-internal column, filled in relation fields on 23 heuristic rows, and corrected one audit |
+| v9.3 | 3,302 | Label-only: built on the corporate relabel published as `corporate-labels-v9.2.1`, added presence codes for corporate entity fields, and routed the 152 merger agreements to `merger_agreement_specialist` |
 
-Neither v9.1 nor v9.2 added or removed a document, or changed an identifier or any document text. The changelog records zero drift.
+None of v9.1, v9.2 or v9.3 added or removed a document, or changed an identifier or any document text. The changelog records zero drift. The tables and counts in this report and its appendix are for `v9.2`.
 
 ### An audit that was wrong
 

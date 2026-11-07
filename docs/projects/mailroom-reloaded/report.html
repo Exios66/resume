@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=23dfbaac0e">
+<link rel="stylesheet" href="../../styles.css?v=07b8614774">
 <meta property="og:title" content="Mailroom Reloaded: technical report — Jack J. Burleson">
 <meta property="og:description" content="Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -310,8 +310,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The repository’s changelog is the iteration record (141 commits in the history I could read). Notable recent entries, newest first:</p>
 <div class="timeline">
 <ul>
+<li><strong>Unreleased</strong> — operator commands in <code>/tui</code> (<code>links</code>, readiness views, a read-only configuration summary, replay export, and a review queue with per-document detail); an operator SMS pager that is off by default; accessibility passes on <code>/ui</code> and <code>/tui</code> (a page heading, labelled tables, live regions, keyboard-reachable rows, focus rings, contrast fixes); a real provider probe behind <code>GET /ready</code>; the vendored <code>llm-dojo-scoring</code> updated to v0.22.0, with its scoring fixes; and a fix so <code>mailroom eval</code> no longer drops rows whose filename has no supported suffix. <em>Dormant sandbox deep links removed from <code>/tui</code>.</em></li>
 <li><strong>0.4.2 (2026-10-11)</strong> — fixed the <code>/ui</code> documents table at phone widths. <em>Verified at 420, 768 and 1280 px with no page-level horizontal overflow.</em></li>
-<li><strong>Unreleased</strong> — accessibility passes on <code>/ui</code> and <code>/tui</code> (a page heading, labelled tables, live regions, keyboard-reachable rows, focus rings, contrast fixes), a real provider probe behind <code>GET /ready</code>, and a fix so <code>mailroom eval</code> no longer drops rows whose filename has no supported suffix. <em>Dormant sandbox deep links removed from <code>/tui</code>.</em></li>
 <li><strong>v1 trim</strong> — an offline ingress simulator was moved off <code>main</code> onto a feature branch, leaving the core pipeline and the replay viewer. <em>Verified on merged <code>main</code>.</em></li>
 </ul>
 </div>

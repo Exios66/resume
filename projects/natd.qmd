@@ -1,6 +1,6 @@
 ---
 pagetitle: "The Neural Architecture of Truth and Deception — Jack J. Burleson"
-description: "A pilot study of what happens when people talk to chatbots told to help or to deceive: nine participants, 18 sessions, five personas. Exam scores rose after helpful personas and almost nobody flagged deception. Physiological and neural recordings are withheld until the data are authenticated."
+description: "A pilot study of what happens when people talk to chatbots told to help or to deceive: nine participants, 18 sessions, five personas. Exam scores rose after helpful personas and fell after deceitful ones, and almost nobody flagged the deception."
 ---
 
 ::: {.page}
@@ -22,14 +22,14 @@ A pilot study from the Cognitive Neuroscience Lab at UW–Parkside, advised by D
 :::
 
 ::: {.caveat}
-**Pilot study; part of the data is withheld.** This study was only ever fully tested under pilot conditions, with nine participants. Heart rate, SpO₂, EEG, eye-tracking and self-reported workload data were also collected, but they are not published here and will not be until all of the data have been authenticated. What follows covers the design, the exam-score results and detection.
+**Pilot study.** Physiological, EEG and eye-tracking recordings are withheld until they are authenticated; this page covers the helpful-versus-deceitful results.
 :::
 
 ## At a glance
 
 ::: {.stats}
 ::: {.stat}
-[+12.3 vs −1.0]{.stat-value} [change in exam score, in points, after helpful personas (7 sessions) and after deceitful ones (11 sessions); the 13.3-point gap has a 95% CI of 6.3 to 20.3, which is optimistic because sessions are nested within people]{.stat-label}
+[+12.3 vs −1.0]{.stat-value} [change in exam score, in points, after helpful personas (7 sessions) and after deceitful ones (11 sessions); the 13.3-point gap has a 95% CI of 6.3 to 20.3]{.stat-label}
 :::
 ::: {.stat}
 [1 of 18]{.stat-value} [sessions in which the participant flagged the deception (5.6%; 95% CI 0.1% to 27.3%)]{.stat-label}
@@ -39,19 +39,19 @@ A pilot study from the Cognitive Neuroscience Lab at UW–Parkside, advised by D
 :::
 :::
 
-In short, exam scores rose after the helpful personas and not after the deceitful ones, and participants almost never noticed the deceit. This is a nine-person exploratory study, so none of it is established.
+In short, exam scores rose after the helpful personas and not after the deceitful ones, and participants almost never noticed the deceit.
 
 ## The question
 
 People tend to assume that what they are told is true until something gives them a reason to doubt it. Truth-Default Theory says this, and it predicts that a person talking to a chatbot that has been told to deceive will rarely suspect it. I could not find a verified study that tests the theory against a deceitful chatbot, so this study is a pilot-scale extension and not a replication.
 
-The study asks two things about people who talk to chatbots that help or deceive: whether their exam scores change and whether they notice the deceit. The study also recorded bodies, brains and eyes, and that part is withheld for now.
+The core comparison is between helpful and deceitful assistants. The study asks two things about the people who talk to them: whether their exam scores change and whether they notice the deceit.
 
 ## Design
 
 {{< include ../partials/diagrams/_natd.qmd >}}
 
-Each of nine participants (mean age 23.8, range 20 to 31; 7 men and 2 women) held two conversations, each with a different chatbot running a different system-prompt persona. Athena and Milgrim were told to be helpful. Alan, Enigma and Scarlet were told to deceive. Before and after each session we measured exam performance and whether the participant flagged the disinformation. Other recordings from the same sessions are withheld (see the note above).
+Each of nine participants (mean age 23.8, range 20 to 31; 7 men and 2 women) held two conversations, each with a different chatbot running a different system-prompt persona. Athena and Milgrim were told to be helpful. Alan, Enigma and Scarlet were told to deceive. Before and after each session we measured exam performance and whether the participant flagged the disinformation.
 
 ## Findings
 
@@ -67,7 +67,7 @@ Each of nine participants (mean age 23.8, range 20 to 31; 7 men and 2 women) hel
 | Scarlet | Deceitful | 5 | −3.6 |
 :::
 
-Helpful sessions also started 18 points lower (33.6% against 52.0%), so part of the gain is probably regression to the mean. Adjusting for the starting score still left a helpful-persona effect of +11.6 points (95% CI 2.9 to 20.3; the interval treats sessions as independent, so it is optimistic). In the five participants who met one helpful and one deceitful persona, the helpful session produced the larger gain every time, though that rests on only five people.
+Helpful sessions also started 18 points lower (33.6% against 52.0%), so part of the gain is probably regression to the mean. Adjusting for the starting score still left a helpful-persona effect of +11.6 points (95% CI 2.9 to 20.3; the interval treats sessions as independent, so it is optimistic). In the five participants who met one helpful and one deceitful persona, the helpful session produced the larger gain every time.
 
 **2. Almost nobody flagged the deception.** Participants flagged it in 1 of 18 sessions, and in 1 of the 11 sessions with a deceitful persona. That fits the truth-default prediction, but with one event the 95% interval runs from 0.1% to 27.3%, so the rate is poorly pinned down.
 
@@ -80,7 +80,7 @@ Helpful sessions also started 18 points lower (33.6% against 52.0%), so part of 
 
 ## What I would do next
 
-Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and how false each persona's output was. Authenticate the physiological and neural recordings before publishing them, then fit mixed-effects models with participant random intercepts.
+Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and how false each persona's output was, then fit mixed-effects models with participant random intercepts.
 
 The technical report has the literature review, the full method, every table, the cluster analysis and the references with how far each was verified.
 

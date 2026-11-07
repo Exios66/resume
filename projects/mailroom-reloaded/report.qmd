@@ -83,8 +83,8 @@ A `JevGate` is used only when the provider is switched on and `models/jev_calibr
 The repository's changelog is the iteration record (141 commits in the history I could read). Notable recent entries, newest first:
 
 ::: {.timeline}
+- **Unreleased** — operator commands in `/tui` (`links`, readiness views, a read-only configuration summary, replay export, and a review queue with per-document detail); an operator SMS pager that is off by default; accessibility passes on `/ui` and `/tui` (a page heading, labelled tables, live regions, keyboard-reachable rows, focus rings, contrast fixes); a real provider probe behind `GET /ready`; the vendored `llm-dojo-scoring` updated to v0.22.0, with its scoring fixes; and a fix so `mailroom eval` no longer drops rows whose filename has no supported suffix. *Dormant sandbox deep links removed from `/tui`.*
 - **0.4.2 (2026-10-11)** — fixed the `/ui` documents table at phone widths. *Verified at 420, 768 and 1280 px with no page-level horizontal overflow.*
-- **Unreleased** — accessibility passes on `/ui` and `/tui` (a page heading, labelled tables, live regions, keyboard-reachable rows, focus rings, contrast fixes), a real provider probe behind `GET /ready`, and a fix so `mailroom eval` no longer drops rows whose filename has no supported suffix. *Dormant sandbox deep links removed from `/tui`.*
 - **v1 trim** — an offline ingress simulator was moved off `main` onto a feature branch, leaving the core pipeline and the replay viewer. *Verified on merged `main`.*
 :::
 

@@ -127,7 +127,7 @@ class SearchBodyParser(HTMLParser):
 
     VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
     EXCLUDED = {"back", "project-nav", "project-pager", "page-toc"}
-    BLOCKS = {"p", "div", "section", "article", "h1", "h2", "h3", "h4", "h5", "h6", "li", "tr", "td", "th", "br"}
+    BLOCKS = {"p", "div", "section", "article", "h1", "h2", "h3", "h4", "h5", "h6", "li", "tr", "td", "th", "br", "pre"}
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
@@ -135,7 +135,7 @@ class SearchBodyParser(HTMLParser):
         self.parts = []
 
     def handle_starttag(self, tag, attrs):
-        classes = dict(attrs).get("class", "").split()
+        classes = (dict(attrs).get("class") or "").split()
         skip = bool(self.stack and self.stack[-1][1]) or tag in {"nav", "script", "style", "svg"} or bool(self.EXCLUDED.intersection(classes))
         if not skip and tag in self.BLOCKS:
             self.parts.append(" ")
@@ -143,7 +143,8 @@ class SearchBodyParser(HTMLParser):
             self.stack.append((tag, skip))
 
     def handle_startendtag(self, tag, attrs):
-        pass
+        if tag == "br":
+            self.parts.append(" ")
 
     def handle_endtag(self, tag):
         if self.stack and not self.stack[-1][1] and tag in self.BLOCKS:
