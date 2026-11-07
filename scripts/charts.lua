@@ -170,9 +170,10 @@ local function hit(x, y, w, h)
     num(x), num(y), num(w), num(h))
 end
 
+-- One datum: focusable, named for screen readers, and carrying its tooltip text.
 local function mark(tip_value, tip_label, body)
-  return string.format('<g class="mark" tabindex="0" data-tip-value="%s" data-tip-label="%s">%s</g>',
-    esc(tip_value), esc(tip_label), body)
+  return string.format('<g class="mark" tabindex="0" role="img" aria-label="%s" data-tip-value="%s" data-tip-label="%s">%s</g>',
+    esc(tip_label .. ": " .. tip_value), esc(tip_value), esc(tip_label), body)
 end
 
 -- Row label, right-aligned in the gutter, one or two lines centred on cy.
@@ -375,7 +376,7 @@ function M.render(spec, rows)
   end
   return string.format('<figure class="chart chart-%s"><figcaption class="chart-title">%s</figcaption>%s'
     .. '<div class="chart-body" tabindex="0" role="group" aria-label="%s">'
-    .. '<svg viewBox="0 0 %d %s" width="%d" height="%s" role="img" aria-label="%s">%s</svg></div></figure>',
+    .. '<svg viewBox="0 0 %d %s" width="%d" height="%s" role="group" aria-label="%s">%s</svg></div></figure>',
     spec.kind, esc(spec.title or ""), legend_html, esc((spec.title or "Chart") .. ", scrollable"),
     W, num(height), W, num(height), esc(summary(spec, rows)), table.concat(body))
 end

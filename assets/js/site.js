@@ -25,6 +25,52 @@
     }
   } catch (e) {}
 
+  // Charts: one shared tooltip for hover and keyboard focus. Every value it shows is
+  // also in the table under the chart, so it only ever adds convenience.
+  (function () {
+    var marks = doc.querySelectorAll(".chart .mark");
+    if (!marks.length) return;
+    var tip = doc.createElement("div");
+    var value = doc.createElement("strong");
+    var label = doc.createElement("span");
+    tip.className = "chart-tooltip";
+    tip.setAttribute("role", "tooltip");
+    tip.hidden = true;
+    tip.appendChild(value);
+    tip.appendChild(label);
+    doc.body.appendChild(tip);
+    var current = null;
+
+    /** Show the tooltip for a mark, above its shape and inside the viewport. */
+    function show(mark) {
+      current = mark;
+      value.textContent = mark.getAttribute("data-tip-value") || "";
+      label.textContent = mark.getAttribute("data-tip-label") || "";
+      tip.hidden = false;
+      var box = (mark.querySelector(".bar, .dot") || mark).getBoundingClientRect();
+      var x = box.left + box.width / 2 - tip.offsetWidth / 2;
+      x = Math.max(8, Math.min(x, window.innerWidth - tip.offsetWidth - 8));
+      var y = box.top - tip.offsetHeight - 10;
+      if (y < 8) y = box.bottom + 10;
+      tip.style.left = Math.round(x) + "px";
+      tip.style.top = Math.round(y) + "px";
+    }
+    /** Hide the tooltip, or only if it belongs to the given mark. */
+    function hide(mark) {
+      if (mark && mark !== current) return;
+      tip.hidden = true;
+      current = null;
+    }
+    Array.prototype.forEach.call(marks, function (mark) {
+      mark.addEventListener("pointerenter", function () { show(mark); });
+      mark.addEventListener("pointerleave", function () { hide(mark); });
+      mark.addEventListener("focus", function () { show(mark); });
+      mark.addEventListener("blur", function () { hide(mark); });
+    });
+    doc.addEventListener("keydown", function (event) { if (event.key === "Escape") hide(); });
+    window.addEventListener("scroll", function () { hide(); }, { passive: true });
+  })();
+
   var reduce = false;
   try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 

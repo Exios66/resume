@@ -17,6 +17,9 @@
   --accent-ink: #ffffff;
   --accent-2: #155e75;
   --glow: rgba(14, 111, 122, .26);
+  --chart-1: #008b9a;
+  --chart-2: #4f5fc4;
+  --chart-1-soft: #6cb2bb;
   color-scheme: light;
   --shadow: 0 1px 2px rgba(16, 32, 38, .06), 0 12px 32px rgba(16, 32, 38, .07);
   --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -36,6 +39,9 @@
     --accent-ink: #06191d;
     --accent-2: #8fdde6;
     --glow: rgba(79, 193, 205, .3);
+    --chart-1: #2aa3b0;
+    --chart-2: #7c86f0;
+    --chart-1-soft: #1f6f78;
     color-scheme: dark;
     --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px rgba(0, 0, 0, .35);
   }
@@ -52,6 +58,9 @@
     --accent-ink: #06191d;
     --accent-2: #8fdde6;
     --glow: rgba(79, 193, 205, .3);
+    --chart-1: #2aa3b0;
+    --chart-2: #7c86f0;
+    --chart-1-soft: #1f6f78;
     color-scheme: dark;
     --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px rgba(0, 0, 0, .35);
 }
@@ -311,6 +320,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
     --bg: #fff; --paper: #fff; --ink: #111; --muted: #444; --rule: #ccc;
     --accent: #0e6f7a; --accent-soft: #fff; --accent-ink: #fff; --shadow: none;
     --accent-2: #0e6f7a; --glow: transparent;
+    --chart-1: #008b9a; --chart-2: #4f5fc4; --chart-1-soft: #6cb2bb;
     color-scheme: light;
   }
   body { background: #fff; color: #111; font-size: 9.6pt; line-height: 1.33; }
@@ -729,4 +739,59 @@ h2:not(.group-title)::before {
   .stat { background: none; }
   .timeline ul { background: none; border-left: 2px solid #ccc; }
   .caveat { background: none; }
+}
+
+/* ==========================================================================
+   Charts, drawn from report tables by scripts/charts.lua. Chart colors come from
+   the --chart-* tokens (validated with the dataviz palette checker in both themes);
+   text always uses --ink / --muted. The table after each chart holds every value.
+   ========================================================================== */
+.page figure.chart { margin: 22px 0 10px; padding: 16px 16px 10px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); break-inside: avoid; }
+.page .chart figcaption.chart-title { margin: 0 0 8px; font-size: .95rem; font-weight: 600; line-height: 1.35; color: var(--ink); }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0 0 6px; padding: 0; list-style: none; font-size: .82rem; color: var(--muted); }
+.page .chart-legend li { display: inline-flex; align-items: center; gap: .45em; margin: 0; }
+.chart-legend .key { width: 12px; height: 12px; flex: none; border-radius: 3px; background: var(--chart-1); }
+.chart-legend .key.c2 { background: var(--chart-2); }
+.chart-legend .key.c1s { background: var(--chart-1-soft); }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--sans); font-size: 13px; }
+.chart text { fill: var(--muted); }
+.chart text.cat { fill: var(--ink); }
+.chart text.val { fill: var(--ink); font-weight: 600; }
+.chart text.tick { font-size: 12px; font-variant-numeric: tabular-nums; }
+.chart text.axis-note, .chart text.ref-label { font-size: 12px; }
+.chart .grid { stroke: var(--rule); stroke-width: 1; }
+.chart .zero { stroke: var(--muted); stroke-width: 1; }
+.chart .ref { stroke: var(--muted); stroke-width: 1.5; }
+.chart .link { stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
+.chart :is(.bar, .dot).c1 { fill: var(--chart-1); }
+.chart :is(.bar, .dot).c2 { fill: var(--chart-2); }
+.chart :is(.bar, .dot).c1s { fill: var(--chart-1-soft); }
+.chart .line.c1 { fill: none; stroke: var(--chart-1); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .dot { stroke: var(--paper); stroke-width: 2; }
+.chart .mark { outline: none; }
+.chart .mark .hit { fill: transparent; }
+.chart .mark:is(:hover, :focus-visible) .hit { fill: color-mix(in srgb, var(--accent) 8%, transparent); }
+.chart .mark:focus-visible .hit { stroke: var(--accent); stroke-width: 1.5; }
+.chart-body:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.chart-tooltip {
+  position: fixed; z-index: 50; max-width: 260px; padding: 6px 10px; pointer-events: none;
+  font-size: .82rem; line-height: 1.35; color: var(--muted);
+  background: var(--paper); border: 1px solid var(--rule); border-radius: 8px; box-shadow: var(--shadow);
+}
+.chart-tooltip strong { display: block; color: var(--ink); font-size: .95rem; font-variant-numeric: tabular-nums; }
+@media (max-width: 720px) {
+  .page figure.chart { padding: 12px 10px 8px; }
+  .chart-body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .chart svg { min-width: 520px; }
+  .page figure.chart::after { content: "Scroll sideways to see the whole chart."; display: block; margin-top: 6px; font-size: .78rem; font-style: italic; color: var(--muted); }
+}
+@media (forced-colors: active) {
+  .chart :is(.bar, .dot) { fill: CanvasText; }
+  .chart .line.c1 { stroke: CanvasText; }
+}
+@media print {
+  .chart-body { overflow: visible; }
+  .chart svg { min-width: 0; }
+  .page figure.chart::after, .chart-tooltip { display: none; }
+  .chart .mark .hit { fill: none; stroke: none; }
 }

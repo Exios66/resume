@@ -88,7 +88,9 @@ local natd = CHARTS.render({ kind = "bars", title = "Exam change by persona", la
 assert_eq(count(natd, '<g class="mark"'), 5, "NATD mark count")
 assert(natd:find('<figure class="chart chart-bars">', 1, true), "figure wrapper")
 assert(natd:find('<div class="chart-body" tabindex="0"', 1, true), "scrollable body")
-assert(natd:find('role="img" aria-label="', 1, true), "svg is an image with a summary")
+assert(natd:find('<svg viewBox="0 0 640 ', 1, true) and natd:find('role="group" aria-label="Exam change by persona: ', 1, true),
+  "svg is a labelled group with a summary")
+assert(natd:find('role="img" aria-label="Scarlet · Deceitful: −3.6 pts"', 1, true), "each mark has an accessible name")
 assert(natd:find("<li><span class=\"key c1\"></span>Helpful</li>", 1, true), "legend: Helpful")
 assert(natd:find("<li><span class=\"key c2\"></span>Deceitful</li>", 1, true), "legend: Deceitful")
 assert(natd:find('data-tip-value="−3.6 pts"', 1, true), "signed tip value")
