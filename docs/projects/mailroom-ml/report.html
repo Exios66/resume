@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=c56762ebe6">
+<link rel="stylesheet" href="../../styles.css?v=27b673cfe5">
 <meta property="og:title" content="Mailroom-ML: technical report — Jack J. Burleson">
 <meta property="og:description" content="Historical technical report through Mailroom-ML M9b: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits. See the case study for M9c.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -440,41 +440,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Training cost on Modal was estimated at about $6.0 for three epochs and $7.79 for four. A scoring pass over the 323 test documents on an L4 cost about $0.04.</p>
 <h2 id="figures">Figures</h2>
 <p>All six figures come from the earlier 3-epoch Arm B run. Its document-type accuracy matches the final run, but its calibration and fast-path numbers do not.</p>
+<p>On narrow screens, scroll each chart sideways to read its labels.</p>
+<div class="chart-scroll" tabindex="0" role="region" aria-label="Confusion matrix; scroll sideways to see the full chart">
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img src="figures/confusion.svg" class="fig img-fluid" style="width:100.0%" alt="Confusion matrix for the 323 test-split documents. Insurance claims and merger agreements are all correct. Contracts 88% correct, mostly misrouted to corporate record. Corporate records 89% correct. Correspondence 95% correct."></p>
 <figcaption>Which type each test-split document was routed to, from the earlier 3-epoch Arm B run.</figcaption>
 </figure>
 </div>
+</div>
+<div class="chart-scroll" tabindex="0" role="region" aria-label="Recall by document type; scroll sideways to see the full chart">
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img src="figures/doc_type_recall.svg" class="fig img-fluid" style="width:100.0%" alt="Grouped bars of recall per document type for three runs. Contract recall is 0.83, 0.68 and 0.88; corporate record 0.57, 0.81 and 0.89; correspondence 0.95, 0.88 and 0.95; insurance claim and merger agreement near 1.0 throughout."></p>
 <figcaption>Recall per document type for Run 3, Arm A and Arm B, from the earlier 3-epoch Arm B run and its predecessors.</figcaption>
 </figure>
 </div>
+</div>
+<div class="chart-scroll" tabindex="0" role="region" aria-label="Calibration error by head; scroll sideways to see the full chart">
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img src="figures/head_ece.svg" class="fig img-fluid" style="width:100.0%" alt="Bar chart of expected calibration error per head with a line at 0.05. Document type 0.020, contract 0.033, corporate record 0.071, insurance claim 0.003, merger agreement 0.108 and correspondence 0.138; correspondence, corporate record and merger agreement sit above the line."></p>
 <figcaption>Calibration error for each head, from the earlier 3-epoch Arm B run.</figcaption>
 </figure>
 </div>
+</div>
+<div class="chart-scroll" tabindex="0" role="region" aria-label="Accuracy and coverage by confidence; scroll sideways to see the full chart">
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img src="figures/selective_risk.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart over confidence thresholds from 0.60 to 0.90 showing accuracy of accepted windows rising and coverage falling, with a Wilson lower bound. The pick at 0.90 accepts 87% of windows at 99.4% accuracy."></p>
 <figcaption>Accuracy of accepted windows against share accepted as the confidence cutoff changes, from the earlier 3-epoch Arm B run.</figcaption>
 </figure>
 </div>
+</div>
+<div class="chart-scroll" tabindex="0" role="region" aria-label="Accuracy by window count; scroll sideways to see the full chart">
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img src="figures/accuracy_by_windows.svg" class="fig img-fluid" style="width:100.0%" alt="Bar chart of document-type accuracy by window count: 94.9% for single-window documents (274), 92.0% for 2 to 3 windows (25), 100% for 4 to 8 (9) and 100% for 9 or more (15)."></p>
 <figcaption>Document-type accuracy by number of 8k-token windows, from the earlier 3-epoch Arm B run.</figcaption>
 </figure>
 </div>
+</div>
+<div class="chart-scroll" tabindex="0" role="region" aria-label="Subclass accuracy and collapse; scroll sideways to see the full chart">
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img src="figures/subclass_collapse.svg" class="fig img-fluid" style="width:100.0%" alt="Bar chart per document type with subclass accuracy and the share of predictions on one subclass, plus a 0.75 gate line. Contract subclass accuracy is 0.04 and corporate record 0.45; insurance claim is 0.99."></p>
 <figcaption>Subclass accuracy and the collapse signal for each head, from the earlier 3-epoch Arm B run.</figcaption>
 </figure>
+</div>
 </div>
 <h2 id="reproducibility">Reproducibility</h2>
 <p>The project uses <code>uv</code> with a lockfile, and the pins live in <code>pyproject.toml</code> and <code>uv.lock</code>. The core test suite needs neither torch, onnxruntime nor Modal.</p>
@@ -518,7 +531,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="../../assets/js/site.js?v=91dd9b1cc4" defer=""></script>
+<script src="../../assets/js/site.js?v=65422da58a" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-github" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></symbol><symbol id="i-linkedin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></symbol><symbol id="i-mail" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></symbol><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-download" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></symbol><symbol id="i-map-pin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol><symbol id="i-layers" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></symbol><symbol id="i-brain" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M19.938 10.5a4 4 0 0 1 .585.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M19.967 17.484A4 4 0 0 1 18 18"></path></symbol><symbol id="i-scale" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></symbol><symbol id="i-waves" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></symbol><symbol id="i-database" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></symbol><symbol id="i-clock" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol></svg>
 
 <script>

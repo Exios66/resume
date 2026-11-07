@@ -484,6 +484,9 @@ pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .project-nav a { padding: 0 14px; }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .page table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .chart-scroll { overflow-x: auto; }
+  .chart-scroll img.fig { min-width: 700px; }
+  .chart-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   .page figure.diagram { padding: 10px 8px 8px; overflow-x: auto; }
   .diagram svg { min-width: 600px; }
   .diagram-ecosystem svg { min-width: 720px; }
@@ -495,6 +498,8 @@ pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* Project pages: print */
 @media print {
+  .chart-scroll { overflow: visible; }
+  .chart-scroll img.fig { min-width: 0; }
   .icon { display: none !important; }
   .project-nav { display: none; }
   .stats { grid-template-columns: repeat(4, 1fr); gap: 8px; }

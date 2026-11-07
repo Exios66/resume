@@ -24,7 +24,13 @@ PAGES = sorted(path.relative_to(ROOT / "docs").as_posix()
 
 
 @pytest.fixture(scope="module")
-def site():
+def playwright():
+    with sync_playwright() as instance:
+        yield instance
+
+
+@pytest.fixture(scope="module")
+def site(playwright):
     class QuietHandler(SimpleHTTPRequestHandler):
         def log_message(self, *_):
             pass
@@ -32,10 +38,9 @@ def site():
     server = ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=ROOT))
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
-    with sync_playwright() as playwright:
-        browser = playwright.chromium.launch()
-        yield browser, f"http://127.0.0.1:{server.server_port}/docs/"
-        browser.close()
+    browser = playwright.chromium.launch()
+    yield browser, f"http://127.0.0.1:{server.server_port}/docs/"
+    browser.close()
     server.shutdown()
     server.server_close()
     thread.join()
@@ -198,6 +203,94 @@ def test_site_search_contents_list_and_pager(site):
         expect(page.get_by_role("heading", level=1)).to_have_text("Mailroom Reloaded")
     finally:
         page.close()
+
+
+def test_search_before_index_load_and_after_failure(site):
+    browser, base = site
+    page = browser.new_page()
+    errors = []
+    page.on("pageerror", lambda error: errors.append(str(error)))
+    page.add_init_script("""(() => {
+      const originalFetch = window.fetch;
+      window.fetch = (...args) => new Promise((resolve, reject) => {
+        window.releaseIndex = () => resolve(originalFetch(...args));
+        window.rejectIndex = () => reject(new Error('index unavailable'));
+      });
+    })()""")
+    try:
+        page.goto(base + "search.html")
+        search = page.get_by_label("Search this site")
+        search.fill("M9c")
+        search.press("Enter")
+        assert not errors
+        page.evaluate("window.releaseIndex()")
+        expect(page.locator('#search-results a[href$="projects/mailroom-ml.html"]')).to_have_count(1)
+
+        page.goto(base + "search.html")
+        page.evaluate("window.rejectIndex()")
+        expect(page.locator("#search-status")).to_have_text("Search is unavailable right now.")
+        search.fill("M9c")
+        search.press("Escape")
+        assert not errors
+        expect(page.locator("#search-status")).to_have_text("Search is unavailable right now.")
+    finally:
+        page.close()
+
+
+def test_mobile_report_charts_are_scrollable_by_keyboard(site):
+    browser, base = site
+    page = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/mailroom-ml/report.html")
+        charts = page.locator(".chart-scroll")
+        expect(charts).to_have_count(6)
+        for chart in charts.all():
+            assert chart.get_attribute("aria-label")
+            assert chart.evaluate("el => el.scrollWidth > el.clientWidth")
+            expect(chart.locator("img")).to_have_css("width", "700px")
+            chart.focus()
+            expect(chart).to_be_focused()
+            page.keyboard.press("ArrowRight")
+            page.wait_for_function("el => el.scrollLeft > 0", arg=chart.element_handle())
+    finally:
+        page.close()
+
+
+def test_report_charts_fit_print_from_mobile(site):
+    browser, base = site
+    page = browser.new_page(viewport={"width": 375, "height": 812})
+    try:
+        page.goto(base + "projects/mailroom-ml/report.html")
+        page.emulate_media(media="print")
+        for chart in page.locator(".chart-scroll").all():
+            assert chart.evaluate("el => el.scrollWidth <= el.clientWidth + 1")
+            expect(chart).to_have_css("overflow-x", "visible")
+    finally:
+        page.close()
+
+
+@pytest.mark.parametrize("engine", ["firefox", "webkit"])
+def test_mobile_report_charts_in_other_engines(site, playwright, engine):
+    _, base = site
+    browser = getattr(playwright, engine).launch()
+    page = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
+    errors = []
+    page.on("pageerror", lambda error: errors.append(str(error)))
+    try:
+        page.goto(base + "projects/mailroom-ml/report.html")
+        charts = page.locator(".chart-scroll")
+        expect(charts).to_have_count(6)
+        for chart in charts.all():
+            image = chart.locator("img")
+            image.scroll_into_view_if_needed()
+            assert image.evaluate("img => img.decode().then(() => img.naturalWidth > 0)")
+            assert chart.evaluate("el => el.scrollWidth > el.clientWidth")
+            chart.focus()
+            page.keyboard.press("ArrowRight")
+            page.wait_for_function("el => el.scrollLeft > 0", arg=chart.element_handle())
+        assert not errors
+    finally:
+        browser.close()
 
 
 def test_no_script_and_print_from_dark(site, tmp_path):

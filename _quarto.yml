@@ -1,6 +1,9 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - "*.qmd"
+    - "**/*.qmd"
   resources:
     - assets/**
   post-render: scripts/post-render.py

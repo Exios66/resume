@@ -39,10 +39,12 @@ An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages
 
 ## Update the site
 
-Optional: `pypdf` lets `tests/test_resume_pdf.py` check the PDF's layout instead of skipping:
+Set up the test environment (Python 3.13 is known to work):
 
 ```sh
-pip install pypdf
+python3.13 -m venv .venv
+.venv/bin/python -m pip install -r requirements-test.txt
+.venv/bin/python -m playwright install chromium firefox webkit
 ```
 
 Then:
@@ -54,9 +56,9 @@ Then:
 
 Use `quarto preview` while writing. The header and footer appear there too.
 
-Run the checks with `lua tests/test_site.lua`, `node --test tests/theme.test.cjs tests/icons.test.cjs`, and `python -m pytest tests`. `tests/icons.test.cjs` reads the rendered `docs/` and checks that every icon sizes itself and the stylesheet and script links are cache-busted. `tests/test_links.py` checks the rendered `docs/` for broken internal links, images without alt text, and strings that must never be published.
+Run the checks with `lua tests/test_site.lua`, `node --test tests/theme.test.cjs tests/icons.test.cjs`, and `RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q tests`. `tests/icons.test.cjs` reads the rendered `docs/` and checks that every icon sizes itself and the stylesheet and script links are cache-busted. `tests/test_links.py` checks the rendered `docs/` for broken internal links, images without alt text, and strings that must never be published.
 
-For real-browser regression checks, install `playwright`, `pytest` and `pypdf`, run `playwright install chromium`, then `RUN_BROWSER_TESTS=1 python -m pytest -q tests/test_browser.py`. The test serves `docs/` under a subpath and checks every page in both themes at 320, 375, 768 and 1280 px, plus project navigation, keyboard access, diagram text bounds, image loading, no-JavaScript access and two-page résumé printing. Without the environment flag, these browser checks are explicitly skipped.
+For real-browser regression checks alone, run `RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q tests/test_browser.py`. The test serves `docs/` under a subpath and checks every page in both themes at 320, 375, 768 and 1280 px, plus project navigation, keyboard access, diagram text bounds, image loading, no-JavaScript access and two-page résumé printing. Without the environment flag, these browser checks are explicitly skipped. Capture screenshots or a recording for visual changes and report coverage limits as described in `AGENTS.md`.
 
 Project navigation links only to resources that actually exist: a local case study, a local report when available, a public Code repository, and a verified Live link. An upstream report can be linked directly (MapReduce); no placeholder reports or private repository links are added. Search remains off in this pass: category shortcuts improve the current index without adding another script or generated search index. Search, report TOCs and prev/next navigation remain separate backlog work, not completed features.
 

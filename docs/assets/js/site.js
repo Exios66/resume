@@ -5,6 +5,13 @@
   "use strict";
   var doc = document;
   var root = doc.documentElement;
+  doc.querySelectorAll('.chart-scroll').forEach(function (chart) {
+    chart.addEventListener('keydown', function (event) {
+      if (chart.scrollWidth <= chart.clientWidth || (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')) return;
+      event.preventDefault();
+      chart.scrollLeft += event.key === 'ArrowRight' ? 40 : -40;
+    });
+  });
   var reduce = false;
   try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 
@@ -57,6 +64,7 @@
     }
 
     function render(query) {
+      if (!pages) return;
       var tokens = query.toLowerCase().split(/\s+/).filter(function (t) { return t.length > 1; });
       list.textContent = "";
       if (!tokens.length) { status.textContent = ""; return; }

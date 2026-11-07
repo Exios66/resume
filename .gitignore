@@ -15,5 +15,6 @@ Thumbs.db
 **/*.quarto_ipynb
 
 # Python
+.venv/
 __pycache__/
 .pytest_cache/
