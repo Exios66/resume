@@ -535,6 +535,12 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   .project-nav { gap: 6px; }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .page table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* Number grids stay grids: tighter cells let most of them fit a phone without scrolling. */
+  .page table:not(.stack) { font-size: .84rem; }
+  .page table:not(.stack) code { font-size: .9em; }
+  .page table:not(.stack) :is(th, td) { padding: 7px 8px; }
+  .page table:not(.stack) :is(th, td):first-child { padding-left: 2px; }
+  .page table:not(.stack) :is(th, td):last-child { padding-right: 2px; }
   /* Text tables: each row becomes a block, each cell labelled with its column. */
   .page table.stack, .page table.stack tbody, .page table.stack tr, .page table.stack td { display: block; width: auto; }
   .page table.stack { overflow: visible; border-top: 2px solid var(--accent); }
