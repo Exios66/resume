@@ -1,0 +1,9 @@
+{
+  "main": "13c9afb5ca30e7ec91ba5c860887c0b0d49ef15b",
+  "parent107": "24257754f420fa3fd2fcd89012019b99283a2642",
+  "candidate108": "3eed785a980da8fcc8c6c3a334379a9a3ad31451",
+  "parentMergeConflicts": false,
+  "childMergeConflicts": false,
+  "postMergeTreeMatchesCandidate": true,
+  "method": "git merge-tree plus unreferenced commit-tree object; no branch or deployment changed"
+}
