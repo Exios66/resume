@@ -525,6 +525,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .search-results { list-style: none; margin: 14px 0 0; padding: 0; }
 .search-results li { padding: 12px 0; border-bottom: 1px solid var(--rule); }
 .search-results li > span { display: block; font-size: .78rem; color: var(--muted); }
+.search-results li > .result-type { display: table; margin-bottom: 4px; padding: 2px 8px; border: 1px solid var(--rule); border-radius: 5px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 600; }
 .search-results .result-title { font-weight: 600; }
 .search-results p { margin: 4px 0 0; color: var(--muted); font-size: .9rem; }
 h2.group-title, .group-title { display: flex; align-items: baseline; gap: 10px; }

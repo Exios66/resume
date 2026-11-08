@@ -184,6 +184,10 @@ def test_site_search_contents_list_and_pager(site):
         expect(page.locator("#search-results li")).to_have_count(matches)
         snippet = page.locator('#search-results a[href$="projects/digital-mailroom/appendix.html"] + span + p')
         expect(snippet).not_to_contain_text("Case study Case study")
+        appendix = page.locator('#search-results a[href$="projects/digital-mailroom/appendix.html"]')
+        expect(appendix.locator("..").locator(".result-type")).to_have_text("Appendix")
+        report = page.locator('#search-results a[href$="projects/mailroom-ml/report.html"]')
+        expect(report.locator("..").locator(".result-type")).to_have_text("Technical report")
 
         # Whole pages are indexed, not an opening excerpt: "shipment" is only deep in the résumé.
         page.get_by_label("Search this site").fill("shipment")
@@ -193,6 +197,7 @@ def test_site_search_contents_list_and_pager(site):
         expect(page.locator("#search-results a").first).to_be_visible()
         case_study = page.locator('#search-results a[href$="projects/mailroom-ml.html"]')
         expect(case_study).to_have_count(1)
+        expect(case_study.locator("..").locator(".result-type")).to_have_text("Case study")
         case_study.click()
         expect(page.get_by_role("heading", level=1)).to_have_text("Mailroom-ML")
 

@@ -167,6 +167,15 @@
       return el;
     }
 
+    // Derive artifact types from local routes, not claims in project prose.
+    function pageType(url) {
+      var route = new URL(url, location.href).pathname;
+      if (/\/report\.html$/.test(route)) return { key: "report", label: "Technical report" };
+      if (/\/appendix\.html$/.test(route)) return { key: "appendix", label: "Appendix" };
+      if (/\/projects\/(?!index\.html$)[^/]+\.html$/.test(route)) return { key: "case-study", label: "Case study" };
+      return { key: "other", label: "Page" };
+    }
+
     function snippet(page, tokens) {
       var body = page.b || "";
       var at = -1;
@@ -206,6 +215,11 @@
         : "No pages match “" + query + "”.";
       hits.forEach(function (hit) {
         var item = node("li");
+        var type = pageType(hit.page.u);
+        item.dataset.pageType = type.key;
+        var badge = node("span", type.label);
+        badge.className = "result-type";
+        item.appendChild(badge);
         var link = node("a");
         link.href = hit.page.u;
         link.appendChild(node("span", hit.page.t));
