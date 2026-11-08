@@ -165,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The number to quote is <strong>82.6% (925 of 1,120)</strong> for prompt v11.8 on a balanced slice of 70 images per class. That slice is a seeded, class-balanced sample of the Hugging Face mirror of RVL-CDIP, which holds 100 images per class across its three splits. It shares at least 20 images per class (320 in all) with the 800-image slice, so those two results are not independent. I did not verify its overlap with the 160-image slice I tuned on. On the tuning slice the same prompt reaches 99.4% (157 of 158), which I treat as an optimistic upper bound because I wrote rules for individual misses on that slice. Cost is about $0.0004 per image. Simulations of voting and routing looked promising, but none of the three routing tests I measured reproduced the gain.</p>
 <h2 id="system-and-data">System and data</h2>
 <p>The pipeline has these stages.</p>
-<table class="stack caption-top" role="table">
+<table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -230,7 +230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Two things stand out. The v10 jump (+6.4 points over v9’s 91.1%) came from writing rules for every v9 miss, which is tuning in the strict sense. And the last steps to 99.4% fixed three named images. I also kept a harder 56-row evaluation set made from earlier failures, where v11.8 scored 18 of 56 (32.1%), below v11.7’s 20 of 56. I fixed one trade-off and introduced others, so I stopped treating the 160-image slice as evidence of generalization.</p>
 <h2 id="results">Results</h2>
-<table class="stack caption-top" role="table">
+<table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 18%">
 <col style="width: 18%">
@@ -377,44 +377,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <h3 id="data-exploration-and-observability-tools">Data exploration and observability tools</h3>
 <p>These are in the repository and are linked from the case study as well.</p>
-<table class="caption-top">
+<table class="caption-top stack" role="table">
 <thead>
-<tr class="header">
-<th>Tool</th>
-<th>What it does</th>
-<th>Where</th>
+<tr class="header" role="row">
+<th role="columnheader">Tool</th>
+<th role="columnheader">What it does</th>
+<th role="columnheader">Where</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Quarto site</td>
-<td>Manuscript, methods, results, experiment log, prompt changelog, cost analysis, research memos, notebooks and a misclassification appendix. Renders offline, with no model spend.</td>
-<td><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website"><code>website/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Tool">Quarto site</td>
+<td role="cell" data-label="What it does">Manuscript, methods, results, experiment log, prompt changelog, cost analysis, research memos, notebooks and a misclassification appendix. Renders offline, with no model spend.</td>
+<td role="cell" data-label="Where"><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website"><code>website/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
 </tr>
-<tr class="even">
-<td>Monte Carlo pages and reports</td>
-<td>Ten pages and the raw tables for the analyses above.</td>
-<td><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/montecarlo"><code>website/montecarlo/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>, <a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/reports/monte_carlo"><code>reports/monte_carlo/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Tool">Monte Carlo pages and reports</td>
+<td role="cell" data-label="What it does">Ten pages and the raw tables for the analyses above.</td>
+<td role="cell" data-label="Where"><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/montecarlo"><code>website/montecarlo/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>, <a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/reports/monte_carlo"><code>reports/monte_carlo/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
 </tr>
-<tr class="odd">
-<td>Interactive pages</td>
-<td>A cost calculator and an experiment explorer.</td>
-<td><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/interactive"><code>website/interactive/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Tool">Interactive pages</td>
+<td role="cell" data-label="What it does">A cost calculator and an experiment explorer.</td>
+<td role="cell" data-label="Where"><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/interactive"><code>website/interactive/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
 </tr>
-<tr class="even">
-<td>Data exploration</td>
-<td>Class balance, image dimensions, file sizes, color modes and sample grids.</td>
-<td><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/scripts/eda"><code>scripts/eda/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Tool">Data exploration</td>
+<td role="cell" data-label="What it does">Class balance, image dimensions, file sizes, color modes and sample grids.</td>
+<td role="cell" data-label="Where"><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/scripts/eda"><code>scripts/eda/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
 </tr>
-<tr class="odd">
-<td>Braintrust tooling</td>
-<td>Dataset builders, evaluation runs logged as Braintrust experiments, summaries, reports, metric charts, and the Monte Carlo scripts.</td>
-<td><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/scripts/braintrust"><code>scripts/braintrust/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Tool">Braintrust tooling</td>
+<td role="cell" data-label="What it does">Dataset builders, evaluation runs logged as Braintrust experiments, summaries, reports, metric charts, and the Monte Carlo scripts.</td>
+<td role="cell" data-label="Where"><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/scripts/braintrust"><code>scripts/braintrust/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
 </tr>
-<tr class="even">
-<td>Notebooks</td>
-<td>Setup, balanced sampling and upload, evaluators over a full experiment, and cost.</td>
-<td><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/notebooks"><code>notebooks/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Tool">Notebooks</td>
+<td role="cell" data-label="What it does">Setup, balanced sampling and upload, evaluators over a full experiment, and cost.</td>
+<td role="cell" data-label="Where"><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/notebooks"><code>notebooks/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
 </tr>
 </tbody>
 </table>

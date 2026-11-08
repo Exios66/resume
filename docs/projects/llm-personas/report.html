@@ -165,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>One point matters more than the rest. The runner makes one model call that plays every seat. It is not a multi-model system. There is also no evaluation: no baseline and no comparison with a single prompt. This report describes the design and the evidence that it runs, and it publishes no quality claim.</p>
 <h2 id="system-and-data">System and data</h2>
 <h3 id="the-cast-and-the-rules">The cast and the rules</h3>
-<table class="stack caption-top" role="table">
+<table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -227,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 id="what-the-prompt-contains">What the prompt contains</h3>
 <p>The system prompt is assembled from the framework files: procedures, rules, personalities, checklists, the expert registry, the feasibility framework and optionally spectators and templates. A short runner instruction tells the model to produce a complete transcript with all phases and to end with scribe certification. The user prompt carries the matter, the feasibility level, the hearing type and a state summary. The model is told to follow the procedure. Nothing in code checks that it did, apart from the separate transcript audit described below.</p>
 <h3 id="records-and-state">Records and state</h3>
-<table class="stack caption-top" role="table">
+<table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
@@ -263,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <h3 id="the-executive-layer">The executive layer</h3>
 <p>The <code>executive/</code> package has four standard-library modules, about 600 lines in all. By design it executes rulings and does not make decisions.</p>
-<table class="stack caption-top" role="table">
+<table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
@@ -311,7 +311,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 id="what-the-project-reports-about-itself">What the project reports about itself</h3>
 <p><code>state/metrics.md</code> says 13 deliberations, 12 decisions, 8 unanimous and 3 split, with 0 tie-breakers and 0 deadlocks. The feasibility counts are 2 at F3, 4 at F4 and 7 at F5. These come from the same system that produced the decisions and I did not recompute them. The vote categories add up to 11 rather than the 12 decisions it reports, so the file is not fully consistent with itself. The 8 unanimous votes are a weak signal when one model casts all the votes.</p>
 <h3 id="test-counts">Test counts</h3>
-<table class="stack caption-top" role="table">
+<table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">

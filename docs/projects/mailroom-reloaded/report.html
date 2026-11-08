@@ -165,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The package is version 0.4.2 and requires Python 3.11 or 3.12. No accuracy or cost results are committed to the repository, so this report publishes none. It describes what the system does and the evidence that it runs.</p>
 <h2 id="system-and-data">System and data</h2>
 <p>The canonical main path is <code>ingest</code>, <code>bert_primary</code>, <code>sort</code>, <code>gate_classify</code>, <code>extract</code>, <code>gate_extract</code>, then <code>report_catalog_archive</code> (<code>pipeline/state.py</code>). The two gates are pure route computations. <code>verify</code>, <code>boss</code>, <code>human_review</code> and an evaluation-only <code>grade</code> step are dispatched by the driver outside that tuple.</p>
-<table class="stack caption-top" role="table">
+<table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -231,7 +231,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>ingest</code> and <code>bert_primary</code> are local, so they add no LLM calls. If ModernBERT is flagged off, missing, given an oversized input, or raises, the adapter returns an “unavailable” verdict and the handoff forces a full sort. Classes listed under <code>defer_classes</code> (by default <code>contract</code> and <code>merger_agreement</code>) and multi-window verdicts also fall back to a full sort. The model comes from <a href="../../projects/mailroom-ml.html">Mailroom-ML</a> through the optional <code>bert</code> extra.</p>
 <h3 id="the-gates-and-their-escalation-paths">The gates and their escalation paths</h3>
 <p><code>BandGate</code> applies per-class thresholds from <code>config/taxonomy.yaml</code>. The global defaults are a high band of 0.95, a low band of 0.70, and <code>retry_max</code> of 2. Some classes override them.</p>
-<table class="stack caption-top" role="table">
+<table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -327,7 +327,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <h3 id="verification-run-on-merged-main-2026-10-11">Verification run on merged <code>main</code> (2026-10-11)</h3>
 <p>This used a mock LLM provider with four seeded documents. It tests plumbing, not model quality.</p>
-<table class="stack caption-top" role="table">
+<table class="caption-top stack" role="table">
 <thead>
 <tr class="header" role="row">
 <th role="columnheader">Check</th>

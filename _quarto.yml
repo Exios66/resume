@@ -31,6 +31,8 @@ format:
     filters:
       - scripts/charts.lua
       - scripts/site.lua
+      - path: scripts/tables.lua
+        at: post-render
     title-block-style: none
     minimal: false
     canonical-url: true

@@ -169,7 +169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Numbers on this page labelled “test split” come from those 323 documents. The split was kept out of training, out of checkpoint selection (done on validation) and out of calibration fitting. It is not untouched, though. I used it to compare runs, to run the selective-risk sweep that supports the 0.97 cutoff, and to run the decode sweep. The 0.97 value itself is a preset in the project’s config, and the sweep recommended the same value. I name the project’s runs as follows: Run 3 is an early two-epoch run, Arm A and Arm B are two comparison runs (a one-epoch smoke run and a three-epoch run), and M9b is the final four-epoch run. The six figures are from Arm B, not from the final run. Where the two differ I say so.</p>
 <h2 id="system-and-data">System and data</h2>
 <h3 id="stages-and-modules">Stages and modules</h3>
-<table class="stack caption-top" role="table">
+<table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -394,7 +394,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>The insurance score is high because that class is templated and has only six subclasses. Given the earlier leak, I treat a 1.000 as a prompt to keep looking, not as evidence of general skill. At the default decode, the merger-agreement result is a collapse: all 17 test merger agreements were assigned to one rare subclass that had 13 training windows, against 450 for the largest. Contract errors are different. The model spreads its answers over many subclasses and gets 14 of 53 right where the type was right, and services and supply contracts, with real support in training, are never recovered.</p>
 <h3 id="acceptance-gates-test-split">Acceptance gates, test split</h3>
-<table class="stack caption-top" role="table">
+<table class="caption-top stack" role="table">
 <thead>
 <tr class="header" role="row">
 <th role="columnheader">Gate</th>
