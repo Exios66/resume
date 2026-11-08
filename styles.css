@@ -494,6 +494,8 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .page-toc .toc-label { margin: 0 0 8px; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .page-toc ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 28px; margin: 0; padding-left: 1.1rem; }
 .page-toc li { margin: 0; min-width: 0; }
+.page-toc a { display: flex; align-items: center; min-height: 44px; padding: 6px 8px; border-radius: 6px; }
+.page-toc a:hover, .page-toc a:focus-visible { background: var(--accent-soft); }
 @media (max-width: 720px) { .page-toc ul { grid-template-columns: minmax(0, 1fr); } }
 
 /* Previous/next project pager */
