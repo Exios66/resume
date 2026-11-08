@@ -503,6 +503,24 @@ div.sourceCode pre.sourceCode, pre.sourceCode code, code.sourceCode > span { col
 pre span, .page pre code span, .page div.sourceCode pre code span { color: inherit !important; font-style: normal !important; font-weight: inherit; background: none !important; }
 pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+/* Copy button on code blocks. Quarto draws it with an icon font this site does not load,
+   so it gets a text label and the site's own button styling. */
+div.code-copy-outer-scaffold { position: relative; }
+div.code-copy-outer-scaffold pre { padding-right: 76px; }
+.page .code-copy-button {
+  position: absolute; top: 7px; right: 7px; margin: 0;
+  min-height: 26px; padding: 3px 10px;
+  font: 600 .75rem/1.4 var(--sans); letter-spacing: .02em; color: var(--muted);
+  background: var(--paper); border: 1px solid var(--rule); border-radius: 6px;
+  cursor: pointer; transition: color .15s, border-color .15s;
+}
+.page .code-copy-button .bi { display: none; }
+.page .code-copy-button::before { content: "Copy"; }
+.page .code-copy-button-checked::before { content: "Copied"; }
+.page .code-copy-button:hover, .page .code-copy-button-checked { color: var(--accent); border-color: var(--accent); }
+.page .code-copy-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media print { .page .code-copy-button { display: none; } div.code-copy-outer-scaffold pre { padding-right: 14px; } }
+
 /* Project pages: small screens */
 @media (max-width: 720px) {
   .project-nav { gap: 6px; }
