@@ -44,12 +44,26 @@ function serve() {
 function inspect(mobile) {
   const vw = document.documentElement.clientWidth;
   const out = { pageOverflow: document.documentElement.scrollWidth > vw + 1, tap: [], tiny: [], crushed: 0,
-    tableOverflow: 0, invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0 };
+    tableOverflow: 0, invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
+    sepStart: 0, sepEnd: 0, headingWidows: 0 };
   const visible = el => { const s = getComputedStyle(el); const r = el.getBoundingClientRect();
     return s.visibility !== 'hidden' && s.display !== 'none' && r.width > 0 && r.height > 0; };
   const sig = el => { const parts = []; while (el && el.nodeType === 1 && parts.length < 3) {
     parts.unshift(el.tagName.toLowerCase() + (el.classList.length ? '.' + [...el.classList].slice(0, 2).join('.') : ''));
     el = el.parentElement; } return parts.join('>'); };
+  // Line boxes of an element's own text: element boxes (padded inline code, icons) are ignored, and
+  // fragments whose vertical centres are within 6px share a line even when their fonts differ.
+  const lineCount = el => {
+    const mids = []; const tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    for (let n = tw.nextNode(); n; n = tw.nextNode()) {
+      if (!n.textContent.trim()) continue;
+      const rg = document.createRange(); rg.selectNodeContents(n);
+      for (const q of rg.getClientRects()) if (q.width > 0) mids.push(q.top + q.height / 2);
+    }
+    mids.sort((a, b) => a - b); let lines = 0, last = -1e9;
+    for (const m of mids) { if (m - last > 6) lines++; last = m; }
+    return lines;
+  };
   const focusables = 'a[href], button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])';
   for (const el of document.querySelectorAll(focusables)) {
     const s = getComputedStyle(el); const r = el.getBoundingClientRect();
@@ -58,7 +72,11 @@ function inspect(mobile) {
     if (r.width > 0 && r.height > 0 && (r.width < 8 || r.height < 8)) out.invisibleFocusable.push(sig(el));
     if (!mobile || r.width === 0) continue;
     const inline = el.tagName === 'A' && s.display === 'inline' && el.closest('p, li, td, th, figcaption, dd, dt, blockquote');
-    if (!inline && (r.width < 24 || r.height < 24) && el.closest('svg') === null) out.tap.push(sig(el));
+    // A link whose ::after is an absolute overlay (a stretched card link) is as big as the box it covers.
+    const after = getComputedStyle(el, '::after');
+    const hit = after.content !== 'none' && after.position === 'absolute' && el.offsetParent
+      ? el.offsetParent.getBoundingClientRect() : r;
+    if (!inline && (hit.width < 24 || hit.height < 24) && el.closest('svg') === null) out.tap.push(sig(el));
   }
   if (mobile) {
     const seen = new Set();
@@ -76,13 +94,49 @@ function inspect(mobile) {
       for (const cell of t.querySelectorAll('td, th')) {
         const text = cell.textContent.trim(); if (!text) continue;
         // Count the text's own line boxes, not the row height that a taller neighbour sets.
-        const range = document.createRange(); range.selectNodeContents(cell);
-        const lines = new Set([...range.getClientRects()].filter(q => q.width > 0).map(q => Math.round(q.bottom))).size;
+        const lines = lineCount(cell);
         const words = text.split(/\s+/).length;
         const clipped = [...cell.querySelectorAll('code')].some(c => c.getBoundingClientRect().right > cell.getBoundingClientRect().right + 1);
         if (lines > words + 1 || clipped) out.crushed++;
       }
     }
+  }
+  // Typography. Separators (• ·) that start or end a wrapped line, and headings whose last line is one word.
+  const charRect = (node, i) => { const rg = document.createRange(); rg.setStart(node, i); rg.setEnd(node, i + 1);
+    return rg.getClientRects()[0]; };
+  const sameLine = (a, b) => a && b && Math.abs((a.top + a.height / 2) - (b.top + b.height / 2)) <= 6;
+  const tw = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const chars = [];
+  for (let n = tw.nextNode(); n; n = tw.nextNode()) {
+    const el = n.parentElement; if (!el || el.closest('svg, script, style, pre, .visually-hidden, .sr-only') || !visible(el)) continue;
+    if (/[•·]/.test(n.textContent)) chars.push(n);
+  }
+  for (const n of chars) {
+    const block = n.parentElement.closest('p, li, h1, h2, h3, h4, dd, dt, figcaption, td, th, div, span.role, nav') || n.parentElement;
+    // Every visible character of the block in order, so neighbours across inline elements are found.
+    const seq = []; const bw = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
+    for (let m = bw.nextNode(); m; m = bw.nextNode()) for (let i = 0; i < m.textContent.length; i++)
+      if (m.textContent[i].trim()) seq.push([m, i]);
+    seq.forEach(([m, i], k) => {
+      if (m !== n || !/[•·]/.test(m.textContent[i])) return;
+      const here = charRect(m, i); if (!here || !here.width) return;
+      const before = k > 0 ? charRect(...seq[k - 1]) : null;
+      const after = k < seq.length - 1 ? charRect(...seq[k + 1]) : null;
+      if (before && !sameLine(before, here)) out.sepStart++;
+      else if (after && !sameLine(after, here)) out.sepEnd++;
+    });
+  }
+  for (const h of document.querySelectorAll('h1, h2, h3')) {
+    if (!visible(h)) continue;
+    const words = []; const hw = document.createTreeWalker(h, NodeFilter.SHOW_TEXT);
+    for (let m = hw.nextNode(); m; m = hw.nextNode()) {
+      if (m.parentElement.closest('svg, .visually-hidden')) continue;
+      const re = /\S+/g; let w; while ((w = re.exec(m.textContent))) {
+        const rg = document.createRange(); rg.setStart(m, w.index); rg.setEnd(m, w.index + w[0].length);
+        const q = [...rg.getClientRects()].pop(); if (q && q.width) words.push(q);
+      }
+    }
+    if (words.length >= 3 && !sameLine(words[words.length - 1], words[words.length - 2])) out.headingWidows++;
   }
   let prev = 0;
   for (const h of document.querySelectorAll('h1, h2, h3, h4, h5, h6')) {
@@ -114,7 +168,7 @@ function lints() {
   const browser = await chromium.launch();
   const combos = [{ w: 375, theme: 'light', mobile: true }, { w: 375, theme: 'dark' },
     { w: 1280, theme: 'light' }, { w: 1280, theme: 'dark' }, { w: 320, theme: 'light', mobile: true, layoutOnly: true }];
-  const totals = { axe: 0, layout: 0, errors: 0, structure: 0, axeIds: {}, details: {} };
+  const totals = { axe: 0, layout: 0, errors: 0, structure: 0, type: 0, axeIds: {}, details: {} };
   const add = (bucket, key, pts) => { totals[bucket] += pts; totals.details[key] = (totals.details[key] || 0) + pts; };
   await Promise.all(combos.map(async c => {
     const ctx = await browser.newContext({ viewport: { width: c.w, height: 900 }, colorScheme: c.theme, reducedMotion: 'reduce' });
@@ -147,6 +201,11 @@ function lints() {
         add('structure', 'heading level skips', 2 * r.headingSkips);
         if (r.h1 !== 1) add('structure', 'pages without exactly one h1', 2);
       }
+      if (c.theme === 'light' && !c.layoutOnly) {
+        add('type', 'separator starts a line', 2 * r.sepStart);
+        add('type', 'separator ends a line', r.sepEnd);
+        add('type', 'heading ends with a one-word line', r.headingWidows);
+      }
       add('errors', 'broken images', 10 * r.brokenImages);
       add('errors', 'console or network errors', 10 * errs.size);
       if (SHOT_DIR && !c.layoutOnly && c.theme === 'light') {
@@ -162,7 +221,7 @@ function lints() {
   const lintFound = lints();
   const lintPts = lintFound.reduce((s, [, w]) => s + w, 0);
   for (const [k, w] of lintFound) totals.details['lint: ' + k] = w;
-  const total = totals.axe + totals.layout + totals.errors + totals.structure + lintPts;
+  const total = totals.axe + totals.layout + totals.errors + totals.structure + totals.type + lintPts;
   console.error(JSON.stringify({ details: totals.details, axeIds: totals.axeIds }, null, 1));
   const css = fs.statSync(path.join(DOCS, 'styles.css')).size;
   console.log(`METRIC polish_defects=${total}`);
@@ -171,6 +230,7 @@ function lints() {
   console.log(`METRIC error_points=${totals.errors}`);
   console.log(`METRIC structure_points=${totals.structure}`);
   console.log(`METRIC lint_points=${lintPts}`);
+  console.log(`METRIC type_points=${totals.type}`);
   console.log(`METRIC pages=${PAGES.length}`);
   console.log(`METRIC css_kb=${(css / 1024).toFixed(1)}`);
   console.log(`METRIC audit_s=${((Date.now() - t0) / 1000).toFixed(1)}`);
