@@ -5,7 +5,6 @@ description: "Supporting notes for the Langton's Ant case study: the full 20-mac
 
 ::: {.page}
 
-[← Case study](../langtons-ant.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../langtons-ant.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/langtons-ant) [Live demo](https://exios66.github.io/langtons-ant/)

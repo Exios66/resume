@@ -5,7 +5,6 @@ description: "Pipeline structure, durability, escalation gates, observability, d
 
 ::: {.page}
 
-[← Case study](../mailroom-reloaded.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../mailroom-reloaded.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/mailroom-reloaded)

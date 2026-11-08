@@ -57,7 +57,9 @@ I build AI systems from start to finish: multi-agent document pipelines, transfo
 :::
 
 ::: {.degree}
-*B.S., Psychology* · Concentration: Neuroscience · **GPA: 3.93**
+*B.S., Psychology*
+
+Concentration: Neuroscience. **GPA: 3.93**
 :::
 
 - Coursework spanning cognitive and computational neuroscience, psychological theory, clinical psychology, psychopharmacology, psychometrics, psychological statistics, and early data science preparation — plus philosophy, neuroethics, and pre-law.

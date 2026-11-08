@@ -4,8 +4,17 @@ project:
   render:
     - "*.qmd"
     - "**/*.qmd"
+    - "!node_modules/**"
+    - "!.venv/**"
+    - "!.autoresearch-tools/**"
+    - "!.autoresearch/**"
   resources:
     - assets/**
+    - "!node_modules/**"
+    - "!.venv/**"
+    - "!.autoresearch-tools/**"
+    - "!.autoresearch/**"
+    - "!**/node_modules/**"
   post-render: scripts/post-render.py
 
 website:

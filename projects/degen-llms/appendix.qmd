@@ -5,7 +5,6 @@ description: "Supporting notes for The Mandalay Bay: game inventory, save format
 
 ::: {.page}
 
-[← Case study](../degen-llms.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../degen-llms.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/degen-llms) [Live demo](https://exios66.github.io/degen-llms/)

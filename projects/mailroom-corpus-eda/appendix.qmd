@@ -5,7 +5,6 @@ description: "Supporting tables for the mailroom dataset: published configuratio
 
 ::: {.page}
 
-[← Case study](../mailroom-corpus-eda.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../mailroom-corpus-eda.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/Mailroom-Corpus-EDA) [Dataset](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset)

@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=6dab5189c7">
+<link rel="stylesheet" href="../../styles.css?v=b9bb1b90c4">
 <meta property="og:title" content="Psychometric Digital Twin: technical report — Jack J. Burleson">
 <meta property="og:description" content="Technical report on a PSYCH 755 study of LLM personas against classical ML for predicting PRCA communication apprehension: data, models, per-tier results, bias slices, secondary studies, reproduction and limits.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -153,7 +153,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <div class="page">
-<p><a href="../../projects/psychometric-digital-twin.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>Case study</a></p>
 <div class="project-nav">
 <p><a href="../../projects/psychometric-digital-twin.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/psychometric-digital-twin/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/psychometric-digital-twin/appendix.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Appendix</a> <a href="https://github.com/Exios66/psych755-jjb"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
 </div>
@@ -168,11 +167,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 id="data">Data</h3>
 <p>The survey was collected through Prolific and Qualtrics for the course. Two Prolific recruitment waves were stacked (262 unique participants) and joined to 273 Qualtrics rows by the participant identifier the respondents typed into the survey. That gave 252 matches. Eleven had incomplete PRCA items and were dropped, leaving an analytic sample of 241. Both subscales are the sum of six five-point items, with comfort items reverse-coded, so each runs from 6 to 30. The repository states no ethics or consent details, so I make no claim about them here.</p>
 <table class="caption-top">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Measure</th>
@@ -192,9 +186,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>13</td>
 </tr>
 <tr class="odd">
-<td>Low (13 or less) / moderate (14–19) / high (20 or more)</td>
-<td>53.9% / 25.3% / 20.7%</td>
-<td>53.1% / 28.6% / 18.3%</td>
+<td>Low band (13 or less)</td>
+<td>53.9%</td>
+<td>53.1%</td>
+</tr>
+<tr class="even">
+<td>Moderate band (14–19)</td>
+<td>25.3%</td>
+<td>28.6%</td>
+</tr>
+<tr class="odd">
+<td>High band (20 or more)</td>
+<td>20.7%</td>
+<td>18.3%</td>
 </tr>
 </tbody>
 </table>
@@ -245,65 +249,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 id="results">Results</h2>
 <h3 id="classical-baselines">Classical baselines</h3>
 <p>Group-score MAE by model and tier, lower is better:</p>
-<table class="caption-top">
+<table class="caption-top stack" role="table">
 <thead>
-<tr class="header">
-<th>Model</th>
-<th>demos</th>
-<th>employment</th>
-<th>geo</th>
-<th>transit</th>
+<tr class="header" role="row">
+<th role="columnheader">Model</th>
+<th role="columnheader">demos</th>
+<th role="columnheader">employment</th>
+<th role="columnheader">geo</th>
+<th role="columnheader">transit</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Ridge</td>
-<td>4.97</td>
-<td>4.66</td>
-<td>4.68</td>
-<td><strong>4.49</strong></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Model">Ridge</td>
+<td class="num" role="cell" data-label="demos">4.97</td>
+<td class="num" role="cell" data-label="employment">4.66</td>
+<td class="num" role="cell" data-label="geo">4.68</td>
+<td class="num" role="cell" data-label="transit"><strong>4.49</strong></td>
 </tr>
-<tr class="even">
-<td>Elastic Net</td>
-<td>4.94</td>
-<td><strong>4.65</strong></td>
-<td>4.69</td>
-<td>4.51</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Model">Elastic Net</td>
+<td class="num" role="cell" data-label="demos">4.94</td>
+<td class="num" role="cell" data-label="employment"><strong>4.65</strong></td>
+<td class="num" role="cell" data-label="geo">4.69</td>
+<td class="num" role="cell" data-label="transit">4.51</td>
 </tr>
-<tr class="odd">
-<td>Neural net</td>
-<td><strong>4.90</strong></td>
-<td>4.78</td>
-<td>4.82</td>
-<td>4.59</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Model">Neural net</td>
+<td class="num" role="cell" data-label="demos"><strong>4.90</strong></td>
+<td class="num" role="cell" data-label="employment">4.78</td>
+<td class="num" role="cell" data-label="geo">4.82</td>
+<td class="num" role="cell" data-label="transit">4.59</td>
 </tr>
-<tr class="even">
-<td>Random forest</td>
-<td>5.72</td>
-<td>5.59</td>
-<td>5.05</td>
-<td>4.68</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Model">Random forest</td>
+<td class="num" role="cell" data-label="demos">5.72</td>
+<td class="num" role="cell" data-label="employment">5.59</td>
+<td class="num" role="cell" data-label="geo">5.05</td>
+<td class="num" role="cell" data-label="transit">4.68</td>
 </tr>
-<tr class="odd">
-<td>Histogram gradient boosting</td>
-<td>5.15</td>
-<td>5.05</td>
-<td>5.01</td>
-<td>4.87</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Model">Histogram gradient boosting</td>
+<td class="num" role="cell" data-label="demos">5.15</td>
+<td class="num" role="cell" data-label="employment">5.05</td>
+<td class="num" role="cell" data-label="geo">5.01</td>
+<td class="num" role="cell" data-label="transit">4.87</td>
 </tr>
-<tr class="even">
-<td>XGBoost</td>
-<td>5.81</td>
-<td>5.90</td>
-<td>5.26</td>
-<td>4.99</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Model">XGBoost</td>
+<td class="num" role="cell" data-label="demos">5.81</td>
+<td class="num" role="cell" data-label="employment">5.90</td>
+<td class="num" role="cell" data-label="geo">5.26</td>
+<td class="num" role="cell" data-label="transit">4.99</td>
 </tr>
-<tr class="odd">
-<td>k-NN</td>
-<td>5.83</td>
-<td>5.84</td>
-<td>5.74</td>
-<td>5.21</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Model">k-NN</td>
+<td class="num" role="cell" data-label="demos">5.83</td>
+<td class="num" role="cell" data-label="employment">5.84</td>
+<td class="num" role="cell" data-label="geo">5.74</td>
+<td class="num" role="cell" data-label="transit">5.21</td>
 </tr>
 </tbody>
 </table>
@@ -317,7 +321,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>A constant guess is a useful reference. From the committed cohort table I computed the MAE of always predicting the cohort mean, which is 4.93 for group CA and 4.63 for interpersonal CA, and of always predicting the median, 4.74 and 4.51. This is my own calculation and is in-sample, so it flatters the constant guess a little. It still shows the room above the floor is small.</p>
 <h3 id="llm-personas">LLM personas</h3>
 <p>Pooled over the five tiers of version 1 (1,205 prompts per model):</p>
-<table class="caption-top">
+<table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 20%">
 <col style="width: 20%">
@@ -326,42 +330,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <col style="width: 20%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Model</th>
-<th>Group MAE</th>
-<th>Interpersonal MAE</th>
-<th>Group band accuracy</th>
-<th>Interpersonal band accuracy</th>
+<tr class="header" role="row">
+<th role="columnheader">Model</th>
+<th role="columnheader">Group MAE</th>
+<th role="columnheader">Interpersonal MAE</th>
+<th role="columnheader">Group band accuracy</th>
+<th role="columnheader">Interpersonal band accuracy</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>DeepSeek-R1-Distill-Llama-8B</td>
-<td>5.22</td>
-<td>5.73</td>
-<td>33.4%</td>
-<td>35.4%</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Model">DeepSeek-R1-Distill-Llama-8B</td>
+<td class="num" role="cell" data-label="Group MAE">5.22</td>
+<td class="num" role="cell" data-label="Interpersonal MAE">5.73</td>
+<td class="num" role="cell" data-label="Group band accuracy">33.4%</td>
+<td class="num" role="cell" data-label="Interpersonal band accuracy">35.4%</td>
 </tr>
-<tr class="even">
-<td>Llama 3.2 3B Instruct</td>
-<td>5.51</td>
-<td>5.35</td>
-<td>52.7%</td>
-<td>30.0%</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Model">Llama 3.2 3B Instruct</td>
+<td class="num" role="cell" data-label="Group MAE">5.51</td>
+<td class="num" role="cell" data-label="Interpersonal MAE">5.35</td>
+<td class="num" role="cell" data-label="Group band accuracy">52.7%</td>
+<td class="num" role="cell" data-label="Interpersonal band accuracy">30.0%</td>
 </tr>
-<tr class="odd">
-<td>Llama 3.1 8B Instruct</td>
-<td>5.92</td>
-<td>5.82</td>
-<td>28.8%</td>
-<td>40.2%</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Model">Llama 3.1 8B Instruct</td>
+<td class="num" role="cell" data-label="Group MAE">5.92</td>
+<td class="num" role="cell" data-label="Interpersonal MAE">5.82</td>
+<td class="num" role="cell" data-label="Group band accuracy">28.8%</td>
+<td class="num" role="cell" data-label="Interpersonal band accuracy">40.2%</td>
 </tr>
-<tr class="even">
-<td>Llama 3.3 70B Instruct</td>
-<td>6.02</td>
-<td>4.65</td>
-<td>26.3%</td>
-<td>52.0%</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Model">Llama 3.3 70B Instruct</td>
+<td class="num" role="cell" data-label="Group MAE">6.02</td>
+<td class="num" role="cell" data-label="Interpersonal MAE">4.65</td>
+<td class="num" role="cell" data-label="Group band accuracy">26.3%</td>
+<td class="num" role="cell" data-label="Interpersonal band accuracy">52.0%</td>
 </tr>
 </tbody>
 </table>
@@ -369,65 +373,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Version 2 improved DeepSeek (group 5.02, interpersonal 5.26) and made the others worse. Llama 3.1 went to 5.99 and 7.63, and Llama 3.2 3B Instruct to 5.73 and 6.07. Version 3, greedy and eight tiers, left Llama 3.1 at 5.99 and 5.76, Llama 3.2 3B Instruct at 5.72 and 6.81, and the 70B model at 6.01 and 4.61, again as a constant prior. The enhanced-decode rerun of version 3 is still pending in the repository.</p>
 <h3 id="per-tier-results">Per-tier results</h3>
 <p>Group-score MAE by tier, with the best classical value and the persona runs:</p>
-<table class="caption-top">
+<table class="caption-top stack" role="table">
 <thead>
-<tr class="header">
-<th>Run</th>
-<th>demos</th>
-<th>employment</th>
-<th>geo</th>
-<th>transit</th>
+<tr class="header" role="row">
+<th role="columnheader">Run</th>
+<th role="columnheader">demos</th>
+<th role="columnheader">employment</th>
+<th role="columnheader">geo</th>
+<th role="columnheader">transit</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Best classical</td>
-<td>4.90</td>
-<td>4.65</td>
-<td>4.68</td>
-<td>4.49</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Run">Best classical</td>
+<td class="num" role="cell" data-label="demos">4.90</td>
+<td class="num" role="cell" data-label="employment">4.65</td>
+<td class="num" role="cell" data-label="geo">4.68</td>
+<td class="num" role="cell" data-label="transit">4.49</td>
 </tr>
-<tr class="even">
-<td>Random forest</td>
-<td>5.72</td>
-<td>5.59</td>
-<td>5.05</td>
-<td>4.68</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Run">Random forest</td>
+<td class="num" role="cell" data-label="demos">5.72</td>
+<td class="num" role="cell" data-label="employment">5.59</td>
+<td class="num" role="cell" data-label="geo">5.05</td>
+<td class="num" role="cell" data-label="transit">4.68</td>
 </tr>
-<tr class="odd">
-<td>DeepSeek, v2</td>
-<td>5.05</td>
-<td>5.15</td>
-<td>4.89</td>
-<td>4.97</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Run">DeepSeek, v2</td>
+<td class="num" role="cell" data-label="demos">5.05</td>
+<td class="num" role="cell" data-label="employment">5.15</td>
+<td class="num" role="cell" data-label="geo">4.89</td>
+<td class="num" role="cell" data-label="transit">4.97</td>
 </tr>
-<tr class="even">
-<td>DeepSeek, v1</td>
-<td>5.12</td>
-<td>5.16</td>
-<td>5.30</td>
-<td>5.15</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Run">DeepSeek, v1</td>
+<td class="num" role="cell" data-label="demos">5.12</td>
+<td class="num" role="cell" data-label="employment">5.16</td>
+<td class="num" role="cell" data-label="geo">5.30</td>
+<td class="num" role="cell" data-label="transit">5.15</td>
 </tr>
-<tr class="odd">
-<td>Llama 3.2 3B Instruct, v1</td>
-<td>5.59</td>
-<td>5.59</td>
-<td>5.63</td>
-<td>5.47</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Run">Llama 3.2 3B Instruct, v1</td>
+<td class="num" role="cell" data-label="demos">5.59</td>
+<td class="num" role="cell" data-label="employment">5.59</td>
+<td class="num" role="cell" data-label="geo">5.63</td>
+<td class="num" role="cell" data-label="transit">5.47</td>
 </tr>
-<tr class="even">
-<td>Llama 3.1 8B Instruct, v1</td>
-<td>6.05</td>
-<td>6.03</td>
-<td>6.02</td>
-<td>5.68</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Run">Llama 3.1 8B Instruct, v1</td>
+<td class="num" role="cell" data-label="demos">6.05</td>
+<td class="num" role="cell" data-label="employment">6.03</td>
+<td class="num" role="cell" data-label="geo">6.02</td>
+<td class="num" role="cell" data-label="transit">5.68</td>
 </tr>
-<tr class="odd">
-<td>Llama 3.3 70B Instruct, v1</td>
-<td>6.05</td>
-<td>6.07</td>
-<td>6.07</td>
-<td>6.08</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Run">Llama 3.3 70B Instruct, v1</td>
+<td class="num" role="cell" data-label="demos">6.05</td>
+<td class="num" role="cell" data-label="employment">6.07</td>
+<td class="num" role="cell" data-label="geo">6.07</td>
+<td class="num" role="cell" data-label="transit">6.08</td>
 </tr>
 </tbody>
 </table>
@@ -441,39 +445,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>One failure is large. Llama 3.1’s interpersonal MAE rose from 4.67 at demos to 8.17 at transit, its band accuracy fell from 51.9% to 15.4%, and its mean signed error went from -2.21 to +6.52. It began predicting high apprehension for people whose transit answers were added. Version 2’s rewrite did not remove it (transit 8.23). In the version 3 ablations the bundled transit tier gave 7.77, while public transit alone gave 4.85, open text alone 5.82 and ride-share alone 5.92. Only the combined bundle triggered it. I do not know why, and I did not test an explanation.</p>
 <h3 id="band-discrimination">Band discrimination</h3>
 <p>Error in points hid how poorly the personas ranked people. At the transit tier:</p>
-<table class="caption-top">
+<table class="caption-top stack" role="table">
 <thead>
-<tr class="header">
-<th>Agent</th>
-<th>Target</th>
-<th>Band accuracy</th>
-<th>Low-vs-high AUC</th>
+<tr class="header" role="row">
+<th role="columnheader">Agent</th>
+<th role="columnheader">Target</th>
+<th role="columnheader">Band accuracy</th>
+<th role="columnheader">Low vs high AUC</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Random forest</td>
-<td>Group</td>
-<td>0.481</td>
-<td>0.717</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Agent">Random forest</td>
+<td role="cell" data-label="Target">Group</td>
+<td class="num" role="cell" data-label="Band accuracy">0.481</td>
+<td class="num" role="cell" data-label="Low vs high AUC">0.717</td>
 </tr>
-<tr class="even">
-<td>Random forest</td>
-<td>Interpersonal</td>
-<td>0.531</td>
-<td>0.738</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Agent">Random forest</td>
+<td role="cell" data-label="Target">Interpersonal</td>
+<td class="num" role="cell" data-label="Band accuracy">0.531</td>
+<td class="num" role="cell" data-label="Low vs high AUC">0.738</td>
 </tr>
-<tr class="odd">
-<td>DeepSeek v2</td>
-<td>Group</td>
-<td>0.358</td>
-<td>0.527</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Agent">DeepSeek v2</td>
+<td role="cell" data-label="Target">Group</td>
+<td class="num" role="cell" data-label="Band accuracy">0.358</td>
+<td class="num" role="cell" data-label="Low vs high AUC">0.527</td>
 </tr>
-<tr class="even">
-<td>DeepSeek v2</td>
-<td>Interpersonal</td>
-<td>0.363</td>
-<td>0.488</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Agent">DeepSeek v2</td>
+<td role="cell" data-label="Target">Interpersonal</td>
+<td class="num" role="cell" data-label="Band accuracy">0.363</td>
+<td class="num" role="cell" data-label="Low vs high AUC">0.488</td>
 </tr>
 </tbody>
 </table>
@@ -495,7 +499,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Factor analysis of the scored PRCA items supports treating the group and interpersonal subscales as related but separable, so I report them separately. The repository describes this in words and gives no loadings table, so I report none.</p>
 <h3 id="bias-by-group">Bias by group</h3>
 <p>I sliced DeepSeek version 2’s group-score error by group. These are descriptive MAE and signed-error gaps. I did not run formal association tests on the LLM exports.</p>
-<table class="caption-top" style="width:100%;">
+<table class="caption-top stack" style="width:100%;" role="table">
 <colgroup>
 <col style="width: 16%">
 <col style="width: 16%">
@@ -505,55 +509,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <col style="width: 16%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Group</th>
-<th>n</th>
-<th>MAE at demos</th>
-<th>Mean signed error at demos</th>
-<th>MAE at transit</th>
-<th>Mean signed error at transit</th>
+<tr class="header" role="row">
+<th role="columnheader">Group</th>
+<th role="columnheader">n</th>
+<th role="columnheader">MAE at demos</th>
+<th role="columnheader">Mean signed error at demos</th>
+<th role="columnheader">MAE at transit</th>
+<th role="columnheader">Mean signed error at transit</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Full-time</td>
-<td>148</td>
-<td>4.37</td>
-<td>-0.01</td>
-<td>4.39</td>
-<td>+0.43</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Group">Full-time</td>
+<td class="num" role="cell" data-label="n">148</td>
+<td class="num" role="cell" data-label="MAE at demos">4.37</td>
+<td class="num" role="cell" data-label="Mean signed error at demos">-0.01</td>
+<td class="num" role="cell" data-label="MAE at transit">4.39</td>
+<td class="num" role="cell" data-label="Mean signed error at transit">+0.43</td>
 </tr>
-<tr class="even">
-<td>Part-time</td>
-<td>31</td>
-<td>6.06</td>
-<td>-2.00</td>
-<td>5.55</td>
-<td>-1.68</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Group">Part-time</td>
+<td class="num" role="cell" data-label="n">31</td>
+<td class="num" role="cell" data-label="MAE at demos">6.06</td>
+<td class="num" role="cell" data-label="Mean signed error at demos">-2.00</td>
+<td class="num" role="cell" data-label="MAE at transit">5.55</td>
+<td class="num" role="cell" data-label="Mean signed error at transit">-1.68</td>
 </tr>
-<tr class="odd">
-<td>Other employment</td>
-<td>62</td>
-<td>6.16</td>
-<td>-3.58</td>
-<td>6.07</td>
-<td>-3.61</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Group">Other employment</td>
+<td class="num" role="cell" data-label="n">62</td>
+<td class="num" role="cell" data-label="MAE at demos">6.16</td>
+<td class="num" role="cell" data-label="Mean signed error at demos">-3.58</td>
+<td class="num" role="cell" data-label="MAE at transit">6.07</td>
+<td class="num" role="cell" data-label="Mean signed error at transit">-3.61</td>
 </tr>
-<tr class="even">
-<td>Female</td>
-<td>120</td>
-<td>4.93</td>
-<td>-1.47</td>
-<td>4.73</td>
-<td>-0.97</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Group">Female</td>
+<td class="num" role="cell" data-label="n">120</td>
+<td class="num" role="cell" data-label="MAE at demos">4.93</td>
+<td class="num" role="cell" data-label="Mean signed error at demos">-1.47</td>
+<td class="num" role="cell" data-label="MAE at transit">4.73</td>
+<td class="num" role="cell" data-label="Mean signed error at transit">-0.97</td>
 </tr>
-<tr class="odd">
-<td>Male</td>
-<td>121</td>
-<td>5.17</td>
-<td>-0.90</td>
-<td>5.20</td>
-<td>-0.77</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Group">Male</td>
+<td class="num" role="cell" data-label="n">121</td>
+<td class="num" role="cell" data-label="MAE at demos">5.17</td>
+<td class="num" role="cell" data-label="Mean signed error at demos">-0.90</td>
+<td class="num" role="cell" data-label="MAE at transit">5.20</td>
+<td class="num" role="cell" data-label="Mean signed error at transit">-0.77</td>
 </tr>
 </tbody>
 </table>

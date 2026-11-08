@@ -265,6 +265,8 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 16px; margin: 4px 0 14px; }
 .cards-wide { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); margin-top: 22px; }
+/* Essay cards need room for full titles before sharing a row. */
+.writing-cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
 /* Exactly four cards sit in a 2x2 grid instead of leaving one alone on a third row. */
 @media (min-width: 560px) {
   .cards:not(.cards-wide):has(> .card:nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -315,7 +317,14 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   body { font-size: 15px; }
   .page { margin: 0; padding: 36px 20px 28px; border-radius: 0; box-shadow: none; }
   .site-header { padding: 0 16px; }
-  .site-nav { justify-content: flex-start; }
+  .site-nav { justify-content: flex-start; row-gap: 0; column-gap: 4px; }
+  /* Phone header: the title sits on its own line; links keep their 44 px touch
+     height but lose horizontal padding, so the theme toggle rides the last link
+     row instead of taking one of its own. */
+  .site-title { flex-basis: 100%; display: flex; align-items: center; min-height: 44px; }
+  .nav-list { flex: 1 1 auto; }
+  .nav-link { padding: 6px 8px; font-size: .84rem; }
+  .theme-toggle { margin-left: 0; flex: 0 0 auto; }
   .site-footer { padding: 0 16px; }
   .site-header + main .page { margin-top: 12px; }
   .skills dl { grid-template-columns: 1fr; gap: 2px; }
@@ -412,8 +421,8 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 :root[data-theme="dark"] .page img.fig { background: #fff; padding: 10px; }
 
 /* Diagrams (inline SVG; colors via currentColor and tokens only) */
-.page figure.diagram { margin: 22px 0; padding: 14px 12px 12px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); }
-.diagram svg { display: block; width: 100%; height: auto; color: var(--ink); font-family: var(--sans); font-size: 14px; overflow: visible; }
+.page figure.diagram { margin: 22px 0; padding: 14px 12px 12px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); overflow-x: auto; }
+.diagram svg { display: block; width: 100%; min-width: 800px; height: auto; color: var(--ink); font-family: var(--sans); font-size: 14px; overflow: visible; }
 .diagram svg text { font-family: var(--sans); fill: currentColor; }
 .diagram .d-box { fill: var(--paper); stroke: currentColor; stroke-width: 1.4; }
 .diagram .d-accent { stroke: var(--accent); }
@@ -425,7 +434,13 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .diagram .d-arrow.d-accent { stroke: var(--accent); }
 .diagram .d-arrow.d-muted { stroke: var(--muted); }
 .diagram marker path { fill: currentColor; fill: context-stroke; stroke: none; }
-.diagram figcaption { margin-top: 10px; }
+.diagram figcaption { margin-top: 10px; position: sticky; left: 0; }
+.diagram figcaption::before { content: "Scroll sideways to see the whole diagram. "; display: block; font-style: italic; }
+@media (min-width: 1000px) {
+  .page figure.diagram { margin-left: -48px; margin-right: -48px; }
+  .diagram figcaption::before { display: none; }
+}
+
 .page figure.diagram-ecosystem { padding: 20px 16px 16px; }
 .diagram-ecosystem .d-title { font-size: 16px; font-weight: 600; }
 .diagram-ecosystem .d-code { font-family: var(--mono); font-size: 13px; }
@@ -433,10 +448,13 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .page figure.diagram:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 /* Tables */
-.page table { width: 100%; margin: 16px 0 20px; border-collapse: collapse; font-size: .9rem; font-variant-numeric: tabular-nums; }
+.page table { width: 100%; margin: 16px 0 20px; border-collapse: collapse; font-size: .9rem; }
 .page caption { padding: 0 0 8px; font-size: .84rem; color: var(--muted); text-align: left; caption-side: bottom; }
 .page th, .page td { padding: 8px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
 .page thead th { background: var(--accent-soft); font-weight: 700; border-bottom: 2px solid var(--accent); }
+/* Tabular figures only where figures actually line up: in Inter they widen the
+   hyphen, which put visible gaps into labels like DeepSeek-R1-Distill-Llama-8B. */
+.page :is(td, th)[align="right"], .page .text-end, .page td.num { font-variant-numeric: tabular-nums; }
 .page td[align="right"], .page th[align="right"], .page .text-end { text-align: right; }
 .page td[align="center"], .page th[align="center"] { text-align: center; }
 .page tbody tr:last-child td { border-bottom: 0; }
@@ -474,9 +492,11 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 /* On-page contents, reports and appendices only */
 .page-toc { margin: 22px 0; padding: 14px 16px; border: 1px solid var(--rule); border-radius: 10px; background: var(--bg); }
 .page-toc .toc-label { margin: 0 0 8px; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.page-toc ul { margin: 0; padding-left: 1.1rem; columns: 2; column-gap: 28px; }
-.page-toc li { margin: 3px 0; break-inside: avoid; }
-@media (max-width: 720px) { .page-toc ul { columns: 1; } }
+.page-toc ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 28px; margin: 0; padding-left: 1.1rem; }
+.page-toc li { margin: 0; min-width: 0; }
+.page-toc a { display: flex; align-items: center; min-height: 44px; padding: 6px 8px; border-radius: 6px; }
+.page-toc a:hover, .page-toc a:focus-visible { background: var(--accent-soft); }
+@media (max-width: 720px) { .page-toc ul { grid-template-columns: minmax(0, 1fr); } }
 
 /* Previous/next project pager */
 .project-pager { display: flex; gap: 12px; justify-content: space-between; margin: 24px 0 4px; padding-top: 14px; border-top: 1px solid var(--rule); }
@@ -546,17 +566,8 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
 .page .code-copy-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media print { .page .code-copy-button { display: none; } div.code-copy-outer-scaffold pre { padding-right: 14px; } }
 
-/* Project pages: small screens */
-@media (max-width: 720px) {
-  .project-nav { gap: 6px; }
-  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .page table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  /* Number grids stay grids: tighter cells let most of them fit a phone without scrolling. */
-  .page table:not(.stack) { font-size: .84rem; }
-  .page table:not(.stack) code { font-size: .9em; }
-  .page table:not(.stack) :is(th, td) { padding: 7px 8px; }
-  .page table:not(.stack) :is(th, td):first-child { padding-left: 2px; }
-  .page table:not(.stack) :is(th, td):last-child { padding-right: 2px; }
+/* Prose tables also need the full column at tablet widths. */
+@media (max-width: 800px) {
   /* Text tables: each row becomes a block, each cell labelled with its column. */
   .page table.stack, .page table.stack tbody, .page table.stack tr, .page table.stack td { display: block; width: auto; }
   .page table.stack { overflow: visible; border-top: 2px solid var(--accent); }
@@ -572,20 +583,42 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   .page table.stack td.num::before { margin: 0; }
   .page table.stack td + td { margin-top: 8px; }
   .page table.stack td:first-child { font-weight: 700; color: var(--ink); }
+  .page table.stack[data-prose-rows] td:first-child::before {
+    content: attr(data-label) / "";
+    display: block; margin-bottom: 1px;
+    font: 700 .75rem/1.4 var(--sans); letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
+  }
   .page table.stack td + td::before {
     content: attr(data-label) / "";
     display: block; margin-bottom: 1px;
     font: 700 .75rem/1.4 var(--sans); letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
   }
   .page table.stack td code { white-space: pre-wrap; overflow-wrap: anywhere; }
+}
+
+/* Project pages: small screens */
+@media (max-width: 720px) {
+  .project-nav { gap: 6px; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .page table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* Number grids stay grids: tighter cells let most of them fit a phone without scrolling. */
+  .page table:not(.stack) { font-size: .84rem; }
+  .page table:not(.stack) code { font-size: .9em; }
+  .page table:not(.stack) :is(th, td) { padding: 7px 8px; }
+  .page table:not(.stack) :is(th, td):first-child { padding-left: 2px; }
+  .page table:not(.stack) :is(th, td):last-child { padding-right: 2px; }
+  /* Row labels stay put while a wide number grid scrolls sideways, so a reader can
+     always see what a figure belongs to. The soft edge appears only while it scrolls
+     (site.js sets data-scrolls), showing there is more past the label column. */
+  .page table:not(.stack) :is(th, td):first-child { position: sticky; left: 0; }
+  .page table:not(.stack) :is(td):first-child { background: var(--paper); }
+  .page table:not(.stack)[data-scrolls] :is(th, td):first-child {
+    box-shadow: 10px 0 10px -8px color-mix(in srgb, var(--ink) 40%, transparent);
+  }
   .chart-scroll { overflow-x: auto; }
   .chart-scroll img.fig { min-width: 700px; }
   .chart-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   .page figure.diagram { padding: 10px 8px 8px; overflow-x: auto; }
-  .diagram svg { min-width: 600px; }
-  .diagram-ecosystem svg { min-width: 720px; }
-  .diagram figcaption { position: sticky; left: 0; }
-  .diagram figcaption::before { content: "Scroll sideways to see the whole diagram. "; display: block; font-style: italic; }
   .timeline ul { padding-left: 18px; }
   .timeline li::before { left: -26px; }
 }
@@ -605,7 +638,9 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   .page figure, .stat, .caveat, .sample-doc, .page tr { break-inside: avoid; }
   .sample-doc pre, pre { max-height: none; overflow: visible; white-space: pre-wrap; border-color: #ccc; background: none; }
   .caveat { background: none; }
-  .diagram svg { color: #111; }
+  .page figure.diagram { overflow: visible; margin-left: 0; margin-right: 0; }
+  .diagram svg { color: #111; min-width: 0; }
+  .diagram figcaption::before { display: none; }
 }
 
 /* ==========================================================================
@@ -839,7 +874,8 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 .chart-legend .key { width: 12px; height: 12px; flex: none; border-radius: 3px; background: var(--chart-1); }
 .chart-legend .key.c2 { background: var(--chart-2); }
 .chart-legend .key.c1s { background: var(--chart-1-soft); }
-.chart svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--sans); font-size: 13px; }
+.chart-body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.chart svg { display: block; width: 100%; min-width: 640px; height: auto; overflow: visible; font-family: var(--sans); font-size: 13px; }
 .chart text { fill: var(--muted); }
 .chart text.cat { fill: var(--ink); }
 .chart text.val { fill: var(--ink); font-weight: 600; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
@@ -867,8 +903,8 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 .chart-tooltip strong { display: block; color: var(--ink); font-size: .95rem; font-variant-numeric: tabular-nums; }
 @media (max-width: 720px) {
   .page figure.chart { padding: 12px 10px 8px; }
-  .chart-body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .chart svg { min-width: 520px; }
+}
+@media (max-width: 800px) {
   .page figure.chart::after { content: "Scroll sideways to see the whole chart."; display: block; margin-top: 6px; font-size: .78rem; font-style: italic; color: var(--muted); }
 }
 @media (forced-colors: active) {

@@ -2,6 +2,12 @@
 
 Notes for working on the source of this portfolio. For the human side, see the [README](../README.md).
 
+## Agent / fresh-clone setup
+
+`bash scripts/setup-agent.sh` synchronizes the pinned Python dependencies in `.venv`, installs the same Node Playwright version in the ignored root `node_modules/`, verifies Chromium launches for both clients, installs Quarto 1.10.19 in `.autoresearch-tools/` when needed, and writes `.autoresearch-tools/env.sh`. Chromium uses the user cache by default (`~/Library/Caches/ms-playwright` on macOS, `~/.cache/ms-playwright` on Linux), outside the worktree; set `PLAYWRIGHT_BROWSERS_PATH` before setup and validation to use another cache. Local dependencies are excluded from Quarto rendering and published resources.
+
+Source `. .autoresearch-tools/env.sh` before rendering or auditing, then run `scripts/hillclimb/hc.sh doctor` (`All tools present.`). Setup is idempotent, probes the default locale, and sets `LC_ALL=C` for deterministic byte-based Lua pattern matching. An explicit `QUARTO` override must also be version 1.10.19.
+
 An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages serves it straight from `docs/`, with no GitHub Actions. Live at <https://exios66.github.io/resume/>.
 
 ## Pages

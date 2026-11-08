@@ -5,7 +5,6 @@ description: "Supporting notes for Mailroom Reloaded: routing gate bands, defer 
 
 ::: {.page}
 
-[← Case study](../mailroom-reloaded.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../mailroom-reloaded.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/mailroom-reloaded)

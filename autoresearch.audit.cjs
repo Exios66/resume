@@ -44,11 +44,17 @@ function serve() {
   return new Promise(r => server.listen(0, '127.0.0.1', () => r(server)));
 }
 
-// Runs inside the page. Returns layout and interaction findings for one viewport.
+/**
+ * Inspect the current page in the browser and return layout, typography, image,
+ * heading and focus findings for its viewport. `smallSvg` contains one entry per
+ * chart or diagram with visible SVG text below 11.95 rendered pixels.
+ * @param {boolean} mobile Include tap-target, small-text and table checks.
+ * @returns {object} Counts and finding details used by the audit scorer.
+ */
 function inspect(mobile) {
   const vw = document.documentElement.clientWidth;
   const out = { pageOverflow: document.documentElement.scrollWidth > vw + 1, tap: [], tiny: [], crushed: 0,
-    tableOverflow: 0, invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
+    tableOverflow: 0, tocAlignment: [], tocTargets: [], smallSvg: [], invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
     sepStart: 0, sepEnd: 0, headingWidows: 0, where: { crushed: [], tables: [], sepStart: [], sepEnd: [], widows: [] } };
   const visible = el => { const s = getComputedStyle(el); const r = el.getBoundingClientRect();
     return s.visibility !== 'hidden' && s.display !== 'none' && r.width > 0 && r.height > 0; };
@@ -104,6 +110,42 @@ function inspect(mobile) {
         if (lines > words + 1 || clipped) { out.crushed++; out.where.crushed.push((clipped ? 'clipped ' : '') + lines + ' lines | ' + text.slice(0, 80)); }
       }
     }
+  }
+  // Standalone report contents are navigation, rather than inline prose. Measure
+  // first-row alignment across columns and 44px touch areas on phone/tablet.
+  for (const nav of document.querySelectorAll('nav.page-toc')) {
+    if (!visible(nav)) continue;
+    const columns = [];
+    for (const item of nav.querySelectorAll('li')) {
+      const box = item.getClientRects()[0];
+      if (!box || !box.width) continue;
+      let column = columns.find(c => Math.abs(c.x - box.left) < 2);
+      if (!column) columns.push({ x: box.left, top: box.top });
+      else column.top = Math.min(column.top, box.top);
+    }
+    const offset = columns.length > 1 ? Math.max(...columns.map(c => c.top)) - Math.min(...columns.map(c => c.top)) : 0;
+    if (offset > 2) out.tocAlignment.push(sig(nav) + ' | column start offset ' + offset.toFixed(2) + 'px');
+    if (vw <= 768) {
+      const small = [...nav.querySelectorAll('a[href]')].filter(a => {
+        const r = a.getBoundingClientRect();
+        return visible(a) && (r.height < 43.95 || r.width < 43.95);
+      });
+      if (small.length) out.tocTargets.push(sig(nav) + ' | ' + small.length + ' links below 44px');
+    }
+  }
+  // SVG text scales with the viewBox: a CSS 12px tick can be only 9.75px on a phone.
+  // Score once per figure, reporting its smallest rendered label. Offscreen portions
+  // of a scrollable figure still need legible text when the reader scrolls to them.
+  for (const figure of document.querySelectorAll('figure.chart, figure.diagram')) {
+    let smallest = null;
+    for (const text of figure.querySelectorAll('svg text, svg tspan')) {
+      if (!text.textContent.trim() || !visible(text)) continue;
+      const matrix = text.getScreenCTM();
+      if (!matrix) continue;
+      const px = parseFloat(getComputedStyle(text).fontSize) * Math.hypot(matrix.c, matrix.d);
+      if (px < 11.95 && (!smallest || px < smallest.px)) smallest = { px, text: text.textContent.trim() };
+    }
+    if (smallest) out.smallSvg.push(sig(figure) + ' | ' + smallest.px.toFixed(2) + 'px | ' + smallest.text.slice(0, 80));
   }
   // Typography. Separators (• ·) that start or end a wrapped line, and headings whose last line is one word.
   const charRect = (node, i) => { const rg = document.createRange(); rg.setStart(node, i); rg.setEnd(node, i + 1);
@@ -174,7 +216,9 @@ function lints() {
   const server = await serve();
   const base = `http://127.0.0.1:${server.address().port}/resume/`;
   const browser = await chromium.launch();
-  const combos = [{ w: 375, theme: 'light', mobile: true }, { w: 375, theme: 'dark' },
+  const combos = [{ w: 375, theme: 'light', mobile: true }, { w: 375, theme: 'dark', mobile: true },
+    { w: 414, theme: 'light', mobile: true }, { w: 414, theme: 'dark', mobile: true },
+    { w: 768, theme: 'light', mobile: true }, { w: 768, theme: 'dark', mobile: true },
     { w: 1280, theme: 'light' }, { w: 1280, theme: 'dark' }, { w: 320, theme: 'light', mobile: true, layoutOnly: true }];
   const totals = { axe: 0, layout: 0, errors: 0, structure: 0, type: 0, axeIds: {}, details: {} };
   const add = (bucket, key, pts) => { totals[bucket] += pts; totals.details[key] = (totals.details[key] || 0) + pts; };
@@ -207,7 +251,15 @@ function lints() {
         if (!c.layoutOnly) { add('layout', 'tap targets < 24px', r.tap.length); add('layout', 'text < 12px', r.tiny.length);
           note(c, p, 'small tap target', r.tap); note(c, p, 'text < 12px', r.tiny); }
       }
-      if (!c.layoutOnly) { add('layout', 'invisible focusable controls', 5 * r.invisibleFocusable.length);
+      if (!c.layoutOnly) {
+        add('layout', 'report contents column alignment', r.tocAlignment.length);
+        add('layout', 'report contents touch targets < 44px', r.tocTargets.length);
+        note(c, p, 'contents column offset', r.tocAlignment);
+        note(c, p, 'contents touch targets', r.tocTargets);
+      }
+      if (!c.layoutOnly) { add('layout', 'SVG figures with text < 12px', r.smallSvg.length);
+        note(c, p, 'small SVG text', r.smallSvg);
+        add('layout', 'invisible focusable controls', 5 * r.invisibleFocusable.length);
         note(c, p, 'invisible focusable', r.invisibleFocusable); }
       if (c.w === 1280 && c.theme === 'light') {
         add('structure', 'heading level skips', 2 * r.headingSkips);

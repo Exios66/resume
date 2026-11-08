@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=6dab5189c7">
+<link rel="stylesheet" href="../../styles.css?v=b9bb1b90c4">
 <meta property="og:title" content="Mailroom-ML: technical report — Jack J. Burleson">
 <meta property="og:description" content="Historical technical report through Mailroom-ML M9b: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits. See the case study for M9c.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -153,7 +153,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <div class="page">
-<p><a href="../../projects/mailroom-ml.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>Case study</a></p>
 <div class="project-nav">
 <p><a href="../../projects/mailroom-ml.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/mailroom-ml/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/mailroom-ml/appendix.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Appendix</a> <a href="https://github.com/LLM-Mailroom-Services/mailroom-ml"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
 </div>
@@ -186,57 +185,57 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">Configuration</td>
 <td role="cell" data-label="What it does">One file holds the pinned data revisions, taxonomy, window sizes and routing thresholds that every other module imports</td>
-<td role="cell" data-label="Module"><code>src/mailroom_ml/config.py</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>mailroom_</code><wbr><code>ml/</code><wbr><code>config.</code><wbr><code>py</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">Normalisation</td>
 <td role="cell" data-label="What it does">A deterministic text clerk that runs before training and before inference, so the two see the same bytes</td>
-<td role="cell" data-label="Module"><code>src/mailroom_ml/normalize.py</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>mailroom_</code><wbr><code>ml/</code><wbr><code>normalize.</code><wbr><code>py</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">Windowing</td>
 <td role="cell" data-label="What it does">Token-level windows of 8,192 tokens with 512 tokens of overlap, plurality vote across windows</td>
-<td role="cell" data-label="Module"><code>src/mailroom_ml/windows.py</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>mailroom_</code><wbr><code>ml/</code><wbr><code>windows.</code><wbr><code>py</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">Dataset build</td>
 <td role="cell" data-label="What it does">Stages the training set, splits it, and runs the leak audits</td>
-<td role="cell" data-label="Module"><code>src/mailroom_ml/dataset.py</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>mailroom_</code><wbr><code>ml/</code><wbr><code>dataset.</code><wbr><code>py</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">Provenance</td>
 <td role="cell" data-label="What it does">sha256 helpers and a byte-deterministic build manifest</td>
-<td role="cell" data-label="Module"><code>src/mailroom_ml/provenance.py</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>mailroom_</code><wbr><code>ml/</code><wbr><code>provenance.</code><wbr><code>py</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">Training</td>
 <td role="cell" data-label="What it does">PyTorch training with checkpoint selection on validation</td>
-<td role="cell" data-label="Module"><code>training/train/train_modernbert.py</code></td>
+<td role="cell" data-label="Module"><code>training/</code><wbr><code>train/</code><wbr><code>train_</code><wbr><code>modernbert.</code><wbr><code>py</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">Calibration</td>
 <td role="cell" data-label="What it does">Per-head temperature scaling, ECE, Wilson bounds, selective-risk sweep</td>
-<td role="cell" data-label="Module"><code>src/mailroom_ml/calibration.py</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>mailroom_</code><wbr><code>ml/</code><wbr><code>calibration.</code><wbr><code>py</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">Out-of-distribution</td>
 <td role="cell" data-label="What it does">Energy probe on the document-type logits, fit on validation</td>
-<td role="cell" data-label="Module"><code>src/mailroom_ml/ood.py</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>mailroom_</code><wbr><code>ml/</code><wbr><code>ood.</code><wbr><code>py</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">Routing</td>
 <td role="cell" data-label="What it does">Fast-path gate over calibrated confidence, agreement and margin</td>
-<td role="cell" data-label="Module"><code>src/mailroom_ml/routing.py</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>mailroom_</code><wbr><code>ml/</code><wbr><code>routing.</code><wbr><code>py</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">Evaluation</td>
 <td role="cell" data-label="What it does">Test-split scoring, cohorts, selective risk, paired bootstrap comparison</td>
-<td role="cell" data-label="Module"><code>training/eval/eval_modernbert.py</code>, <code>training/eval/compare_runs.py</code></td>
+<td role="cell" data-label="Module"><code>training/</code><wbr><code>eval/</code><wbr><code>eval_</code><wbr><code>modernbert.</code><wbr><code>py</code>, <code>training/</code><wbr><code>eval/</code><wbr><code>compare_</code><wbr><code>runs.</code><wbr><code>py</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">Deployment</td>
 <td role="cell" data-label="What it does">ONNX export, parity check, Modal train and serve apps</td>
-<td role="cell" data-label="Module"><code>deploy/onnx_export.py</code>, <code>deploy/onnx_parity_check.py</code>, <code>deploy/modal_app.py</code>, <code>deploy/serve_app.py</code></td>
+<td role="cell" data-label="Module"><code>deploy/</code><wbr><code>onnx_</code><wbr><code>export.</code><wbr><code>py</code>, <code>deploy/</code><wbr><code>onnx_</code><wbr><code>parity_</code><wbr><code>check.</code><wbr><code>py</code>, <code>deploy/</code><wbr><code>modal_</code><wbr><code>app.</code><wbr><code>py</code>, <code>deploy/</code><wbr><code>serve_</code><wbr><code>app.</code><wbr><code>py</code></td>
 </tr>
 </tbody>
 </table>
@@ -305,7 +304,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <h3 id="run-comparison-test-split">Run comparison, test split</h3>
-<table class="caption-top">
+<table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 15%">
 <col style="width: 21%">
@@ -314,42 +313,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <col style="width: 21%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Run</th>
-<th style="text-align: right;">Epochs</th>
-<th style="text-align: right;">Doc-type acc.</th>
-<th style="text-align: right;">Subclass acc. (type correct)</th>
-<th style="text-align: right;">Window ECE</th>
+<tr class="header" role="row">
+<th role="columnheader">Run</th>
+<th style="text-align: right;" role="columnheader">Epochs</th>
+<th style="text-align: right;" role="columnheader">Doc-type acc.</th>
+<th style="text-align: right;" role="columnheader">Subclass acc. (type correct)</th>
+<th style="text-align: right;" role="columnheader">Window ECE</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Run 3</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">0.8947</td>
-<td style="text-align: right;">0.526</td>
-<td style="text-align: right;">0.0203</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Run">Run 3</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Epochs">2</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Doc-type acc.">0.8947</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Subclass acc. (type correct)">0.526</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Window ECE">0.0203</td>
 </tr>
-<tr class="even">
-<td>Arm A</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0.8638</td>
-<td style="text-align: right;">0.4839</td>
-<td style="text-align: right;">—</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Run">Arm A</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Epochs">1</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Doc-type acc.">0.8638</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Subclass acc. (type correct)">0.4839</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Window ECE">—</td>
 </tr>
-<tr class="odd">
-<td>Arm B</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">0.9505</td>
-<td style="text-align: right;">0.5831</td>
-<td style="text-align: right;">0.0259</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Run">Arm B</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Epochs">3</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Doc-type acc.">0.9505</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Subclass acc. (type correct)">0.5831</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Window ECE">0.0259</td>
 </tr>
-<tr class="even">
-<td>Final (M9b)</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">0.9505</td>
-<td style="text-align: right;">0.6287</td>
-<td style="text-align: right;">0.0152</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Run">Final (M9b)</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Epochs">4</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Doc-type acc.">0.9505</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Subclass acc. (type correct)">0.6287</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Window ECE">0.0152</td>
 </tr>
 </tbody>
 </table>

@@ -5,7 +5,6 @@ description: "Supporting tables for the Mailroom-ML M9c release: evaluation prot
 
 ::: {.page}
 
-[← Case study](../mailroom-ml.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../mailroom-ml.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/LLM-Mailroom-Services/mailroom-ml)

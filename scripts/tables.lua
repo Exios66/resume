@@ -14,13 +14,49 @@ local function looks_numeric(text)
   return t:match("^%d[%d.,]*%%?%s*%S*$") ~= nil and #t <= 24
 end
 
---- Mark text-heavy tables with class "stack" and give every body cell a data-label
--- naming its column. On small screens styles.css shows each row as a labelled block
--- instead of squeezing prose into narrow columns. Number tables keep their grid and
--- scroll sideways, which is how people compare figures. Explicit roles keep the table
--- semantics that some browsers drop once table parts are restyled as blocks.
+--- Add HTML break opportunities after internal path and name separators in
+-- inline code of at least 14 bytes. Code without an eligible separator is unchanged.
+-- @param contents pandoc.Blocks Table cell contents.
+-- @return pandoc.Blocks Split code retains classes and attributes; its identifier
+--   is retained only on the first fragment.
+local function split_long_code(contents)
+  return contents:walk {
+    Code = function(code)
+      local text, attr = code.text, code.attr
+      if #text < 14 then return nil end
+      -- Collect positions just after separators, skipping runs so each break
+      -- lands on the end of the longest separator run.
+      local parts = {}
+      local from = 1
+      for i = 2, #text - 1 do
+        local c = text:sub(i, i)
+        local next_c = text:sub(i + 1, i + 1)
+        if (c == "/" or c == "-" or c == "_" or c == ".") and next_c ~= c
+          and next_c ~= "/" and next_c ~= "-" and next_c ~= "_" and next_c ~= "." then
+          parts[#parts + 1] = text:sub(from, i)
+          from = i + 1
+        end
+      end
+      parts[#parts + 1] = text:sub(from)
+      if #parts < 2 then return nil end
+      local out = {}
+      for j, part in ipairs(parts) do
+        if j > 1 then out[#out + 1] = pandoc.RawInline("html", "<wbr>") end
+        local fragment_attr = pandoc.Attr(j == 1 and attr.identifier or "", attr.classes, attr.attributes)
+        out[#out + 1] = pandoc.Code(part, fragment_attr)
+      end
+      return out
+    end,
+  }
+end
+
+--- Mark tables selected for stacking and label body cells with their column names.
+-- On small screens styles.css shows their rows as labelled blocks. Wide or short
+-- numeric tables can also be selected. Explicit roles preserve table semantics
+-- when table parts are restyled as blocks. Long code in the last header row and
+-- body cells gains break opportunities even when the table is not selected.
 -- @param tbl pandoc.Table
--- @return pandoc.Table|nil
+-- @return pandoc.Table|nil The modified table if selected, otherwise nil.
 local function stack_table(tbl)
   local head_rows = tbl.head and tbl.head.rows or {}
   if #head_rows == 0 then return nil end
@@ -28,11 +64,15 @@ local function stack_table(tbl)
   for i, cell in ipairs(head_rows[#head_rows].cells) do
     labels[i] = pandoc.utils.stringify(cell.contents)
   end
+  for _, cell in ipairs(head_rows[#head_rows].cells) do
+    cell.contents = split_long_code(cell.contents)
+  end
   local cells, numeric, longest, total, has_code = 0, 0, 0, 0, false
   local col_max, col_numeric, col_cells = {}, {}, {}
   for _, body in ipairs(tbl.bodies) do
     for _, row in ipairs(body.body) do
       for i, cell in ipairs(row.cells) do
+        cell.contents = split_long_code(cell.contents)
         local text = pandoc.utils.stringify(cell.contents)
         longest = math.max(longest, #text)
         pandoc.walk_block(pandoc.Div(cell.contents), { Code = function() has_code = true end })
@@ -50,13 +90,40 @@ local function stack_table(tbl)
   end
   if cells == 0 then return nil end
   -- A prose column (mostly words, some long entries) needs the full width on a phone.
+  -- 45+ characters is already two or more wrapped lines inside a grid column on a
+  -- phone, so the column stops being a figure-comparison cell there.
   local prose_column = false
   for i, n in pairs(col_cells) do
-    if col_numeric[i] / n < 0.5 and col_max[i] >= 60 then prose_column = true end
+    if col_numeric[i] / n < 0.5 and col_max[i] >= 45 then prose_column = true end
   end
+  -- The same for the row-label column, which the loop above skips: a row label of
+  -- 12+ characters ("Random forest", "Other employment", a model name) cannot be
+  -- read without awkward wrapping inside one narrow cell of a four-plus-column
+  -- grid on a phone, so the table stacks and the label gets the full width.
+  local first_max = 0
+  for _, body in ipairs(tbl.bodies) do
+    for _, row in ipairs(body.body) do
+      local cell = row.cells[1]
+      if cell then first_max = math.max(first_max, #pandoc.utils.stringify(cell.contents)) end
+    end
+  end
+  local long_row_label = first_max >= 12 and #labels >= 4
+  -- A grid of only one or two rows is not a comparable surface worth scrolling
+  -- sideways for: each row reads as a block of labelled figures, the way the
+  -- stacked rows above it do. Four or more columns need this more than the
+  -- narrow three-column key tables, which already fit.
+  local body_rows = 0
+  for _, body in ipairs(tbl.bodies) do body_rows = body_rows + #body.body end
+  local squat_grid = body_rows <= 2 and #labels >= 4
+  -- A five-plus-column grid cannot give a phone five readable figures in one view:
+  -- its columns end up 55-60 px wide no matter how the type is trimmed, so it
+  -- scrolls or clips on every narrow screen. Stacked rows carry all the figures.
+  local wide_grid = #labels >= 5 and body_rows >= 3
+  -- Mostly numeric cells (the "wordy" test) that also carry some long entries read
+  -- as a grid; anything else compares better stacked.
   local wordy = numeric / cells < 0.5
     and (longest >= 40 or total / cells >= 20 or #labels >= 4 or has_code)
-  if not (prose_column or wordy) then return nil end
+  if not (prose_column or wordy or long_row_label or squat_grid or wide_grid) then return nil end
   tbl.attr.classes:insert("stack")
   tbl.attr.attributes["role"] = "table"
   for _, row in ipairs(head_rows) do
@@ -73,6 +140,13 @@ local function stack_table(tbl)
         if i > 1 and looks_numeric(pandoc.utils.stringify(cell.contents)) then cell.attr.classes:insert("num") end
       end
     end
+  end
+  -- In stacked rows the bold first cell doubles as the row heading, which reads
+  -- fine when it names a thing (a model, a cluster) but hides the column's meaning
+  -- when it is a full claim ("The pilot supports X"). Long first-cell prose gets
+  -- its column label shown above it, the way every other stacked cell is labelled.
+  if first_max >= 40 then
+    tbl.attr.attributes["data-prose-rows"] = "true"
   end
   return tbl
 end

@@ -5,7 +5,6 @@ description: "Sources and licences, identity and provenance design, label separa
 
 ::: {.page}
 
-[← Case study](../mailroom-corpus-eda.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../mailroom-corpus-eda.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/Mailroom-Corpus-EDA) [Dataset](https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset)

@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=6dab5189c7">
+<link rel="stylesheet" href="../../styles.css?v=b9bb1b90c4">
 <meta property="og:title" content="Mailroom Reloaded: technical report — Jack J. Burleson">
 <meta property="og:description" content="Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -153,7 +153,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <div class="page">
-<p><a href="../../projects/mailroom-reloaded.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>Case study</a></p>
 <div class="project-nav">
 <p><a href="../../projects/mailroom-reloaded.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/mailroom-reloaded/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/mailroom-reloaded/appendix.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Appendix</a> <a href="https://github.com/Exios66/mailroom-reloaded"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
 </div>
@@ -182,47 +181,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd" role="row">
 <td role="cell" data-label="Node"><code>ingest</code></td>
 <td role="cell" data-label="Kind">deterministic: text normalisation, PDF text layer, else vision transcription</td>
-<td role="cell" data-label="Module"><code>ingest/clerk.py</code>, <code>ingest/pdf.py</code>, <code>ingest/vision.py</code></td>
+<td role="cell" data-label="Module"><code>ingest/</code><wbr><code>clerk.</code><wbr><code>py</code>, <code>ingest/pdf.py</code>, <code>ingest/</code><wbr><code>vision.</code><wbr><code>py</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Node"><code>bert_primary</code></td>
 <td role="cell" data-label="Kind">local ModernBERT classification plus a handoff policy; fails open</td>
-<td role="cell" data-label="Module"><code>ingest/bert.py</code></td>
+<td role="cell" data-label="Module"><code>ingest/</code><wbr><code>bert.</code><wbr><code>py</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Node"><code>sort</code></td>
 <td role="cell" data-label="Kind">LLM call 1: structured sorter</td>
-<td role="cell" data-label="Module"><code>agents/sorter.py</code></td>
+<td role="cell" data-label="Module"><code>agents/</code><wbr><code>sorter.</code><wbr><code>py</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Node"><code>gate_classify</code>, <code>gate_extract</code></td>
 <td role="cell" data-label="Kind">deterministic route decisions, zero LLM calls</td>
-<td role="cell" data-label="Module"><code>agents/gate.py</code>, <code>pipeline/flow.py</code></td>
+<td role="cell" data-label="Module"><code>agents/</code><wbr><code>gate.</code><wbr><code>py</code>, <code>pipeline/</code><wbr><code>flow.</code><wbr><code>py</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Node"><code>extract</code></td>
 <td role="cell" data-label="Kind">LLM call 2: per-class specialist</td>
-<td role="cell" data-label="Module"><code>agents/specialists.py</code></td>
+<td role="cell" data-label="Module"><code>agents/</code><wbr><code>specialists.</code><wbr><code>py</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Node"><code>verify</code></td>
 <td role="cell" data-label="Kind">LLM: judge, then arbiter</td>
-<td role="cell" data-label="Module"><code>agents/judge.py</code>, <code>agents/arbiter.py</code></td>
+<td role="cell" data-label="Module"><code>agents/</code><wbr><code>judge.</code><wbr><code>py</code>, <code>agents/</code><wbr><code>arbiter.</code><wbr><code>py</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Node"><code>boss</code></td>
 <td role="cell" data-label="Kind">LLM: escalation and class reassignment</td>
-<td role="cell" data-label="Module"><code>agents/boss.py</code></td>
+<td role="cell" data-label="Module"><code>agents/</code><wbr><code>boss.</code><wbr><code>py</code></td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="Node"><code>report_catalog_archive</code></td>
+<td role="cell" data-label="Node"><code>report_</code><wbr><code>catalog_</code><wbr><code>archive</code></td>
 <td role="cell" data-label="Kind">deterministic: report, move to archive, catalog row</td>
-<td role="cell" data-label="Module"><code>pipeline/report.py</code>, <code>pipeline/archivist.py</code></td>
+<td role="cell" data-label="Module"><code>pipeline/</code><wbr><code>report.</code><wbr><code>py</code>, <code>pipeline/</code><wbr><code>archivist.</code><wbr><code>py</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Node"><code>human_review</code></td>
 <td role="cell" data-label="Kind">deterministic: park in <code>review/</code></td>
-<td role="cell" data-label="Module"><code>pipeline/flow.py</code>, <code>review.py</code></td>
+<td role="cell" data-label="Module"><code>pipeline/</code><wbr><code>flow.</code><wbr><code>py</code>, <code>review.py</code></td>
 </tr>
 </tbody>
 </table>
@@ -272,12 +271,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">extract</td>
-<td role="cell" data-label="Condition">confidence at or above <code>judge_band_high</code></td>
+<td role="cell" data-label="Condition">confidence at or above <code>judge_</code><wbr><code>band_</code><wbr><code>high</code></td>
 <td role="cell" data-label="Action">proceed</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">extract</td>
-<td role="cell" data-label="Condition">between low and <code>judge_band_high</code></td>
+<td role="cell" data-label="Condition">between low and <code>judge_</code><wbr><code>band_</code><wbr><code>high</code></td>
 <td role="cell" data-label="Action"><code>verify</code> (judge, then arbiter)</td>
 </tr>
 <tr class="even" role="row">
@@ -340,11 +339,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td role="cell" data-label="Result">all checks passed</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="Check"><code>uv run pytest -q</code></td>
+<td role="cell" data-label="Check"><code>uv run pytest -</code><wbr><code>q</code></td>
 <td role="cell" data-label="Result">1,597 passed, 3 skipped, 3 deselected, 0 failed</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="Check"><code>node --test tests/tui/js/*.test.mjs</code></td>
+<td role="cell" data-label="Check"><code>node --</code><wbr><code>test tests/</code><wbr><code>tui/</code><wbr><code>js/</code><wbr><code>*.</code><wbr><code>test.</code><wbr><code>mjs</code></td>
 <td role="cell" data-label="Result">290 pass, 0 fail</td>
 </tr>
 <tr class="even" role="row">
@@ -352,7 +351,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td role="cell" data-label="Result">96 pass, 0 fail</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="Check"><code>GET /v1/documents</code></td>
+<td role="cell" data-label="Check"><code>GET /</code><wbr><code>v1/</code><wbr><code>documents</code></td>
 <td role="cell" data-label="Result">4 documents, all archived</td>
 </tr>
 <tr class="even" role="row">

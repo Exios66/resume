@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=6dab5189c7">
+<link rel="stylesheet" href="../../styles.css?v=b9bb1b90c4">
 <meta property="og:title" content="MORNINGSTAR: technical report — Jack J. Burleson">
 <meta property="og:description" content="Court structure, voting rules, runner design, executive layer, test counts, limitations and a proposed evaluation for MORNINGSTAR, a deliberative persona framework with no published evaluation.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -153,7 +153,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <div class="page">
-<p><a href="../../projects/llm-personas.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>Case study</a></p>
 <div class="project-nav">
 <p><a href="../../projects/llm-personas.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/llm-personas/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/llm-personas/appendix.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Appendix</a> <a href="https://github.com/Exios66/LLM_Personas"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
 </div>
@@ -165,7 +164,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>One point matters more than the rest. The runner makes one model call that plays every seat. It is not a multi-model system. There is also no evaluation: no baseline and no comparison with a single prompt. This report describes the design and the evidence that it runs, and it publishes no quality claim.</p>
 <h2 id="system-and-data">System and data</h2>
 <h3 id="the-cast-and-the-rules">The cast and the rules</h3>
-<table class="caption-top stack" role="table">
+<table class="caption-top stack" role="table" data-prose-rows="true">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -202,7 +201,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd" role="row">
 <td role="cell" data-label="Role">Witnesses</td>
 <td class="num" role="cell" data-label="Votes">0</td>
-<td role="cell" data-label="Notes">Expert domains called with <code>/summon &lt;domain&gt;-expert</code></td>
+<td role="cell" data-label="Notes">Expert domains called with <code>/summon &lt;domain&gt;-</code><wbr><code>expert</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Role">Specialists</td>
@@ -240,24 +239,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd" role="row">
-<td role="cell" data-label="Item"><code>state/current.md</code></td>
-<td role="cell" data-label="What it does">Session state, validated against <code>core/state-schema.md</code></td>
+<td role="cell" data-label="Item"><code>state/</code><wbr><code>current.</code><wbr><code>md</code></td>
+<td role="cell" data-label="What it does">Session state, validated against <code>core/</code><wbr><code>state-</code><wbr><code>schema.</code><wbr><code>md</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Item">Case IDs</td>
-<td role="cell" data-label="What it does"><code>2026-DEL-005-001</code> style: year, category, case number, deliberation number</td>
+<td role="cell" data-label="What it does"><code>2026-</code><wbr><code>DEL-</code><wbr><code>005-</code><wbr><code>001</code> style: year, category, case number, deliberation number</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="Item"><code>courtroom/case-registry.yaml</code></td>
-<td role="cell" data-label="What it does">Holds the next case number per category; <code>allocate_case_no</code> in <code>run.py</code> increments it</td>
+<td role="cell" data-label="Item"><code>courtroom/</code><wbr><code>case-</code><wbr><code>registry.</code><wbr><code>yaml</code></td>
+<td role="cell" data-label="What it does">Holds the next case number per category; <code>allocate_</code><wbr><code>case_</code><wbr><code>no</code> in <code>run.py</code> increments it</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="Item"><code>courtroom/reporter.py</code></td>
+<td role="cell" data-label="Item"><code>courtroom/</code><wbr><code>reporter.</code><wbr><code>py</code></td>
 <td role="cell" data-label="What it does">Audits transcript names and headers, regenerates the portal manifest, prints an integration report</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Item">Court Reporter agent</td>
-<td role="cell" data-label="What it does">Acts on that report: updates <code>courtroom/precedents.md</code> and <code>state/metrics.md</code></td>
+<td role="cell" data-label="What it does">Acts on that report: updates <code>courtroom/</code><wbr><code>precedents.</code><wbr><code>md</code> and <code>state/</code><wbr><code>metrics.</code><wbr><code>md</code></td>
 </tr>
 </tbody>
 </table>
@@ -276,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd" role="row">
-<td role="cell" data-label="Module"><code>judicial_log.py</code></td>
+<td role="cell" data-label="Module"><code>judicial_</code><wbr><code>log.</code><wbr><code>py</code></td>
 <td role="cell" data-label="Behaviour">Append-only log. Each entry carries a SHA-256 entry hash and the previous entry’s hash, and <code>verify()</code> walks the chain</td>
 </tr>
 <tr class="even" role="row">
@@ -333,7 +332,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even" role="row">
 <td role="cell" data-label="Suite">Test functions by grep</td>
 <td role="cell" data-label="Count">59 <code>def test_</code> in 13 files</td>
-<td role="cell" data-label="Where"><code>tests/test_*.py</code></td>
+<td role="cell" data-label="Where"><code>tests/</code><wbr><code>test_</code><wbr><code>*.</code><wbr><code>py</code></td>
 </tr>
 </tbody>
 </table>

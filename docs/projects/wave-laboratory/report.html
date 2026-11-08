@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=6dab5189c7">
+<link rel="stylesheet" href="../../styles.css?v=b9bb1b90c4">
 <meta property="og:title" content="Wave Laboratory: technical report — Jack J. Burleson">
 <meta property="og:description" content="Wave spectra and ship-dynamics models, architecture, validation suite, test counts, limitations and plan-versus-shipped notes for Wave Laboratory.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -153,7 +153,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 <main id="main"><header id="title-block-header" class="quarto-title-block"></header>
 <div class="page">
-<p><a href="../../projects/wave-laboratory.html" class="back"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg>Case study</a></p>
 <div class="project-nav">
 <p><a href="../../projects/wave-laboratory.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/wave-laboratory/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/wave-laboratory/appendix.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Appendix</a> <a href="https://github.com/Exios66/wave-laboratory"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a> <a href="https://exios66.github.io/wave-laboratory/"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-play"></use></svg>Live demo</a></p>
 </div>
@@ -230,7 +229,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Underwater optics.</strong> Jerlov water types give diffuse attenuation coefficients K_d for red, green and blue. They drive rendering only, not the physics. Light is attenuated as c·e^(−K_d·d) plus in-scattered colour, and from below the surface shows the rippled sky inside Snell’s window (48.6°) and a mirror outside it.</p>
 <h3 id="architecture">Architecture</h3>
 <p>The main thread runs the React UI, a Zustand store and the renderer. A Web Worker runs the simulation: the CPU ocean field, the vessels and a fixed-rate recorder. <code>SimClient</code> keeps one request in flight. Edits go through a Zod-validated store, which also keeps undo history and bumps a revision that reloads the worker.</p>
-<table class="caption-top stack" role="table">
+<table class="caption-top stack" role="table" data-prose-rows="true">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
@@ -264,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">Welch PSD, statistics, MSI</td>
-<td role="cell" data-label="Module path"><code>src/instruments/</code></td>
+<td role="cell" data-label="Module path"><code>src/</code><wbr><code>instruments/</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">Simulation kernel, worker, client</td>
@@ -299,7 +298,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>There are no benchmark numbers against external data. The evidence is the validation suite below.</p>
 <h3 id="validation-suite">Validation suite</h3>
 <p>The longer statistical checks live in <code>*.validation.ts</code> files and run with <code>pnpm validate</code>, with a 120-second timeout per test. There are 9 files and 25 test definitions.</p>
-<table class="caption-top stack" role="table">
+<table class="caption-top stack" role="table" data-prose-rows="true">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
@@ -312,35 +311,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd" role="row">
-<td role="cell" data-label="File"><code>ocean/ocean.validation.ts</code></td>
+<td role="cell" data-label="File"><code>ocean/</code><wbr><code>ocean.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">A virtual wave gauge reproduces the requested JONSWAP spectrum; linear seas have Gaussian elevations and H1/3 close to Hm0; choppy seas show positive skewness (sharper crests)</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="File"><code>sim/rogue.validation.ts</code></td>
+<td role="cell" data-label="File"><code>sim/</code><wbr><code>rogue.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">A 12 m NewWave crest peaks at the focus gauge near t = 75 s and the ship ships green water</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="File"><code>vessel/vessel.waves.validation.ts</code></td>
+<td role="cell" data-label="File"><code>vessel/</code><wbr><code>vessel.</code><wbr><code>waves.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">Heave RAO close to 1 for 20 s head seas; slamming and green water in steep head seas</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="File"><code>vessel/vessel.manoeuvring.validation.ts</code></td>
+<td role="cell" data-label="File"><code>vessel/</code><wbr><code>vessel.</code><wbr><code>manoeuvring.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">Plausible steady speeds, 30° autopilot turns without large overshoot, rudder sign and rate limit</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="File"><code>vessel/vessel.wind.validation.ts</code></td>
+<td role="cell" data-label="File"><code>vessel/</code><wbr><code>vessel.</code><wbr><code>wind.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">Leeway and heel in a beam wind, carrier course holding, square-rig sailing, reefing in a storm</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="File"><code>vessel/flooding.validation.ts</code>, <code>damage.validation.ts</code></td>
+<td role="cell" data-label="File"><code>vessel/</code><wbr><code>flooding.</code><wbr><code>validation.</code><wbr><code>ts</code>, <code>damage.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">Flooding and damage behaviour, including Torricelli decay and flooded-barge roll period</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="File"><code>vessel/mooring.validation.ts</code></td>
+<td role="cell" data-label="File"><code>vessel/</code><wbr><code>mooring.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">A trawler in a 15 m/s wind settles at a chain pull of 3.9 kN against a 3.8 kN wind load; a cargo ship stays within its watch circle in a 2 m swell; the anchor drags in a 45 m/s gale</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="File"><code>vessel/vessel.perf.validation.ts</code></td>
+<td role="cell" data-label="File"><code>vessel/</code><wbr><code>vessel.</code><wbr><code>perf.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">Performance check</td>
 </tr>
 </tbody>
@@ -364,18 +363,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd" role="row">
 <td role="cell" data-label="Suite">Unit</td>
-<td role="cell" data-label="Count">481 definitions in <code>src/**/*.test.ts</code></td>
+<td role="cell" data-label="Count">481 definitions in <code>src/</code><wbr><code>**/</code><wbr><code>*.</code><wbr><code>test.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="Where">Counted by grep at the 24 October snapshot</td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Suite">Validation</td>
 <td role="cell" data-label="Count">25 definitions in 9 files</td>
-<td role="cell" data-label="Where"><code>src/**/*.validation.ts</code></td>
+<td role="cell" data-label="Where"><code>src/</code><wbr><code>**/</code><wbr><code>*.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Suite">Browser (Playwright)</td>
 <td role="cell" data-label="Count">27 definitions in 2 files: 22 desktop, 5 mobile</td>
-<td role="cell" data-label="Where"><code>e2e/app.spec.ts</code>, <code>e2e/mobile.spec.ts</code></td>
+<td role="cell" data-label="Where"><code>e2e/</code><wbr><code>app.</code><wbr><code>spec.</code><wbr><code>ts</code>, <code>e2e/</code><wbr><code>mobile.</code><wbr><code>spec.</code><wbr><code>ts</code></td>
 </tr>
 </tbody>
 </table>
