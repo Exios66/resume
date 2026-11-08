@@ -495,7 +495,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Factor analysis of the scored PRCA items supports treating the group and interpersonal subscales as related but separable, so I report them separately. The repository describes this in words and gives no loadings table, so I report none.</p>
 <h3 id="bias-by-group">Bias by group</h3>
 <p>I sliced DeepSeek version 2’s group-score error by group. These are descriptive MAE and signed-error gaps. I did not run formal association tests on the LLM exports.</p>
-<table class="caption-top" style="width:100%;">
+<table class="caption-top stack" style="width:100%;" role="table">
 <colgroup>
 <col style="width: 16%">
 <col style="width: 16%">
@@ -505,55 +505,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <col style="width: 16%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Group</th>
-<th>n</th>
-<th>MAE at demos</th>
-<th>Mean signed error at demos</th>
-<th>MAE at transit</th>
-<th>Mean signed error at transit</th>
+<tr class="header" role="row">
+<th role="columnheader">Group</th>
+<th role="columnheader">n</th>
+<th role="columnheader">MAE at demos</th>
+<th role="columnheader">Mean signed error at demos</th>
+<th role="columnheader">MAE at transit</th>
+<th role="columnheader">Mean signed error at transit</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Full-time</td>
-<td>148</td>
-<td>4.37</td>
-<td>-0.01</td>
-<td>4.39</td>
-<td>+0.43</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Group">Full-time</td>
+<td class="num" role="cell" data-label="n">148</td>
+<td class="num" role="cell" data-label="MAE at demos">4.37</td>
+<td class="num" role="cell" data-label="Mean signed error at demos">-0.01</td>
+<td class="num" role="cell" data-label="MAE at transit">4.39</td>
+<td class="num" role="cell" data-label="Mean signed error at transit">+0.43</td>
 </tr>
-<tr class="even">
-<td>Part-time</td>
-<td>31</td>
-<td>6.06</td>
-<td>-2.00</td>
-<td>5.55</td>
-<td>-1.68</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Group">Part-time</td>
+<td class="num" role="cell" data-label="n">31</td>
+<td class="num" role="cell" data-label="MAE at demos">6.06</td>
+<td class="num" role="cell" data-label="Mean signed error at demos">-2.00</td>
+<td class="num" role="cell" data-label="MAE at transit">5.55</td>
+<td class="num" role="cell" data-label="Mean signed error at transit">-1.68</td>
 </tr>
-<tr class="odd">
-<td>Other employment</td>
-<td>62</td>
-<td>6.16</td>
-<td>-3.58</td>
-<td>6.07</td>
-<td>-3.61</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Group">Other employment</td>
+<td class="num" role="cell" data-label="n">62</td>
+<td class="num" role="cell" data-label="MAE at demos">6.16</td>
+<td class="num" role="cell" data-label="Mean signed error at demos">-3.58</td>
+<td class="num" role="cell" data-label="MAE at transit">6.07</td>
+<td class="num" role="cell" data-label="Mean signed error at transit">-3.61</td>
 </tr>
-<tr class="even">
-<td>Female</td>
-<td>120</td>
-<td>4.93</td>
-<td>-1.47</td>
-<td>4.73</td>
-<td>-0.97</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Group">Female</td>
+<td class="num" role="cell" data-label="n">120</td>
+<td class="num" role="cell" data-label="MAE at demos">4.93</td>
+<td class="num" role="cell" data-label="Mean signed error at demos">-1.47</td>
+<td class="num" role="cell" data-label="MAE at transit">4.73</td>
+<td class="num" role="cell" data-label="Mean signed error at transit">-0.97</td>
 </tr>
-<tr class="odd">
-<td>Male</td>
-<td>121</td>
-<td>5.17</td>
-<td>-0.90</td>
-<td>5.20</td>
-<td>-0.77</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Group">Male</td>
+<td class="num" role="cell" data-label="n">121</td>
+<td class="num" role="cell" data-label="MAE at demos">5.17</td>
+<td class="num" role="cell" data-label="Mean signed error at demos">-0.90</td>
+<td class="num" role="cell" data-label="MAE at transit">5.20</td>
+<td class="num" role="cell" data-label="Mean signed error at transit">-0.77</td>
 </tr>
 </tbody>
 </table>
