@@ -128,3 +128,6 @@ Project numbers and claims (must match source repos). Removing or hiding content
 - `content: attr(data-label) / ""` keeps stacked-table labels from being read twice by screen readers.
 - Tests that match `class="kicker"` exactly break when a filter adds classes; match by class membership.
 - Hyphenating headers or wrapping inline code anywhere both made layout worse.
+
+## Segment 5 in progress
+Baseline run 44: 24 points at 414/768 added coverage. Hypothesis: extending only prose-table stacking to 800px removes the 10 crushed tablet cells while preserving desktop grids.
