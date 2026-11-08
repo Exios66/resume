@@ -655,3 +655,23 @@ def test_chart_evidence_linking_uses_every_source_row(site, width, theme):
                 page.emulate_media(media="screen")
     finally:
         page.close()
+
+
+@pytest.mark.parametrize("width", [375, 414, 768, 1280])
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_stacked_benchmark_caption_preserves_reading_width(site, width, theme):
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 1000}, color_scheme=theme)
+    try:
+        page.goto(base + "projects/langtons-ant.html")
+        table = page.locator("table.chart-source")
+        caption = table.locator("caption")
+        expect(caption).to_contain_text("These are not browser frame rates")
+        assert caption.bounding_box()["width"] >= table.bounding_box()["width"] * .9
+        if width <= 768:
+            assert caption.bounding_box()["height"] < 180
+        else:
+            expect(caption).to_have_css("display", "table-caption")
+        assert table.locator("tbody tr").count() == 2
+    finally:
+        page.close()

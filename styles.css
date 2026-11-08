@@ -576,6 +576,7 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   .page table.stack, .page table.stack tbody, .page table.stack tr, .page table.stack td { display: block; width: auto; }
   .page table.stack { overflow: visible; border-top: 2px solid var(--accent); }
   .page table.stack colgroup { display: none; }
+  .page table.stack caption { display: block; width: auto; }
   .page table.stack thead {
     position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
     overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
