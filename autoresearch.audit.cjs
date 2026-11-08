@@ -252,6 +252,41 @@ function inspectChartEvidence() {
   return {navigation, linking};
 }
 
+// MapReduce's two backup experiments answer different questions. Both plots
+// must retain their design limitations and the source-pinned measurements.
+function inspectMapReduceEvidence() {
+  const failures = [];
+  const duration = document.getElementById('mr-backup-duration');
+  const uncertainty = document.getElementById('mr-backup-uncertainty');
+  const text = el => el ? el.textContent.replace(/\s+/g, ' ') : '';
+  const number = value => Number((value || '').replace(/−/g, '-').replace(/[^0-9.+-]/g, ''));
+  const marks = duration ? [...duration.querySelectorAll('.chart .mark')] : [];
+  const durationText = text(duration);
+  if (marks.length !== 2 || !marks.some(m => Math.abs(number(m.dataset.tipValue) - 17.58) < 1e-6)
+    || !marks.some(m => Math.abs(number(m.dataset.tipValue) - 11.24) < 1e-6)
+    || duration.querySelectorAll('.bar').length !== 2
+    || !/three runs/i.test(durationText) || !/fixed setting order/i.test(durationText)
+    || !/not drift-controlled/i.test(durationText)) failures.push('slow-worker duration with experiment limits');
+  const range = uncertainty && uncertainty.querySelector('.interval-range');
+  const point = uncertainty && uncertainty.querySelector('.mark .dot');
+  const zero = uncertainty && uncertainty.querySelector('line.ref');
+  let geometry = false;
+  if (range && point && zero) {
+    const low = +range.getAttribute('x1'), high = +range.getAttribute('x2');
+    const mean = +point.getAttribute('cx'), origin = +zero.getAttribute('x1');
+    geometry = low < mean && mean < origin && origin < high
+      && Math.abs((mean - low) / (high - low) - 0.27 / 0.54) < .02
+      && Math.abs((origin - low) / (high - low) - 0.38 / 0.54) < .02;
+  }
+  const cells = uncertainty ? [...uncertainty.querySelectorAll('table tbody tr:first-child td')].slice(1, 5).map(c => number(c.textContent)) : [];
+  const expected = [-.11, -.38, .16, 10];
+  const uncertaintyText = text(uncertainty);
+  if (!geometry || cells.length !== 4 || cells.some((n, i) => Math.abs(n - expected[i]) > 1e-6)
+    || !/95%/.test(uncertaintyText) || !/interleaved/i.test(uncertaintyText)
+    || !/does not prove zero cost/i.test(uncertaintyText)) failures.push('paired effect interval across no change, with limits');
+  return failures;
+}
+
 // Exercise discovery against real indexed results, preserving the unfiltered set.
 // Labels must describe the destination; filters must retain every matching route.
 async function inspectSearch(page) {
@@ -371,6 +406,11 @@ function lints() {
         add('type', 'heading ends with a one-word line', r.headingWidows);
         note(c, p, 'separator starts line', r.where.sepStart); note(c, p, 'separator ends line', r.where.sepEnd);
         note(c, p, 'heading widow', r.where.widows);
+      }
+      if (!c.layoutOnly && p === 'projects/mapreduce-reloaded.html') {
+        const gaps = await page.evaluate(inspectMapReduceEvidence);
+        add('structure', 'MapReduce evidence coverage', gaps.length);
+        note(c, p, 'MapReduce evidence coverage', gaps);
       }
       if (!c.layoutOnly) {
         const evidence = await page.evaluate(inspectChartEvidence);
