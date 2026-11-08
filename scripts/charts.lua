@@ -188,9 +188,9 @@ local function hit(x, y, w, h)
 end
 
 -- One datum: focusable, named for screen readers, and carrying its tooltip text.
-local function mark(tip_value, tip_label, body)
-  return string.format('<g class="mark" tabindex="0" role="img" aria-label="%s" data-tip-value="%s" data-tip-label="%s">%s</g>',
-    esc(tip_label .. ": " .. tip_value), esc(tip_value), esc(tip_label), body)
+local function mark(tip_value, tip_label, body, row_index)
+  return string.format('<g class="mark" tabindex="0" role="img" aria-label="%s" data-tip-value="%s" data-tip-label="%s" data-source-row="%d">%s</g>',
+    esc(tip_label .. ": " .. tip_value), esc(tip_value), esc(tip_label), row_index, body)
 end
 
 --- Return SVG text for a row label, right-aligned in the gutter and centered on cy.
@@ -312,7 +312,7 @@ function DRAW.bars(spec, rows)
     local tip = v >= 0 and text("val", vx + 6, y + BAND / 2 + 4.5, "start", value_text)
       or text("val", vx - 6, y + BAND / 2 + 4.5, "end", value_text)
     out[#out + 1] = mark(value_text, label, hit(0, y, W, BAND) .. row_label(row[spec.label], y + BAND / 2, gutter)
-      .. bar_path(color, sx(math.max(lo, 0)), vx, y + (BAND - BAR) / 2) .. tip)
+      .. bar_path(color, sx(math.max(lo, 0)), vx, y + (BAND - BAR) / 2) .. tip, i)
   end
   return out, bottom + 28, legend, function(i) return i end
 end
@@ -334,7 +334,7 @@ function DRAW.dumbbell(spec, rows)
       hit(0, y, W, BAND) .. row_label(row[spec.label], cy)
       .. line("link", fx, cy, tx, cy, PAINT.muted) .. dot("c1s", fx, cy) .. dot("c1", tx, cy)
       .. (tx >= fx and text("val", tx + 10, cy + 4.5, "start", M.fmt(b[i], spec.unit))
-        or text("val", tx - 10, cy + 4.5, "end", M.fmt(b[i], spec.unit))))
+        or text("val", tx - 10, cy + 4.5, "end", M.fmt(b[i], spec.unit))), i)
   end
   return out, bottom + 28, { spec["from-name"] or spec.from, spec["to-name"] or spec.to }, nil
 end
@@ -371,7 +371,7 @@ function DRAW.step(spec, rows)
     local body = hit(x0, top, x1 - x0, bottom - top)
       .. dot("c1", x, sy(ys[i])) .. text("tick", x, bottom + 18, "middle", short)
     if i == #rows then body = body .. text("val", x, sy(ys[i]) - 12, "middle", M.fmt(ys[i], spec.unit)) end
-    out[#out + 1] = mark(M.fmt(ys[i], spec.unit), row[spec.label] .. " tokens", body)
+    out[#out + 1] = mark(M.fmt(ys[i], spec.unit), row[spec.label] .. " tokens", body, i)
   end
   return out, bottom + 30, {}, nil
 end
@@ -405,7 +405,7 @@ function DRAW.strip(spec, rows)
         if k ~= j and other > xs[j] then x1 = math.min(x1, (other + xs[j]) / 2) end
       end
       panel[#panel + 1] = mark(M.fmt(v, spec.unit), row[spec.label] .. " · " .. who,
-        hit(x0, cy - 12, x1 - x0, 24) .. dot(color, xs[j], cy))
+        hit(x0, cy - 12, x1 - x0, 24) .. dot(color, xs[j], cy), i)
     end
     out[#out + 1] = '<g class="panel">' .. table.concat(panel) .. "</g>"
   end

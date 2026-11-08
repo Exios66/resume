@@ -617,3 +617,41 @@ def test_chart_source_round_trip_without_script(site, width, theme):
                 expect(caption).to_have_text(figure.locator("figcaption").inner_text())
     finally:
         context.close()
+
+
+@pytest.mark.parametrize("width,theme", [(375, "light"), (375, "dark"), (1280, "light"), (1280, "dark")])
+def test_chart_evidence_linking_uses_every_source_row(site, width, theme):
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 1000}, color_scheme=theme, reduced_motion="reduce")
+    try:
+        for path in CHART_PAGES:
+            page.goto(base + path)
+            for figure in page.locator("figure.chart").all():
+                table = page.locator(figure.locator(".chart-tools a").get_attribute("href"))
+                rows = table.locator("tbody tr")
+                readout = figure.locator(".chart-readout")
+                expect(readout).to_be_visible()
+                for mark in figure.locator(".mark").all():
+                    index = int(mark.get_attribute("data-source-row")) - 1
+                    row = rows.nth(index)
+                    cells = [" ".join(text.split()) for text in row.locator("td").all_text_contents()]
+                    assert mark.get_attribute("data-tip-label").startswith(cells[0])
+                    mark.focus()
+                    expect(row).to_have_class(re.compile(r"\bis-linked\b"))
+                    for text in cells:
+                        expect(readout).to_contain_text(text)
+                    assert row.evaluate("el => getComputedStyle(el).outlineWidth") == "2px"
+                # Reverse direction: keyboard focus in the table selects all its marks,
+                # including every replicate in a benchmark-strip panel.
+                for index in range(rows.count()):
+                    rows.nth(index).focus()
+                    selected = figure.locator(".mark.is-linked")
+                    assert selected.count() > 0
+                    assert all(int(m.get_attribute("data-source-row")) == index + 1 for m in selected.all())
+                page.emulate_media(media="print")
+                expect(readout).to_be_hidden()
+                expect(table).to_be_visible()
+                expect(figure.locator("svg")).to_be_visible()
+                page.emulate_media(media="screen")
+    finally:
+        page.close()

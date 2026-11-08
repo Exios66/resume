@@ -1,6 +1,6 @@
 /* Site enhancements: header hairline, reading progress on technical reports and a
    fade-in for project cards. Everything here is optional; the pages are complete
-   without it. Nothing runs when the visitor asks for reduced motion. */
+   without it. Decorative motion respects the reduced-motion preference. */
 (function () {
   "use strict";
   var doc = document;
@@ -24,6 +24,68 @@
       }, { passive: true });
     }
   } catch (e) {}
+
+  // Coordinated views share a row index emitted by the chart's table renderer.
+  // Readout text comes from the authored table, including unplotted context.
+  (function () {
+    doc.querySelectorAll('figure.chart').forEach(function (figure) {
+      var link = figure.querySelector('.chart-tools a');
+      var table = link && doc.getElementById(link.hash.slice(1));
+      if (!table) return;
+      var rows = Array.from(table.querySelectorAll('tbody tr'));
+      var marks = Array.from(figure.querySelectorAll('.mark'));
+      if (!rows.length || !marks.length || marks.some(function (mark) {
+        var index = Number(mark.getAttribute('data-source-row'));
+        return !Number.isInteger(index) || index < 1 || index > rows.length;
+      })) return;
+      var headers = Array.from(table.querySelectorAll('thead tr:last-child th')).map(function (cell) { return cell.textContent.trim(); });
+      var readout = doc.createElement('div');
+      readout.className = 'chart-readout';
+      readout.setAttribute('role', 'group');
+      readout.setAttribute('aria-label', 'Selected source row');
+      var position = doc.createElement('span');
+      position.className = 'chart-readout-position';
+      var name = doc.createElement('strong');
+      name.className = 'chart-readout-name';
+      var values = doc.createElement('dl');
+      var hint = doc.createElement('p');
+      hint.className = 'chart-readout-hint';
+      hint.textContent = 'Focus or point to a mark or data row to connect the evidence.';
+      readout.append(position, name, values, hint);
+      figure.querySelector('.chart-tools').before(readout);
+      function select(index) {
+        rows.forEach(function (row, at) { row.classList.toggle('is-linked', at === index); });
+        marks.forEach(function (mark) { mark.classList.toggle('is-linked', Number(mark.getAttribute('data-source-row')) === index + 1); });
+        position.textContent = 'Source row ' + (index + 1) + ' of ' + rows.length;
+        name.textContent = rows[index].cells[0].textContent.trim();
+        values.replaceChildren();
+        Array.from(rows[index].cells).slice(1).forEach(function (cell, at) {
+          var pair = doc.createElement('div');
+          var key = doc.createElement('dt');
+          var value = doc.createElement('dd');
+          key.textContent = headers[at + 1] || 'Value';
+          value.textContent = cell.textContent.trim();
+          pair.append(key, value);
+          values.appendChild(pair);
+        });
+      }
+      marks.forEach(function (mark) {
+        var index = Number(mark.getAttribute('data-source-row')) - 1;
+        mark.addEventListener('focus', function () { select(index); });
+        mark.addEventListener('pointerenter', function () { select(index); });
+        mark.addEventListener('click', function () { mark.focus({preventScroll: true}); select(index); });
+      });
+      rows.forEach(function (row, index) {
+        row.tabIndex = 0;
+        row.addEventListener('focus', function () { select(index); });
+        row.addEventListener('pointerenter', function () { select(index); });
+        row.addEventListener('click', function (event) {
+          if (!event.target.closest('a, button, input, select, textarea')) row.focus({preventScroll: true});
+        });
+      });
+      select(0);
+    });
+  })();
 
   // Charts: one shared tooltip for hover and keyboard focus. Every value it shows is
   // also in the table under the chart, so it only ever adds convenience.

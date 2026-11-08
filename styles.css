@@ -954,3 +954,25 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
   .chart-tools, .chart-return { display: none; }
   .chart-title[tabindex]:focus, table.chart-source:focus { outline: none; }
 }
+
+/* A persistent source lens coordinates marks and rows without hiding either. */
+.chart-readout { margin-top: 14px; padding: 12px 14px; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--paper)); border-radius: 0 8px 8px 0; }
+.chart-readout-position { display: block; color: var(--muted); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; }
+.chart-readout-name { display: block; margin: 3px 0 9px; font-size: .95rem; }
+.chart-readout dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 20px; margin: 0; }
+.chart-readout dt { color: var(--muted); font-size: .75rem; line-height: 1.45; overflow-wrap: anywhere; }
+.chart-readout dd { margin: 2px 0 0; color: var(--ink); font-size: .87rem; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.page .chart-readout-hint { margin: 10px 0 0; color: var(--muted); font-size: .75rem; }
+.chart-source tr.is-linked { outline: 2px solid var(--accent); outline-offset: -2px; background: color-mix(in srgb, var(--accent) 8%, var(--paper)); }
+.chart-source tr:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.chart .mark.is-linked .hit { fill: color-mix(in srgb, var(--accent) 8%, transparent); stroke: var(--accent); stroke-width: 1.5; }
+@media (forced-colors: active) {
+  .chart-source tr.is-linked { outline-color: Highlight; }
+  .chart .mark.is-linked .hit { fill: none; stroke: Highlight; }
+  .chart-readout { border-color: Highlight; }
+}
+@media print {
+  .chart-readout { display: none; }
+  .chart-source tr.is-linked, .chart-source tr:focus-visible { outline: none; background: none; }
+  .chart .mark.is-linked .hit { fill: none; stroke: none; }
+}
