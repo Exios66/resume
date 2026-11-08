@@ -18,3 +18,15 @@ Thumbs.db
 .venv/
 __pycache__/
 .pytest_cache/
+
+# Polish hill-climb: living session state and local outputs (snapshots go in .autoresearch/)
+autoresearch.jsonl
+autoresearch.md
+autoresearch.ideas.md
+run.log
+checks.log
+render.err
+audit.details.json
+findings.tsv
+.autoresearch-tools/
+.hillclimb-shots/
