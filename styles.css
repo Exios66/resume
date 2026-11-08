@@ -315,7 +315,14 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   body { font-size: 15px; }
   .page { margin: 0; padding: 36px 20px 28px; border-radius: 0; box-shadow: none; }
   .site-header { padding: 0 16px; }
-  .site-nav { justify-content: flex-start; }
+  .site-nav { justify-content: flex-start; row-gap: 0; column-gap: 4px; }
+  /* Phone header: the title sits on its own line; links keep their 44 px touch
+     height but lose horizontal padding, so the theme toggle rides the last link
+     row instead of taking one of its own. */
+  .site-title { flex-basis: 100%; display: flex; align-items: center; min-height: 44px; }
+  .nav-list { flex: 1 1 auto; }
+  .nav-link { padding: 6px 8px; font-size: .84rem; }
+  .theme-toggle { margin-left: 0; flex: 0 0 auto; }
   .site-footer { padding: 0 16px; }
   .site-header + main .page { margin-top: 12px; }
   .skills dl { grid-template-columns: 1fr; gap: 2px; }
