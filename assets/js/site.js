@@ -121,22 +121,23 @@
     onScroll(function () { header.classList.toggle("is-scrolled", scrollTop() > 8); });
   }
 
-  // Wide tables and code blocks scroll sideways on small screens. Make each one that
+  // Wide tables and long code blocks scroll on small screens. Make each one that
   // actually overflows reachable by keyboard (arrow keys then scroll it), and drop the
   // extra tab stop again when it fits. Tables keep their table role and caption name.
   (function () {
     var boxes = doc.querySelectorAll(".page table, .page div.sourceCode, .page pre:not(.sourceCode)");
     if (!boxes.length) return;
+    var codes = [].filter.call(boxes, function (box) { return box.tagName !== "TABLE"; });
     function update() {
       boxes.forEach(function (box) {
-        var wide = box.scrollWidth > box.clientWidth + 1;
+        var wide = box.scrollWidth > box.clientWidth || box.scrollHeight > box.clientHeight;
         if (wide === box.hasAttribute("data-scrolls")) return;
         if (wide) {
           box.setAttribute("data-scrolls", "");
           box.setAttribute("tabindex", "0");
           if (box.tagName !== "TABLE") {
             box.setAttribute("role", "region");
-            box.setAttribute("aria-label", "Code, scrolls sideways");
+            box.setAttribute("aria-label", "Code example " + (codes.indexOf(box) + 1) + " of " + codes.length + ", scrollable");
           }
         } else {
           box.removeAttribute("data-scrolls");
@@ -147,6 +148,7 @@
     }
     update();
     window.addEventListener("load", update); // web fonts can change widths
+    if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(update);
     var timer;
     window.addEventListener("resize", function () { clearTimeout(timer); timer = setTimeout(update, 150); });
   })();
