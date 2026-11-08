@@ -493,6 +493,10 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   .project-pager { flex-direction: column; }
   .project-pager a { max-width: none; }
   .project-pager .pager-next { margin-left: 0; justify-content: flex-end; }
+  /* Number grids: a second notch so the narrowest phones fit more of them without
+     scrolling. 12 px is the audit floor and matches the size run 13 set for labels. */
+  .page table:not(.stack) { font-size: .75rem; }
+  .page table:not(.stack) :is(th, td) { padding: 5px 5px; }
 }
 
 /* Search */
