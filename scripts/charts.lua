@@ -427,6 +427,12 @@ function DRAW.interval(spec, rows)
   local requested_lo, requested_hi = tonumber(spec.min) or lo, tonumber(spec.max) or hi
   if requested_lo > lo or requested_hi < hi then fail(spec, "interval axis must include zero and all bounds") end
   local ticks = M.nice_ticks(requested_lo, requested_hi, 4)
+  -- Nice ticks may expand inferred ends, but authored bounds define the axis.
+  if spec.min then ticks[1] = requested_lo end
+  if spec.max then
+    while #ticks > 1 and ticks[#ticks] > requested_hi + 1e-9 do ticks[#ticks] = nil end
+    if ticks[#ticks] < requested_hi - 1e-9 then ticks[#ticks + 1] = requested_hi end
+  end
   lo, hi = ticks[1], ticks[#ticks]
   local top, band, width = 70, 120, 320
   local bottom = top + (#rows - 1) * band + 80

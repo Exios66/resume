@@ -266,6 +266,21 @@ fails("interval axis must include zero and all bounds",
   { kind = "interval", label = "Comparison", value = "Mean", lower = "Low", upper = "High", min = "0" }, interval_rows)
 fails("needs at least one row", interval_spec, {})
 
+-- Explicit non-round domains remain authored; automatic ends may use nice ticks.
+for _, bounds in ipairs({ { min = "-0.38", max = "0.16" }, { min = "-0.38" }, { max = "0.16" } }) do
+  local spec = { kind = "interval", label = "Comparison", value = "Mean", lower = "Low", upper = "High",
+    min = bounds.min, max = bounds.max }
+  local svg = CHARTS.render(spec, interval_rows)
+  local left, right = svg:match('<line class="interval%-range c1" x1="([%d%.]+)" y1="[%d%.]+" x2="([%d%.]+)"')
+  if bounds.min then assert(math.abs(tonumber(left) - 44) < .01, "explicit lower bound is the axis start") end
+  if bounds.max then assert(math.abs(tonumber(right) - 296) < .01, "explicit upper bound is the axis end") end
+  if bounds.min and bounds.max then
+    local zero = tonumber(svg:match('<line class="ref" x1="([%d%.]+)"'))
+    assert(math.abs(zero - (44 + 252 * .38 / .54)) < .051, "zero follows the authored non-round domain")
+  end
+end
+
+
 fails("integer width", { kind = "bars", label = "Job", value = "Speedup", ["plot-width"] = "320.5" }, MAPRED)
 
 print("chart unit tests passed")
