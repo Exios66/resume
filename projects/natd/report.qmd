@@ -5,7 +5,6 @@ description: "Technical report on a study of nine participants and 18 sessions w
 
 ::: {.page}
 
-[← Case study](../natd.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../natd.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/truth-deception-architecture)

@@ -26,15 +26,14 @@ def page(slug):
     return path, ContentParser(path)
 
 
-def test_every_appendix_links_case_study_report_and_back():
+def test_every_appendix_links_case_study_and_report():
     all_projects = (checks.DOCS / "projects").resolve()
     for slug in ALL:
         path, parser = page(slug)
         study = all_projects / f"{slug}.html"
-        back = next(a for tag, a, _ in parser.elements if "back" in checks.classes(a))
-        assert destination(path, back) == study
-        links = {parser.text(a): destination(path, a) for tag, a, _ in parser.elements
-                 if tag == "a" and "back" not in checks.classes(a)}
+        # The standalone back link was removed on purpose (duplicate of the
+        # Case-study pill in the project nav); the pill is the way back.
+        links = {parser.text(a): destination(path, a) for tag, a, _ in parser.elements if tag == "a"}
         assert links["Case study"] == study
         if (checks.DOCS / "projects" / slug / "report.html").is_file():
             assert links["Technical report"] == all_projects / slug / "report.html"

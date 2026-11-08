@@ -5,7 +5,6 @@ description: "Court structure, voting rules, runner design, executive layer, tes
 
 ::: {.page}
 
-[← Case study](../llm-personas.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../llm-personas.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/LLM_Personas)

@@ -5,7 +5,6 @@ description: "Supporting notes for the RVL-CDIP study: slice sizes, prompt versi
 
 ::: {.page}
 
-[← Case study](../rvl-cdip-classifier.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../rvl-cdip-classifier.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/RVL-CDIP-Classifier)

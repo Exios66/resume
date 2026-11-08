@@ -5,7 +5,6 @@ description: "Supporting notes for the Digital-Mailroom case study: the public c
 
 ::: {.page}
 
-[← Case study](../digital-mailroom.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../digital-mailroom.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/LLM-Mailroom-Services/Digital-Mailroom)

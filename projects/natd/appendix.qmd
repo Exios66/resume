@@ -5,7 +5,6 @@ description: "Publication scope for The Neural Architecture of Truth and Decepti
 
 ::: {.page}
 
-[← Case study](../natd.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../natd.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/truth-deception-architecture)

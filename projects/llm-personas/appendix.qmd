@@ -5,7 +5,6 @@ description: "Supporting scope notes for MORNINGSTAR: the self-reported delibera
 
 ::: {.page}
 
-[← Case study](../llm-personas.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../llm-personas.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/LLM_Personas)

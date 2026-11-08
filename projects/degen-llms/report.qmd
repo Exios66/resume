@@ -5,7 +5,6 @@ description: "Architecture, shared-screen rule, save format, randomness, exact s
 
 ::: {.page}
 
-[← Case study](../degen-llms.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../degen-llms.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/degen-llms) [Live demo](https://exios66.github.io/degen-llms/)

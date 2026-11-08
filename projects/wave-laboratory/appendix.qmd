@@ -5,7 +5,6 @@ description: "Supporting notes for Wave Laboratory: the wave models, validation 
 
 ::: {.page}
 
-[← Case study](../wave-laboratory.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../wave-laboratory.qmd) [Technical report](report.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/wave-laboratory) [Live demo](https://exios66.github.io/wave-laboratory/)

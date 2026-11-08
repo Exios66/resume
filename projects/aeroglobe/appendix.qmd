@@ -5,7 +5,6 @@ description: "Supporting notes for the AeroGlobe case study: pipeline stages, da
 
 ::: {.page}
 
-[← Case study](../aeroglobe.qmd){.back}
 
 ::: {.project-nav}
 [Case study](../aeroglobe.qmd) [Appendix](appendix.qmd){aria-current="page"} [Code](https://github.com/Exios66/aeroglobe) [Live site](https://exios66.github.io/aeroglobe/)

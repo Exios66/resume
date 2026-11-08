@@ -123,14 +123,18 @@ class PortfolioAdditionTests(unittest.TestCase):
         for name in NEW_PAGES:
             with self.subTest(page=name):
                 page, parser = self.read_page(name)
-                back = self.one(parser, "a", **{"class": "back"})
-                expected = "projects/mailroom-corpus-eda.html" if name.endswith("/report.html") else "projects/index.html"
-                self.assertEqual(destination(page, back), (checks.DOCS / expected).resolve())
                 main_nav = self.one(parser, "nav", **{"aria-label": "Main"})
                 links = [attrs for tag, attrs in parser.children(main_nav) if tag == "a"]
                 current = [link for link in links if checks.attr(link, "aria-current") == "page"]
                 self.assertEqual(len(current), 1)
                 self.assertEqual(destination(page, current[0]), (checks.DOCS / "projects/index.html").resolve())
+                if name.endswith("/report.html"):
+                    # The report's standalone back link was removed as the
+                    # duplicate of its Case-study pivot; case-study pages keep theirs.
+                    continue
+                back = self.one(parser, "a", **{"class": "back"})
+                expected = "projects/mailroom-corpus-eda.html" if name.endswith("/report.html") else "projects/index.html"
+                self.assertEqual(destination(page, back), (checks.DOCS / expected).resolve())
 
     def test_aeroglobe_keeps_its_development_and_planned_feature_caveats(self):
         _, parser = self.read_page("projects/aeroglobe.html")
