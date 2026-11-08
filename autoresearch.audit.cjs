@@ -44,7 +44,13 @@ function serve() {
   return new Promise(r => server.listen(0, '127.0.0.1', () => r(server)));
 }
 
-// Runs inside the page. Returns layout and interaction findings for one viewport.
+/**
+ * Inspect the current page in the browser and return layout, typography, image,
+ * heading and focus findings for its viewport. `smallSvg` contains one entry per
+ * chart or diagram with visible SVG text below 11.95 rendered pixels.
+ * @param {boolean} mobile Include tap-target, small-text and table checks.
+ * @returns {object} Counts and finding details used by the audit scorer.
+ */
 function inspect(mobile) {
   const vw = document.documentElement.clientWidth;
   const out = { pageOverflow: document.documentElement.scrollWidth > vw + 1, tap: [], tiny: [], crushed: 0,
