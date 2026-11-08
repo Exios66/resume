@@ -632,7 +632,7 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   .chart-scroll { overflow: visible; }
   .chart-scroll img.fig { min-width: 0; }
   .icon { display: none !important; }
-  .project-nav { display: none; }
+  .project-nav, .project-pager, .search-suggest { display: none; }
   .stats { grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .stat { border: 1px solid #ccc; padding: 6px 8px; }
   .stat-value { font-size: 15pt; }
