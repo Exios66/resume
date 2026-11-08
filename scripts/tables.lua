@@ -14,13 +14,11 @@ local function looks_numeric(text)
   return t:match("^%d[%d.,]*%%?%s*%S*$") ~= nil and #t <= 24
 end
 
---- Give long inline code in a table cell break opportunities after path and name
---- separators ("/", "_", "-", "."), so a narrow column breaks at those points
--- instead of clipping the code or crushing it into mid-word lines. Inbox wrapping:
--- the browser only breaks when the code would otherwise overflow. Only code of
--- 14+ characters gets this; short tokens like "R1" or "x" stay one piece.
--- @param contents pandoc.Inlines
--- @return pandoc.Inlines
+--- Add HTML break opportunities after internal path and name separators in
+-- inline code of at least 14 bytes. Code without an eligible separator is unchanged.
+-- @param contents pandoc.Blocks Table cell contents.
+-- @return pandoc.Blocks Split code retains classes and attributes; its identifier
+--   is retained only on the first fragment.
 local function split_long_code(contents)
   return contents:walk {
     Code = function(code)
@@ -52,13 +50,13 @@ local function split_long_code(contents)
   }
 end
 
---- Mark text-heavy tables with class "stack" and give every body cell a data-label
--- naming its column. On small screens styles.css shows each row as a labelled block
--- instead of squeezing prose into narrow columns. Number tables keep their grid and
--- scroll sideways, which is how people compare figures. Explicit roles keep the table
--- semantics that some browsers drop once table parts are restyled as blocks.
+--- Mark tables selected for stacking and label body cells with their column names.
+-- On small screens styles.css shows their rows as labelled blocks. Wide or short
+-- numeric tables can also be selected. Explicit roles preserve table semantics
+-- when table parts are restyled as blocks. Long code in the last header row and
+-- body cells gains break opportunities even when the table is not selected.
 -- @param tbl pandoc.Table
--- @return pandoc.Table|nil
+-- @return pandoc.Table|nil The modified table if selected, otherwise nil.
 local function stack_table(tbl)
   local head_rows = tbl.head and tbl.head.rows or {}
   if #head_rows == 0 then return nil end

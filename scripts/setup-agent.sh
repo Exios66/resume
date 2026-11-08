@@ -6,6 +6,7 @@ set -euo pipefail
 
 QUARTO_VERSION=1.10.19
 
+# Print a setup status message with the script's prefix.
 say() { printf '%s\n' "setup-agent: $*"; }
 
 # Select the official archive and how many leading archive components to remove.
@@ -19,6 +20,7 @@ quarto_archive() {
 }
 
 # Every selection path, including an explicit override, must use the build pin.
+# Return success only when the executable reports that exact version.
 quarto_ok() { [ -x "$1" ] && [ "$("$1" --version 2>/dev/null)" = "$QUARTO_VERSION" ]; }
 
 # Test the actual revision required by each client, not the presence of any cache directory.

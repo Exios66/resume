@@ -193,7 +193,9 @@ local function mark(tip_value, tip_label, body)
     esc(tip_label .. ": " .. tip_value), esc(tip_value), esc(tip_label), body)
 end
 
--- Row label, right-aligned in the gutter, one or two lines centred on cy.
+--- Return SVG text for a row label, right-aligned in the gutter and centered on cy.
+-- Labels wrap to at most two lines. The gutter defaults to GUTTER when omitted;
+-- cy and gutter are in SVG viewBox units.
 local function row_label(label, cy, gutter)
   gutter = gutter or GUTTER
   local lines = M.wrap_label(label, 26)
@@ -255,6 +257,14 @@ end
 
 local DRAW = {}
 
+--- Draw horizontal bars and their labels from the selected table columns.
+-- @param spec table Chart attributes, including label and value column names;
+--   optional series, min, max, ref, ref-label, unit and signed control the display.
+-- @param rows table Rows mapping column names to cell text.
+-- @return table, number, table, function SVG fragments, height in viewBox units,
+--   legend names in series order, and an identity function for row indices.
+-- Raises an error for missing columns or numeric values, more than two series,
+-- or a positive minimum. Other errors from invalid attributes propagate.
 function DRAW.bars(spec, rows)
   column(spec, rows, spec.label); column(spec, rows, spec.value)
   local vals = values(spec, rows, spec.value)
