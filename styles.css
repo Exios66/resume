@@ -265,6 +265,8 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 16px; margin: 4px 0 14px; }
 .cards-wide { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); margin-top: 22px; }
+/* Essay cards need room for full titles before sharing a row. */
+.writing-cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
 /* Exactly four cards sit in a 2x2 grid instead of leaving one alone on a third row. */
 @media (min-width: 560px) {
   .cards:not(.cards-wide):has(> .card:nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
