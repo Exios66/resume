@@ -943,3 +943,14 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
   .footnotes { max-width: none; margin: 0; padding: 0; border-radius: 0; font-size: 9pt; }
   .footnotes li { break-inside: avoid; }
 }
+
+/* Chart and exact evidence form one reading path, including without scripting. */
+.chart-tools, .page .chart-return { margin: 8px 0 0; font-size: .82rem; }
+.page .chart-return { margin-bottom: 18px; }
+.chart-tools a, .chart-return a { display: inline-flex; align-items: center; min-height: 44px; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 6px; }
+.chart-title[tabindex], table.chart-source { scroll-margin-top: 110px; }
+.chart-title[tabindex]:focus, table.chart-source:focus { outline: 2px solid var(--accent); outline-offset: 4px; }
+@media print {
+  .chart-tools, .chart-return { display: none; }
+  .chart-title[tabindex]:focus, table.chart-source:focus { outline: none; }
+}

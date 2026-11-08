@@ -195,7 +195,7 @@ fails("unknown kind 'pie'", { kind = "pie", label = "Job", value = "Speedup" }, 
 
 -- filter
 local function cell(text) return { contents = { { text = text } } } end
-local tbl = { t = "Table",
+local tbl = { t = "Table", attr = { identifier = "", classes = { insert = table.insert }, attributes = {} },
   head = { rows = { { cells = { cell("Job"), cell("Speedup") } } } },
   bodies = { { body = { { cells = { cell("sort"), cell("2.9×") } }, { cells = { cell("grep"), cell("2.3×") } } } } } }
 local out = Div({ classes = { "chart" }, attributes = { kind = "bars", title = "S", label = "Job", value = "Speedup" },

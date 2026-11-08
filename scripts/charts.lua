@@ -453,11 +453,14 @@ function M.render(spec, rows)
     end
     legend_html = '<ul class="chart-legend">' .. table.concat(items) .. "</ul>"
   end
-  return string.format('<figure class="chart chart-%s"><figcaption class="chart-title">%s</figcaption>%s'
+  local title_attr = spec.evidence_id and (' id="' .. esc(spec.evidence_id .. '-title') .. '" tabindex="-1"') or ""
+  local tools = spec.source_id and ('<p class="chart-tools"><a href="#' .. esc(spec.source_id)
+    .. '" aria-label="View exact values for ' .. esc(spec.title or "Chart") .. '">View exact values</a></p>') or ""
+  return string.format('<figure class="chart chart-%s"><figcaption class="chart-title"%s>%s</figcaption>%s'
     .. '<div class="chart-body" tabindex="0" role="group" aria-label="%s">'
-    .. '<svg viewBox="0 0 %d %s" width="%d" height="%s" role="group" aria-label="%s">%s</svg></div></figure>',
-    spec.kind, esc(spec.title or ""), legend_html, esc((spec.title or "Chart") .. ", scrollable"),
-    W, num(height), W, num(height), esc(summary(spec, rows)), table.concat(body))
+    .. '<svg viewBox="0 0 %d %s" width="%d" height="%s" role="group" aria-label="%s">%s</svg></div>%s</figure>',
+    spec.kind, title_attr, esc(spec.title or ""), legend_html, esc((spec.title or "Chart") .. ", scrollable"),
+    W, num(height), W, num(height), esc(summary(spec, rows)), table.concat(body), tools)
 end
 
 -- ------------------------------------------------------------------- filter
@@ -472,6 +475,8 @@ local function cells_text(row)
   for i, c in ipairs(row.cells) do out[i] = pandoc.utils.stringify(c.contents) end
   return out
 end
+
+local chart_count = 0
 
 --- Replace a `.chart` Div with the chart figure followed by its table.
 function Div(el)
@@ -493,11 +498,22 @@ function Div(el)
       rows[#rows + 1] = row
     end
   end
+  chart_count = chart_count + 1
+  spec.evidence_id = "chart-evidence-" .. chart_count
+  spec.source_id = tbl.attr.identifier ~= "" and tbl.attr.identifier or (spec.evidence_id .. "-data")
+  tbl.attr.identifier = spec.source_id
+  tbl.attr.classes:insert("chart-source")
+  tbl.attr.attributes["tabindex"] = "-1"
+  tbl.attr.attributes["aria-labelledby"] = spec.evidence_id .. "-title"
   -- Keep every authored block; the figure goes directly before the charted table.
   local out = {}
   for i, block in ipairs(el.content) do
     if i == at then out[#out + 1] = pandoc.RawBlock("html", M.render(spec, rows)) end
     out[#out + 1] = block
+    if i == at then
+      out[#out + 1] = pandoc.RawBlock("html", '<p class="chart-return"><a href="#' .. esc(spec.evidence_id .. '-title')
+        .. '" aria-label="Return to chart: ' .. esc(spec.title or "Chart") .. '">Return to chart</a></p>')
+    end
   end
   return out
 end

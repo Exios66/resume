@@ -590,3 +590,30 @@ def test_numbered_research_notes_work_without_javascript(site):
         expect(page).to_have_url(re.compile(r"#fnref17$"))
     finally:
         page.close()
+
+
+@pytest.mark.parametrize("width,theme", [(375, "light"), (375, "dark"), (1280, "light"), (1280, "dark")])
+def test_chart_source_round_trip_without_script(site, width, theme):
+    """Evidence links must move keyboard focus and work without enhancement JS."""
+    browser, base = site
+    context = browser.new_context(viewport={"width": width, "height": 900}, color_scheme=theme, java_script_enabled=False)
+    page = context.new_page()
+    try:
+        for path in CHART_PAGES:
+            page.goto(base + path)
+            for figure in page.locator("figure.chart").all():
+                forward = figure.locator(".chart-tools a")
+                table = page.locator(forward.get_attribute("href"))
+                assert table.evaluate("el => el.tagName === 'TABLE'")
+                forward.focus()
+                page.keyboard.press("Enter")
+                expect(table).to_be_focused()
+                assert page.url.endswith(forward.get_attribute("href"))
+                back = table.locator("xpath=following-sibling::p[1]").locator("a")
+                caption = page.locator(back.get_attribute("href"))
+                back.focus()
+                page.keyboard.press("Enter")
+                expect(caption).to_be_focused()
+                expect(caption).to_have_text(figure.locator("figcaption").inner_text())
+    finally:
+        context.close()
