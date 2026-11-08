@@ -266,6 +266,7 @@ local DRAW = {}
 -- Raises an error for missing columns or numeric values, more than two series,
 -- or a positive minimum. Other errors from invalid attributes propagate.
 function DRAW.bars(spec, rows)
+  local width = tonumber(spec["plot-width"]) or W
   column(spec, rows, spec.label); column(spec, rows, spec.value)
   local vals = values(spec, rows, spec.value)
   local color_of, legend = series_colors(spec, rows)
@@ -281,7 +282,7 @@ function DRAW.bars(spec, rows)
   local longest = 0
   for _, row in ipairs(rows) do longest = math.max(longest, utf8.len(row[spec.label])) end
   local gutter = math.min(GUTTER, math.max(100, longest * 9 + 32))
-  local sx = linear(lo, hi, gutter + (lo < 0 and LABEL_ROOM or 0), W - RIGHT)
+  local sx = linear(lo, hi, gutter + (lo < 0 and LABEL_ROOM or 0), width - RIGHT)
   local out = { x_axis(ticks, sx, top, bottom, spec.unit) }
   if lo < 0 then out[#out + 1] = line("zero", sx(0), top, sx(0), bottom, PAINT.muted) end
   local signed = spec.signed == "true"
@@ -311,7 +312,7 @@ function DRAW.bars(spec, rows)
     local vx = sx(v)
     local tip = v >= 0 and text("val", vx + 6, y + BAND / 2 + 4.5, "start", value_text)
       or text("val", vx - 6, y + BAND / 2 + 4.5, "end", value_text)
-    out[#out + 1] = mark(value_text, label, hit(0, y, W, BAND) .. row_label(row[spec.label], y + BAND / 2, gutter)
+    out[#out + 1] = mark(value_text, label, hit(0, y, width, BAND) .. row_label(row[spec.label], y + BAND / 2, gutter)
       .. bar_path(color, sx(math.max(lo, 0)), vx, y + (BAND - BAR) / 2) .. tip, i)
   end
   return out, bottom + 28, legend, function(i) return i end
@@ -442,6 +443,10 @@ function M.render(spec, rows)
   local draw = DRAW[spec.kind or ""]
   if not draw then fail(spec, "unknown kind '" .. tostring(spec.kind) .. "'") end
   if #rows < 2 then fail(spec, "needs at least two rows") end
+  local width = tonumber(spec["plot-width"]) or W
+  if spec["plot-width"] and (spec.kind ~= "bars" or not tonumber(spec["plot-width"]) or width < 320 or width > W) then
+    fail(spec, "plot-width requires bars and a width from 320 to 640")
+  end
   local body, height, legend = draw(spec, rows)
   local keys = { "c1", "c2" }
   if spec.kind == "dumbbell" then keys = { "c1s", "c1" } end
@@ -460,7 +465,7 @@ function M.render(spec, rows)
     .. '<div class="chart-body" tabindex="0" role="group" aria-label="%s">'
     .. '<svg viewBox="0 0 %d %s" width="%d" height="%s" role="group" aria-label="%s">%s</svg></div>%s</figure>',
     spec.kind, title_attr, esc(spec.title or ""), legend_html, esc((spec.title or "Chart") .. ", scrollable"),
-    W, num(height), W, num(height), esc(summary(spec, rows)), table.concat(body), tools)
+    width, num(height), width, num(height), esc(summary(spec, rows)), table.concat(body), tools)
 end
 
 -- ------------------------------------------------------------------- filter

@@ -977,3 +977,8 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
   .chart-source tr.is-linked, .chart-source tr:focus-visible { outline: none; background: none; }
   .chart .mark.is-linked .hit { fill: none; stroke: none; }
 }
+
+/* The two-condition duration comparison keeps both bar ends visible on phones. */
+#mr-backup-duration .chart svg { min-width: 300px; max-width: 640px; }
+#mr-backup-duration .chart text.tick { font-size: 13px; }
+.page #mr-backup-duration figure.chart::after { content: none; }

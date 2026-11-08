@@ -237,4 +237,9 @@ local multi = CHARTS.render({ kind = "strip", title = "T", label = "L", from = "
 assert_eq(count(multi, '<circle class="dot c2"'), 3, "from-mode all plots every from value")
 assert_eq(Div({ classes = { "note" }, attributes = {}, content = {} }), nil, "other divs untouched")
 
+local compact = CHARTS.render({ kind = "bars", label = "Job", value = "Speedup", ["plot-width"] = "320" }, MAPRED)
+assert(compact:find('<svg viewBox="0 0 320 ', 1, true), "compact bar geometry uses the requested width")
+for _, hitbox in ipairs(spans(compact)) do assert(hitbox[3] <= 320, "compact hit box stays inside its viewBox") end
+fails("plot-width requires bars", { kind = "bars", label = "Job", value = "Speedup", ["plot-width"] = "200" }, MAPRED)
+
 print("chart unit tests passed")

@@ -431,10 +431,14 @@ def test_charts_scroll_on_phone(site):
         for path in CHART_PAGES:
             page.goto(base + path)
             for body in page.locator(".chart-body").all():
-                assert body.evaluate("el => el.scrollWidth > el.clientWidth"), path
-                body.focus()
-                page.keyboard.press("ArrowRight")
-                page.wait_for_function("el => el.scrollLeft > 0", arg=body.element_handle())
+                compact = body.evaluate("el => el.querySelector('svg').viewBox.baseVal.width === 320")
+                if compact:
+                    assert body.evaluate("el => el.scrollWidth <= el.clientWidth + 1"), path
+                else:
+                    assert body.evaluate("el => el.scrollWidth > el.clientWidth"), path
+                    body.focus()
+                    page.keyboard.press("ArrowRight")
+                    page.wait_for_function("el => el.scrollLeft > 0", arg=body.element_handle())
                 outside = body.evaluate("""el => {
                     const svg = el.querySelector('svg').getBoundingClientRect();
                     return [...el.querySelectorAll('svg text')].filter(t => {
@@ -673,5 +677,35 @@ def test_stacked_benchmark_caption_preserves_reading_width(site, width, theme):
         else:
             expect(caption).to_have_css("display", "table-caption")
         assert table.locator("tbody tr").count() == 2
+    finally:
+        page.close()
+
+
+@pytest.mark.parametrize("width,theme", [(375, "light"), (375, "dark"), (1280, "light"), (1280, "dark")])
+def test_mapreduce_duration_keeps_condition_and_source_context(site, width, theme):
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 1100}, color_scheme=theme, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/mapreduce-reloaded.html")
+        panel = page.locator("#mr-backup-duration")
+        expect(panel).to_contain_text("three runs")
+        expect(panel).to_contain_text("fixed setting order")
+        expect(panel).to_contain_text("not drift-controlled")
+        marks = panel.locator(".mark")
+        expect(marks).to_have_count(2)
+        assert [m.get_attribute("data-tip-value") for m in marks.all()] == ["17.58 s", "11.24 s"]
+        if width == 375:
+            for label in panel.locator('.chart text.val').all():
+                box = label.bounding_box()
+                assert box["x"] >= 0 and box["x"] + box["width"] <= width
+            assert panel.locator('.chart-body').evaluate("el => el.scrollWidth <= el.clientWidth + 1")
+        marks.last.focus()
+        expect(panel.locator(".chart-readout")).to_contain_text("Backups on")
+        expect(panel.locator(".chart-readout")).to_contain_text("11.24")
+        expect(panel.locator(".chart-readout")).to_contain_text("Runs")
+        citation = panel.locator('a[role="doc-noteref"]')
+        citation.click()
+        expect(page.locator("#fn1")).to_contain_text("4dd1ca4")
+        assert page.locator('#fn1 a[href*="4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387"]').count() == 2
     finally:
         page.close()
