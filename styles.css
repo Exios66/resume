@@ -538,7 +538,6 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   /* Number grids stay grids: tighter cells let most of them fit a phone without scrolling. */
   .page table:not(.stack) { font-size: .84rem; }
   .page table:not(.stack) code { font-size: .9em; }
-  .page table:not(.stack) th { hyphens: auto; -webkit-hyphens: auto; }
   .page table:not(.stack) :is(th, td) { padding: 7px 8px; }
   .page table:not(.stack) :is(th, td):first-child { padding-left: 2px; }
   .page table:not(.stack) :is(th, td):last-child { padding-right: 2px; }
