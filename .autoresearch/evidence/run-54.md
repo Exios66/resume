@@ -17,7 +17,7 @@
 - Best kept before this run: 100
 - This run:
 ```
-METRIC polish_defects=12 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=8 METRIC lint_points=0 METRIC type_points=4 METRIC pages=43 METRIC css_kb=54.5 METRIC audit_s=54.4 METRIC render_s=21
+METRIC polish_defects=12 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=8 METRIC lint_points=0 METRIC type_points=4 METRIC pages=43 METRIC css_kb=54.5 METRIC audit_s=54.4 METRIC render_s=21 
 non-zero: {'separator starts a line': 2, 'separator ends a line': 1, 'heading ends with a one-word line': 1, 'search type filtering': 8}
 ```
 
@@ -78,12 +78,12 @@ All checks passed.
 ```
 
 ## Visual evidence
-- [run-54-search-1280-dark.png](../screenshots/run-54-search-1280-dark.png)
-- [run-54-search-1280-light.png](../screenshots/run-54-search-1280-light.png)
-- [run-54-search-375-dark.png](../screenshots/run-54-search-375-dark.png)
-- [run-54-search-375-light.png](../screenshots/run-54-search-375-light.png)
-- [run-54-search-768-dark.png](../screenshots/run-54-search-768-dark.png)
-- [run-54-search-768-light.png](../screenshots/run-54-search-768-light.png)
+- `.hillclimb-shots/run-54-search-1280-dark.png`
+- `.hillclimb-shots/run-54-search-1280-light.png`
+- `.hillclimb-shots/run-54-search-375-dark.png`
+- `.hillclimb-shots/run-54-search-375-light.png`
+- `.hillclimb-shots/run-54-search-768-dark.png`
+- `.hillclimb-shots/run-54-search-768-light.png`
 
 Reviewer notes: Opened six actual search captures at 375/768/1280 in light/dark plus two baseline captures. Destination-type labels are readable above the link without displacing the URL/snippet relationship, clipping or overflow. Public portfolio data only. Collaborative browser confirmed the same 11 calibration matches and all expected route labels, and activated the Technical report link to Mailroom-ML technical report. Full gate 220 passed, 2 deselected, 611 subtests passed in 137.16s. Tests now pin the deliberately added labels for case study/report/appendix. 88 missing-label findings removed, no added findings; 100 to 12. Existing snippet separator findings remain visible and are not hidden.
 
