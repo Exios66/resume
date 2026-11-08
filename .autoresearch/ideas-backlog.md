@@ -9,8 +9,8 @@ v0 content fixes, labelled prose rows, compact phone header, duplicate back link
 Open:
 1. Layout findings are 0. The one accepted finding is the "Graduate research, UW–Madison" heading widow
    (UW–Madison is a single unit). The second widow found in run 46, the Writing title at 768 px, was fixed in run 49.
-2. Projects page jump links have large row gaps on phones; consider chip styling.
-3. Report contents box column misalignment (run 38 removed the duplicate back link; alignment still open).
+2. Projects category chip styling is deferred: browser measurement shows 44px targets and a 4px row gap already. Establish a navigation benefit before changing presentation.
+3. Completed in runs 51–52: report contents columns align, reading order matches the grid, and full-cell links provide 44px targets with hover/focus feedback.
 4. Content consistency (owner facts needed): unify date formats; "Simulations" shortcut vs "Side projects &
    interests" heading; expand "DSHB" on first use.
 5. Audit coverage: real Firefox/WebKit, real devices and screen readers were never checked.
@@ -22,7 +22,7 @@ Open:
 ## Next batch after runs 44–49
 - Completed: new 414/768 coverage, tablet prose tables, undergraduate credential structure, SVG rendered label-size coverage and readable figures; PR candidates now include durable screenshots and quantitative keep rationale.
 - Next visualization audit segment: SVG text/essential mark contrast in both themes (axe excludes much SVG), then forced colors and reduced motion checks. Keep the audit fixed within each segment.
-- Next features: report contents alignment, Projects category chips, page-type labels in search results. These are currently metric-blind; define independent visitor-facing evaluation before experimenting.
+- Completed: report contents alignment and 44px targets, measured in segment 7 (211 → 127 → 1). Next: report opening structure, project artifact labels and search page-type labels; define their evaluation before experimenting. Category chips remain deferred pending a demonstrated benefit.
 - Prose backlog: shorten repeated introductory inventories and make report takeaways easier to scan, preserving all claims and source-backed metrics. Owner facts still needed for the open content-accuracy issues.
 - Continue screenshots for every progressing PR candidate, with before/after metrics and reason for keeping it. Never publish evidence under docs/.
 
@@ -55,4 +55,10 @@ Initial validation (review only, no code fixes or commits): `scripts/hillclimb/h
 Review baseline before patches: 14 unresolved threads, 2 already resolved. The omitted Writing heading-widow and pending run-46 comments are superseded by runs 49 and 46 respectively; do not reintroduce the resolved widow. The RVL result-column heading remains a low-risk clarification of a pre-existing mixed-slice column. CodeAnt skipped the large PR; CodeRabbit's latest check is neutral/rate-limited, not a fresh approval. GitGuardian passed. No pending reviewer assignments.
 
 
-Patch validation supersedes that initial review: all confirmed code/documentation findings are patched, including the RVL result-column heading clarification. Bootstrap/table regressions and deployment compatibility checks are now automated. Full gate: **220 passed, 2 deselected, 611 subtests passed** (100.63s); fixed audit remains **1**, with zero new findings. See [review-patches-2026-11-08.md](review-patches-2026-11-08.md) for commands, evidence and limits. Native Linux setup remains unchecked; archive/architecture paths were tested with fixtures and the real tar extractor. Live deployment remains pending an authorized merge.
+Patch validation supersedes that initial review: all confirmed code/documentation findings are patched, including the RVL result-column heading clarification. Bootstrap/table regressions and deployment compatibility checks are now automated. Full gate: **220 passed, 2 deselected, 611 subtests passed** (100.63s); fixed audit remains **1**, with zero new findings. See [review-patches-2026-11-08.md](.autoresearch/review-patches-2026-11-08.md) for commands, evidence and limits. Native Linux setup remains unchecked; archive/architecture paths were tested with fixtures and the real tar extractor. Live deployment remains pending an authorized merge.
+
+## Next batch after runs 50–52
+- See [project-improvement-plan.md](project-improvement-plan.md) for eight brainstormed experiments with visitor benefits, evaluation criteria, scope and risks.
+- Priority: report opening finding/evidence/constraint structure, project artifact labels, search page-type labels, reproducibility panel, chart-to-table navigation. Optional category filters need evidence that jump links are insufficient, plus no-JavaScript/reset/history behavior.
+- Keep historical M9b/M9c distinctions and reused-test-split caveats, RVL tuning/control slices and usable-row denominators. No new project claims or numbers without source verification.
+- Segment 7 complete: 211 → 127 → 1, two keeps, no discards, no new findings. Both candidates passed 220 tests and 611 subtests; screenshots archived with evidence. Only the accepted research UW–Madison widow remains.
