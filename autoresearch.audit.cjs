@@ -196,6 +196,38 @@ function inspect(mobile) {
   return out;
 }
 
+// Exercise discovery against real indexed results, preserving the unfiltered set.
+// Labels must describe the destination; filters must retain every matching route.
+async function inspectSearch(page) {
+  await page.locator('#site-search-input').fill('calibration');
+  await page.waitForFunction(() => /pages? match/.test(document.querySelector('#search-status').textContent));
+  const results = await page.evaluate(() => [...document.querySelectorAll('#search-results li')].map(li => {
+    const a = li.querySelector('a.result-title');
+    const url = new URL(a.href).pathname;
+    const type = /\/report\.html$/.test(url) ? 'report' : /\/appendix\.html$/.test(url) ? 'appendix'
+      : /\/projects\/(?!index\.html$)[^/]+\.html$/.test(url) ? 'case-study' : 'other';
+    const label = li.querySelector('.result-type');
+    const expected = {report: 'Technical report', appendix: 'Appendix', 'case-study': 'Case study'}[type];
+    return { url, type, labelled: !!label && !!label.getBoundingClientRect().height
+      && (expected ? label.textContent.trim() === expected : !!label.textContent.trim()) };
+  }));
+  const labels = results.filter(r => !r.labelled).map(r => r.url + ' | missing or incorrect destination type');
+  const filters = [];
+  const control = page.locator('#search-type');
+  if (await control.count() !== 1) filters.push('No page-type filter for mixed search results');
+  else {
+    for (const type of ['report', 'appendix', 'case-study', 'all']) {
+      if (!await control.locator('option[value="' + type + '"]').count()) { filters.push('Missing option ' + type); continue; }
+      await control.selectOption(type);
+      const actual = await page.locator('#search-results a.result-title').evaluateAll(as => as.map(a => new URL(a.href).pathname).sort());
+      const expected = results.filter(r => type === 'all' || r.type === type).map(r => r.url).sort();
+      if (JSON.stringify(actual) !== JSON.stringify(expected)) filters.push(type + ' loses or includes incorrect routes');
+      if (await page.locator('#site-search-input').inputValue() !== 'calibration') filters.push(type + ' loses query');
+    }
+  }
+  return { labels, filters };
+}
+
 function lints() {
   const found = [];
   const read = p => fs.existsSync(path.join(DOCS, p)) ? fs.readFileSync(path.join(DOCS, p), 'utf8') : '';
@@ -234,6 +266,13 @@ function lints() {
       page.on('response', r => { if (r.status() >= 400 && !p.startsWith('404')) errs.add(r.status() + ' ' + r.url()); });
       await page.goto(base + p, { waitUntil: 'load' });
       await page.waitForTimeout(150);
+      if (p === 'search.html' && !c.layoutOnly) {
+        const discovery = await inspectSearch(page);
+        add('structure', 'search results missing destination types', discovery.labels.length);
+        add('structure', 'search type filtering', discovery.filters.length);
+        note(c, p, 'search destination type', discovery.labels);
+        note(c, p, 'search type filtering', discovery.filters);
+      }
       if (!c.layoutOnly) {
         await page.addScriptTag({ content: AXE });
         const violations = await page.evaluate(async () => (await axe.run(document, { runOnly: { type: 'tag',
