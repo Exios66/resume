@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
+<link rel="stylesheet" href="../../styles.css?v=0c22942d99">
 <meta property="og:title" content="Mailroom-ML: technical report — Jack J. Burleson">
 <meta property="og:description" content="Historical technical report through Mailroom-ML M9b: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits. See the case study for M9c.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -394,39 +394,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>The insurance score is high because that class is templated and has only six subclasses. Given the earlier leak, I treat a 1.000 as a prompt to keep looking, not as evidence of general skill. At the default decode, the merger-agreement result is a collapse: all 17 test merger agreements were assigned to one rare subclass that had 13 training windows, against 450 for the largest. Contract errors are different. The model spreads its answers over many subclasses and gets 14 of 53 right where the type was right, and services and supply contracts, with real support in training, are never recovered.</p>
 <h3 id="acceptance-gates-test-split">Acceptance gates, test split</h3>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <thead>
-<tr class="header">
-<th>Gate</th>
-<th style="text-align: right;">Result</th>
-<th style="text-align: right;">Threshold</th>
-<th>Status</th>
+<tr class="header" role="row">
+<th role="columnheader">Gate</th>
+<th style="text-align: right;" role="columnheader">Result</th>
+<th style="text-align: right;" role="columnheader">Threshold</th>
+<th role="columnheader">Status</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Document-type accuracy</td>
-<td style="text-align: right;">0.9505</td>
-<td style="text-align: right;">at least 0.89</td>
-<td>met</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Gate">Document-type accuracy</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Result">0.9505</td>
+<td style="text-align: right;" role="cell" data-label="Threshold">at least 0.89</td>
+<td role="cell" data-label="Status">met</td>
 </tr>
-<tr class="even">
-<td>Window ECE</td>
-<td style="text-align: right;">0.0152</td>
-<td style="text-align: right;">at most 0.05</td>
-<td>met</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Gate">Window ECE</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Result">0.0152</td>
+<td style="text-align: right;" role="cell" data-label="Threshold">at most 0.05</td>
+<td role="cell" data-label="Status">met</td>
 </tr>
-<tr class="odd">
-<td>Correspondence macro-F1</td>
-<td style="text-align: right;">0.351</td>
-<td style="text-align: right;">at least 0.25</td>
-<td>met</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Gate">Correspondence macro-F1</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Result">0.351</td>
+<td style="text-align: right;" role="cell" data-label="Threshold">at least 0.25</td>
+<td role="cell" data-label="Status">met</td>
 </tr>
-<tr class="even">
-<td>Contract macro-F1</td>
-<td style="text-align: right;">0.162</td>
-<td style="text-align: right;">at least 0.20</td>
-<td>not met</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Gate">Contract macro-F1</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Result">0.162</td>
+<td style="text-align: right;" role="cell" data-label="Threshold">at least 0.20</td>
+<td role="cell" data-label="Status">not met</td>
 </tr>
 </tbody>
 </table>

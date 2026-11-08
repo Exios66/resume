@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
+<link rel="stylesheet" href="../../styles.css?v=0c22942d99">
 <meta property="og:title" content="Mailroom-Corpus-EDA: appendix — Jack J. Burleson">
 <meta property="og:description" content="Supporting tables for the mailroom dataset: published configurations, class composition, sources and licences, label provenance and context-window bands.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -127,44 +127,44 @@ ul.task-list li input[type="checkbox"] {
 <p>These tables support the <a href="../../projects/mailroom-corpus-eda.html">Mailroom-Corpus-EDA case study</a>. They describe the published <code>v9.2</code> revision of <a href="https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset/tree/v9.2">mailroom-dataset⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> and come from its dataset card. No documents or participant-level records are reproduced here.</p>
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#published-configurations">Published configurations</a></li><li><a href="#class-composition">Class composition</a></li><li><a href="#sources-and-licences">Sources and licences</a></li><li><a href="#how-labels-were-produced">How labels were produced</a></li><li><a href="#context-window-bands">Context-window bands</a></li><li><a href="#split-and-held-out-test">Split and held-out test</a></li><li><a href="#scope">Scope</a></li></ul></nav>
 <h2 id="published-configurations">Published configurations</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 30%">
 <col style="width: 40%">
 <col style="width: 30%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Configuration</th>
-<th style="text-align: right;">Rows</th>
-<th>Contents</th>
+<tr class="header" role="row">
+<th role="columnheader">Configuration</th>
+<th style="text-align: right;" role="columnheader">Rows</th>
+<th role="columnheader">Contents</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td><code>default</code></td>
-<td style="text-align: right;">3,302</td>
-<td>Four columns only: filename, document text, prompt, metadata. No label column.</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Configuration"><code>default</code></td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">3,302</td>
+<td role="cell" data-label="Contents">Four columns only: filename, document text, prompt, metadata. No label column.</td>
 </tr>
-<tr class="even">
-<td><code>ground_truth</code></td>
-<td style="text-align: right;">3,302</td>
-<td>Labels, identity hashes, evaluation contract and matter grouping, joined on filename.</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Configuration"><code>ground_truth</code></td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">3,302</td>
+<td role="cell" data-label="Contents">Labels, identity hashes, evaluation contract and matter grouping, joined on filename.</td>
 </tr>
-<tr class="odd">
-<td><code>bundles</code></td>
-<td style="text-align: right;">50</td>
-<td>Synthetic bundle families over real anchors, flagged as constructed.</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Configuration"><code>bundles</code></td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">50</td>
+<td role="cell" data-label="Contents">Synthetic bundle families over real anchors, flagged as constructed.</td>
 </tr>
-<tr class="even">
-<td><code>streams</code></td>
-<td style="text-align: right;">62</td>
-<td>Interleaved ingress stream with distractors.</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Configuration"><code>streams</code></td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">62</td>
+<td role="cell" data-label="Contents">Interleaved ingress stream with distractors.</td>
 </tr>
-<tr class="odd">
-<td><code>fixtures</code></td>
-<td style="text-align: right;">32</td>
-<td>Recovery and adversarial fixtures.</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Configuration"><code>fixtures</code></td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">32</td>
+<td role="cell" data-label="Contents">Recovery and adversarial fixtures.</td>
 </tr>
 </tbody>
 </table>

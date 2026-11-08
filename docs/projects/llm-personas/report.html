@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
+<link rel="stylesheet" href="../../styles.css?v=0c22942d99">
 <meta property="og:title" content="MORNINGSTAR: technical report — Jack J. Burleson">
 <meta property="og:description" content="Court structure, voting rules, runner design, executive layer, test counts, limitations and a proposed evaluation for MORNINGSTAR, a deliberative persona framework with no published evaluation.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -186,32 +186,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Role">Architect, Engineer, Debugger, Prophet, Counsel</td>
-<td role="cell" data-label="Votes">1 each</td>
+<td class="num" role="cell" data-label="Votes">1 each</td>
 <td role="cell" data-label="Notes">The five standard voters, cast in that order</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Role">Scribe</td>
-<td role="cell" data-label="Votes">0</td>
+<td class="num" role="cell" data-label="Votes">0</td>
 <td role="cell" data-label="Notes">Records decisions and maintains state</td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Role">Non-voting consultant persona</td>
-<td role="cell" data-label="Votes">0</td>
+<td class="num" role="cell" data-label="Votes">0</td>
 <td role="cell" data-label="Notes">Advisory, invoked by the judge</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Role">Witnesses</td>
-<td role="cell" data-label="Votes">0</td>
+<td class="num" role="cell" data-label="Votes">0</td>
 <td role="cell" data-label="Notes">Expert domains called with <code>/summon &lt;domain&gt;-expert</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Role">Specialists</td>
-<td role="cell" data-label="Votes">1 each</td>
+<td class="num" role="cell" data-label="Votes">1 each</td>
 <td role="cell" data-label="Notes">Seated by the judge only, F3 and above, up to 2 at a time</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Role">Spectators</td>
-<td role="cell" data-label="Votes">0</td>
+<td class="num" role="cell" data-label="Votes">0</td>
 <td role="cell" data-label="Notes">Optional commentary; they do not deliberate, testify or vote</td>
 </tr>
 </tbody>
@@ -311,29 +311,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 id="what-the-project-reports-about-itself">What the project reports about itself</h3>
 <p><code>state/metrics.md</code> says 13 deliberations, 12 decisions, 8 unanimous and 3 split, with 0 tie-breakers and 0 deadlocks. The feasibility counts are 2 at F3, 4 at F4 and 7 at F5. These come from the same system that produced the decisions and I did not recompute them. The vote categories add up to 11 rather than the 12 decisions it reports, so the file is not fully consistent with itself. The 8 unanimous votes are a weak signal when one model casts all the votes.</p>
 <h3 id="test-counts">Test counts</h3>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Suite</th>
-<th>Count</th>
-<th>Where</th>
+<tr class="header" role="row">
+<th role="columnheader">Suite</th>
+<th role="columnheader">Count</th>
+<th role="columnheader">Where</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>pytest collection</td>
-<td>62 tests</td>
-<td><code>tests/</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Suite">pytest collection</td>
+<td class="num" role="cell" data-label="Count">62 tests</td>
+<td role="cell" data-label="Where"><code>tests/</code></td>
 </tr>
-<tr class="even">
-<td>Test functions by grep</td>
-<td>59 <code>def test_</code> in 13 files</td>
-<td><code>tests/test_*.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Suite">Test functions by grep</td>
+<td role="cell" data-label="Count">59 <code>def test_</code> in 13 files</td>
+<td role="cell" data-label="Where"><code>tests/test_*.py</code></td>
 </tr>
 </tbody>
 </table>

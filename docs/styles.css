@@ -538,7 +538,9 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   }
   .page table.stack tr { padding: 12px 2px; border-bottom: 1px solid var(--rule); }
   .page table.stack tbody tr:last-child { border-bottom: 0; }
-  .page table.stack td { padding: 0; border: 0; }
+  .page table.stack td { padding: 0; border: 0; text-align: left !important; }
+  .page table.stack td.num { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .page table.stack td.num::before { margin: 0; }
   .page table.stack td + td { margin-top: 8px; }
   .page table.stack td:first-child { font-weight: 700; color: var(--ink); }
   .page table.stack td + td::before {

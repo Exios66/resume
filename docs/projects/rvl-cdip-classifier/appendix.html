@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
+<link rel="stylesheet" href="../../styles.css?v=0c22942d99">
 <meta property="og:title" content="RVL-CDIP-Classifier: appendix — Jack J. Burleson">
 <meta property="og:description" content="Supporting notes for the RVL-CDIP study: slice sizes, prompt versions and the cost model.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -127,92 +127,92 @@ ul.task-list li input[type="checkbox"] {
 <p>Supporting tables for the <a href="../../projects/rvl-cdip-classifier.html">RVL-CDIP case study</a>. All accuracy figures use prompt v11.8 on <code>qwen/qwen3.7-flash</code> unless stated.</p>
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#accuracy-by-slice">Accuracy by slice</a></li><li><a href="#prompt-history">Prompt history</a></li><li><a href="#cost">Cost</a></li><li><a href="#what-the-simulations-did-not-reproduce">What the simulations did not reproduce</a></li></ul></nav>
 <h2 id="accuracy-by-slice">Accuracy by slice</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 36%">
 <col style="width: 27%">
 <col style="width: 36%">
 </colgroup>
 <thead>
-<tr class="header">
-<th style="text-align: right;">Slice size</th>
-<th>Tuning set?</th>
-<th style="text-align: right;">Exact-match accuracy</th>
+<tr class="header" role="row">
+<th style="text-align: right;" role="columnheader">Slice size</th>
+<th role="columnheader">Tuning set?</th>
+<th style="text-align: right;" role="columnheader">Exact-match accuracy</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td style="text-align: right;">160</td>
-<td>Yes, tuned against</td>
-<td style="text-align: right;">99.4% (157/158)</td>
+<tr class="odd" role="row">
+<td style="text-align: right;" role="cell" data-label="Slice size">160</td>
+<td role="cell" data-label="Tuning set?">Yes, tuned against</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Exact-match accuracy">99.4% (157/158)</td>
 </tr>
-<tr class="even">
-<td style="text-align: right;">320</td>
-<td>No; informed later rules</td>
-<td style="text-align: right;">87.2% (279/320)</td>
+<tr class="even" role="row">
+<td style="text-align: right;" role="cell" data-label="Slice size">320</td>
+<td role="cell" data-label="Tuning set?">No; informed later rules</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Exact-match accuracy">87.2% (279/320)</td>
 </tr>
-<tr class="odd">
-<td style="text-align: right;">480</td>
-<td>No; superset of the 160</td>
-<td style="text-align: right;">89.1% (424/476)</td>
+<tr class="odd" role="row">
+<td style="text-align: right;" role="cell" data-label="Slice size">480</td>
+<td role="cell" data-label="Tuning set?">No; superset of the 160</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Exact-match accuracy">89.1% (424/476)</td>
 </tr>
-<tr class="even">
-<td style="text-align: right;">800</td>
-<td>Not the tuning slice</td>
-<td style="text-align: right;">83.1% (665/800)</td>
+<tr class="even" role="row">
+<td style="text-align: right;" role="cell" data-label="Slice size">800</td>
+<td role="cell" data-label="Tuning set?">Not the tuning slice</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Exact-match accuracy">83.1% (665/800)</td>
 </tr>
-<tr class="odd">
-<td style="text-align: right;">1,120 balanced</td>
-<td>Not the tuning slice; shares at least 320 images with the 800</td>
-<td style="text-align: right;">82.6% (925/1,120)</td>
+<tr class="odd" role="row">
+<td style="text-align: right;" role="cell" data-label="Slice size">1,120 balanced</td>
+<td role="cell" data-label="Tuning set?">Not the tuning slice; shares at least 320 images with the 800</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Exact-match accuracy">82.6% (925/1,120)</td>
 </tr>
 </tbody>
 </table>
 <p>The tuning number is an upper bound, not a generalisation result. The 1,120 slice overlaps the 800 slice, so those two results are not independent.</p>
 <h2 id="prompt-history">Prompt history</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 30%">
 <col style="width: 30%">
 <col style="width: 40%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Version</th>
-<th>Change</th>
-<th style="text-align: right;">Tuning-slice result</th>
+<tr class="header" role="row">
+<th role="columnheader">Version</th>
+<th role="columnheader">Change</th>
+<th style="text-align: right;" role="columnheader">Tuning-slice result</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>v0</td>
-<td>Short baseline</td>
-<td style="text-align: right;">66.1% on 800</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Version">v0</td>
+<td role="cell" data-label="Change">Short baseline</td>
+<td style="text-align: right;" role="cell" data-label="Tuning-slice result">66.1% on 800</td>
 </tr>
-<tr class="even">
-<td>v10</td>
-<td>Rules written for every v9 miss</td>
-<td style="text-align: right;">+6.4 points over v9</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Version">v10</td>
+<td role="cell" data-label="Change">Rules written for every v9 miss</td>
+<td style="text-align: right;" role="cell" data-label="Tuning-slice result">+6.4 points over v9</td>
 </tr>
-<tr class="odd">
-<td>v11.8</td>
-<td>Form-versus-budget and memo-versus-letter fixes</td>
-<td style="text-align: right;">99.4% (157/158)</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Version">v11.8</td>
+<td role="cell" data-label="Change">Form-versus-budget and memo-versus-letter fixes</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Tuning-slice result">99.4% (157/158)</td>
 </tr>
-<tr class="even">
-<td>v16</td>
-<td>Two worked examples</td>
-<td style="text-align: right;">96.2%</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Version">v16</td>
+<td role="cell" data-label="Change">Two worked examples</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Tuning-slice result">96.2%</td>
 </tr>
-<tr class="odd">
-<td>v17.2</td>
-<td>Current code default</td>
-<td style="text-align: right;">—</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Version">v17.2</td>
+<td role="cell" data-label="Change">Current code default</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Tuning-slice result">—</td>
 </tr>
-<tr class="even">
-<td>v19</td>
-<td>Vote preamble</td>
-<td style="text-align: right;">96.9% (155/160)</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Version">v19</td>
+<td role="cell" data-label="Change">Vote preamble</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Tuning-slice result">96.9% (155/160)</td>
 </tr>
 </tbody>
 </table>

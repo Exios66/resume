@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
+<link rel="stylesheet" href="../../styles.css?v=0c22942d99">
 <meta property="og:title" content="Mailroom-Corpus-EDA: technical report — Jack J. Burleson">
 <meta property="og:description" content="Sources and licences, identity and provenance design, label separation, split rule, intent hydration, audit pipeline, revision history, test results and limitations for the mailroom dataset and its audit repository.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -187,31 +187,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd" role="row">
 <td role="cell" data-label="Class"><code>insurance_claim</code></td>
-<td style="text-align: right;" role="cell" data-label="Documents">1,100</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Documents">1,100</td>
 <td role="cell" data-label="Source">CMS DE-SynPUF, GNOTHEIA, a motor-claims decision set, INSURBIAS</td>
 <td role="cell" data-label="Licence">Apache-2.0, MIT or CC BY 4.0, depending on the source</td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Class"><code>correspondence</code></td>
-<td style="text-align: right;" role="cell" data-label="Documents">1,000</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Documents">1,000</td>
 <td role="cell" data-label="Source">Enron email, deduplicated (a pool of 247,523 rows)</td>
 <td role="cell" data-label="Licence">Research use; real named individuals, so handled conservatively</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Class"><code>contract</code></td>
-<td style="text-align: right;" role="cell" data-label="Documents">600</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Documents">600</td>
 <td role="cell" data-label="Source">CUAD v1 (509) and SEC EDGAR exhibits (91)</td>
 <td role="cell" data-label="Licence">CC BY 4.0 and US public domain</td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Class"><code>corporate_record</code></td>
-<td style="text-align: right;" role="cell" data-label="Documents">450</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Documents">450</td>
 <td role="cell" data-label="Source">SEC EDGAR filing exhibits</td>
 <td role="cell" data-label="Licence">US public domain</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Class"><code>merger_agreement</code></td>
-<td style="text-align: right;" role="cell" data-label="Documents">152</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Documents">152</td>
 <td role="cell" data-label="Source">MAUD v1</td>
 <td role="cell" data-label="Licence">CC BY 4.0</td>
 </tr>
@@ -219,44 +219,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>I excluded three candidate insurance samples because they carry a non-commercial licence.</p>
 <h3 id="configurations">Configurations</h3>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 30%">
 <col style="width: 40%">
 <col style="width: 30%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Configuration</th>
-<th style="text-align: right;">Rows</th>
-<th>Contents</th>
+<tr class="header" role="row">
+<th role="columnheader">Configuration</th>
+<th style="text-align: right;" role="columnheader">Rows</th>
+<th role="columnheader">Contents</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td><code>default</code> (blind)</td>
-<td style="text-align: right;">3,302</td>
-<td><code>filename</code>, <code>doc_text</code>, <code>prompt</code>, <code>metadata</code>. No label column</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Configuration"><code>default</code> (blind)</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">3,302</td>
+<td role="cell" data-label="Contents"><code>filename</code>, <code>doc_text</code>, <code>prompt</code>, <code>metadata</code>. No label column</td>
 </tr>
-<tr class="even">
-<td><code>ground_truth</code></td>
-<td style="text-align: right;">3,302</td>
-<td>Labels in a <code>gt_fields</code> JSON column, identity and hashes, the evaluation contract, matter and group fields: 35 top-level columns and a 34-key <code>gt_fields</code> union</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Configuration"><code>ground_truth</code></td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">3,302</td>
+<td role="cell" data-label="Contents">Labels in a <code>gt_fields</code> JSON column, identity and hashes, the evaluation contract, matter and group fields: 35 top-level columns and a 34-key <code>gt_fields</code> union</td>
 </tr>
-<tr class="odd">
-<td><code>bundles</code></td>
-<td style="text-align: right;">50</td>
-<td>Synthetic multi-document families built over real anchor documents, flagged as constructed</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Configuration"><code>bundles</code></td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">50</td>
+<td role="cell" data-label="Contents">Synthetic multi-document families built over real anchor documents, flagged as constructed</td>
 </tr>
-<tr class="even">
-<td><code>streams</code></td>
-<td style="text-align: right;">62</td>
-<td>One interleaved ingress stream with distractor documents</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Configuration"><code>streams</code></td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">62</td>
+<td role="cell" data-label="Contents">One interleaved ingress stream with distractor documents</td>
 </tr>
-<tr class="odd">
-<td><code>fixtures</code></td>
-<td style="text-align: right;">32</td>
-<td>Recovery and adversarial fixtures</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Configuration"><code>fixtures</code></td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">32</td>
+<td role="cell" data-label="Contents">Recovery and adversarial fixtures</td>
 </tr>
 </tbody>
 </table>
@@ -293,7 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even" role="row">
 <td role="cell" data-label="Phase">P3</td>
 <td role="cell" data-label="What it does">Static figures and tables</td>
-<td role="cell" data-label="Output">30 PNGs</td>
+<td class="num" role="cell" data-label="Output">30 PNGs</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Phase">P4</td>
@@ -449,44 +449,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>Merger agreements are the long tail, with a mean near 22,000 tokens and a maximum near 63,000. Insurance claims are short, about 690 characters on average.</p>
 <h3 id="revision-history">Revision history</h3>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 30%">
 <col style="width: 40%">
 <col style="width: 30%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Revision</th>
-<th style="text-align: right;">Rows</th>
-<th>What changed</th>
+<tr class="header" role="row">
+<th role="columnheader">Revision</th>
+<th style="text-align: right;" role="columnheader">Rows</th>
+<th role="columnheader">What changed</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>v8 (frozen baseline)</td>
-<td style="text-align: right;">2,000</td>
-<td>The starting corpus, kept pinned and never deleted</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Revision">v8 (frozen baseline)</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">2,000</td>
+<td role="cell" data-label="What changed">The starting corpus, kept pinned and never deleted</td>
 </tr>
-<tr class="even">
-<td>v9</td>
-<td style="text-align: right;">3,302</td>
-<td>Added 650 correspondence, 411 corporate records, 91 contracts and 150 insurance claims</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Revision">v9</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">3,302</td>
+<td role="cell" data-label="What changed">Added 650 correspondence, 411 corporate records, 91 contracts and 150 insurance claims</td>
 </tr>
-<tr class="odd">
-<td>v9.1</td>
-<td style="text-align: right;">3,302</td>
-<td>Moved label-derived counts out of the blind metadata, added a per-row presence code for every label field, and added context-window bands</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Revision">v9.1</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">3,302</td>
+<td role="cell" data-label="What changed">Moved label-derived counts out of the blind metadata, added a per-row presence code for every label field, and added context-window bands</td>
 </tr>
-<tr class="even">
-<td>v9.2</td>
-<td style="text-align: right;">3,302</td>
-<td>Published all six provenance regimes, removed an undocumented build-internal column, filled in relation fields on 23 heuristic rows, and corrected one audit</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Revision">v9.2</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">3,302</td>
+<td role="cell" data-label="What changed">Published all six provenance regimes, removed an undocumented build-internal column, filled in relation fields on 23 heuristic rows, and corrected one audit</td>
 </tr>
-<tr class="odd">
-<td>v9.3</td>
-<td style="text-align: right;">3,302</td>
-<td>Label-only: built on the corporate relabel published as <code>corporate-labels-v9.2.1</code>, added presence codes for corporate entity fields, and routed the 152 merger agreements to <code>merger_agreement_specialist</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Revision">v9.3</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Rows">3,302</td>
+<td role="cell" data-label="What changed">Label-only: built on the corporate relabel published as <code>corporate-labels-v9.2.1</code>, added presence codes for corporate entity fields, and routed the 152 merger agreements to <code>merger_agreement_specialist</code></td>
 </tr>
 </tbody>
 </table>

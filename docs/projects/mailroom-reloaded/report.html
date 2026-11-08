@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
+<link rel="stylesheet" href="../../styles.css?v=0c22942d99">
 <meta property="og:title" content="Mailroom Reloaded: technical report — Jack J. Burleson">
 <meta property="og:description" content="Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -327,37 +327,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <h3 id="verification-run-on-merged-main-2026-10-11">Verification run on merged <code>main</code> (2026-10-11)</h3>
 <p>This used a mock LLM provider with four seeded documents. It tests plumbing, not model quality.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <thead>
-<tr class="header">
-<th>Check</th>
-<th>Result</th>
+<tr class="header" role="row">
+<th role="columnheader">Check</th>
+<th role="columnheader">Result</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td><code>ruff check .</code></td>
-<td>all checks passed</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Check"><code>ruff check .</code></td>
+<td role="cell" data-label="Result">all checks passed</td>
 </tr>
-<tr class="even">
-<td><code>uv run pytest -q</code></td>
-<td>1,597 passed, 3 skipped, 3 deselected, 0 failed</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Check"><code>uv run pytest -q</code></td>
+<td role="cell" data-label="Result">1,597 passed, 3 skipped, 3 deselected, 0 failed</td>
 </tr>
-<tr class="odd">
-<td><code>node --test tests/tui/js/*.test.mjs</code></td>
-<td>290 pass, 0 fail</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Check"><code>node --test tests/tui/js/*.test.mjs</code></td>
+<td role="cell" data-label="Result">290 pass, 0 fail</td>
 </tr>
-<tr class="even">
-<td>replay-only subset of those</td>
-<td>96 pass, 0 fail</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Check">replay-only subset of those</td>
+<td role="cell" data-label="Result">96 pass, 0 fail</td>
 </tr>
-<tr class="odd">
-<td><code>GET /v1/documents</code></td>
-<td>4 documents, all archived</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Check"><code>GET /v1/documents</code></td>
+<td role="cell" data-label="Result">4 documents, all archived</td>
 </tr>
-<tr class="even">
-<td>browser replay check script</td>
-<td>11 of 11 checks passed</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Check">browser replay check script</td>
+<td role="cell" data-label="Result">11 of 11 checks passed</td>
 </tr>
 </tbody>
 </table>

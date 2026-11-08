@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
+<link rel="stylesheet" href="../../styles.css?v=0c22942d99">
 <meta property="og:title" content="RVL-CDIP-Classifier: technical report — Jack J. Burleson">
 <meta property="og:description" content="Method, iteration history, results and limits of a prompt-only, zero-shot RVL-CDIP classifier built on an off-the-shelf vision model.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -230,7 +230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Two things stand out. The v10 jump (+6.4 points over v9’s 91.1%) came from writing rules for every v9 miss, which is tuning in the strict sense. And the last steps to 99.4% fixed three named images. I also kept a harder 56-row evaluation set made from earlier failures, where v11.8 scored 18 of 56 (32.1%), below v11.7’s 20 of 56. I fixed one trade-off and introduced others, so I stopped treating the 160-image slice as evidence of generalization.</p>
 <h2 id="results">Results</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 18%">
 <col style="width: 18%">
@@ -239,63 +239,63 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <col style="width: 25%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Run</th>
-<th>Prompt</th>
-<th>Eval set</th>
-<th>Held out from tuning?</th>
-<th style="text-align: right;">Exact match</th>
+<tr class="header" role="row">
+<th role="columnheader">Run</th>
+<th role="columnheader">Prompt</th>
+<th role="columnheader">Eval set</th>
+<th role="columnheader">Held out from tuning?</th>
+<th style="text-align: right;" role="columnheader">Exact match</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>qwen3.7-flash</td>
-<td>v11.8</td>
-<td>160 (tuning slice)</td>
-<td>No (tuning slice)</td>
-<td style="text-align: right;">157/158 (99.4%)</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Run">qwen3.7-flash</td>
+<td role="cell" data-label="Prompt">v11.8</td>
+<td class="num" role="cell" data-label="Eval set">160 (tuning slice)</td>
+<td role="cell" data-label="Held out from tuning?">No (tuning slice)</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Exact match">157/158 (99.4%)</td>
 </tr>
-<tr class="even">
-<td>qwen3.7-flash</td>
-<td>v11.8</td>
-<td>320</td>
-<td>No: v10 and v11 failures on this slice informed later rules</td>
-<td style="text-align: right;">279/320 (87.2%)</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Run">qwen3.7-flash</td>
+<td role="cell" data-label="Prompt">v11.8</td>
+<td class="num" role="cell" data-label="Eval set">320</td>
+<td role="cell" data-label="Held out from tuning?">No: v10 and v11 failures on this slice informed later rules</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Exact match">279/320 (87.2%)</td>
 </tr>
-<tr class="odd">
-<td>qwen3.7-flash</td>
-<td>v11.8</td>
-<td>480 (476 scored)</td>
-<td>No: superset containing the 160</td>
-<td style="text-align: right;">424/476 (89.1%)</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Run">qwen3.7-flash</td>
+<td role="cell" data-label="Prompt">v11.8</td>
+<td class="num" role="cell" data-label="Eval set">480 (476 scored)</td>
+<td role="cell" data-label="Held out from tuning?">No: superset containing the 160</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Exact match">424/476 (89.1%)</td>
 </tr>
-<tr class="even">
-<td>qwen3.7-flash</td>
-<td>v11.8</td>
-<td>800</td>
-<td>Not the tuning slice</td>
-<td style="text-align: right;">665/800 (83.1%)</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Run">qwen3.7-flash</td>
+<td role="cell" data-label="Prompt">v11.8</td>
+<td class="num" role="cell" data-label="Eval set">800</td>
+<td role="cell" data-label="Held out from tuning?">Not the tuning slice</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Exact match">665/800 (83.1%)</td>
 </tr>
-<tr class="odd">
-<td>qwen3.7-flash</td>
-<td><strong>v11.8</strong></td>
-<td><strong>1,120 balanced</strong></td>
-<td><strong>Not the tuning slice; overlap with it not verified. Shares at least 20 images per class (320 in all) with the 800 slice</strong></td>
-<td style="text-align: right;"><strong>925/1,120 (82.6%)</strong></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Run">qwen3.7-flash</td>
+<td role="cell" data-label="Prompt"><strong>v11.8</strong></td>
+<td class="num" role="cell" data-label="Eval set"><strong>1,120 balanced</strong></td>
+<td role="cell" data-label="Held out from tuning?"><strong>Not the tuning slice; overlap with it not verified. Shares at least 20 images per class (320 in all) with the 800 slice</strong></td>
+<td class="num" style="text-align: right;" role="cell" data-label="Exact match"><strong>925/1,120 (82.6%)</strong></td>
 </tr>
-<tr class="even">
-<td>qwen3.7-flash</td>
-<td>v0</td>
-<td>480</td>
-<td>Control</td>
-<td style="text-align: right;">332/480 (69.2%)</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Run">qwen3.7-flash</td>
+<td role="cell" data-label="Prompt">v0</td>
+<td class="num" role="cell" data-label="Eval set">480</td>
+<td role="cell" data-label="Held out from tuning?">Control</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Exact match">332/480 (69.2%)</td>
 </tr>
-<tr class="odd">
-<td>qwen3.7-flash</td>
-<td>v0</td>
-<td>800</td>
-<td>Control</td>
-<td style="text-align: right;">529/800 (66.1%)</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Run">qwen3.7-flash</td>
+<td role="cell" data-label="Prompt">v0</td>
+<td class="num" role="cell" data-label="Eval set">800</td>
+<td role="cell" data-label="Held out from tuning?">Control</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Exact match">529/800 (66.1%)</td>
 </tr>
 </tbody>
 </table>
