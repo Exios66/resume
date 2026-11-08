@@ -85,7 +85,9 @@ The early lesson came before Run 3. An earlier build used the filename as a fall
 
 ### Run comparison, test split
 
-| Run | Epochs | Doc-type acc. | Subclass acc. (type correct) | Window ECE |
+Subclass accuracy is conditional on a correct document-type prediction.
+
+| Run | Epochs | Doc-type acc. | Subclass acc. | Window ECE |
 | --- | ---: | ---: | ---: | ---: |
 | Run 3 | 2 | 0.8947 | 0.526 | 0.0203 |
 | Arm A | 1 | 0.8638 | 0.4839 | — |
