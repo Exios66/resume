@@ -190,7 +190,7 @@ function inspect(mobile) {
   }
   // NATD's 17 existing scholarly citations need numbered, navigable source notes.
   if (location.pathname.endsWith('/projects/natd/report.html')) {
-    const refs = [...document.querySelectorAll('#literature-review a[role="doc-noteref"]')];
+    const refs = [...document.querySelectorAll('.page a[role="doc-noteref"]')];
     for (let i = refs.length; i < 17; i++) out.citations.push('Missing numbered research citation ' + (i + 1));
     for (const ref of refs) {
       const target = document.getElementById(ref.hash.slice(1));
