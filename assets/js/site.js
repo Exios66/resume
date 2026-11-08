@@ -121,6 +121,36 @@
     onScroll(function () { header.classList.toggle("is-scrolled", scrollTop() > 8); });
   }
 
+  // Wide tables and code blocks scroll sideways on small screens. Make each one that
+  // actually overflows reachable by keyboard (arrow keys then scroll it), and drop the
+  // extra tab stop again when it fits. Tables keep their table role and caption name.
+  (function () {
+    var boxes = doc.querySelectorAll(".page table, .page div.sourceCode, .page pre:not(.sourceCode)");
+    if (!boxes.length) return;
+    function update() {
+      boxes.forEach(function (box) {
+        var wide = box.scrollWidth > box.clientWidth + 1;
+        if (wide === box.hasAttribute("data-scrolls")) return;
+        if (wide) {
+          box.setAttribute("data-scrolls", "");
+          box.setAttribute("tabindex", "0");
+          if (box.tagName !== "TABLE") {
+            box.setAttribute("role", "region");
+            box.setAttribute("aria-label", "Code, scrolls sideways");
+          }
+        } else {
+          box.removeAttribute("data-scrolls");
+          box.removeAttribute("tabindex");
+          if (box.tagName !== "TABLE") { box.removeAttribute("role"); box.removeAttribute("aria-label"); }
+        }
+      });
+    }
+    update();
+    window.addEventListener("load", update); // web fonts can change widths
+    var timer;
+    window.addEventListener("resize", function () { clearTimeout(timer); timer = setTimeout(update, 150); });
+  })();
+
   // Site search: filter the generated page index and render results in place.
   (function () {
     var input = doc.getElementById("site-search-input");

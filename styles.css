@@ -501,7 +501,9 @@ div.sourceCode pre, div.sourceCode pre.sourceCode { margin: 0; padding: 12px 14p
 pre code { padding: 0; background: none; font: inherit; overflow-wrap: normal; white-space: pre; }
 div.sourceCode pre.sourceCode, pre.sourceCode code, code.sourceCode > span { color: var(--ink); }
 pre span, .page pre code span, .page div.sourceCode pre code span { color: inherit !important; font-style: normal !important; font-weight: inherit; background: none !important; }
-pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+pre:focus-visible, .page table:focus-visible, div.sourceCode:focus-visible, figure.diagram:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
 
 /* Copy button on code blocks. Quarto draws it with an icon font this site does not load,
    so it gets a text label and the site's own button styling. */
