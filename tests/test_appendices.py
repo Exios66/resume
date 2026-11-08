@@ -34,10 +34,11 @@ def test_every_appendix_links_case_study_and_report():
         # The standalone back link was removed on purpose (duplicate of the
         # Case-study pill in the project nav); the pill is the way back.
         links = {parser.text(a): destination(path, a) for tag, a, _ in parser.elements if tag == "a"}
-        assert links["Case study"] == study
+        nav = next(a for tag, a, _ in parser.elements if "project-nav" in checks.classes(a))
+        nav_links = {parser.text(a): destination(path, a) for tag, a in parser.children(nav) if tag == "a"}
+        assert nav_links["Case study"] == study
         if (checks.DOCS / "projects" / slug / "report.html").is_file():
             assert links["Technical report"] == all_projects / slug / "report.html"
-        nav = next(a for tag, a, _ in parser.elements if "project-nav" in checks.classes(a))
         current = [a for tag, a in parser.children(nav)
                    if tag == "a" and checks.attr(a, "aria-current") == "page"]
         assert len(current) == 1
