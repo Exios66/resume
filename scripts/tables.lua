@@ -109,11 +109,18 @@ local function stack_table(tbl)
     end
   end
   local long_row_label = first_max >= 16 and #labels >= 4
+  -- A grid of only one or two rows is not a comparable surface worth scrolling
+  -- sideways for: each row reads as a block of labelled figures, the way the
+  -- stacked rows above it do. Four or more columns need this more than the
+  -- narrow three-column key tables, which already fit.
+  local body_rows = 0
+  for _, body in ipairs(tbl.bodies) do body_rows = body_rows + #body.body end
+  local squat_grid = body_rows <= 2 and #labels >= 4
   -- Mostly numeric cells (the "wordy" test) that also carry some long entries read
   -- as a grid; anything else compares better stacked.
   local wordy = numeric / cells < 0.5
     and (longest >= 40 or total / cells >= 20 or #labels >= 4 or has_code)
-  if not (prose_column or wordy or long_row_label) then return nil end
+  if not (prose_column or wordy or long_row_label or squat_grid) then return nil end
   tbl.attr.classes:insert("stack")
   tbl.attr.attributes["role"] = "table"
   for _, row in ipairs(head_rows) do
