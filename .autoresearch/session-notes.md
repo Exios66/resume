@@ -131,3 +131,5 @@ Project numbers and claims (must match source repos). Removing or hiding content
 
 ## Segment 5 in progress
 Baseline run 44: 24 points at 414/768 added coverage. Hypothesis: extending only prose-table stacking to 800px removes the 10 crushed tablet cells while preserving desktop grids.
+
+Run 45 kept: 24 → 4; ten crushed tablet cells removed. Run 46 hypothesis: separating the undergraduate credential from its concentration and GPA makes the education block easier to scan and removes two orphan separators at 414 px. Facts unchanged. Regenerate the resume PDF.
