@@ -174,10 +174,11 @@ case "${1:-}" in
     git revert --no-edit HEAD >/dev/null
     git log --oneline -1 ;;
   findings)
-    out=${2:-findings.tsv}
+    out=${2:-findings.tsv}; [[ "$out" = /* ]] || out="$ROOT/$out"
     AXE="$ROOT/.autoresearch-tools/node_modules/axe-core/axe.min.js"
     [ -f "$AXE" ] || npm install --silent --prefix .autoresearch-tools axe-core@4.10.2 >/dev/null
-    AXE_PATH="$AXE" AUDIT_LIST="$ROOT/$out" node autoresearch.audit.cjs 2>/dev/null | grep '^METRIC polish'
+    AXE_PATH="$AXE" AUDIT_LIST="$out" node autoresearch.audit.cjs 2>audit.details.json | grep '^METRIC polish' ||
+      { echo "AUDIT FAILED (see audit.details.json)"; exit 1; }
     cut -f4 "$out" | sort | uniq -c | sort -rn
     echo "every finding (width, theme, page, kind, where): $out" ;;
   segment) ledger segment "$2" ;;

@@ -26,6 +26,8 @@ suite, review screenshots for visual changes, and report exact commands, results
 | `scripts/hillclimb/shot.cjs` | Screenshots into `.hillclimb-shots/` (outside the site) | Fix bugs only |
 | `autoresearch.jsonl`, `autoresearch.md`, `autoresearch.ideas.md` | Living session state: run log, notes, ideas. **Gitignored** so a revert can never erase them | Every iteration |
 | `.autoresearch/` | Committed snapshot of the living files, for hand-off and fresh clones | At hand-off points |
+| `findings.tsv`, `findings.best.tsv`, `checks.ok`, `checks.log`, `run.log` | Latest findings, best kept findings, checks stamp and logs (gitignored) | Written by `hc.sh` |
+| `.hillclimb-evidence/run-N.md`, `.hillclimb-shots/` | Evidence records and screenshots, outside the site (gitignored) | Written by `hc.sh` |
 
 In scope for experiments: `styles.css`, `assets/js/site.js`, `scripts/*.lua`, `scripts/post-render.py`,
 `partials/**`, `_quarto.yml`, `*.qmd`, and the rendered `docs/` (always via Quarto). Tests may change only
@@ -53,43 +55,78 @@ Every page in `docs/` at 375 px and 1280 px in light and dark themes, plus 320 p
 `hc.sh findings` lists each scored finding by viewport, page, kind and element. Read it before choosing
 an experiment, and again after one, to see exactly what moved.
 
+## Tools and how to get them
+
+Run `scripts/hillclimb/hc.sh doctor` first. It checks each tool and prints how to install whatever is missing.
+
+| Tool | Used for | How to get it |
+|---|---|---|
+| Quarto 1.10.x (bundles pandoc and its Lua) | rendering `docs/`; Lua filter tests | quarto.org, or set `QUARTO=/path/to/quarto` |
+| Node 18+ with `playwright` | the audit and screenshots | `npm install --no-save playwright` (match the Python version) |
+| axe-core 4.10.2 | accessibility rules | installed automatically into `.autoresearch-tools/` (never published) |
+| Python venv `.venv` | pytest and the browser suite | `python3 -m venv .venv && .venv/bin/pip install -r requirements-test.txt` |
+| Chromium for Playwright | audit, screenshots, browser tests | `npx playwright install chromium`, or `PLAYWRIGHT_BROWSERS_PATH` for a preinstalled set |
+| git | one commit per experiment | — |
+
+See `.github/BUILDING.md` for the full build setup.
+
 ## Setup (once per clone)
 
-1. Tools: Quarto 1.10.x (`QUARTO=` if not on PATH), Node 18+, Python venv at `.venv` with
-   `requirements-test.txt`, Playwright Chromium (`PLAYWRIGHT_BROWSERS_PATH` if preinstalled elsewhere). See `.github/BUILDING.md`.
-2. Branch: work on the branch you were given. Never on `main`.
-3. Session state:
-   - Resuming: `scripts/hillclimb/hc.sh restore` copies `.autoresearch/` back to the living files. Read
-     `autoresearch.md` (learnings, history) and `autoresearch.ideas.md` (backlog) before anything else.
-   - Fresh start: `scripts/hillclimb/ledger.py segment "<goal>"`, write `autoresearch.md` (goal, metrics,
-     scope, rules, learnings) and `autoresearch.ideas.md`.
-4. Baseline: `hc.sh baseline`, `hc.sh checks`, then `hc.sh log keep "baseline"`.
+1. **Branch.** Work on the branch you were given, never on `main`.
+2. **Tools.** `hc.sh doctor` must end with `All tools present.`
+3. **Session state.**
+   - Resuming: `hc.sh restore` copies `.autoresearch/` back to the living files. Read `autoresearch.md` and
+     `autoresearch.ideas.md` before anything else.
+   - Fresh start: `python3 scripts/hillclimb/ledger.py segment "<goal>"`, then write `autoresearch.md` (goal,
+     metrics, scope, rules, learnings) and `autoresearch.ideas.md` (backlog).
+4. **Baseline.** `hc.sh baseline`, then `hc.sh checks`, then `hc.sh log keep "baseline"`. The first run of a
+   segment is its baseline and is the only keep that needs no evidence record.
 
-## The loop
+## The loop, step by step
 
-Repeat until the owner stops you, the status says stop, or a set iteration budget runs out. Do not
-stop to ask whether to continue.
+Repeat until the owner stops you, the status says stop, or a set iteration budget runs out. Do not stop to
+ask whether to continue. Every step names its command and what you must see before going on.
 
-1. **Status.** `hc.sh status`. Act on `VERDICT`: `continue`; `rethink` (3+ failures in a row: change
-   approach, re-read sources, use the backlog); `wall` (more than 8: stop and report); `concluded` (ask).
-2. **Choose one change.** Use `hc.sh findings`, screenshots and the backlog. Prefer the change that
-   removes the most real defects with the least code. One idea per experiment.
-3. **Edit** source files only.
-4. **Experiment.** `hc.sh experiment "<what changed>" <source paths>` renders, audits, and commits the
-   sources with `docs/`. Read the metric line and the non-zero breakdown.
-5. **Look.** For anything visible, `hc.sh shot <page> 375 light <name> [--at sel --text words]` and the
-   same at 1280 and in dark mode. Open the images. Check the changed spot and its neighbours.
-6. **Checks.** `hc.sh checks`. All must pass to keep.
-7. **Decide.**
-   - Lower metric, checks pass, looks right → `hc.sh log keep "<what>" '<asi>'`.
-   - Equal or higher, checks fail, or it looks worse → `hc.sh log discard|checks_failed "<what>" '<asi>'`,
-     then `hc.sh discard`.
-   - A side effect you can fix inside the same idea (e.g. bigger labels made the pager wrap): fix it,
-     `git commit --amend`, re-run steps 4–6, then decide once.
-8. **Record.** ASI is a JSON object that survives reverts: `hypothesis`, `result`, `next_action_hint`,
-   plus anything specific. Every few runs, update `autoresearch.md` (learnings, history table via
-   `ledger.py table`) and the backlog.
-9. **Publish progress** every few keeps: `git push -u origin <branch>`.
+| # | Step | Command | Pass condition |
+|---|---|---|---|
+| 1 | Status | `hc.sh status` | `VERDICT=continue`. `rethink`: change approach and read the backlog. `wall` (more than 8 failures in a row): stop and report. `concluded`: ask the owner. |
+| 2 | Choose | `hc.sh findings` (lists every scored finding in `findings.tsv`) | One idea that removes real defects with little code. Write the hypothesis down. |
+| 3 | Edit | your editor | Only in-scope source files. Never `docs/` by hand. |
+| 4 | Experiment | `hc.sh experiment "<what>" <source paths>` | It prints `run N committed as ...` and the metric line. Note N. |
+| 5 | Look | `hc.sh shot <page> <width> <light\|dark> run-N-<page>-<width>-<theme> [--at css --text words]` | For any visible change: 375 and 1280 px, light and dark, at the changed spot. Open every image. |
+| 6 | Checks | `hc.sh checks` | `All checks passed.` It stamps the commit in `checks.ok`. |
+| 7 | Evidence | `hc.sh evidence "<what you saw in each screenshot>"` | Writes `.hillclimb-evidence/run-N.md`. Read it: the findings delta must match what you meant to change. |
+| 8 | Decide | `hc.sh log keep "<what>" '<asi>'`, or `hc.sh log discard\|crash\|checks_failed "<what>" '<asi>'` then `hc.sh discard` | See the decision rules below. |
+| 9 | Record | edit `autoresearch.md`, `autoresearch.ideas.md`; `python3 scripts/hillclimb/ledger.py table` | Every few runs. |
+| 10 | Publish | `git push -u origin <branch>` | Every few keeps. |
+
+**Decision rules.**
+- Keep only if the score is lower, checks pass, the screenshots look right, and nothing nearby got worse.
+- Equal or higher score, failed checks, or a worse look: log it with the reason in the ASI, then `hc.sh discard`.
+- A side effect you can fix inside the same idea (bigger labels made the pager wrap): fix it,
+  `git commit --amend`, re-run steps 4–7, then decide once.
+- ASI is a JSON object that survives reverts: `hypothesis`, `result`, `next_action_hint`, plus anything specific.
+
+## Evidence contract
+
+A keep is a claim that one change made the site better. `hc.sh log keep` refuses it unless the claim is backed:
+
+1. **Checks passed on this exact commit.** `checks.ok` holds HEAD's hash. Any later edit or amend voids it.
+2. **An evidence record exists** at `.hillclimb-evidence/run-N.md`. It holds the commit and parent, the source
+   diffstat, the full metric line, the findings removed and added against the best kept state
+   (`findings.best.tsv`), the checks summary, the screenshot paths, your review notes and what was not checked.
+3. **Screenshots exist for visible changes.** If the commit touches `.css`, `.qmd`, `.lua`, `.js` or `.html`,
+   at least one `.hillclimb-shots/run-N-*.png` must exist, and you must have opened it.
+4. **Review notes are written.** `hc.sh evidence` without notes leaves "none given", and the keep is refused.
+5. **No session links.** Descriptions and ASI with session URLs, co-author trailers or tool footers are refused.
+
+After a keep, `findings.tsv` becomes `findings.best.tsv`, so the next record shows only that experiment's delta.
+Screenshots stay in `.hillclimb-shots/` and records in `.hillclimb-evidence/`, both outside the published site.
+`hc.sh snapshot` copies the records (not the images) into `.autoresearch/evidence/` for hand-off. Before
+sharing any screenshot, check it for private data.
+
+The gate checks that evidence exists, not that it is true. Never write notes for images you did not open, and
+never claim checks, browsers or devices you did not run.
 
 ## Rules that keep the number honest
 
@@ -111,6 +148,7 @@ stop to ask whether to continue.
 When stopping (owner request, wall, budget):
 1. `ledger.py pause "<why>"` (or let the final status stand), update `autoresearch.md`.
 2. `hc.sh snapshot`, commit `.autoresearch/`, push.
+   Commit messages, pull requests, issues and comments carry no session links, co-author trailers or tool footers.
 3. Open or update the pull request and an issue that lists: score history, what each kept change does,
    what was discarded and why, the remaining findings, the backlog, and what was not checked (other
    browsers, real devices, screen readers). Link evidence; do not paste screenshots of private data.
