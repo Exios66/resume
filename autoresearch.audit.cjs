@@ -54,7 +54,7 @@ function serve() {
 function inspect(mobile) {
   const vw = document.documentElement.clientWidth;
   const out = { pageOverflow: document.documentElement.scrollWidth > vw + 1, tap: [], tiny: [], crushed: 0,
-    tableOverflow: 0, tocAlignment: [], tocTargets: [], smallSvg: [], invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
+    tableOverflow: 0, citations: [], tocAlignment: [], tocTargets: [], smallSvg: [], invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
     sepStart: 0, sepEnd: 0, headingWidows: 0, where: { crushed: [], tables: [], sepStart: [], sepEnd: [], widows: [] } };
   const visible = el => { const s = getComputedStyle(el); const r = el.getBoundingClientRect();
     return s.visibility !== 'hidden' && s.display !== 'none' && r.width > 0 && r.height > 0; };
@@ -188,6 +188,17 @@ function inspect(mobile) {
     }
     if (words.length >= 3 && !sameLine(words[words.length - 1], words[words.length - 2])) { out.headingWidows++; out.where.widows.push(h.tagName.toLowerCase() + ' | ' + h.textContent.trim().slice(0, 80)); }
   }
+  // NATD's 17 existing scholarly citations need numbered, navigable source notes.
+  if (location.pathname.endsWith('/projects/natd/report.html')) {
+    const refs = [...document.querySelectorAll('#literature-review a[role="doc-noteref"]')];
+    for (let i = refs.length; i < 17; i++) out.citations.push('Missing numbered research citation ' + (i + 1));
+    for (const ref of refs) {
+      const target = document.getElementById(ref.hash.slice(1));
+      const back = target && [...target.querySelectorAll('a[href]')].some(a => a.hash === '#' + ref.id);
+      if (!/^\d+$/.test(ref.textContent.trim()) || !target || !target.querySelector('a[href^="https://"]') || !back)
+        out.citations.push('Incomplete numbered citation/source/return path: ' + ref.id);
+    }
+  }
   let prev = 0;
   for (const h of document.querySelectorAll('h1, h2, h3, h4, h5, h6')) {
     const l = +h.tagName[1]; if (prev && l > prev + 1) out.headingSkips++; prev = l; }
@@ -291,6 +302,8 @@ function lints() {
           note(c, p, 'small tap target', r.tap); note(c, p, 'text < 12px', r.tiny); }
       }
       if (!c.layoutOnly) {
+        add('structure', 'numbered research citation navigation', r.citations.length);
+        note(c, p, 'research citation navigation', r.citations);
         add('layout', 'report contents column alignment', r.tocAlignment.length);
         add('layout', 'report contents touch targets < 44px', r.tocTargets.length);
         note(c, p, 'contents column offset', r.tocAlignment);
