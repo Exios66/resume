@@ -48,7 +48,7 @@ function serve() {
 function inspect(mobile) {
   const vw = document.documentElement.clientWidth;
   const out = { pageOverflow: document.documentElement.scrollWidth > vw + 1, tap: [], tiny: [], crushed: 0,
-    tableOverflow: 0, smallSvg: [], invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
+    tableOverflow: 0, tocAlignment: [], tocTargets: [], smallSvg: [], invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
     sepStart: 0, sepEnd: 0, headingWidows: 0, where: { crushed: [], tables: [], sepStart: [], sepEnd: [], widows: [] } };
   const visible = el => { const s = getComputedStyle(el); const r = el.getBoundingClientRect();
     return s.visibility !== 'hidden' && s.display !== 'none' && r.width > 0 && r.height > 0; };
@@ -103,6 +103,28 @@ function inspect(mobile) {
         const clipped = [...cell.querySelectorAll('code')].some(c => c.getBoundingClientRect().right > cell.getBoundingClientRect().right + 1);
         if (lines > words + 1 || clipped) { out.crushed++; out.where.crushed.push((clipped ? 'clipped ' : '') + lines + ' lines | ' + text.slice(0, 80)); }
       }
+    }
+  }
+  // Standalone report contents are navigation, rather than inline prose. Measure
+  // first-row alignment across columns and 44px touch areas on phone/tablet.
+  for (const nav of document.querySelectorAll('nav.page-toc')) {
+    if (!visible(nav)) continue;
+    const columns = [];
+    for (const item of nav.querySelectorAll('li')) {
+      const box = item.getClientRects()[0];
+      if (!box || !box.width) continue;
+      let column = columns.find(c => Math.abs(c.x - box.left) < 2);
+      if (!column) columns.push({ x: box.left, top: box.top });
+      else column.top = Math.min(column.top, box.top);
+    }
+    const offset = columns.length > 1 ? Math.max(...columns.map(c => c.top)) - Math.min(...columns.map(c => c.top)) : 0;
+    if (offset > 2) out.tocAlignment.push(sig(nav) + ' | column start offset ' + offset.toFixed(2) + 'px');
+    if (vw <= 768) {
+      const small = [...nav.querySelectorAll('a[href]')].filter(a => {
+        const r = a.getBoundingClientRect();
+        return visible(a) && (r.height < 43.95 || r.width < 43.95);
+      });
+      if (small.length) out.tocTargets.push(sig(nav) + ' | ' + small.length + ' links below 44px');
     }
   }
   // SVG text scales with the viewBox: a CSS 12px tick can be only 9.75px on a phone.
@@ -222,6 +244,12 @@ function lints() {
         note(c, p, 'crushed cell', r.where.crushed); note(c, p, 'wide table', r.where.tables);
         if (!c.layoutOnly) { add('layout', 'tap targets < 24px', r.tap.length); add('layout', 'text < 12px', r.tiny.length);
           note(c, p, 'small tap target', r.tap); note(c, p, 'text < 12px', r.tiny); }
+      }
+      if (!c.layoutOnly) {
+        add('layout', 'report contents column alignment', r.tocAlignment.length);
+        add('layout', 'report contents touch targets < 44px', r.tocTargets.length);
+        note(c, p, 'contents column offset', r.tocAlignment);
+        note(c, p, 'contents touch targets', r.tocTargets);
       }
       if (!c.layoutOnly) { add('layout', 'SVG figures with text < 12px', r.smallSvg.length);
         note(c, p, 'small SVG text', r.smallSvg);
