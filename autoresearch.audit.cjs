@@ -54,7 +54,7 @@ function serve() {
 function inspect(mobile) {
   const vw = document.documentElement.clientWidth;
   const out = { pageOverflow: document.documentElement.scrollWidth > vw + 1, tap: [], tiny: [], crushed: 0,
-    tableOverflow: 0, citations: [], tocAlignment: [], tocTargets: [], smallSvg: [], invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
+    tableOverflow: 0, narrowCaptions: [], citations: [], tocAlignment: [], tocTargets: [], smallSvg: [], invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
     sepStart: 0, sepEnd: 0, headingWidows: 0, where: { crushed: [], tables: [], sepStart: [], sepEnd: [], widows: [] } };
   const visible = el => { const s = getComputedStyle(el); const r = el.getBoundingClientRect();
     return s.visibility !== 'hidden' && s.display !== 'none' && r.width > 0 && r.height > 0; };
@@ -146,6 +146,15 @@ function inspect(mobile) {
       if (px < 11.95 && (!smallest || px < smallest.px)) smallest = { px, text: text.textContent.trim() };
     }
     if (smallest) out.smallSvg.push(sig(figure) + ' | ' + smallest.px.toFixed(2) + 'px | ' + smallest.text.slice(0, 80));
+  }
+  // Stacked tables use block layout; their captions must keep the reading width.
+  // Native table captions at desktop widths are intentionally outside this check.
+  for (const table of document.querySelectorAll('main table.stack')) {
+    const caption = table.querySelector('caption');
+    if (!caption || !visible(caption) || getComputedStyle(table).display !== 'block') continue;
+    const width = table.getBoundingClientRect().width;
+    const captionWidth = caption.getBoundingClientRect().width;
+    if (captionWidth < width * 0.9) out.narrowCaptions.push(sig(table) + ' | caption ' + captionWidth.toFixed(1) + 'px / table ' + width.toFixed(1) + 'px');
   }
   // Typography. Separators (• ·) that start or end a wrapped line, and headings whose last line is one word.
   const charRect = (node, i) => { const rg = document.createRange(); rg.setStart(node, i); rg.setEnd(node, i + 1);
@@ -338,6 +347,8 @@ function lints() {
           note(c, p, 'small tap target', r.tap); note(c, p, 'text < 12px', r.tiny); }
       }
       if (!c.layoutOnly) {
+        add('layout', 'stacked table caption below reading width', r.narrowCaptions.length);
+        note(c, p, 'narrow table caption', r.narrowCaptions);
         add('structure', 'numbered research citation navigation', r.citations.length);
         note(c, p, 'research citation navigation', r.citations);
         add('layout', 'report contents column alignment', r.tocAlignment.length);
