@@ -556,25 +556,8 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
 .page .code-copy-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media print { .page .code-copy-button { display: none; } div.code-copy-outer-scaffold pre { padding-right: 14px; } }
 
-/* Project pages: small screens */
-@media (max-width: 720px) {
-  .project-nav { gap: 6px; }
-  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .page table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  /* Number grids stay grids: tighter cells let most of them fit a phone without scrolling. */
-  .page table:not(.stack) { font-size: .84rem; }
-  .page table:not(.stack) code { font-size: .9em; }
-  .page table:not(.stack) :is(th, td) { padding: 7px 8px; }
-  .page table:not(.stack) :is(th, td):first-child { padding-left: 2px; }
-  .page table:not(.stack) :is(th, td):last-child { padding-right: 2px; }
-  /* Row labels stay put while a wide number grid scrolls sideways, so a reader can
-     always see what a figure belongs to. The soft edge appears only while it scrolls
-     (site.js sets data-scrolls), showing there is more past the label column. */
-  .page table:not(.stack) :is(th, td):first-child { position: sticky; left: 0; }
-  .page table:not(.stack) :is(td):first-child { background: var(--paper); }
-  .page table:not(.stack)[data-scrolls] :is(th, td):first-child {
-    box-shadow: 10px 0 10px -8px color-mix(in srgb, var(--ink) 40%, transparent);
-  }
+/* Prose tables also need the full column at tablet widths. */
+@media (max-width: 800px) {
   /* Text tables: each row becomes a block, each cell labelled with its column. */
   .page table.stack, .page table.stack tbody, .page table.stack tr, .page table.stack td { display: block; width: auto; }
   .page table.stack { overflow: visible; border-top: 2px solid var(--accent); }
@@ -601,6 +584,27 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
     font: 700 .75rem/1.4 var(--sans); letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
   }
   .page table.stack td code { white-space: pre-wrap; overflow-wrap: anywhere; }
+}
+
+/* Project pages: small screens */
+@media (max-width: 720px) {
+  .project-nav { gap: 6px; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .page table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* Number grids stay grids: tighter cells let most of them fit a phone without scrolling. */
+  .page table:not(.stack) { font-size: .84rem; }
+  .page table:not(.stack) code { font-size: .9em; }
+  .page table:not(.stack) :is(th, td) { padding: 7px 8px; }
+  .page table:not(.stack) :is(th, td):first-child { padding-left: 2px; }
+  .page table:not(.stack) :is(th, td):last-child { padding-right: 2px; }
+  /* Row labels stay put while a wide number grid scrolls sideways, so a reader can
+     always see what a figure belongs to. The soft edge appears only while it scrolls
+     (site.js sets data-scrolls), showing there is more past the label column. */
+  .page table:not(.stack) :is(th, td):first-child { position: sticky; left: 0; }
+  .page table:not(.stack) :is(td):first-child { background: var(--paper); }
+  .page table:not(.stack)[data-scrolls] :is(th, td):first-child {
+    box-shadow: 10px 0 10px -8px color-mix(in srgb, var(--ink) 40%, transparent);
+  }
   .chart-scroll { overflow-x: auto; }
   .chart-scroll img.fig { min-width: 700px; }
   .chart-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
