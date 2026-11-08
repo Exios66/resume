@@ -333,6 +333,9 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 @media (max-width: 480px) {
   .actions { gap: 8px; }
   .actions .btn { flex: 1 1 auto; padding-inline: 12px; }
+  /* Number grids: trim horizontal cell padding (not the type size) so the narrowest
+     screens fit the last few grids that hang on two or three pixels. */
+  .page table:not(.stack) :is(th, td) { padding-inline: 5px; }
 }
 
 /* ---------- Print ---------- */
