@@ -2,6 +2,10 @@
 
 Notes for working on the source of this portfolio. For the human side, see the [README](../README.md).
 
+## Agent / fresh-clone setup
+
+`bash scripts/setup-agent.sh` installs everything a working environment needs into gitignored paths (`.venv`, node playwright, Chromium, Quarto 1.10.19 in `.autoresearch-tools/`) and writes `.autoresearch-tools/env.sh`. Source `. .autoresearch-tools/env.sh` before any render or audit, then check with `scripts/hillclimb/hc.sh doctor` (`All tools present.`). The script is idempotent and probes the locale, adding `LC_ALL=C` on machines where pandoc's bundled Lua would otherwise drift from byte-based pattern matching.
+
 An interim portfolio site built with [Quarto](https://quarto.org/). GitHub Pages serves it straight from `docs/`, with no GitHub Actions. Live at <https://exios66.github.io/resume/>.
 
 ## Pages
