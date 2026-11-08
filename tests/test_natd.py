@@ -123,8 +123,11 @@ class NatdTests(unittest.TestCase):
             with self.subTest(reference=parser.text(item)[:40]):
                 self.assertRegex(parser.text(item), r"\[(Verified|Partly verified)[^\]]*\]")
                 links = [a for t, a in parser.children(item) if t == "a"]
-                self.assertEqual(len(links), 1)
+                # The citation work adds a return arrow beside each source link.
+                self.assertEqual(len(links), 2)
                 self.assertTrue(checks.attr(links[0], "href").startswith("https://"))
+                # The second link goes back to the citation number in the text.
+                self.assertTrue(checks.attr(links[1], "href").startswith("#fnref"))
 
     def test_nav_back_link_and_code_action(self):
         study, parser = self.read_page(STUDY)

@@ -59,6 +59,28 @@ Patch validation supersedes that initial review: all confirmed code/documentatio
 
 ## Next batch after runs 50–52
 - See [project-improvement-plan.md](project-improvement-plan.md) for eight brainstormed experiments with visitor benefits, evaluation criteria, scope and risks.
-- Priority: report opening finding/evidence/constraint structure, project artifact labels, search page-type labels, reproducibility panel, chart-to-table navigation. Optional category filters need evidence that jump links are insufficient, plus no-JavaScript/reset/history behavior.
+- Priority: report opening finding/evidence/constraint structure, project artifact labels, search page-type labels (completed in run 54; filtering in run 55), reproducibility panel, chart-to-table navigation. Optional category filters need evidence that jump links are insufficient, plus no-JavaScript/reset/history behavior.
 - Keep historical M9b/M9c distinctions and reused-test-split caveats, RVL tuning/control slices and usable-row denominators. No new project claims or numbers without source verification.
 - Segment 7 complete: 211 → 127 → 1, two keeps, no discards, no new findings. Both candidates passed 220 tests and 611 subtests; screenshots archived with evidence. Only the accepted research UW–Madison widow remains.
+
+## Leg 2 / PR108 completed
+- [x] Destination-type labels in search, run 54: 100 → 12 in segment 8, no lost/added results.
+- [x] Native page-type filter, exact subsets/order restoration, shareable q/type URLs and safe readiness/fallback behavior, run 55: 12 → 4.
+- [ ] Next measurable polish: search snippet separator wrapping at 375/414 (3 typography points newly exposed by the populated-search baseline). Prefer informative body context over repeated title/kicker text while retaining provenance and claims.
+- [ ] Next creative leg: report evidence-first openings; project cards with explicit live-demo/recording/report/source artifact distinctions; chart-to-table navigation. Establish the evaluation before changing the UI.
+- PR108 is stacked on PR107 at 2425775. Merge PR107 first; retarget after confirming its actual merge method. Merge-commit integration simulated cleanly against main 13c9afb. Squash/rebase merges need transplanting only the child-leg commits onto updated main.
+
+Pre-publication print-form regression repaired in 3eed785; screen-only grid rule and four print assertions, full gate 225 passed/611 subtests. Print pagination and pre-existing search-suggestion print styling remain unmeasured backlog items.
+
+Done in segment 10: numbered citations and source notes on the NATD report (runs 58-59), end-of-document
+footnotes seated inside main, snippet separators flattened to semicolons, footnote-ref boxes, and the
+heading widow cleared by rephrasing. polish_defects is 0.
+
+Open (segments must be re-baselined per issue 106's contract before adding checks):
+1. Chart and diagram contrast under dark theme (SVG text/lines), reduced motion and forced colors.
+2. Link and asset integrity: internal anchors and natural-vs-displayed image size.
+3. Metadata coverage: unique title and description, canonical URL, og:image per page.
+4. Performance budget: page weight, font files, CLS and largest paint from Playwright's timeline.
+5. Print layout: report-page table and figure breaks (the resume already prints on two pages).
+6. Search: page type labels live; informative snippets gate may be worth a segment of its own.
+7. Other engines (Firefox/WebKit), real devices, screen readers, live deployment.

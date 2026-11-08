@@ -184,6 +184,10 @@ def test_site_search_contents_list_and_pager(site):
         expect(page.locator("#search-results li")).to_have_count(matches)
         snippet = page.locator('#search-results a[href$="projects/digital-mailroom/appendix.html"] + span + p')
         expect(snippet).not_to_contain_text("Case study Case study")
+        appendix = page.locator('#search-results a[href$="projects/digital-mailroom/appendix.html"]')
+        expect(appendix.locator("..").locator(".result-type")).to_have_text("Appendix")
+        report = page.locator('#search-results a[href$="projects/mailroom-ml/report.html"]')
+        expect(report.locator("..").locator(".result-type")).to_have_text("Technical report")
 
         # Whole pages are indexed, not an opening excerpt: "shipment" is only deep in the résumé.
         page.get_by_label("Search this site").fill("shipment")
@@ -193,6 +197,7 @@ def test_site_search_contents_list_and_pager(site):
         expect(page.locator("#search-results a").first).to_be_visible()
         case_study = page.locator('#search-results a[href$="projects/mailroom-ml.html"]')
         expect(case_study).to_have_count(1)
+        expect(case_study.locator("..").locator(".result-type")).to_have_text("Case study")
         case_study.click()
         expect(page.get_by_role("heading", level=1)).to_have_text("Mailroom-ML")
 
@@ -240,14 +245,17 @@ def test_search_before_index_load_and_after_failure(site):
     try:
         page.goto(base + "search.html")
         search = page.get_by_label("Search this site")
+        expect(page.get_by_label("Page type", exact=True)).to_be_disabled()
         search.fill("M9c")
         search.press("Enter")
         assert not errors
         page.evaluate("window.releaseIndex()")
         expect(page.locator('#search-results a[href$="projects/mailroom-ml.html"]')).to_have_count(1)
+        expect(page.get_by_label("Page type", exact=True)).to_be_enabled()
 
         page.goto(base + "search.html")
         page.evaluate("window.rejectIndex()")
+        expect(page.get_by_label("Page type", exact=True)).to_be_disabled()
         expect(page.locator("#search-status")).to_have_text("Search is unavailable right now.")
         search.fill("M9c")
         search.press("Escape")
@@ -465,5 +473,120 @@ def test_chart_tooltip_hides_on_sideways_scroll_and_stays_on_screen(site):
         page.mouse.wheel(0, 300)
         page.wait_for_timeout(200)
         assert follows_mark(), "tooltip follows its mark on page scroll"
+    finally:
+        page.close()
+
+
+@pytest.mark.parametrize("width", [375, 1280])
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_search_type_filter_url_and_restoration(site, width, theme):
+    """The new native filter preserves exact route subsets and shareable state."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 900}, color_scheme=theme)
+    try:
+        page.goto(base + "search.html?q=calibration&type=report")
+        control = page.get_by_label("Page type", exact=True)
+        results = page.locator("#search-results a.result-title")
+        expect(control).to_be_enabled()
+        expect(control).to_have_value("report")
+        expect(results).to_have_count(3)
+        assert all(a.get_attribute("href").endswith("/report.html") for a in results.all())
+        control.select_option("all")
+        expect(results).to_have_count(11)
+        original = [a.get_attribute("href") for a in results.all()]
+        for kind, expected in (
+            ("case-study", [u for u in original if re.fullmatch(r"projects/(?!index\.html)[^/]+\.html", u)]),
+            ("appendix", [u for u in original if u.endswith("/appendix.html")]),
+            ("report", [u for u in original if u.endswith("/report.html")]),
+            ("other", [u for u in original if not u.startswith("projects/") or u == "projects/index.html"]),
+        ):
+            control.select_option(kind)
+            expect(results).to_have_count(len(expected))
+            assert [a.get_attribute("href") for a in results.all()] == expected
+            assert page.evaluate("new URLSearchParams(location.search).get('type')") == kind
+            expect(page.get_by_label("Search this site")).to_have_value("calibration")
+        control.select_option("all")
+        assert [a.get_attribute("href") for a in results.all()] == original
+        assert page.evaluate("new URLSearchParams(location.search).has('type')") is False
+        control.select_option("appendix")
+        page.reload()
+        expect(control).to_be_enabled()
+        expect(control).to_have_value("appendix")
+        expect(results).to_have_count(2)
+        search = page.get_by_label("Search this site")
+        search.fill("zzzznothing")
+        expect(results).to_have_count(0)
+        expect(page.locator("#search-status")).to_contain_text("in appendices")
+        search.press("Escape")
+        expect(search).to_have_value("")
+        assert page.evaluate("new URLSearchParams(location.search).has('q')") is False
+        page.goto(base + "search.html?q=calibration&type=unknown")
+        expect(control).to_be_enabled()
+        expect(control).to_have_value("all")
+        expect(results).to_have_count(11)
+        assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+        page.emulate_media(media="print")
+        expect(page.locator("form.site-search")).to_be_hidden()
+    finally:
+        page.close()
+
+
+def test_search_without_javascript_keeps_browse_fallback(site):
+    """The disabled filter must not block the existing non-JavaScript browse path."""
+    browser, base = site
+    page = browser.new_page(java_script_enabled=False)
+    try:
+        page.goto(base + "search.html")
+        expect(page.get_by_label("Page type", exact=True)).to_be_disabled()
+        expect(page.locator("noscript p")).to_contain_text("Search needs JavaScript")
+        page.get_by_role("link", name="projects index", exact=True).click()
+        expect(page.get_by_role("heading", level=1)).to_have_text("Projects")
+    finally:
+        page.close()
+
+
+@pytest.mark.parametrize("width", [375, 1280])
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_numbered_research_sources_and_return_links(site, width, theme):
+    """Native numbered notes retain sources and return navigation without overlays."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 900}, color_scheme=theme, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/natd/report.html")
+        refs = page.locator('a[role="doc-noteref"]')
+        expect(refs).to_have_count(17)
+        for i, ref in enumerate(refs.all(), 1):
+            assert ref.inner_text() == str(i)
+            note = page.locator(ref.get_attribute("href"))
+            expect(note).to_have_count(1)
+            assert note.locator('a[href^="https://"]').count() == 1
+            expect(note.locator('a[href="#' + ref.get_attribute("id") + '"]')).to_have_count(1)
+        first = refs.first
+        first.focus()
+        page.keyboard.press("Enter")
+        expect(page).to_have_url(re.compile(r"#fn1$"))
+        note = page.locator("#fn1")
+        expect(note).to_be_in_viewport()
+        note.locator('a[role="doc-backlink"]').click()
+        expect(page).to_have_url(re.compile(r"#fnref1$"))
+        expect(first).to_be_in_viewport()
+        first.hover()
+        expect(page.locator(".tippy-box")).to_have_count(0)
+        assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+        page.emulate_media(media="print")
+        expect(page.locator("#footnotes")).to_be_visible()
+    finally:
+        page.close()
+
+
+def test_numbered_research_notes_work_without_javascript(site):
+    browser, base = site
+    page = browser.new_page(java_script_enabled=False)
+    try:
+        page.goto(base + "projects/natd/report.html")
+        page.locator("#fnref17").click()
+        expect(page).to_have_url(re.compile(r"#fn17$"))
+        page.locator('#fn17 a[role="doc-backlink"]').click()
+        expect(page).to_have_url(re.compile(r"#fnref17$"))
     finally:
         page.close()

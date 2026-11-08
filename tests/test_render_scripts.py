@@ -62,6 +62,19 @@ class PostRenderTests(unittest.TestCase):
             result = function()
         return result, out.getvalue(), err.getvalue()
 
+    def test_end_of_document_footnotes_seat_inside_main(self):
+        text = ('<body><main id="main"><p>Body cites'
+                '<a href="#fn1" class="footnote-ref" role="doc-noteref"><sup>1</sup></a></p></main>'
+                '<footer class="site-footer"></footer>'
+                '<section id="footnotes" class="footnotes" role="doc-endnotes"><ol><li id="fn1">Levine (2014).</li></ol></section>')
+        fixed = POST["seat_footnotes"](text)
+        self.assertIn('<section id="footnotes"', fixed)
+        self.assertLess(fixed.find('<section id="footnotes"'), fixed.find('</main>'))
+        self.assertGreater(fixed.find('<section id="footnotes"'), fixed.find('class="footnote-ref"'))
+        # A page whose footnotes are already inside a landmark is untouched.
+        plain = '<body><main id="main"></main><footer class="site-footer"></footer></body>'
+        self.assertEqual(POST["seat_footnotes"](plain), plain)
+
     def test_committed_pdf_is_published_byte_for_byte(self):
         self.output.parent.mkdir(parents=True)
         self.output.write_bytes(b"stale copy")
