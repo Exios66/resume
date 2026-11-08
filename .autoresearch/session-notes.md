@@ -7,7 +7,7 @@ Fix what visitors, keyboard users and screen-reader users actually meet; never t
 
 ## Metrics
 - **Primary:** `polish_defects` (weighted defect points, lower is better), from `autoresearch.audit.cjs` on a fresh render.
-  - axe-core violations x impact (critical 10, serious 5, moderate 2, minor 1), 375 and 1280 px, light and dark
+  - axe-core violations x impact (critical 10, serious 5, moderate 2, minor 1), 375/414/768/1280 px, light and dark
   - layout: page overflow 20; crushed or clipped table cells 2 each (320 and 375 px); tables wider than the screen 1;
     tap targets < 24 px 1; unique text < 12 px 1 (375 px); invisible focusable controls 5 (per combo)
   - structure: heading skips 2, pages without exactly one h1 2
@@ -26,7 +26,7 @@ new `404.qmd`, `docs/` (rendered output only, always via `quarto render`), `asse
 (regenerate with `scripts/make-resume-pdf.py` whenever `resume.qmd` changes), tests that encode the exact content changed.
 
 ## Off limits
-`autoresearch.sh`, `autoresearch.checks.sh`, `autoresearch.audit.cjs` (immutable harness). Hand edits to `docs/`.
+`autoresearch.checks.sh` is fixed. `autoresearch.sh` and `autoresearch.audit.cjs` are fixed within each segment; audit extensions require a separate commit and a new baseline. Never hand-edit `docs/`.
 Project numbers and claims (must match source repos). Removing or hiding content to dodge a check.
 
 ## Constraints and anti-cheating rules
@@ -34,7 +34,7 @@ Project numbers and claims (must match source repos). Removing or hiding content
 - Visual review of screenshots for every kept change (SHOT_DIR=... node autoresearch.audit.cjs). A lower count that looks worse is a discard.
 - No `display:none`/`aria-hidden` tricks to hide defects; no shrinking content to avoid overflow checks.
 - Commit sources + rendered `docs/` together per experiment; restore `docs/sitemap.xml` churn on discards via revert.
-- Branch: `claude/serene-fermat-yr920i` (required by the session; not a separate autoresearch/* branch).
+- Current branch: `t3/resume-auto-research-loops`; PR #107. Never work on main.
 
 ## Segments
 - 0: original audit (served at /docs/). 1: audit serves docs/ at /resume/ like GitHub Pages.
@@ -42,6 +42,8 @@ Project numbers and claims (must match source repos). Removing or hiding content
   stretched card links measured by the overlay box; table-cell lines counted from text nodes, not padded code boxes.
 - 3: characters clipped by an overflow ancestor are not counted (they are not seen).
 - 4: mobile checks (crushed cells, table overflow, tap targets, small text) also run at 375 px dark.
+- 5: 414 and 768 px coverage in both themes.
+- 6: SVG label size measured after viewBox scaling (one point per undersized figure and viewport/theme).
 
 ## What's been tried
 | # | Seg | Description | polish_defects | Status |
@@ -145,3 +147,22 @@ Run 48 refinement before decision: initial label-size fix scored 2 but screensho
 
 ## PR progress evidence policy
 For every candidate that proceeds, update PR #107 with actual reviewed screenshots, the fixed segment's before/after metrics and findings delta, checks on the experiment commit, and why the candidate was kept. Store review images under `.autoresearch/screenshots/`, outside `docs/`, and embed durable raw image URLs. Include refinements and any failed checks honestly; never advance a candidate on score alone.
+
+Run 48 kept: 174 → 2 after refinement, full checks and reviewed screenshots. Run 49 hypothesis: a 320px minimum for Writing cards (rather than 300px) gives long essay titles and summaries a full tablet row, preserving two columns on desktop and removing the 768px heading widow. Scope only the Writing index. This batch targets four kept candidates, then snapshots the backlog for the next iterations.
+
+
+## Current hand-off: runs 44–49
+Four kept candidates completed this batch. PR #107 includes actual screenshots, metrics, validation and reasons each proceeded. Durable images are in `.autoresearch/screenshots/`; the exact verification commands and limits are in `.autoresearch/verification-2026-11-08.md`.
+
+| Run | Segment | Candidate | Score | Decision |
+|---|---|---|---|---|
+| 44 | 5 | 414/768 coverage baseline | 24 | baseline keep |
+| 45 | 5 | Tablet prose tables | 4 | keep |
+| 46 | 5 | Undergraduate education structure | 2 | keep |
+| 47 | 6 | Rendered SVG legibility baseline | 174 | baseline keep |
+| 48 | 6 | Readable charts/diagrams, adaptive bar-label gutters | 2 | keep after refinement |
+| 49 | 6 | Writing cards give titles and summaries tablet room | 1 | keep |
+
+Final gate on experiment 29a03e3: 197 passed, 2 deselected, 611 subtests passed in 44.50s. All 43 pages audited; axe/layout/error/structure/lint/separator points are zero. Only the accepted research heading widow at 375 light remains (UW–Madison is an indivisible name). Initial run-48 tooltip failure was fixed and checked before keeping; no other discarded candidates in this batch. Segment scores are comparable only within a segment.
+
+Next: SVG contrast, then report contents alignment, Projects category chips and page-type search labels. These need new fixed evaluations before metric-blind features can proceed. No live merge/deploy, other engines, real devices, screen readers or external destinations checked. Resume from the saved backlog on the existing branch.
