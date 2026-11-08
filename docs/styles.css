@@ -490,9 +490,7 @@ h2.group-title, .group-title { display: flex; align-items: baseline; gap: 10px; 
 
 /* Code */
 code { font: 400 .88em/1.4 var(--mono); }
-/* Quarto sets code { white-space: pre } and relaxes it only inside p and dd, so inline code
-   in a table cell or list item could never wrap and pushed tables off small screens. */
-:not(pre) > code { padding: 1px 5px; background: var(--accent-soft); border-radius: 4px; overflow-wrap: anywhere; white-space: pre-wrap; }
+:not(pre) > code { padding: 1px 5px; background: var(--accent-soft); border-radius: 4px; overflow-wrap: anywhere; }
 pre, div.sourceCode {
   margin: 14px 0 18px; padding: 12px 14px; overflow-x: auto; color: var(--ink);
   background: var(--bg); border: 1px solid var(--rule); border-radius: 8px;
