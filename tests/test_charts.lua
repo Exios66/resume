@@ -266,4 +266,6 @@ fails("interval axis must include zero and all bounds",
   { kind = "interval", label = "Comparison", value = "Mean", lower = "Low", upper = "High", min = "0" }, interval_rows)
 fails("needs at least one row", interval_spec, {})
 
+fails("integer width", { kind = "bars", label = "Job", value = "Speedup", ["plot-width"] = "320.5" }, MAPRED)
+
 print("chart unit tests passed")

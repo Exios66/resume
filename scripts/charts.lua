@@ -497,8 +497,8 @@ function M.render(spec, rows)
     if #rows == 0 then fail(spec, "needs at least one row") end
   elseif #rows < 2 then fail(spec, "needs at least two rows") end
   local width = spec.kind == "interval" and 320 or (tonumber(spec["plot-width"]) or W)
-  if spec["plot-width"] and (spec.kind ~= "bars" or not tonumber(spec["plot-width"]) or width < 320 or width > W) then
-    fail(spec, "plot-width requires bars and a width from 320 to 640")
+  if spec["plot-width"] and (spec.kind ~= "bars" or not tonumber(spec["plot-width"]) or width < 320 or width > W or width % 1 ~= 0) then
+    fail(spec, "plot-width requires bars and an integer width from 320 to 640")
   end
   local body, height, legend = draw(spec, rows)
   local keys = { "c1", "c2" }
