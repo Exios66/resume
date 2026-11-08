@@ -583,6 +583,11 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   .page table.stack td.num::before { margin: 0; }
   .page table.stack td + td { margin-top: 8px; }
   .page table.stack td:first-child { font-weight: 700; color: var(--ink); }
+  .page table.stack[data-prose-rows] td:first-child::before {
+    content: attr(data-label) / "";
+    display: block; margin-bottom: 1px;
+    font: 700 .75rem/1.4 var(--sans); letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
+  }
   .page table.stack td + td::before {
     content: attr(data-label) / "";
     display: block; margin-bottom: 1px;

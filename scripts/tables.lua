@@ -131,6 +131,13 @@ local function stack_table(tbl)
       end
     end
   end
+  -- In stacked rows the bold first cell doubles as the row heading, which reads
+  -- fine when it names a thing (a model, a cluster) but hides the column's meaning
+  -- when it is a full claim ("The pilot supports X"). Long first-cell prose gets
+  -- its column label shown above it, the way every other stacked cell is labelled.
+  if first_max >= 40 then
+    tbl.attr.attributes["data-prose-rows"] = "true"
+  end
   return tbl
 end
 

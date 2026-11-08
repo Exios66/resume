@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=e54c9c9dcb">
+<link rel="stylesheet" href="../styles.css?v=caf9aa7058">
 <meta property="og:title" content="MapReduce-Reloaded — Jack J. Burleson">
 <meta property="og:description" content="A from-scratch MapReduce rebuild: a Go cluster and Python reference, a 24-item paper mapping, S3 storage, compression, fault injection and a small-scale VM evaluation. In active development.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -175,7 +175,7 @@ ul.task-list li input[type="checkbox"] {
 <p>The original test runs in one process, so a “dead” worker behaves like a machine cut off from the network, not one that lost power. The repository now also has a seeded <code>make chaos</code> driver for container kills, pauses and coordinator crashes in Compose. Dropped-packet fault injection remains out of scope.</p>
 <h2 id="evaluation-at-small-scale">Evaluation at small scale</h2>
 <p>The <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/evaluation.md">evaluation⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> compares the paper’s mechanisms, not its absolute throughput: four containers share one 4-vCPU, 8 GB VM and one disk, versus roughly 1,800 machines in the paper.</p>
-<table class="caption-top stack" role="table">
+<table class="caption-top stack" role="table" data-prose-rows="true">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">

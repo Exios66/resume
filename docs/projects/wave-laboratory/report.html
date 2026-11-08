@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=e54c9c9dcb">
+<link rel="stylesheet" href="../../styles.css?v=caf9aa7058">
 <meta property="og:title" content="Wave Laboratory: technical report — Jack J. Burleson">
 <meta property="og:description" content="Wave spectra and ship-dynamics models, architecture, validation suite, test counts, limitations and plan-versus-shipped notes for Wave Laboratory.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -230,7 +230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Underwater optics.</strong> Jerlov water types give diffuse attenuation coefficients K_d for red, green and blue. They drive rendering only, not the physics. Light is attenuated as c·e^(−K_d·d) plus in-scattered colour, and from below the surface shows the rippled sky inside Snell’s window (48.6°) and a mirror outside it.</p>
 <h3 id="architecture">Architecture</h3>
 <p>The main thread runs the React UI, a Zustand store and the renderer. A Web Worker runs the simulation: the CPU ocean field, the vessels and a fixed-rate recorder. <code>SimClient</code> keeps one request in flight. Edits go through a Zod-validated store, which also keeps undo history and bumps a revision that reloads the worker.</p>
-<table class="caption-top stack" role="table">
+<table class="caption-top stack" role="table" data-prose-rows="true">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
@@ -299,7 +299,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>There are no benchmark numbers against external data. The evidence is the validation suite below.</p>
 <h3 id="validation-suite">Validation suite</h3>
 <p>The longer statistical checks live in <code>*.validation.ts</code> files and run with <code>pnpm validate</code>, with a 120-second timeout per test. There are 9 files and 25 test definitions.</p>
-<table class="caption-top stack" role="table">
+<table class="caption-top stack" role="table" data-prose-rows="true">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
