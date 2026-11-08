@@ -116,11 +116,15 @@ local function stack_table(tbl)
   local body_rows = 0
   for _, body in ipairs(tbl.bodies) do body_rows = body_rows + #body.body end
   local squat_grid = body_rows <= 2 and #labels >= 4
+  -- A five-plus-column grid cannot give a phone five readable figures in one view:
+  -- its columns end up 55-60 px wide no matter how the type is trimmed, so it
+  -- scrolls or clips on every narrow screen. Stacked rows carry all the figures.
+  local wide_grid = #labels >= 5 and body_rows >= 3
   -- Mostly numeric cells (the "wordy" test) that also carry some long entries read
   -- as a grid; anything else compares better stacked.
   local wordy = numeric / cells < 0.5
     and (longest >= 40 or total / cells >= 20 or #labels >= 4 or has_code)
-  if not (prose_column or wordy or long_row_label or squat_grid) then return nil end
+  if not (prose_column or wordy or long_row_label or squat_grid or wide_grid) then return nil end
   tbl.attr.classes:insert("stack")
   tbl.attr.attributes["role"] = "table"
   for _, row in ipairs(head_rows) do
