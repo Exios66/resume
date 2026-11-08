@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=19289e6960">
+<link rel="stylesheet" href="../../styles.css?v=6a3cfac4b3">
 <meta property="og:title" content="Mailroom Reloaded: technical report — Jack J. Burleson">
 <meta property="og:description" content="Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -158,7 +158,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><a href="../../projects/mailroom-reloaded.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/mailroom-reloaded/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/mailroom-reloaded/appendix.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Appendix</a> <a href="https://github.com/Exios66/mailroom-reloaded"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
 </div>
 <h1 class="page-title" id="mailroom-reloaded-technical-report">Mailroom Reloaded: technical report</h1>
-<p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">Agentic document pipeline</span><span class="seg"> <span class="sep">·</span> deployable rebuild</span></span></span></span></p>
+<p><span class="kicker">Agentic document pipeline · deployable rebuild</span></p>
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#summary">Summary</a></li><li><a href="#system-and-data">System and data</a></li><li><a href="#iteration-history">Iteration history</a></li><li><a href="#results">Results</a></li><li><a href="#figures">Figures</a></li><li><a href="#reproducibility">Reproducibility</a></li><li><a href="#engineering-quality">Engineering quality</a></li><li><a href="#limitations-and-next-steps">Limitations and next steps</a></li></ul></nav>
 <h2 id="summary">Summary</h2>
 <p>Mailroom Reloaded is a single deployable service that ingests documents, classifies them, extracts structured fields and archives them with a verifiable audit trail. It is built on CrewAI Flows, but a deterministic driver, not the framework’s event engine, owns control flow. Agents are called at fixed points, and routing between them is plain threshold code. A clean text-layer document costs exactly two LLM calls.</p>

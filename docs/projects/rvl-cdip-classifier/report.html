@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=19289e6960">
+<link rel="stylesheet" href="../../styles.css?v=6a3cfac4b3">
 <meta property="og:title" content="RVL-CDIP-Classifier: technical report — Jack J. Burleson">
 <meta property="og:description" content="Method, iteration history, results and limits of a prompt-only, zero-shot RVL-CDIP classifier built on an off-the-shelf vision model.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -158,7 +158,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><a href="../../projects/rvl-cdip-classifier.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/rvl-cdip-classifier/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/rvl-cdip-classifier/appendix.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Appendix</a> <a href="https://github.com/Exios66/RVL-CDIP-Classifier"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
 </div>
 <h1 class="page-title" id="rvl-cdip-classifier-technical-report">RVL-CDIP-Classifier: technical report</h1>
-<p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">Zero-shot document classification</span><span class="seg"> <span class="sep">·</span> prompt engineering</span><span class="seg"> <span class="sep">·</span> cost and robustness analysis</span></span></span></span></p>
+<p><span class="kicker">Zero-shot document classification · prompt engineering · cost and robustness analysis</span></p>
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#summary">Summary</a></li><li><a href="#system-and-data">System and data</a></li><li><a href="#iteration-history">Iteration history</a></li><li><a href="#results">Results</a></li><li><a href="#figures">Figures</a></li><li><a href="#reproducibility">Reproducibility</a></li><li><a href="#engineering-quality">Engineering quality</a></li><li><a href="#limitations-and-next-steps">Limitations and next steps</a></li><li><a href="#credits">Credits</a></li></ul></nav>
 <h2 id="summary">Summary</h2>
 <p>I tested how well a general-purpose vision model can classify scanned pages into the 16 RVL-CDIP classes using only a written prompt, with no training or fine-tuning. The main model was <code>qwen/qwen3.7-flash</code> through OpenRouter. I iterated on the prompt across 29 registered versions.</p>
