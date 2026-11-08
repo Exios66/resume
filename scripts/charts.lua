@@ -266,6 +266,7 @@ local DRAW = {}
 -- Raises an error for missing columns or numeric values, more than two series,
 -- or a positive minimum. Other errors from invalid attributes propagate.
 function DRAW.bars(spec, rows)
+  local width = tonumber(spec["plot-width"]) or W
   column(spec, rows, spec.label); column(spec, rows, spec.value)
   local vals = values(spec, rows, spec.value)
   local color_of, legend = series_colors(spec, rows)
@@ -281,7 +282,7 @@ function DRAW.bars(spec, rows)
   local longest = 0
   for _, row in ipairs(rows) do longest = math.max(longest, utf8.len(row[spec.label])) end
   local gutter = math.min(GUTTER, math.max(100, longest * 9 + 32))
-  local sx = linear(lo, hi, gutter + (lo < 0 and LABEL_ROOM or 0), W - RIGHT)
+  local sx = linear(lo, hi, gutter + (lo < 0 and LABEL_ROOM or 0), width - RIGHT)
   local out = { x_axis(ticks, sx, top, bottom, spec.unit) }
   if lo < 0 then out[#out + 1] = line("zero", sx(0), top, sx(0), bottom, PAINT.muted) end
   local signed = spec.signed == "true"
@@ -311,7 +312,7 @@ function DRAW.bars(spec, rows)
     local vx = sx(v)
     local tip = v >= 0 and text("val", vx + 6, y + BAND / 2 + 4.5, "start", value_text)
       or text("val", vx - 6, y + BAND / 2 + 4.5, "end", value_text)
-    out[#out + 1] = mark(value_text, label, hit(0, y, W, BAND) .. row_label(row[spec.label], y + BAND / 2, gutter)
+    out[#out + 1] = mark(value_text, label, hit(0, y, width, BAND) .. row_label(row[spec.label], y + BAND / 2, gutter)
       .. bar_path(color, sx(math.max(lo, 0)), vx, y + (BAND - BAR) / 2) .. tip, i)
   end
   return out, bottom + 28, legend, function(i) return i end
@@ -412,8 +413,66 @@ function DRAW.strip(spec, rows)
   return out, 8 + #rows * PANEL, { to_name, from_name }, nil
 end
 
+--- Draw signed estimates and intervals from the same source-table row.
+-- Bounds must contain the estimate; the axis must contain every bound and zero.
+function DRAW.interval(spec, rows)
+  column(spec, rows, spec.label); column(spec, rows, spec.value)
+  column(spec, rows, spec.lower); column(spec, rows, spec.upper)
+  local means, lows, highs = values(spec, rows, spec.value), values(spec, rows, spec.lower), values(spec, rows, spec.upper)
+  local lo, hi = 0, 0
+  for i = 1, #rows do
+    if lows[i] > means[i] or means[i] > highs[i] then fail(spec, "interval bounds must contain the estimate") end
+    lo, hi = math.min(lo, lows[i]), math.max(hi, highs[i])
+  end
+  local requested_lo, requested_hi = tonumber(spec.min) or lo, tonumber(spec.max) or hi
+  if requested_lo > lo or requested_hi < hi then fail(spec, "interval axis must include zero and all bounds") end
+  if spec.max and requested_hi == requested_lo then fail(spec, "interval axis needs a positive span") end
+  local ticks = M.nice_ticks(requested_lo, requested_hi, 4)
+  -- Nice ticks may expand inferred ends, but authored bounds define the axis.
+  if spec.min then ticks[1] = requested_lo end
+  if spec.max then
+    while #ticks > 1 and ticks[#ticks] > requested_hi + 1e-9 do ticks[#ticks] = nil end
+    if ticks[#ticks] < requested_hi - 1e-9 then ticks[#ticks + 1] = requested_hi end
+  end
+  lo, hi = ticks[1], ticks[#ticks]
+  local top, band, width = 70, 120, 320
+  local bottom = top + (#rows - 1) * band + 80
+  local sx = linear(lo, hi, 44, width - 24)
+  local out = { x_axis(ticks, sx, top, bottom, spec.unit),
+    line("ref", sx(0), top - 8, sx(0), bottom, PAINT.muted),
+    text("ref-label", sx(0), top - 12, "middle", "no change") }
+  for i, row in ipairs(rows) do
+    local cy = top + (i - 1) * band + 32
+    local lx, mx, hx = sx(lows[i]), sx(means[i]), sx(highs[i])
+    local labels = M.wrap_label(row[spec.label], 26)
+    local category = text("cat", 0, top + (i - 1) * band - 48, "start", labels[1])
+    if labels[2] then category = category .. text("cat", 0, top + (i - 1) * band - 32, "start", labels[2]) end
+    -- Confidence level belongs in the accessible name; tip numbers follow
+    -- the source cells in column order without an extra numeric confidence label.
+    local tip = M.fmt(means[i], spec.unit, true) .. "; " .. M.fmt(lows[i], spec.unit, true) .. " to " .. M.fmt(highs[i], spec.unit, true)
+    out[#out + 1] = mark(tip, row[spec.label] .. " (mean and " .. (spec["interval-label"] or "interval") .. ")",
+      hit(0, top + (i - 1) * band, width, i == #rows and 80 or band) .. category
+      .. line("interval-range c1", lx, cy, hx, cy, PAINT.c1)
+      .. line("interval-cap c1", lx, cy - 7, lx, cy + 7, PAINT.c1)
+      .. line("interval-cap c1", hx, cy - 7, hx, cy + 7, PAINT.c1)
+      .. dot("c1", mx, cy)
+      .. text("val", lx, cy - 14, "middle", M.fmt(lows[i], spec.unit, true))
+      .. text("val", hx, cy - 14, "middle", M.fmt(highs[i], spec.unit, true))
+      .. text("val", mx, cy + 24, "middle", M.fmt(means[i], spec.unit, true)), i)
+  end
+  return out, bottom + 34, {}, nil
+end
+
 local function summary(spec, rows)
   if spec.summary then return spec.summary end
+  if spec.kind == "interval" then
+    local parts = {}
+    for _, row in ipairs(rows) do
+      parts[#parts + 1] = row[spec.label] .. " mean " .. row[spec.value] .. ", "
+        .. (spec["interval-label"] or "interval") .. " " .. row[spec.lower] .. " to " .. row[spec.upper]
+    end
+    return (spec.title or "Chart") .. ": " .. table.concat(parts, "; ") .. ". Zero is no change. Full values in the table below."
+  end
   local parts = {}
   for _, row in ipairs(rows) do
     local cells = {}
@@ -441,7 +500,13 @@ end
 function M.render(spec, rows)
   local draw = DRAW[spec.kind or ""]
   if not draw then fail(spec, "unknown kind '" .. tostring(spec.kind) .. "'") end
-  if #rows < 2 then fail(spec, "needs at least two rows") end
+  if spec.kind == "interval" then
+    if #rows == 0 then fail(spec, "needs at least one row") end
+  elseif #rows < 2 then fail(spec, "needs at least two rows") end
+  local width = spec.kind == "interval" and 320 or (tonumber(spec["plot-width"]) or W)
+  if spec["plot-width"] and (spec.kind ~= "bars" or not tonumber(spec["plot-width"]) or width < 320 or width > W or width % 1 ~= 0) then
+    fail(spec, "plot-width requires bars and an integer width from 320 to 640")
+  end
   local body, height, legend = draw(spec, rows)
   local keys = { "c1", "c2" }
   if spec.kind == "dumbbell" then keys = { "c1s", "c1" } end
@@ -460,7 +525,7 @@ function M.render(spec, rows)
     .. '<div class="chart-body" tabindex="0" role="group" aria-label="%s">'
     .. '<svg viewBox="0 0 %d %s" width="%d" height="%s" role="group" aria-label="%s">%s</svg></div>%s</figure>',
     spec.kind, title_attr, esc(spec.title or ""), legend_html, esc((spec.title or "Chart") .. ", scrollable"),
-    W, num(height), W, num(height), esc(summary(spec, rows)), table.concat(body), tools)
+    width, num(height), width, num(height), esc(summary(spec, rows)), table.concat(body), tools)
 end
 
 -- ------------------------------------------------------------------- filter

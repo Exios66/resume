@@ -16,3 +16,6 @@ This leg builds on merged PR107/108/109. It covers seven table-generated charts,
 | 10 | Print reading | Report table/figure breaks and source-note pagination | Actual exported PDF render/page inspection; CSS print viewport screenshots do not establish pagination |
 
 Every feature starts with its evaluation, then baseline, one small experiment, full gate on the exact candidate commit, screenshots, evidence and keep/discard record. Metric-blind ideas stay hypotheses until the evaluation is established. No broad zero-defect or full accessibility claim follows from the current score.
+
+## MapReduce focus added and advanced
+PR111 implements source-pinned backup-duration and signed uncertainty views with per-step review checkpoints. See [mapreduce-follow-on.md](mapreduce-follow-on.md) for scaling trajectories, shuffle-phase interpretation, failure recovery and an illustrative mechanism explorer. Broader uncertainty-aware storytelling and SVG contrast remain open.

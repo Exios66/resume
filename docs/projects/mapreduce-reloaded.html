@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=ad9cf89ac7">
+<link rel="stylesheet" href="../styles.css?v=32735b2a28">
 <meta property="og:title" content="MapReduce-Reloaded — Jack J. Burleson">
 <meta property="og:description" content="A from-scratch MapReduce rebuild: a Go cluster and Python reference, a 24-item paper mapping, S3 storage, compression, fault injection and a small-scale VM evaluation. In active development.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -236,6 +236,68 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 <p class="chart-return"><a href="#chart-evidence-1-title" aria-label="Return to chart: Speedup with four workers over one, 1 GiB input">Return to chart</a></p>
+<div id="mr-backup-duration" class="mr-experiment">
+<h3 id="backups-with-an-injected-straggler">Backups with an injected straggler</h3>
+<p>E2 sorted 1 GiB on the shared VM, with one worker limited to 0.2 CPU. Each setting is the median of three runs, in fixed setting order; this comparison is <strong>not drift-controlled</strong>.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<figure class="chart chart-bars"><figcaption class="chart-title" id="chart-evidence-2-title" tabindex="-1">With a slow worker: job time (seconds)</figcaption><div class="chart-body" tabindex="0" role="group" aria-label="With a slow worker: job time (seconds), scrollable"><svg viewbox="0 0 320 118" width="320" height="118" role="group" aria-label="With a slow worker: job time (seconds): Backups off 17.58 s; Backups on 11.24 s. Full values in the table below."><line class="grid" x1="131" y1="10" x2="131" y2="90" fill="none" stroke="#e2e8eb"></line><text class="tick" x="131" y="108" text-anchor="middle">0 s</text><line class="grid" x1="164.2" y1="10" x2="164.2" y2="90" fill="none" stroke="#e2e8eb"></line><text class="tick" x="164.2" y="108" text-anchor="middle">5 s</text><line class="grid" x1="197.5" y1="10" x2="197.5" y2="90" fill="none" stroke="#e2e8eb"></line><text class="tick" x="197.5" y="108" text-anchor="middle">10 s</text><line class="grid" x1="230.8" y1="10" x2="230.8" y2="90" fill="none" stroke="#e2e8eb"></line><text class="tick" x="230.8" y="108" text-anchor="middle">15 s</text><line class="grid" x1="264" y1="10" x2="264" y2="90" fill="none" stroke="#e2e8eb"></line><text class="tick" x="264" y="108" text-anchor="middle">20 s</text><g class="mark" tabindex="0" role="img" aria-label="Backups off: 17.58 s" data-tip-value="17.58 s" data-tip-label="Backups off" data-source-row="1"><rect class="hit" x="0" y="10" width="320" height="40" fill="transparent" stroke="none"></rect><text class="cat" x="119" y="34.5" text-anchor="end">Backups off</text><path class="bar c1" d="M131 20 H243.9 Q247.9 20 247.9 24 V36 Q247.9 40 243.9 40 H131 Z" fill="#008b9a" stroke="none"></path><text class="val" x="253.9" y="34.5" text-anchor="start">17.58 s</text></g><g class="mark" tabindex="0" role="img" aria-label="Backups on: 11.24 s" data-tip-value="11.24 s" data-tip-label="Backups on" data-source-row="2"><rect class="hit" x="0" y="50" width="320" height="40" fill="transparent" stroke="none"></rect><text class="cat" x="119" y="74.5" text-anchor="end">Backups on</text><path class="bar c1" d="M131 60 H201.7 Q205.7 60 205.7 64 V76 Q205.7 80 201.7 80 H131 Z" fill="#008b9a" stroke="none"></path><text class="val" x="211.7" y="74.5" text-anchor="start">11.24 s</text></g></svg></div><p class="chart-tools"><a href="#chart-evidence-2-data" aria-label="View exact values for With a slow worker: job time (seconds)">View exact values</a></p></figure>
+<table id="chart-evidence-2-data" class="chart-source caption-top" tabindex="-1" aria-labelledby="chart-evidence-2-title">
+<thead>
+<tr class="header">
+<th>Backup setting</th>
+<th style="text-align: right;">Median job time (s)</th>
+<th style="text-align: right;">Runs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Backups off</td>
+<td style="text-align: right;">17.58</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td>Backups on</td>
+<td style="text-align: right;">11.24</td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+<p class="chart-return"><a href="#chart-evidence-2-title" aria-label="Return to chart: With a slow worker: job time (seconds)">Return to chart</a></p>
+<p>Lower is faster. These saved medians give more precision than the rounded overview above; they do not establish a drift-controlled effect or performance on independent machines.</p>
+</div>
+<div id="mr-backup-uncertainty" class="mr-experiment">
+<h3 id="backups-without-an-injected-straggler">Backups without an injected straggler</h3>
+<p>A separate E2 experiment used ten interleaved pairs on the same VM. The dot shows the mean difference, <strong>backups on minus off</strong>; the whisker shows the reported 95% paired interval.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>Negative means faster with backups; positive means slower. The interval crosses no change and <strong>does not prove zero cost</strong>. It describes the mean paired difference, not the spread of individual runs.</p>
+<figure class="chart chart-interval"><figcaption class="chart-title" id="chart-evidence-3-title" tabindex="-1">No slow worker: mean difference and 95% interval (s)</figcaption><div class="chart-body" tabindex="0" role="group" aria-label="No slow worker: mean difference and 95% interval (s), scrollable"><svg viewbox="0 0 320 184" width="320" height="184" role="group" aria-label="No slow worker: mean difference and 95% interval (s): Backups on minus off mean −0.11, 95% paired interval −0.38 to +0.16. Zero is no change. Full values in the table below."><line class="grid" x1="44" y1="70" x2="44" y2="150" fill="none" stroke="#e2e8eb"></line><text class="tick" x="44" y="168" text-anchor="middle">−0.5 s</text><line class="grid" x1="107" y1="70" x2="107" y2="150" fill="none" stroke="#e2e8eb"></line><text class="tick" x="107" y="168" text-anchor="middle">−0.25 s</text><line class="grid" x1="170" y1="70" x2="170" y2="150" fill="none" stroke="#e2e8eb"></line><text class="tick" x="170" y="168" text-anchor="middle">0 s</text><line class="grid" x1="233" y1="70" x2="233" y2="150" fill="none" stroke="#e2e8eb"></line><text class="tick" x="233" y="168" text-anchor="middle">0.25 s</text><line class="grid" x1="296" y1="70" x2="296" y2="150" fill="none" stroke="#e2e8eb"></line><text class="tick" x="296" y="168" text-anchor="middle">0.5 s</text><line class="ref" x1="170" y1="62" x2="170" y2="150" fill="none" stroke="#5b6970"></line><text class="ref-label" x="170" y="58" text-anchor="middle">no change</text><g class="mark" tabindex="0" role="img" aria-label="Backups on minus off (mean and 95% paired interval): −0.11 s; −0.38 s to +0.16 s" data-tip-value="−0.11 s; −0.38 s to +0.16 s" data-tip-label="Backups on minus off (mean and 95% paired interval)" data-source-row="1"><rect class="hit" x="0" y="70" width="320" height="80" fill="transparent" stroke="none"></rect><text class="cat" x="0" y="22" text-anchor="start">Backups on minus off</text><line class="interval-range c1" x1="74.2" y1="102" x2="210.3" y2="102" fill="none" stroke="#008b9a"></line><line class="interval-cap c1" x1="74.2" y1="95" x2="74.2" y2="109" fill="none" stroke="#008b9a"></line><line class="interval-cap c1" x1="210.3" y1="95" x2="210.3" y2="109" fill="none" stroke="#008b9a"></line><circle class="dot c1" cx="142.3" cy="102" r="5" fill="#008b9a" stroke="#ffffff" stroke-width="2"></circle><text class="val" x="74.2" y="88" text-anchor="middle">−0.38 s</text><text class="val" x="210.3" y="88" text-anchor="middle">+0.16 s</text><text class="val" x="142.3" y="126" text-anchor="middle">−0.11 s</text></g></svg></div><p class="chart-tools"><a href="#chart-evidence-3-data" aria-label="View exact values for No slow worker: mean difference and 95% interval (s)">View exact values</a></p></figure>
+<table id="chart-evidence-3-data" class="chart-source caption-top stack" tabindex="-1" aria-labelledby="chart-evidence-3-title" role="table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header" role="row">
+<th role="columnheader">Comparison</th>
+<th style="text-align: right;" role="columnheader">Mean difference (s)</th>
+<th style="text-align: right;" role="columnheader">95% lower (s)</th>
+<th style="text-align: right;" role="columnheader">95% upper (s)</th>
+<th style="text-align: right;" role="columnheader">Pairs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd" role="row">
+<td role="cell" data-label="Comparison">Backups on minus off</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Mean difference (s)">−0.11</td>
+<td class="num" style="text-align: right;" role="cell" data-label="95% lower (s)">−0.38</td>
+<td class="num" style="text-align: right;" role="cell" data-label="95% upper (s)">+0.16</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Pairs">10</td>
+</tr>
+</tbody>
+</table>
+<p class="chart-return"><a href="#chart-evidence-3-title" aria-label="Return to chart: No slow worker: mean difference and 95% interval (s)">Return to chart</a></p>
+</div>
 <p>The <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/report.md">final report⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> links the raw results, design decisions and reproduction steps.</p>
 <h2 id="what-is-planned">What is planned</h2>
 <p>Python workers and a complete Go/Python interoperability matrix, coordinator high availability, skew handling and Parquet input remain stretch goals. LATE-style speculation is built as an opt-in mode, but its E7 evaluation has not been run; there is no measured claim that it is faster.</p>
@@ -250,12 +312,19 @@ ul.task-list li input[type="checkbox"] {
 <nav class="project-pager" aria-label="Project navigation"><a class="pager-prev" href="../projects/aeroglobe.html" rel="prev"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg><span class="pager-text"><span class="pager-label">Previous project</span><span class="pager-name">AeroGlobe</span></span></a><a class="pager-next" href="../projects/psychometric-digital-twin.html" rel="next"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-right"></use></svg><span class="pager-text"><span class="pager-label">Next project</span><span class="pager-name">Psychometric Digital Twin</span></span></a></nav>
 </div>
 
-</main>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Source: <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/evaluation.md#backup-tasks-54">E2 evaluation at revision 4dd1ca4⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> and <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/bench/README.md#e2-backup-tasks-and-a-straggler">benchmark notes⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>. Reported measurements, not rerun here.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Source: <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/evaluation.md#backup-tasks-54">E2 evaluation at revision 4dd1ca4⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> and <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/bench/README.md#e2-backup-tasks-and-a-straggler">benchmark notes⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>. Reported measurements, not rerun here.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></main>
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
 <script src="../assets/js/site.js?v=c1f846aa1e" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-github" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></symbol><symbol id="i-linkedin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></symbol><symbol id="i-mail" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></symbol><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-download" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></symbol><symbol id="i-map-pin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol><symbol id="i-layers" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></symbol><symbol id="i-brain" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M19.938 10.5a4 4 0 0 1 .585.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M19.967 17.484A4 4 0 0 1 18 18"></path></symbol><symbol id="i-scale" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></symbol><symbol id="i-waves" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></symbol><symbol id="i-database" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></symbol><symbol id="i-globe" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></symbol><symbol id="i-clock" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol></svg>
+
 
 <script>
   // Theme toggle: shown only once this script runs; switches to the opposite of what is currently shown and remembers the choice.

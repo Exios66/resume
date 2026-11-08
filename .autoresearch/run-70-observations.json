@@ -1,0 +1,44 @@
+[
+  {
+    "width": 375,
+    "theme": "light",
+    "readout": "SOURCE ROW 1 OF 1\nBackups on minus off\nMean difference (s)\n\u22120.11\n95% lower (s)\n\u22120.38\n95% upper (s)\n+0.16\nPairs\n10\n\nFocus or point to a mark or data row to connect the evidence.",
+    "horizontalScrollRequired": false,
+    "screenshot": "run-70-interval-375-light.png"
+  },
+  {
+    "width": 375,
+    "theme": "dark",
+    "readout": "SOURCE ROW 1 OF 1\nBackups on minus off\nMean difference (s)\n\u22120.11\n95% lower (s)\n\u22120.38\n95% upper (s)\n+0.16\nPairs\n10\n\nFocus or point to a mark or data row to connect the evidence.",
+    "horizontalScrollRequired": false,
+    "screenshot": "run-70-interval-375-dark.png"
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "readout": "SOURCE ROW 1 OF 1\nBackups on minus off\nMean difference (s)\n\u22120.11\n95% lower (s)\n\u22120.38\n95% upper (s)\n+0.16\nPairs\n10\n\nFocus or point to a mark or data row to connect the evidence.",
+    "horizontalScrollRequired": false,
+    "screenshot": "run-70-interval-768-light.png"
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "readout": "SOURCE ROW 1 OF 1\nBackups on minus off\nMean difference (s)\n\u22120.11\n95% lower (s)\n\u22120.38\n95% upper (s)\n+0.16\nPairs\n10\n\nFocus or point to a mark or data row to connect the evidence.",
+    "horizontalScrollRequired": false,
+    "screenshot": "run-70-interval-768-dark.png"
+  },
+  {
+    "width": 1280,
+    "theme": "light",
+    "readout": "SOURCE ROW 1 OF 1\nBackups on minus off\nMean difference (s)\n\u22120.11\n95% lower (s)\n\u22120.38\n95% upper (s)\n+0.16\nPairs\n10\n\nFocus or point to a mark or data row to connect the evidence.",
+    "horizontalScrollRequired": false,
+    "screenshot": "run-70-interval-1280-light.png"
+  },
+  {
+    "width": 1280,
+    "theme": "dark",
+    "readout": "SOURCE ROW 1 OF 1\nBackups on minus off\nMean difference (s)\n\u22120.11\n95% lower (s)\n\u22120.38\n95% upper (s)\n+0.16\nPairs\n10\n\nFocus or point to a mark or data row to connect the evidence.",
+    "horizontalScrollRequired": false,
+    "screenshot": "run-70-interval-1280-dark.png"
+  }
+]

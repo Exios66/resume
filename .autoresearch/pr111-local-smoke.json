@@ -1,0 +1,85 @@
+{
+  "base": "http://127.0.0.1:8769/",
+  "cases": [
+    {
+      "width": 375,
+      "theme": "light",
+      "javascript": true,
+      "status": "passed",
+      "charts": 3,
+      "native_source_roundtrips": 3,
+      "citation_roundtrips": 2,
+      "console_errors": []
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "javascript": false,
+      "status": "passed",
+      "charts": 3,
+      "native_source_roundtrips": 3,
+      "citation_roundtrips": 2,
+      "console_errors": []
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "javascript": true,
+      "status": "passed",
+      "charts": 3,
+      "native_source_roundtrips": 3,
+      "citation_roundtrips": 2,
+      "console_errors": []
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "javascript": false,
+      "status": "passed",
+      "charts": 3,
+      "native_source_roundtrips": 3,
+      "citation_roundtrips": 2,
+      "console_errors": []
+    },
+    {
+      "width": 1280,
+      "theme": "light",
+      "javascript": true,
+      "status": "passed",
+      "charts": 3,
+      "native_source_roundtrips": 3,
+      "citation_roundtrips": 2,
+      "console_errors": []
+    },
+    {
+      "width": 1280,
+      "theme": "light",
+      "javascript": false,
+      "status": "passed",
+      "charts": 3,
+      "native_source_roundtrips": 3,
+      "citation_roundtrips": 2,
+      "console_errors": []
+    },
+    {
+      "width": 1280,
+      "theme": "dark",
+      "javascript": true,
+      "status": "passed",
+      "charts": 3,
+      "native_source_roundtrips": 3,
+      "citation_roundtrips": 2,
+      "console_errors": []
+    },
+    {
+      "width": 1280,
+      "theme": "dark",
+      "javascript": false,
+      "status": "passed",
+      "charts": 3,
+      "native_source_roundtrips": 3,
+      "citation_roundtrips": 2,
+      "console_errors": []
+    }
+  ]
+}

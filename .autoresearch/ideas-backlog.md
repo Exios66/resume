@@ -97,3 +97,9 @@ Open (segments must be re-baselined per issue 106's contract before adding check
 - [x] Full reading width for stacked table captions, preserving the benchmark limitation text (run67).
 - [x] Static inventory of 43 built pages: metadata presence, unique titles, local destinations and fragment targets; see site-coverage-inventory.json for limits.
 - [ ] Follow uncovered-aspects-queue.md: essential SVG contrast first, then uncertainty-aware evidence ladder/report prose, saved-figure source links and artifact labels. Preferences/performance/native portability/PDF pagination remain open.
+
+## MapReduce next focus
+- [x] Source-pinned backup-duration comparison, three-run/fixed-order limits adjacent.
+- [x] Signed mean/95% interval from ten interleaved pairs, zero-crossing uncertainty visible.
+- [ ] Follow-on: worker scaling shape, shuffle-phase interpretation and failure recovery, only after authenticating the matching source data and defining fixed evaluations.
+- Review checkpoints: source/design before edit, diff/visual/function after render, evidence before keep, entire PR and open reviews before merge.

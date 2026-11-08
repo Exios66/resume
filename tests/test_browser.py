@@ -431,10 +431,14 @@ def test_charts_scroll_on_phone(site):
         for path in CHART_PAGES:
             page.goto(base + path)
             for body in page.locator(".chart-body").all():
-                assert body.evaluate("el => el.scrollWidth > el.clientWidth"), path
-                body.focus()
-                page.keyboard.press("ArrowRight")
-                page.wait_for_function("el => el.scrollLeft > 0", arg=body.element_handle())
+                compact = body.evaluate("el => el.querySelector('svg').viewBox.baseVal.width === 320")
+                if compact:
+                    assert body.evaluate("el => el.scrollWidth <= el.clientWidth + 1"), path
+                else:
+                    assert body.evaluate("el => el.scrollWidth > el.clientWidth"), path
+                    body.focus()
+                    page.keyboard.press("ArrowRight")
+                    page.wait_for_function("el => el.scrollLeft > 0", arg=body.element_handle())
                 outside = body.evaluate("""el => {
                     const svg = el.querySelector('svg').getBoundingClientRect();
                     return [...el.querySelectorAll('svg text')].filter(t => {
@@ -673,5 +677,87 @@ def test_stacked_benchmark_caption_preserves_reading_width(site, width, theme):
         else:
             expect(caption).to_have_css("display", "table-caption")
         assert table.locator("tbody tr").count() == 2
+    finally:
+        page.close()
+
+
+@pytest.mark.parametrize("width,theme", [(375, "light"), (375, "dark"), (1280, "light"), (1280, "dark")])
+def test_mapreduce_duration_keeps_condition_and_source_context(site, width, theme):
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 1100}, color_scheme=theme, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/mapreduce-reloaded.html")
+        panel = page.locator("#mr-backup-duration")
+        expect(panel).to_contain_text("three runs")
+        expect(panel).to_contain_text("fixed setting order")
+        expect(panel).to_contain_text("not drift-controlled")
+        marks = panel.locator(".mark")
+        expect(marks).to_have_count(2)
+        assert [m.get_attribute("data-tip-value") for m in marks.all()] == ["17.58 s", "11.24 s"]
+        if width == 375:
+            for label in panel.locator('.chart text.val').all():
+                box = label.bounding_box()
+                assert box["x"] >= 0 and box["x"] + box["width"] <= width
+            assert panel.locator('.chart-body').evaluate("el => el.scrollWidth <= el.clientWidth + 1")
+        marks.last.focus()
+        expect(panel.locator(".chart-readout")).to_contain_text("Backups on")
+        expect(panel.locator(".chart-readout")).to_contain_text("11.24")
+        expect(panel.locator(".chart-readout")).to_contain_text("Runs")
+        citation = panel.locator('a[role="doc-noteref"]')
+        citation.click()
+        expect(page.locator("#fn1")).to_contain_text("4dd1ca4")
+        assert page.locator('#fn1 a[href*="4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387"]').count() == 2
+    finally:
+        page.close()
+
+
+@pytest.mark.parametrize("width,theme", [(375, "light"), (375, "dark"), (1280, "light"), (1280, "dark")])
+def test_mapreduce_interval_distinguishes_mean_bounds_and_zero(site, width, theme):
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 1100}, color_scheme=theme, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/mapreduce-reloaded.html")
+        panel = page.locator("#mr-backup-uncertainty")
+        expect(panel).to_contain_text("ten interleaved pairs")
+        expect(panel).to_contain_text("backups on minus off")
+        expect(panel).to_contain_text("does not prove zero cost")
+        plot = panel.locator("figure.chart")
+        mark = plot.locator(".mark")
+        expect(mark).to_have_count(1)
+        assert mark.get_attribute("data-tip-value") == "−0.11 s; −0.38 s to +0.16 s"
+        geometry = plot.evaluate("""el => {
+            const line = el.querySelector('.interval-range'), dot = el.querySelector('.dot'), zero = el.querySelector('line.ref');
+            return [Number(line.getAttribute('x1')), Number(dot.getAttribute('cx')), Number(zero.getAttribute('x1')), Number(line.getAttribute('x2'))];
+        }""")
+        assert geometry == sorted(geometry)
+        mark.focus()
+        for value in ("−0.11", "−0.38", "+0.16", "10"):
+            expect(plot.locator(".chart-readout")).to_contain_text(value)
+        page.emulate_media(media="print")
+        expect(plot.locator("svg")).to_be_visible()
+        expect(panel.locator("table")).to_be_visible()
+        expect(plot.locator(".chart-readout")).to_be_hidden()
+        page.emulate_media(media="screen", forced_colors="active")
+        expect(plot.locator(".interval-range")).to_have_css("stroke-width", "2px")
+    finally:
+        page.close()
+
+
+def test_mapreduce_evidence_audit_rejects_wrong_cpu_and_missing_measurement(site):
+    """Review regression: apparently plausible plots cannot hide misstated context."""
+    browser, base = site
+    page = browser.new_page()
+    audit = (ROOT / "autoresearch.audit.cjs").read_text()
+    start = audit.index("function inspectMapReduceEvidence()")
+    end = audit.index("// Exercise discovery", start)
+    inspect = "() => { " + audit[start:end] + "; return inspectMapReduceEvidence(); }"
+    try:
+        page.goto(base + "projects/mapreduce-reloaded.html")
+        assert page.evaluate(inspect) == []
+        page.locator('#mr-backup-duration > p').first.evaluate("el => el.textContent = el.textContent.replace('0.2 CPU', '0.5 CPU')")
+        assert "slow-worker duration with experiment limits" in page.evaluate(inspect)
+        page.reload()
+        page.locator('#mr-backup-uncertainty table tbody td').nth(1).evaluate("el => el.textContent = '--'")
+        assert "paired effect interval across no change, with limits" in page.evaluate(inspect)
     finally:
         page.close()
