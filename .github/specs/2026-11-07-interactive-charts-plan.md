@@ -19,7 +19,7 @@
 - Every SVG shape carries fallback `fill`/`stroke` attributes (light values).
 - Tooltip text is set with `textContent` only; value first, label second.
 - No chart without its table; fewer than two rows or a missing column is a render error.
-- Commit trailer on every commit: `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>` and `Claude-Session: https://claude.ai/code/session_013HpAdPKPXYS5U2GXtR8NhT`.
+- Commit messages carry no session links, co-author trailers or tool footers.
 
 ## Review Focus
 

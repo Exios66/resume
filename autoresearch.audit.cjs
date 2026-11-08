@@ -32,9 +32,10 @@ function serve() {
   const server = http.createServer((req, res) => {
     // Serve docs/ at /resume/, the path GitHub Pages publishes it under, so pages that
     // link absolutely to the site path (404.html must) load as they do in production.
-    const url = decodeURIComponent(req.url.split('?')[0].split('#')[0]);
+    let url;
+    try { url = decodeURIComponent(req.url.split('?')[0].split('#')[0]); } catch { res.writeHead(400); return res.end(); }
     let file = url.startsWith('/resume/') ? path.join(DOCS, url.slice('/resume/'.length)) : '';
-    if (!file || !file.startsWith(DOCS)) { res.writeHead(404); return res.end(); }
+    if (!file || (file !== DOCS && !file.startsWith(DOCS + path.sep))) { res.writeHead(404); return res.end(); }
     if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');
     if (!fs.existsSync(file)) { res.writeHead(404); return res.end('not found'); }
     res.writeHead(200, { 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream' });

@@ -7,6 +7,8 @@
                                            crash or checks_failed; asi is a JSON object of notes that survive reverts
   ledger.py pause "<note>"                 mark the session paused (still resumable)
   ledger.py table                          print every run as a Markdown table
+  ledger.py next                           print the number the next logged run will get
+  ledger.py best                           print the best kept metric in the current segment
 
 The log is append-only. Run numbers climb across segments; counts and streaks use the current segment only.
 """
@@ -150,12 +152,23 @@ def cmd_table():
         print(f"| {r['run']} | {r.get('segment')} | {r['description']} | {r['metric']} | {r['status']} |")
 
 
+def cmd_next():
+    print(max([r["run"] for r in runs(records())] or [-1]) + 1)
+
+
+def cmd_best():
+    rows = records()
+    kept = [r["metric"] for r in runs(rows, current_segment(rows)) if r["status"] == "keep"]
+    print(min(kept) if kept else "none")
+
+
 def main(argv):
     if not argv or argv[0] in ("-h", "--help"):
         print(__doc__)
         return
     command, args = argv[0], argv[1:]
-    handlers = {"log": cmd_log, "segment": cmd_segment, "pause": cmd_pause, "status": cmd_status, "table": cmd_table}
+    handlers = {"log": cmd_log, "segment": cmd_segment, "pause": cmd_pause, "status": cmd_status, "table": cmd_table,
+                "next": cmd_next, "best": cmd_best}
     if command not in handlers:
         sys.exit(__doc__)
     handlers[command](*args)
