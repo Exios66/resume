@@ -23,7 +23,7 @@
 - Best kept before this run: 140
 - This run:
 ```
-METRIC polish_defects=1 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=1 METRIC pages=43 METRIC css_kb=55.8 METRIC audit_s=78.2 METRIC render_s=30 
+METRIC polish_defects=1 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=1 METRIC pages=43 METRIC css_kb=55.8 METRIC audit_s=78.2 METRIC render_s=30
 non-zero: {'heading ends with a one-word line': 1}
 ```
 
@@ -124,9 +124,9 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-58-citations-1280-light-footnotes.png`
-- `.hillclimb-shots/run-58-citations-375-light.png`
-- `.hillclimb-shots/run-58-citations-414-light-search.png`
+- [run-58-citations-1280-light-footnotes.png](../screenshots/run-58-citations-1280-light-footnotes.png)
+- [run-58-citations-375-light.png](../screenshots/run-58-citations-375-light.png)
+- [run-58-citations-414-light-search.png](../screenshots/run-58-citations-414-light-search.png)
 
 Reviewer notes: Completed the numbered-citation experiment (segment 10) with three repairs inside the same idea, then amended the run commit. (1) a.footnote-ref now carries 3px inline padding so every superscript citation number stays a real, clickable box (the audit had counted 64 invisible focusable findings across the eight viewport-theme combos). (2) scripts/post-render.py seats the end-of-document footnotes section inside <main> before the footer with a pinning unit test - Pandoc writes footnotes after the body, leaving top-level content outside any landmark (axe 'region' on every combo). (3) the flattened search-index body reads the label dot separators as semicolons (unit test added; '.a number x / 1.5'-style multiplication dots no longer exist in body prose) so a snippet wrap cannot start or end a line with a separator. Also updated the natd test that pinned one link per reference: each source entry now has the numbered source plus the return arrow, which is exactly what this experiment adds. Screenshots reviewed: home/report page at 375 light; natd source notes at 1280 light (numbered entries with doi links, verification tags and return arrows, no clutter); search results at 414 light for a live query with the type chips and a snippet that reads cleanly. Score 140 -> 1: axe 0, layout 0, type 1 (the accepted heading widow); the 17 inequivalent parenthetical links are gone from the reading text. All checks pass (233 tests).
 

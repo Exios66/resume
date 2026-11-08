@@ -18,7 +18,7 @@
 - Best kept before this run: 12
 - This run:
 ```
-METRIC polish_defects=4 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=4 METRIC pages=43 METRIC css_kb=54.8 METRIC audit_s=48.2 METRIC render_s=20 
+METRIC polish_defects=4 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=4 METRIC pages=43 METRIC css_kb=54.8 METRIC audit_s=48.2 METRIC render_s=20
 non-zero: {'separator starts a line': 2, 'separator ends a line': 1, 'heading ends with a one-word line': 1}
 ```
 
@@ -47,16 +47,16 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-55-empty-375-dark.png`
-- `.hillclimb-shots/run-55-filter-375-dark-focus.png`
-- `.hillclimb-shots/run-55-reports-1280-dark.png`
-- `.hillclimb-shots/run-55-reports-375-light.png`
-- `.hillclimb-shots/run-55-search-1280-dark.png`
-- `.hillclimb-shots/run-55-search-1280-light.png`
-- `.hillclimb-shots/run-55-search-375-dark.png`
-- `.hillclimb-shots/run-55-search-375-light.png`
-- `.hillclimb-shots/run-55-search-768-dark.png`
-- `.hillclimb-shots/run-55-search-768-light.png`
+- [run-55-empty-375-dark.png](../screenshots/run-55-empty-375-dark.png)
+- [run-55-filter-375-dark-focus.png](../screenshots/run-55-filter-375-dark-focus.png)
+- [run-55-reports-1280-dark.png](../screenshots/run-55-reports-1280-dark.png)
+- [run-55-reports-375-light.png](../screenshots/run-55-reports-375-light.png)
+- [run-55-search-1280-dark.png](../screenshots/run-55-search-1280-dark.png)
+- [run-55-search-1280-light.png](../screenshots/run-55-search-1280-light.png)
+- [run-55-search-375-dark.png](../screenshots/run-55-search-375-dark.png)
+- [run-55-search-375-light.png](../screenshots/run-55-search-375-light.png)
+- [run-55-search-768-dark.png](../screenshots/run-55-search-768-dark.png)
+- [run-55-search-768-light.png](../screenshots/run-55-search-768-light.png)
 
 Reviewer notes: Opened ten actual captures: six All pages search states at 375/768/1280 light/dark; filtered reports at 375 light and 1280 dark; empty appendix state at 375 dark; actual 375px dark keyboard-focus capture at 2x density. Responsive form is stacked on phones and side-by-side on tablet/desktop; 46px native selector and text labels remain readable, no overflow or clipped controls. Public portfolio data only. Browser selection gives exactly 3 report routes from 11 calibration matches and q/type URL parameters; Tab from input reaches select with :focus-visible and a 2px outline. Native picker Arrow/Enter selection was not established by preview, so no keyboard-choice pass is claimed. Tests verify exact subsets/order/restoration, URL reloads and invalid types, empty/Escape behavior, delayed/failed index readiness, and working no-JavaScript browse fallback. Initial targeted fallback assertion used the noscript wrapper (Playwright text matcher skips it); scoped to its actual paragraph, rerun 6 passed. Tests-only amend followed by fresh render/audit on b1e51e7: score 12 to 4, all 8 filter findings removed, none added; full gate 225 passed, 2 deselected, 611 subtests passed in 74.77s. Three existing snippet separator points plus the accepted heading widow remain.
 

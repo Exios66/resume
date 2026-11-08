@@ -15,7 +15,7 @@
 - Best kept before this run: 1
 - This run:
 ```
-METRIC polish_defects=0 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=0 METRIC pages=43 METRIC css_kb=55.8 METRIC audit_s=96.1 METRIC render_s=44 
+METRIC polish_defects=0 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=0 METRIC pages=43 METRIC css_kb=55.8 METRIC audit_s=96.1 METRIC render_s=44
 non-zero: none
 ```
 
@@ -76,8 +76,8 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-59-research-375-light-graduate.png`
-- `.hillclimb-shots/run-59-widow-375-light.png`
+- [run-59-research-375-light-graduate.png](../screenshots/run-59-research-375-light-graduate.png)
+- [run-59-widow-375-light.png](../screenshots/run-59-widow-375-light.png)
 
 Reviewer notes: Rephrased research.qmd's second section heading from 'Graduate research, UW–Madison' to 'Graduate research at UW–Madison' (same meaning; the comma left text-wrap: balance only a 2+1 split whose last line was the single token UW–MADISON, which this audit has counted as a widow since segment 3 and the owner had accepted). Screenshot reviewed at 375 light: the uppercase heading now balances as 'GRADUATE RESEARCH / AT UW–MADISON', ending on two words; the section's kicker and bullet entries below are unchanged. Score 1->0: polish_defects zero for the first time in this endeavour (axe, layout, error, structure, type and lint buckets all zero across the 43 pages and all viewports the audit covers). All checks pass (233 tests).
 
