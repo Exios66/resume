@@ -108,7 +108,7 @@ assert(m["Scarlet · Deceitful"]:find('class="bar c2"', 1, true), "deceitful use
 for _, who in ipairs({ "Scarlet · Deceitful", "Alan · Deceitful" }) do
   local vx, body = m[who]:match('<text class="val" x="([%d%.]+)" y="[%d%.]+" text%-anchor="end">([^<]*)</text>')
   assert(vx, who .. ": negative value label is end-anchored")
-  assert(tonumber(vx) - utf8.len(body) * 7.5 >= 190, who .. ": negative value label clears the row labels")
+  assert(tonumber(vx) - utf8.len(body) * 7.5 >= tonumber(m[who]:match('<text class="cat" x="([%d%.]+)"')) + 12, who .. ": negative value label clears the row labels")
 end
 
 local MAPRED = rows_of({ "Job", "Speedup" }, { { "word count", "3.8×" }, { "sort", "2.9×" }, { "grep", "2.3×" } })

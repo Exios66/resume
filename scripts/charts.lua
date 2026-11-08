@@ -194,10 +194,11 @@ local function mark(tip_value, tip_label, body)
 end
 
 -- Row label, right-aligned in the gutter, one or two lines centred on cy.
-local function row_label(label, cy)
+local function row_label(label, cy, gutter)
+  gutter = gutter or GUTTER
   local lines = M.wrap_label(label, 26)
-  if #lines == 1 then return text("cat", GUTTER - 12, cy + 4.5, "end", lines[1]) end
-  return text("cat", GUTTER - 12, cy - 3, "end", lines[1]) .. text("cat", GUTTER - 12, cy + 12, "end", lines[2])
+  if #lines == 1 then return text("cat", gutter - 12, cy + 4.5, "end", lines[1]) end
+  return text("cat", gutter - 12, cy - 3, "end", lines[1]) .. text("cat", gutter - 12, cy + 12, "end", lines[2])
 end
 
 -- Vertical gridlines and tick labels for a horizontal value axis.
@@ -264,7 +265,13 @@ function DRAW.bars(spec, rows)
   local lo, hi, ticks = domain(spec, vals, true)
   local top = spec.ref and 26 or 10
   local bottom = top + #rows * BAND
-  local sx = linear(lo, hi, GUTTER + (lo < 0 and LABEL_ROOM or 0), W - RIGHT)
+  -- Short category names should not spend 190px on an empty label gutter.
+  -- Keep the wider default for long labels; give short ones room without pushing
+  -- the zero line and every positive bar off the initial phone viewport.
+  local longest = 0
+  for _, row in ipairs(rows) do longest = math.max(longest, utf8.len(row[spec.label])) end
+  local gutter = math.min(GUTTER, math.max(100, longest * 9 + 32))
+  local sx = linear(lo, hi, gutter + (lo < 0 and LABEL_ROOM or 0), W - RIGHT)
   local out = { x_axis(ticks, sx, top, bottom, spec.unit) }
   if lo < 0 then out[#out + 1] = line("zero", sx(0), top, sx(0), bottom, PAINT.muted) end
   local signed = spec.signed == "true"
@@ -294,7 +301,7 @@ function DRAW.bars(spec, rows)
     local vx = sx(v)
     local tip = v >= 0 and text("val", vx + 6, y + BAND / 2 + 4.5, "start", value_text)
       or text("val", vx - 6, y + BAND / 2 + 4.5, "end", value_text)
-    out[#out + 1] = mark(value_text, label, hit(0, y, W, BAND) .. row_label(row[spec.label], y + BAND / 2)
+    out[#out + 1] = mark(value_text, label, hit(0, y, W, BAND) .. row_label(row[spec.label], y + BAND / 2, gutter)
       .. bar_path(color, sx(math.max(lo, 0)), vx, y + (BAND - BAR) / 2) .. tip)
   end
   return out, bottom + 28, legend, function(i) return i end

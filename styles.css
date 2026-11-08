@@ -419,8 +419,8 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 :root[data-theme="dark"] .page img.fig { background: #fff; padding: 10px; }
 
 /* Diagrams (inline SVG; colors via currentColor and tokens only) */
-.page figure.diagram { margin: 22px 0; padding: 14px 12px 12px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); }
-.diagram svg { display: block; width: 100%; height: auto; color: var(--ink); font-family: var(--sans); font-size: 14px; overflow: visible; }
+.page figure.diagram { margin: 22px 0; padding: 14px 12px 12px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); overflow-x: auto; }
+.diagram svg { display: block; width: 100%; min-width: 800px; height: auto; color: var(--ink); font-family: var(--sans); font-size: 14px; overflow: visible; }
 .diagram svg text { font-family: var(--sans); fill: currentColor; }
 .diagram .d-box { fill: var(--paper); stroke: currentColor; stroke-width: 1.4; }
 .diagram .d-accent { stroke: var(--accent); }
@@ -432,7 +432,13 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .diagram .d-arrow.d-accent { stroke: var(--accent); }
 .diagram .d-arrow.d-muted { stroke: var(--muted); }
 .diagram marker path { fill: currentColor; fill: context-stroke; stroke: none; }
-.diagram figcaption { margin-top: 10px; }
+.diagram figcaption { margin-top: 10px; position: sticky; left: 0; }
+.diagram figcaption::before { content: "Scroll sideways to see the whole diagram. "; display: block; font-style: italic; }
+@media (min-width: 1000px) {
+  .page figure.diagram { margin-left: -48px; margin-right: -48px; }
+  .diagram figcaption::before { display: none; }
+}
+
 .page figure.diagram-ecosystem { padding: 20px 16px 16px; }
 .diagram-ecosystem .d-title { font-size: 16px; font-weight: 600; }
 .diagram-ecosystem .d-code { font-family: var(--mono); font-size: 13px; }
@@ -609,10 +615,6 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   .chart-scroll img.fig { min-width: 700px; }
   .chart-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   .page figure.diagram { padding: 10px 8px 8px; overflow-x: auto; }
-  .diagram svg { min-width: 600px; }
-  .diagram-ecosystem svg { min-width: 720px; }
-  .diagram figcaption { position: sticky; left: 0; }
-  .diagram figcaption::before { content: "Scroll sideways to see the whole diagram. "; display: block; font-style: italic; }
   .timeline ul { padding-left: 18px; }
   .timeline li::before { left: -26px; }
 }
@@ -632,7 +634,9 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   .page figure, .stat, .caveat, .sample-doc, .page tr { break-inside: avoid; }
   .sample-doc pre, pre { max-height: none; overflow: visible; white-space: pre-wrap; border-color: #ccc; background: none; }
   .caveat { background: none; }
-  .diagram svg { color: #111; }
+  .page figure.diagram { overflow: visible; margin-left: 0; margin-right: 0; }
+  .diagram svg { color: #111; min-width: 0; }
+  .diagram figcaption::before { display: none; }
 }
 
 /* ==========================================================================
@@ -866,7 +870,8 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 .chart-legend .key { width: 12px; height: 12px; flex: none; border-radius: 3px; background: var(--chart-1); }
 .chart-legend .key.c2 { background: var(--chart-2); }
 .chart-legend .key.c1s { background: var(--chart-1-soft); }
-.chart svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--sans); font-size: 13px; }
+.chart-body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.chart svg { display: block; width: 100%; min-width: 640px; height: auto; overflow: visible; font-family: var(--sans); font-size: 13px; }
 .chart text { fill: var(--muted); }
 .chart text.cat { fill: var(--ink); }
 .chart text.val { fill: var(--ink); font-weight: 600; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
@@ -894,8 +899,8 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 .chart-tooltip strong { display: block; color: var(--ink); font-size: .95rem; font-variant-numeric: tabular-nums; }
 @media (max-width: 720px) {
   .page figure.chart { padding: 12px 10px 8px; }
-  .chart-body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .chart svg { min-width: 520px; }
+}
+@media (max-width: 800px) {
   .page figure.chart::after { content: "Scroll sideways to see the whole chart."; display: block; margin-top: 6px; font-size: .78rem; font-style: italic; color: var(--muted); }
 }
 @media (forced-colors: active) {
