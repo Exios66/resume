@@ -926,3 +926,20 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 
 /* 404 page: buttons line up with the text above them. */
 .not-found .actions { justify-content: flex-start; }
+
+/* Numbered source notes: native links, no popovers over the reading column. */
+a.footnote-ref { white-space: nowrap; font-weight: 600; padding-inline: 3px; }
+a.footnote-ref sup { font-size: 12px; line-height: 0; }
+a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
+.footnotes { max-width: 880px; margin: 24px auto 40px; padding: 28px 64px; background: var(--paper); border-radius: 14px; font-size: .9rem; line-height: 1.65; }
+.footnotes li { margin-block: 1em; scroll-margin-top: 84px; }
+.footnotes a { overflow-wrap: anywhere; text-decoration: underline; }
+.footnotes .footnote-back { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; min-height: 32px; margin-inline-start: .25em; vertical-align: middle; }
+@media (max-width: 720px) {
+  .footnotes { margin: 20px auto; padding: 24px 20px; border-radius: 0; }
+  .footnotes li { scroll-margin-top: 16px; }
+}
+@media print {
+  .footnotes { max-width: none; margin: 0; padding: 0; border-radius: 0; font-size: 9pt; }
+  .footnotes li { break-inside: avoid; }
+}

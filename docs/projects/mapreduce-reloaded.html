@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=aacbec2b91">
+<link rel="stylesheet" href="../styles.css?v=8085bdf1dd">
 <meta property="og:title" content="MapReduce-Reloaded — Jack J. Burleson">
 <meta property="og:description" content="A from-scratch MapReduce rebuild: a Go cluster and Python reference, a 24-item paper mapping, S3 storage, compression, fault injection and a small-scale VM evaluation. In active development.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -406,22 +406,6 @@ ul.task-list li input[type="checkbox"] {
         config.onUntrigger = onUntriggerFn;
       }
       window.tippy(el, config); 
-    }
-    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-    for (var i=0; i<noterefs.length; i++) {
-      const ref = noterefs[i];
-      tippyHover(ref, function() {
-        // use id or data attribute instead here
-        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-        try { href = new URL(href).hash; } catch {}
-        const id = href.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note) {
-          return note.innerHTML;
-        } else {
-          return "";
-        }
-      });
     }
     const xrefs = window.document.querySelectorAll('a.quarto-xref');
     const processXRef = (id, note) => {

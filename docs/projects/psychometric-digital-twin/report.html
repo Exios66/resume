@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=aacbec2b91">
+<link rel="stylesheet" href="../../styles.css?v=8085bdf1dd">
 <meta property="og:title" content="Psychometric Digital Twin: technical report — Jack J. Burleson">
 <meta property="og:description" content="Technical report on a PSYCH 755 study of LLM personas against classical ML for predicting PRCA communication apprehension: data, models, per-tier results, bias slices, secondary studies, reproduction and limits.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -785,22 +785,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         config.onUntrigger = onUntriggerFn;
       }
       window.tippy(el, config); 
-    }
-    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-    for (var i=0; i<noterefs.length; i++) {
-      const ref = noterefs[i];
-      tippyHover(ref, function() {
-        // use id or data attribute instead here
-        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-        try { href = new URL(href).hash; } catch {}
-        const id = href.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note) {
-          return note.innerHTML;
-        } else {
-          return "";
-        }
-      });
     }
     const xrefs = window.document.querySelectorAll('a.quarto-xref');
     const processXRef = (id, note) => {

@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=aacbec2b91">
+<link rel="stylesheet" href="../styles.css?v=8085bdf1dd">
 <meta property="og:title" content="Mailroom-ML — Jack J. Burleson">
 <meta property="og:description" content="A ModernBERT document classifier with calibrated confidence, a routing gate that decides which documents can skip an LLM, and a leak audit that caught a label leak in my own training data.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -429,22 +429,6 @@ ul.task-list li input[type="checkbox"] {
         config.onUntrigger = onUntriggerFn;
       }
       window.tippy(el, config); 
-    }
-    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-    for (var i=0; i<noterefs.length; i++) {
-      const ref = noterefs[i];
-      tippyHover(ref, function() {
-        // use id or data attribute instead here
-        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-        try { href = new URL(href).hash; } catch {}
-        const id = href.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note) {
-          return note.innerHTML;
-        } else {
-          return "";
-        }
-      });
     }
     const xrefs = window.document.querySelectorAll('a.quarto-xref');
     const processXRef = (id, note) => {

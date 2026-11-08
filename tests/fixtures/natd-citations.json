@@ -1,0 +1,104 @@
+[
+  {
+    "id": "cite1",
+    "short": "Levine, 2014",
+    "url": "https://doi.org/10.1177/0261927X14535916",
+    "full": "Levine, T. R. (2014). Truth-default theory (TDT): A theory of human deception and deception detection. *Journal of Language and Social Psychology, 33*(4), 378-392. [doi:10.1177/0261927X14535916](https://doi.org/10.1177/0261927X14535916) \\[Verified\\]"
+  },
+  {
+    "id": "cite2",
+    "short": "Bond & DePaulo, 2006",
+    "url": "https://doi.org/10.1207/s15327957pspr1003_2",
+    "full": "Bond, C. F., Jr., & DePaulo, B. M. (2006). Accuracy of deception judgments. *Personality and Social Psychology Review, 10*(3), 214-234. [doi:10.1207/s15327957pspr1003_2](https://doi.org/10.1207/s15327957pspr1003_2) \\[Verified\\]"
+  },
+  {
+    "id": "cite3",
+    "short": "Hartwig & Bond, 2011",
+    "url": "https://doi.org/10.1037/a0023589",
+    "full": "Hartwig, M., & Bond, C. F., Jr. (2011). Why do lie-catchers fail? A lens model meta-analysis of human lie judgments. *Psychological Bulletin, 137*(4), 643-659. [doi:10.1037/a0023589](https://doi.org/10.1037/a0023589) \\[Verified\\]"
+  },
+  {
+    "id": "cite4",
+    "short": "Serota et al., 2010",
+    "url": "https://doi.org/10.1111/j.1468-2958.2009.01366.x",
+    "full": "Serota, K. B., Levine, T. R., & Boster, F. J. (2010). The prevalence of lying in America: Three studies of self-reported lies. *Human Communication Research, 36*, 2-25. [doi:10.1111/j.1468-2958.2009.01366.x](https://doi.org/10.1111/j.1468-2958.2009.01366.x) \\[Partly verified: issue number not shown\\]"
+  },
+  {
+    "id": "cite5",
+    "short": "Clare, 2019",
+    "url": "https://doi.org/10.1093/hcr/hqz001",
+    "full": "Clare, D. D. (2019). Documenting the truth-default: The low frequency of spontaneous unprompted veracity assessments in deception detection. *Human Communication Research, 45*(3), 286-308. [doi:10.1093/hcr/hqz001](https://doi.org/10.1093/hcr/hqz001) \\[Partly verified: the author list is unconfirmed; Levine (2014) cited an earlier version as Clare & Levine\\]"
+  },
+  {
+    "id": "cite6",
+    "short": "Park & Levine, 2015",
+    "url": "https://doi.org/10.1111/hcre.12066",
+    "full": "Park, H. S., & Levine, T. R. (2015). Base rates, deception detection, and deception theory: A reply to Burgoon (2015). *Human Communication Research, 41*(3), 350-366. [doi:10.1111/hcre.12066](https://doi.org/10.1111/hcre.12066) \\[Verified\\]"
+  },
+  {
+    "id": "cite7",
+    "short": "Spitale et al., 2023",
+    "url": "https://doi.org/10.1126/sciadv.adh1850",
+    "full": "Spitale, G., Biller-Andorno, N., & Germani, F. (2023). AI model GPT-3 (dis)informs us better than humans. *Science Advances, 9*(26), eadh1850. [doi:10.1126/sciadv.adh1850](https://doi.org/10.1126/sciadv.adh1850) \\[Verified\\]"
+  },
+  {
+    "id": "cite8",
+    "short": "Jakesch et al., 2023",
+    "url": "https://doi.org/10.1073/pnas.2208839120",
+    "full": "Jakesch, M., Hancock, J. T., & Naaman, M. (2023). Human heuristics for AI-generated language are flawed. *Proceedings of the National Academy of Sciences*. [doi:10.1073/pnas.2208839120](https://doi.org/10.1073/pnas.2208839120) \\[Partly verified: volume, issue and article number unverified\\]"
+  },
+  {
+    "id": "cite9",
+    "short": "Sharma et al., 2024",
+    "url": "https://proceedings.iclr.cc/paper_files/paper/2024/hash/0105f7972202c1d4fb817da9f21a9663-Abstract-Conference.html",
+    "full": "Sharma, M., Tong, M., Korbak, T., Duvenaud, D., Askell, A., Bowman, S., et al. (2024). Towards understanding sycophancy in language models. In *Proceedings of the 12th International Conference on Learning Representations (ICLR 2024)*. [ICLR 2024 proceedings page](https://proceedings.iclr.cc/paper_files/paper/2024/hash/0105f7972202c1d4fb817da9f21a9663-Abstract-Conference.html) \\[Partly verified: author initials unchecked\\]"
+  },
+  {
+    "id": "cite10",
+    "short": "Zhou et al., 2024",
+    "url": "https://doi.org/10.18653/v1/2024.acl-long.198",
+    "full": "Zhou, K., Hwang, J. D., Ren, X., & Sap, M. (2024). Relying on the unreliable: The impact of language models' reluctance to express uncertainty. In *Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)* (pp. 3623-3643). [doi:10.18653/v1/2024.acl-long.198](https://doi.org/10.18653/v1/2024.acl-long.198) \\[Verified\\]"
+  },
+  {
+    "id": "cite11",
+    "short": "Kim et al., 2024",
+    "url": "https://doi.org/10.1145/3630106.3658941",
+    "full": "Kim, S. S. Y., Liao, Q. V., Vorvoreanu, M., Ballard, S., & Vaughan, J. W. (2024). \"I'm not sure, but...\": Examining the impact of large language models' uncertainty expression on user reliance and trust. In *Proceedings of the 2024 ACM Conference on Fairness, Accountability, and Transparency (FAccT '24)*. [doi:10.1145/3630106.3658941](https://doi.org/10.1145/3630106.3658941) \\[Verified\\]"
+  },
+  {
+    "id": "cite12",
+    "short": "Zheng et al., 2024",
+    "url": "https://doi.org/10.18653/v1/2024.findings-emnlp.888",
+    "full": "Zheng, M., Pei, J., Logeswaran, L., Lee, M., & Jurgens, D. (2024). When \"a helpful assistant\" is not really helpful: Personas in system prompts do not improve performances of large language models. In *Findings of the Association for Computational Linguistics: EMNLP 2024* (pp. 15126-15154). [doi:10.18653/v1/2024.findings-emnlp.888](https://doi.org/10.18653/v1/2024.findings-emnlp.888) \\[Verified\\]"
+  },
+  {
+    "id": "cite13",
+    "short": "Fazio et al., 2013",
+    "url": "https://doi.org/10.1037/a0028649",
+    "full": "Fazio, L. K., Barber, S. J., Rajaram, S., Ornstein, P. A., & Marsh, E. J. (2013). Creating illusions of knowledge: Learning errors that contradict prior knowledge. *Journal of Experimental Psychology: General, 142*(1), 1-5. [doi:10.1037/a0028649](https://doi.org/10.1037/a0028649) \\[Verified\\]"
+  },
+  {
+    "id": "cite14",
+    "short": "Ecker et al., 2010",
+    "url": "https://doi.org/10.3758/MC.38.8.1087",
+    "full": "Ecker, U. K. H., Lewandowsky, S., & Tang, D. T. W. (2010). Explicit warnings reduce but do not eliminate the continued influence of misinformation. *Memory & Cognition, 38*(8), 1087-1100. [doi:10.3758/MC.38.8.1087](https://doi.org/10.3758/MC.38.8.1087) \\[Verified\\]"
+  },
+  {
+    "id": "cite15",
+    "short": "Bastani et al., 2025",
+    "url": "https://doi.org/10.1073/pnas.2422633122",
+    "full": "Bastani, H., Bastani, O., Sungu, A., Ge, H., Kabakçı, Ö., & Mariman, R. (2025). Generative AI without guardrails can harm learning: Evidence from high school mathematics. *Proceedings of the National Academy of Sciences, 122*(26), e2422633122. [doi:10.1073/pnas.2422633122](https://doi.org/10.1073/pnas.2422633122) \\[Verified via repository record\\]"
+  },
+  {
+    "id": "cite16",
+    "short": "Kestin et al., 2025",
+    "url": "https://doi.org/10.1038/s41598-025-97652-6",
+    "full": "Kestin, G., Miller, K., Klales, A., Milbourne, T., & Ponti, G. (2025). AI tutoring outperforms in-class active learning: An RCT introducing a novel research-based design in an authentic educational setting. *Scientific Reports, 15*, 17458. [doi:10.1038/s41598-025-97652-6](https://doi.org/10.1038/s41598-025-97652-6) \\[Verified\\]"
+  },
+  {
+    "id": "cite17",
+    "short": "Barnett et al., 2005",
+    "url": "https://doi.org/10.1093/ije/dyh299",
+    "full": "Barnett, A. G., van der Pols, J. C., & Dobson, A. J. (2005). Regression to the mean: What it is and how to deal with it. *International Journal of Epidemiology, 34*(1), 215-220. [doi:10.1093/ije/dyh299](https://doi.org/10.1093/ije/dyh299) \\[Partly verified: DOI relayed by an aggregator\\]"
+  }
+]

@@ -151,6 +151,13 @@ class SearchBodyTests(unittest.TestCase):
     def test_valueless_class_attribute_does_not_crash(self):
         self.assertEqual(self.search_body("<div class>Text</div>"), "Text")
 
+    def test_label_separators_become_semicolons_in_flat_text(self):
+        self.assertEqual(self.search_body("<p>ModernBERT · training, calibration</p>"), "ModernBERT; training, calibration")
+        self.assertEqual(self.search_body("<p>A•B· C</p>"), "A; B; C")
+        # Punctuation present on printed page labels stays intact there; only the
+        # flat search text reads the separators as semicolons.
+        self.assertEqual(self.search_body("<p>A number x · 1.5</p>"), "A number x; 1.5")
+
 
 class RenderingIntegrityTests(unittest.TestCase):
     def test_no_page_has_duplicate_ids(self):

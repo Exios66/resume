@@ -165,7 +165,10 @@ class SearchBodyParser(HTMLParser):
 def search_body(fragment):
     parser = SearchBodyParser()
     parser.feed(fragment)
-    return " ".join("".join(parser.parts).split())
+    text = " ".join("".join(parser.parts).split())
+    # The dot separators carry meaning in rendered labels; flat one-line text reads
+    # them as list punctuation, and a wrap can land one at a line edge on phones.
+    return re.sub(r"\s*[•·]\s*", "; ", text)
 
 
 def build_search_index():
@@ -232,6 +235,35 @@ def harden_diagram_pages():
             page.write_text(fixed, encoding="utf-8")
 
 
+FOOTNOTES = re.compile(r'<section id="footnotes"[^>]*>.*?</section>\s*?', re.S)
+
+
+def seat_footnotes(text):
+    """Move an end-of-document footnotes section inside <main>.
+
+    Pandoc writes footnotes at the end of the template, after the body: top-level
+    content no landmark covers, which axe reports on every page view. Following a
+    citation back and forth must stay inside the article.
+    """
+    section = FOOTNOTES.search(text)
+    if not section:
+        return text
+    end_of_main = "</main>"
+    if section.start() > text.find(end_of_main) > -1:
+        text = text[:section.start()] + text[section.end():]
+        text = text.replace(end_of_main, section.group(0) + end_of_main, 1)
+    return text
+
+
+def seat_footnote_pages():
+    """Apply seat_footnotes to every rendered page."""
+    for page in DOCS.rglob("*.html"):
+        text = page.read_text(encoding="utf-8")
+        fixed = seat_footnotes(text)
+        if fixed != text:
+            page.write_text(fixed, encoding="utf-8")
+
+
 def main():
     """Prepare docs for GitHub Pages, remove the search index, and publish the PDF."""
     DOCS.mkdir(exist_ok=True)
@@ -239,6 +271,7 @@ def main():
     (DOCS / "search.json").unlink(missing_ok=True)
     dedupe_titles()
     harden_diagram_pages()
+    seat_footnote_pages()
     cache_bust_pages()
     build_search_index()
     publish_pdf()
