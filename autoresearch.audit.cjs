@@ -335,7 +335,7 @@ function lints() {
           const selectors = ['.site-header', '.site-footer', '.project-nav', '.page-toc',
             '.project-pager', '.site-search', '.search-suggest', '#search-status', '#search-results'];
           return { controls: selectors.flatMap(sel => [...document.querySelectorAll(sel)].filter(visible).map(() => sel)),
-            titleHidden: ![...document.querySelectorAll('main h1')].some(visible) };
+            titleHidden: ![...document.querySelectorAll('main h1, main [role="heading"][aria-level="1"]')].some(visible) };
         });
         add('layout', 'screen navigation visible in print', printed.controls.length);
         note(c, p, 'print navigation', printed.controls);
