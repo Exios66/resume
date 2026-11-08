@@ -122,7 +122,7 @@ One failure is large. Llama 3.1's interpersonal MAE rose from 4.67 at demos to 8
 
 Error in points hid how poorly the personas ranked people. At the transit tier:
 
-| Agent | Target | Band accuracy | Low-vs-high AUC |
+| Agent | Target | Band accuracy | Low vs high AUC |
 | --- | --- | --- | --- |
 | Random forest | Group | 0.481 | 0.717 |
 | Random forest | Interpersonal | 0.531 | 0.738 |
