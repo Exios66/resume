@@ -433,10 +433,13 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .page figure.diagram:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 /* Tables */
-.page table { width: 100%; margin: 16px 0 20px; border-collapse: collapse; font-size: .9rem; font-variant-numeric: tabular-nums; }
+.page table { width: 100%; margin: 16px 0 20px; border-collapse: collapse; font-size: .9rem; }
 .page caption { padding: 0 0 8px; font-size: .84rem; color: var(--muted); text-align: left; caption-side: bottom; }
 .page th, .page td { padding: 8px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
 .page thead th { background: var(--accent-soft); font-weight: 700; border-bottom: 2px solid var(--accent); }
+/* Tabular figures only where figures actually line up: in Inter they widen the
+   hyphen, which put visible gaps into labels like DeepSeek-R1-Distill-Llama-8B. */
+.page :is(td, th)[align="right"], .page .text-end, .page td.num { font-variant-numeric: tabular-nums; }
 .page td[align="right"], .page th[align="right"], .page .text-end { text-align: right; }
 .page td[align="center"], .page th[align="center"] { text-align: center; }
 .page tbody tr:last-child td { border-bottom: 0; }
