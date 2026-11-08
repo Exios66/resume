@@ -516,7 +516,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 }
 
 /* Search */
-.site-search { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 12px; }
+@media screen { .site-search { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 12px; } }
 .site-search select { min-height: 46px; }
 @media (max-width: 720px) { .site-search { grid-template-columns: minmax(0, 1fr); } }
 .site-search label { display: block; margin-bottom: 6px; font-weight: 600; }

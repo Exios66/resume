@@ -525,6 +525,8 @@ def test_search_type_filter_url_and_restoration(site, width, theme):
         expect(control).to_have_value("all")
         expect(results).to_have_count(11)
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+        page.emulate_media(media="print")
+        expect(page.locator("form.site-search")).to_be_hidden()
     finally:
         page.close()
 
