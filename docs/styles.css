@@ -423,6 +423,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .page td[align="right"], .page th[align="right"], .page .text-end { text-align: right; }
 .page td[align="center"], .page th[align="center"] { text-align: center; }
 .page tbody tr:last-child td { border-bottom: 0; }
+.page td code { overflow-wrap: anywhere; }
 
 /* Timeline (iteration history) */
 .timeline ul { list-style: none; margin: 14px 0 20px; padding: 0 0 0 22px; border-left: 2px solid var(--rule); }
@@ -489,10 +490,7 @@ h2.group-title, .group-title { display: flex; align-items: baseline; gap: 10px; 
 
 /* Code */
 code { font: 400 .88em/1.4 var(--mono); }
-/* Quarto sets code { white-space: pre } and relaxes it only inside p and dd, so inline code in a
-   table cell or list item could not wrap at its spaces. break-word keeps tokens whole unless one
-   is wider than its line, so a table never crushes a path into fragments to make room. */
-:not(pre) > code { padding: 1px 5px; background: var(--accent-soft); border-radius: 4px; overflow-wrap: break-word; white-space: pre-wrap; }
+:not(pre) > code { padding: 1px 5px; background: var(--accent-soft); border-radius: 4px; overflow-wrap: anywhere; }
 pre, div.sourceCode {
   margin: 14px 0 18px; padding: 12px 14px; overflow-x: auto; color: var(--ink);
   background: var(--bg); border: 1px solid var(--rule); border-radius: 8px;
