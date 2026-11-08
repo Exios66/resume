@@ -36,3 +36,6 @@ Each progressing candidate needs its own experiment commit, fixed-segment baseli
 
 ## Current follow-on queue
 Native chart/source navigation and coordinated source reading are completed in PR110. See [uncovered-aspects-queue.md](uncovered-aspects-queue.md) for the ranked next objectives and required evaluations. A zero score covers only the fixed measured criteria.
+
+## MapReduce visualization research
+[Plan and review checkpoints](mapreduce-visualization-plan.md), [verification](mapreduce-verification.md), and [next project targets](mapreduce-follow-on.md). Keep experiment conditions, raw values, design limits and native source navigation connected in every new visualization.

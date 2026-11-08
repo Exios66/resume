@@ -6,9 +6,9 @@ Base: merged main bd2605c (PR110). No open PRs existed at the initial review rea
 
 Pinned source revision: 4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387. Official repository evaluation and benchmark README checked directly after the local Firecrawl endpoint refused connections twice. No upstream experiment was rerun.
 
-- E2 with an injected slow worker: backups off17.58s, on11.24s; medians of three runs per setting. Fixed setting order, not drift-controlled. The portfolio overview rounds these to17.6/11.2; new source tables retain the pinned precision.
-- E2-pairs without a slow worker: mean on-minus-off difference−0.11s, reported95% paired interval−0.38 to+0.16s; ten interleaved pairs. The interval crosses zero and does not prove zero cost. Do not mix this mean difference with the separate medians8.03/8.20.
-- Shared course VM: four containers on4vCPU/8GB, one disk. No comparison of absolute throughput to the paper's large cluster, no measured LATE result.
+- E2 with an injected slow worker: backups off 17.58s, on 11.24s; medians of three runs per setting. Fixed setting order, not drift-controlled. The portfolio overview rounds these to 17.6/11.2; new source tables retain the pinned precision.
+- E2-pairs without a slow worker: mean on-minus-off difference −0.11s, reported 95% paired interval −0.38 to +0.16s; ten interleaved pairs. The interval crosses zero and does not prove zero cost. Do not mix this mean difference with the separate medians 8.03/8.20.
+- Shared course VM: four containers on 4 vCPU/8 GB, one disk. No comparison of absolute throughput to the paper's large cluster, no measured LATE result.
 
 Source links:
 https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/evaluation.md#backup-tasks-54
@@ -24,7 +24,7 @@ Fixed audit before source edits: at every normal viewport/theme, one point per m
 ## Checkpoint review for each step
 
 Before implementation: confirm source values, estimand, conditions, units, limitations, expected SVG geometry and keyboard/no-JS/print behavior.
-After candidate render: review source diff against this plan, exact source-table/mark agreement, axis zero/bounds, unique targets, row identity, tests added only for intended new markup/behavior. Check all affected figures at375/1280 in both themes, plus relevant tablet/preference states.
+After candidate render: review source diff against this plan, exact source-table/mark agreement, axis zero/bounds, unique targets, row identity, tests added only for intended new markup/behavior. Check all affected figures at 375/1280 in both themes, plus relevant tablet/preference states.
 Before keep: full correctness gate on exact candidate commit, reviewed screenshots, findings delta and keep/discard record.
 Before merge: review the entire main-to-PR diff, enumerate reviewer requests/unresolved threads, patch valid findings and revalidate; resolve only addressed threads. A skipped bot is not an approval. Normal expected-head merge only after checks.
 
