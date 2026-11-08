@@ -104,6 +104,10 @@ function inspect(mobile) {
   // Typography. Separators (• ·) that start or end a wrapped line, and headings whose last line is one word.
   const charRect = (node, i) => { const rg = document.createRange(); rg.setStart(node, i); rg.setEnd(node, i + 1);
     return rg.getClientRects()[0]; };
+  // A character outside the box of an ancestor that clips its overflow is not seen.
+  const clipped = (el, q) => { for (let a = el; a && a !== document.body; a = a.parentElement) {
+    if (getComputedStyle(a).overflowX === 'visible') continue; const b = a.getBoundingClientRect();
+    if (q.right <= b.left + 0.5 || q.left >= b.right - 0.5) return true; } return false; };
   const sameLine = (a, b) => a && b && Math.abs((a.top + a.height / 2) - (b.top + b.height / 2)) <= 6;
   const tw = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
   const chars = [];
@@ -119,7 +123,7 @@ function inspect(mobile) {
       if (m.textContent[i].trim()) seq.push([m, i]);
     seq.forEach(([m, i], k) => {
       if (m !== n || !/[•·]/.test(m.textContent[i])) return;
-      const here = charRect(m, i); if (!here || !here.width) return;
+      const here = charRect(m, i); if (!here || !here.width || clipped(m.parentElement, here)) return;
       const before = k > 0 ? charRect(...seq[k - 1]) : null;
       const after = k < seq.length - 1 ? charRect(...seq[k + 1]) : null;
       if (before && !sameLine(before, here)) out.sepStart++;
