@@ -207,6 +207,42 @@ function inspect(mobile) {
   return out;
 }
 
+// Chart evidence: keep the visual and its authored source table connected.
+// Run after ordinary layout inspection so focus cannot change that sample.
+function inspectChartEvidence() {
+  const navigation = [], linking = [];
+  const visible = el => !!el && el.getBoundingClientRect().width > 0 && el.getBoundingClientRect().height > 0
+    && getComputedStyle(el).visibility !== 'hidden';
+  const normalized = text => text.replace(/\s+/g, ' ').trim();
+  for (const figure of document.querySelectorAll('figure.chart')) {
+    const caption = figure.querySelector('figcaption');
+    const title = normalized(caption.textContent);
+    const table = figure.nextElementSibling;
+    const link = [...figure.querySelectorAll('a[href]')].find(a => table && table.id && a.hash === '#' + table.id);
+    const back = table && table.nextElementSibling && [...table.nextElementSibling.querySelectorAll('a[href]')]
+      .find(a => caption.id && a.hash === '#' + caption.id);
+    if (!table || table.tagName !== 'TABLE' || !visible(link) || !visible(back)
+      || document.querySelectorAll('[id="' + (table && table.id) + '"]').length !== 1
+      || !table.hasAttribute('tabindex') || !caption.hasAttribute('tabindex')) navigation.push(title);
+    const rows = table && table.tagName === 'TABLE' ? [...table.querySelectorAll('tbody tr')] : [];
+    const marks = [...figure.querySelectorAll('.mark')];
+    const readout = figure.querySelector('.chart-readout');
+    let linked = !!rows.length && !!marks.length && visible(readout);
+    for (const mark of [marks[0], marks[marks.length - 1]].filter(Boolean)) {
+      mark.focus({preventScroll: true});
+      const name = mark.getAttribute('data-tip-label') || '';
+      const row = rows.find(r => name.startsWith(normalized(r.cells[0].textContent)));
+      const cells = row ? [...row.cells].map(c => normalized(c.textContent)) : [];
+      linked = linked && !!row && getComputedStyle(row).outlineStyle !== 'none'
+        && parseFloat(getComputedStyle(row).outlineWidth) >= 2
+        && cells.every(cell => normalized(readout.textContent).includes(cell));
+      mark.blur();
+    }
+    if (!linked) linking.push(title);
+  }
+  return {navigation, linking};
+}
+
 // Exercise discovery against real indexed results, preserving the unfiltered set.
 // Labels must describe the destination; filters must retain every matching route.
 async function inspectSearch(page) {
@@ -324,6 +360,13 @@ function lints() {
         add('type', 'heading ends with a one-word line', r.headingWidows);
         note(c, p, 'separator starts line', r.where.sepStart); note(c, p, 'separator ends line', r.where.sepEnd);
         note(c, p, 'heading widow', r.where.widows);
+      }
+      if (!c.layoutOnly) {
+        const evidence = await page.evaluate(inspectChartEvidence);
+        add('structure', 'chart source and return navigation', evidence.navigation.length);
+        add('structure', 'chart focus linked to full source row', evidence.linking.length);
+        note(c, p, 'chart evidence navigation', evidence.navigation);
+        note(c, p, 'chart linked reading', evidence.linking);
       }
       // Paper has no use for screen navigation. Inspect CSS print media once per
       // built page, while ensuring that its primary reading title survives.
