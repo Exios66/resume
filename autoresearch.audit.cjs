@@ -265,7 +265,7 @@ function inspectMapReduceEvidence() {
   if (marks.length !== 2 || !marks.some(m => Math.abs(number(m.dataset.tipValue) - 17.58) < 1e-6)
     || !marks.some(m => Math.abs(number(m.dataset.tipValue) - 11.24) < 1e-6)
     || duration.querySelectorAll('.bar').length !== 2
-    || !/three runs/i.test(durationText) || !/fixed setting order/i.test(durationText)
+    || !/0\.2\s*CPU/i.test(durationText) || !/three runs/i.test(durationText) || !/fixed setting order/i.test(durationText)
     || !/not drift-controlled/i.test(durationText)) failures.push('slow-worker duration with experiment limits');
   const range = uncertainty && uncertainty.querySelector('.interval-range');
   const point = uncertainty && uncertainty.querySelector('.mark .dot');
@@ -281,7 +281,7 @@ function inspectMapReduceEvidence() {
   const cells = uncertainty ? [...uncertainty.querySelectorAll('table tbody tr:first-child td')].slice(1, 5).map(c => number(c.textContent)) : [];
   const expected = [-.11, -.38, .16, 10];
   const uncertaintyText = text(uncertainty);
-  if (!geometry || cells.length !== 4 || cells.some((n, i) => Math.abs(n - expected[i]) > 1e-6)
+  if (!geometry || cells.length !== 4 || cells.some((n, i) => !Number.isFinite(n) || Math.abs(n - expected[i]) > 1e-6)
     || !/95%/.test(uncertaintyText) || !/interleaved/i.test(uncertaintyText)
     || !/does not prove zero cost/i.test(uncertaintyText)) failures.push('paired effect interval across no change, with limits');
   return failures;

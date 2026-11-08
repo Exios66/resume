@@ -741,3 +741,23 @@ def test_mapreduce_interval_distinguishes_mean_bounds_and_zero(site, width, them
         expect(plot.locator(".interval-range")).to_have_css("stroke-width", "2px")
     finally:
         page.close()
+
+
+def test_mapreduce_evidence_audit_rejects_wrong_cpu_and_missing_measurement(site):
+    """Review regression: apparently plausible plots cannot hide misstated context."""
+    browser, base = site
+    page = browser.new_page()
+    audit = (ROOT / "autoresearch.audit.cjs").read_text()
+    start = audit.index("function inspectMapReduceEvidence()")
+    end = audit.index("// Exercise discovery", start)
+    inspect = "() => { " + audit[start:end] + "; return inspectMapReduceEvidence(); }"
+    try:
+        page.goto(base + "projects/mapreduce-reloaded.html")
+        assert page.evaluate(inspect) == []
+        page.locator('#mr-backup-duration > p').first.evaluate("el => el.textContent = el.textContent.replace('0.2 CPU', '0.5 CPU')")
+        assert "slow-worker duration with experiment limits" in page.evaluate(inspect)
+        page.reload()
+        page.locator('#mr-backup-uncertainty table tbody td').nth(1).evaluate("el => el.textContent = '--'")
+        assert "paired effect interval across no change, with limits" in page.evaluate(inspect)
+    finally:
+        page.close()
