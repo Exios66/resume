@@ -853,6 +853,3 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
   .page figure.chart::after, .chart-tooltip { display: none; }
   .chart .mark .hit { fill: none; stroke: none; }
 }
-
-/* 404 page: buttons line up with the text above them. */
-.not-found .actions { justify-content: flex-start; }

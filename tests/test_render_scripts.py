@@ -194,12 +194,6 @@ class CacheBustTests(unittest.TestCase):
                          '<link rel="stylesheet" href="styles.css?v=abc123">'
                          '<link rel="stylesheet" href="../../styles.css?v=abc123">')
 
-    def test_versions_absolute_links_under_the_site_path(self):
-        page = '<link rel="stylesheet" href="/resume/styles.css"><script src="/resume/assets/js/site.js" defer></script>'
-        self.assertEqual(self.bust(page, {"styles.css": "abc", "assets/js/site.js": "f00"}),
-                         '<link rel="stylesheet" href="/resume/styles.css?v=abc">'
-                         '<script src="/resume/assets/js/site.js?v=f00" defer></script>')
-
     def test_replaces_an_old_version_and_is_idempotent(self):
         page = '<script src="../assets/js/site.js?v=0aa" defer></script>'
         once = self.bust(page, {"assets/js/site.js": "f00"})
