@@ -557,6 +557,14 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   .page table:not(.stack) :is(th, td) { padding: 7px 8px; }
   .page table:not(.stack) :is(th, td):first-child { padding-left: 2px; }
   .page table:not(.stack) :is(th, td):last-child { padding-right: 2px; }
+  /* Row labels stay put while a wide number grid scrolls sideways, so a reader can
+     always see what a figure belongs to. The soft edge appears only while it scrolls
+     (site.js sets data-scrolls), showing there is more past the label column. */
+  .page table:not(.stack) :is(th, td):first-child { position: sticky; left: 0; }
+  .page table:not(.stack) :is(td):first-child { background: var(--paper); }
+  .page table:not(.stack)[data-scrolls] :is(th, td):first-child {
+    box-shadow: 10px 0 10px -8px color-mix(in srgb, var(--ink) 40%, transparent);
+  }
   /* Text tables: each row becomes a block, each cell labelled with its column. */
   .page table.stack, .page table.stack tbody, .page table.stack tr, .page table.stack td { display: block; width: auto; }
   .page table.stack { overflow: visible; border-top: 2px solid var(--accent); }
