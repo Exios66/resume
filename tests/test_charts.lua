@@ -242,4 +242,28 @@ assert(compact:find('<svg viewBox="0 0 320 ', 1, true), "compact bar geometry us
 for _, hitbox in ipairs(spans(compact)) do assert(hitbox[3] <= 320, "compact hit box stays inside its viewBox") end
 fails("plot-width requires bars", { kind = "bars", label = "Job", value = "Speedup", ["plot-width"] = "200" }, MAPRED)
 
+-- An estimate and its confidence interval are different from two endpoints.
+local interval_rows = rows_of({ "Comparison", "Mean", "Low", "High" }, {
+  { "Backups on minus off", "−0.11", "−0.38", "+0.16" },
+})
+local interval_spec = { kind = "interval", title = "Paired effect", label = "Comparison", value = "Mean",
+  lower = "Low", upper = "High", unit = "s", min = "-0.5", max = "0.5", ["interval-label"] = "95% paired interval" }
+local ci = CHARTS.render(interval_spec, interval_rows)
+assert_eq(count(ci, '<g class="mark"'), 1, "single interval estimate is valid")
+assert(ci:find('data-source-row="1"', 1, true), "interval mark retains source-row identity")
+assert(ci:find('data-tip-value="−0.11 s; −0.38 s to +0.16 s"', 1, true), "interval tip preserves all three values")
+assert(ci:find('95% paired interval', 1, true), "confidence level is named")
+local lx, hx = ci:match('<line class="interval%-range c1" x1="([%d%.]+)" y1="[%d%.]+" x2="([%d%.]+)"')
+local mx = ci:match('<circle class="dot c1" cx="([%d%.]+)"')
+local zx = ci:match('<line class="ref" x1="([%d%.]+)"')
+lx, hx, mx, zx = tonumber(lx), tonumber(hx), tonumber(mx), tonumber(zx)
+assert(lx < mx and mx < zx and zx < hx, "signed mean and zero lie correctly inside the interval")
+assert(math.abs((mx - lx) / (hx - lx) - .5) < .002, "mean placement follows source values")
+assert(math.abs((zx - lx) / (hx - lx) - .38 / .54) < .002, "zero placement follows source bounds")
+fails("interval bounds must contain the estimate", interval_spec,
+  rows_of({ "Comparison", "Mean", "Low", "High" }, { { "bad", "0.2", "0.3", "0.4" } }))
+fails("interval axis must include zero and all bounds",
+  { kind = "interval", label = "Comparison", value = "Mean", lower = "Low", upper = "High", min = "0" }, interval_rows)
+fails("needs at least one row", interval_spec, {})
+
 print("chart unit tests passed")

@@ -413,8 +413,59 @@ function DRAW.strip(spec, rows)
   return out, 8 + #rows * PANEL, { to_name, from_name }, nil
 end
 
+--- Draw signed estimates and intervals from the same source-table row.
+-- Bounds must contain the estimate; the axis must contain every bound and zero.
+function DRAW.interval(spec, rows)
+  column(spec, rows, spec.label); column(spec, rows, spec.value)
+  column(spec, rows, spec.lower); column(spec, rows, spec.upper)
+  local means, lows, highs = values(spec, rows, spec.value), values(spec, rows, spec.lower), values(spec, rows, spec.upper)
+  local lo, hi = 0, 0
+  for i = 1, #rows do
+    if lows[i] > means[i] or means[i] > highs[i] then fail(spec, "interval bounds must contain the estimate") end
+    lo, hi = math.min(lo, lows[i]), math.max(hi, highs[i])
+  end
+  local requested_lo, requested_hi = tonumber(spec.min) or lo, tonumber(spec.max) or hi
+  if requested_lo > lo or requested_hi < hi then fail(spec, "interval axis must include zero and all bounds") end
+  local ticks = M.nice_ticks(requested_lo, requested_hi, 4)
+  lo, hi = ticks[1], ticks[#ticks]
+  local top, band, width = 70, 120, 320
+  local bottom = top + #rows * band
+  local sx = linear(lo, hi, 44, width - 24)
+  local out = { x_axis(ticks, sx, top, bottom, spec.unit),
+    line("ref", sx(0), top - 8, sx(0), bottom, PAINT.muted),
+    text("ref-label", sx(0), top - 12, "middle", "no change") }
+  for i, row in ipairs(rows) do
+    local cy = top + (i - 1) * band + 32
+    local lx, mx, hx = sx(lows[i]), sx(means[i]), sx(highs[i])
+    local labels = M.wrap_label(row[spec.label], 26)
+    local category = text("cat", 0, top + (i - 1) * band - 48, "start", labels[1])
+    if labels[2] then category = category .. text("cat", 0, top + (i - 1) * band - 32, "start", labels[2]) end
+    -- Confidence level belongs in the accessible name; tip numbers follow
+    -- the source cells in column order without an extra numeric confidence label.
+    local tip = M.fmt(means[i], spec.unit, true) .. "; " .. M.fmt(lows[i], spec.unit, true) .. " to " .. M.fmt(highs[i], spec.unit, true)
+    out[#out + 1] = mark(tip, row[spec.label] .. " (mean and " .. (spec["interval-label"] or "interval") .. ")",
+      hit(0, top + (i - 1) * band, width, band) .. category
+      .. line("interval-range c1", lx, cy, hx, cy, PAINT.c1)
+      .. line("interval-cap c1", lx, cy - 7, lx, cy + 7, PAINT.c1)
+      .. line("interval-cap c1", hx, cy - 7, hx, cy + 7, PAINT.c1)
+      .. dot("c1", mx, cy)
+      .. text("val", lx, cy - 14, "middle", M.fmt(lows[i], spec.unit, true))
+      .. text("val", hx, cy - 14, "middle", M.fmt(highs[i], spec.unit, true))
+      .. text("val", mx, cy + 24, "middle", M.fmt(means[i], spec.unit, true)), i)
+  end
+  return out, bottom + 34, {}, nil
+end
+
 local function summary(spec, rows)
   if spec.summary then return spec.summary end
+  if spec.kind == "interval" then
+    local parts = {}
+    for _, row in ipairs(rows) do
+      parts[#parts + 1] = row[spec.label] .. " mean " .. row[spec.value] .. ", "
+        .. (spec["interval-label"] or "interval") .. " " .. row[spec.lower] .. " to " .. row[spec.upper]
+    end
+    return (spec.title or "Chart") .. ": " .. table.concat(parts, "; ") .. ". Zero is no change. Full values in the table below."
+  end
   local parts = {}
   for _, row in ipairs(rows) do
     local cells = {}
@@ -442,8 +493,10 @@ end
 function M.render(spec, rows)
   local draw = DRAW[spec.kind or ""]
   if not draw then fail(spec, "unknown kind '" .. tostring(spec.kind) .. "'") end
-  if #rows < 2 then fail(spec, "needs at least two rows") end
-  local width = tonumber(spec["plot-width"]) or W
+  if spec.kind == "interval" then
+    if #rows == 0 then fail(spec, "needs at least one row") end
+  elseif #rows < 2 then fail(spec, "needs at least two rows") end
+  local width = spec.kind == "interval" and 320 or (tonumber(spec["plot-width"]) or W)
   if spec["plot-width"] and (spec.kind ~= "bars" or not tonumber(spec["plot-width"]) or width < 320 or width > W) then
     fail(spec, "plot-width requires bars and a width from 320 to 640")
   end

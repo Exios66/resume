@@ -118,6 +118,22 @@ Lower is faster. These saved medians give more precision than the rounded overvi
 
 :::
 
+::: {#mr-backup-uncertainty .mr-experiment}
+
+### Backups without an injected straggler
+
+A separate E2 experiment used ten interleaved pairs on the same VM. The dot shows the mean difference, **backups on minus off**; the whisker shows the reported 95% paired interval.[^mr-e2]
+
+::: {.chart kind="interval" title="No slow worker: mean difference and 95% interval (s)" label="Comparison" value="Mean difference (s)" lower="95% lower (s)" upper="95% upper (s)" unit="s" min="-0.5" max="0.5" interval-label="95% paired interval"}
+| Comparison | Mean difference (s) | 95% lower (s) | 95% upper (s) | Pairs |
+| --- | ---: | ---: | ---: | ---: |
+| Backups on minus off | −0.11 | −0.38 | +0.16 | 10 |
+:::
+
+Negative means faster with backups; positive means slower. The interval crosses no change and **does not prove zero cost**. It describes the mean paired difference, not the spread of individual runs.
+
+:::
+
 The [final report](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/report.md) links the raw results, design decisions and reproduction steps.
 
 [^mr-e2]: Source: [E2 evaluation at revision 4dd1ca4](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/evaluation.md#backup-tasks-54) and [benchmark notes](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/bench/README.md#e2-backup-tasks-and-a-straggler). Reported measurements, not rerun here.
