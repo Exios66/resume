@@ -281,6 +281,14 @@ for _, bounds in ipairs({ { min = "-0.38", max = "0.16" }, { min = "-0.38" }, { 
 end
 
 
+local zero_interval = rows_of({ "Comparison", "Mean", "Low", "High" }, { { "No difference", "0", "0", "0" } })
+assert(CHARTS.render({ kind = "interval", label = "Comparison", value = "Mean", lower = "Low", upper = "High" }, zero_interval),
+  "automatic domain expands a collapsed interval")
+for _, bounds in ipairs({ { min = "0", max = "0" }, { max = "0" } }) do
+  fails("interval axis needs a positive span",
+    { kind = "interval", label = "Comparison", value = "Mean", lower = "Low", upper = "High", min = bounds.min, max = bounds.max }, zero_interval)
+end
+
 fails("integer width", { kind = "bars", label = "Job", value = "Speedup", ["plot-width"] = "320.5" }, MAPRED)
 
 print("chart unit tests passed")

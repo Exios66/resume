@@ -426,6 +426,7 @@ function DRAW.interval(spec, rows)
   end
   local requested_lo, requested_hi = tonumber(spec.min) or lo, tonumber(spec.max) or hi
   if requested_lo > lo or requested_hi < hi then fail(spec, "interval axis must include zero and all bounds") end
+  if spec.max and requested_hi == requested_lo then fail(spec, "interval axis needs a positive span") end
   local ticks = M.nice_ticks(requested_lo, requested_hi, 4)
   -- Nice ticks may expand inferred ends, but authored bounds define the axis.
   if spec.min then ticks[1] = requested_lo end
