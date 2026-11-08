@@ -445,39 +445,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>One failure is large. Llama 3.1’s interpersonal MAE rose from 4.67 at demos to 8.17 at transit, its band accuracy fell from 51.9% to 15.4%, and its mean signed error went from -2.21 to +6.52. It began predicting high apprehension for people whose transit answers were added. Version 2’s rewrite did not remove it (transit 8.23). In the version 3 ablations the bundled transit tier gave 7.77, while public transit alone gave 4.85, open text alone 5.82 and ride-share alone 5.92. Only the combined bundle triggered it. I do not know why, and I did not test an explanation.</p>
 <h3 id="band-discrimination">Band discrimination</h3>
 <p>Error in points hid how poorly the personas ranked people. At the transit tier:</p>
-<table class="caption-top">
+<table class="caption-top stack" role="table">
 <thead>
-<tr class="header">
-<th>Agent</th>
-<th>Target</th>
-<th>Band accuracy</th>
-<th>Low vs high AUC</th>
+<tr class="header" role="row">
+<th role="columnheader">Agent</th>
+<th role="columnheader">Target</th>
+<th role="columnheader">Band accuracy</th>
+<th role="columnheader">Low vs high AUC</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Random forest</td>
-<td>Group</td>
-<td>0.481</td>
-<td>0.717</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Agent">Random forest</td>
+<td role="cell" data-label="Target">Group</td>
+<td class="num" role="cell" data-label="Band accuracy">0.481</td>
+<td class="num" role="cell" data-label="Low vs high AUC">0.717</td>
 </tr>
-<tr class="even">
-<td>Random forest</td>
-<td>Interpersonal</td>
-<td>0.531</td>
-<td>0.738</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Agent">Random forest</td>
+<td role="cell" data-label="Target">Interpersonal</td>
+<td class="num" role="cell" data-label="Band accuracy">0.531</td>
+<td class="num" role="cell" data-label="Low vs high AUC">0.738</td>
 </tr>
-<tr class="odd">
-<td>DeepSeek v2</td>
-<td>Group</td>
-<td>0.358</td>
-<td>0.527</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Agent">DeepSeek v2</td>
+<td role="cell" data-label="Target">Group</td>
+<td class="num" role="cell" data-label="Band accuracy">0.358</td>
+<td class="num" role="cell" data-label="Low vs high AUC">0.527</td>
 </tr>
-<tr class="even">
-<td>DeepSeek v2</td>
-<td>Interpersonal</td>
-<td>0.363</td>
-<td>0.488</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Agent">DeepSeek v2</td>
+<td role="cell" data-label="Target">Interpersonal</td>
+<td class="num" role="cell" data-label="Band accuracy">0.363</td>
+<td class="num" role="cell" data-label="Low vs high AUC">0.488</td>
 </tr>
 </tbody>
 </table>

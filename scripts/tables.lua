@@ -98,9 +98,9 @@ local function stack_table(tbl)
     if col_numeric[i] / n < 0.5 and col_max[i] >= 45 then prose_column = true end
   end
   -- The same for the row-label column, which the loop above skips: a row label of
-  -- 16+ characters (a model name, "Other employment") cannot be read inside one
-  -- narrow cell of a four-plus-column grid on a phone, so the table stacks and the
-  -- label gets the full width.
+  -- 12+ characters ("Random forest", "Other employment", a model name) cannot be
+  -- read without awkward wrapping inside one narrow cell of a four-plus-column
+  -- grid on a phone, so the table stacks and the label gets the full width.
   local first_max = 0
   for _, body in ipairs(tbl.bodies) do
     for _, row in ipairs(body.body) do
@@ -108,7 +108,7 @@ local function stack_table(tbl)
       if cell then first_max = math.max(first_max, #pandoc.utils.stringify(cell.contents)) end
     end
   end
-  local long_row_label = first_max >= 16 and #labels >= 4
+  local long_row_label = first_max >= 12 and #labels >= 4
   -- A grid of only one or two rows is not a comparable surface worth scrolling
   -- sideways for: each row reads as a block of labelled figures, the way the
   -- stacked rows above it do. Four or more columns need this more than the
