@@ -175,6 +175,8 @@ function lints() {
   const base = `http://127.0.0.1:${server.address().port}/resume/`;
   const browser = await chromium.launch();
   const combos = [{ w: 375, theme: 'light', mobile: true }, { w: 375, theme: 'dark', mobile: true },
+    { w: 414, theme: 'light', mobile: true }, { w: 414, theme: 'dark', mobile: true },
+    { w: 768, theme: 'light', mobile: true }, { w: 768, theme: 'dark', mobile: true },
     { w: 1280, theme: 'light' }, { w: 1280, theme: 'dark' }, { w: 320, theme: 'light', mobile: true, layoutOnly: true }];
   const totals = { axe: 0, layout: 0, errors: 0, structure: 0, type: 0, axeIds: {}, details: {} };
   const add = (bucket, key, pts) => { totals[bucket] += pts; totals.details[key] = (totals.details[key] || 0) + pts; };
