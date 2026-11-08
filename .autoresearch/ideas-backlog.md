@@ -90,3 +90,10 @@ Open (segments must be re-baselined per issue 106's contract before adding check
 - [x] Bounded live deployment smoke for merged PR108 (see pr108-live-smoke.md); broad live coverage and native Linux remain open.
 - [ ] Print report table/figure pagination and native PDF output need a separate evaluation.
 - [ ] Next creative candidate: evidence-first report opening with explicit finding, evidence and constraint, retaining every historical split/run caveat.
+
+## Visualization evidence leg / PR110
+- [x] Native chart-to-table and return navigation without JavaScript across seven generated charts (run64).
+- [x] Coordinated mark/source-row focus and persistent full-source context, including benchmark replicates (run65).
+- [x] Full reading width for stacked table captions, preserving the benchmark limitation text (run67).
+- [x] Static inventory of 43 built pages: metadata presence, unique titles, local destinations and fragment targets; see site-coverage-inventory.json for limits.
+- [ ] Follow uncovered-aspects-queue.md: essential SVG contrast first, then uncertainty-aware evidence ladder/report prose, saved-figure source links and artifact labels. Preferences/performance/native portability/PDF pagination remain open.

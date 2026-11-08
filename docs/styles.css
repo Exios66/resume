@@ -576,6 +576,7 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   .page table.stack, .page table.stack tbody, .page table.stack tr, .page table.stack td { display: block; width: auto; }
   .page table.stack { overflow: visible; border-top: 2px solid var(--accent); }
   .page table.stack colgroup { display: none; }
+  .page table.stack caption { display: block; width: auto; }
   .page table.stack thead {
     position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
     overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
@@ -942,4 +943,37 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
 @media print {
   .footnotes { max-width: none; margin: 0; padding: 0; border-radius: 0; font-size: 9pt; }
   .footnotes li { break-inside: avoid; }
+}
+
+/* Chart and exact evidence form one reading path, including without scripting. */
+.chart-tools, .page .chart-return { margin: 8px 0 0; font-size: .82rem; }
+.page .chart-return { margin-bottom: 18px; }
+.chart-tools a, .chart-return a { display: inline-flex; align-items: center; min-height: 44px; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 6px; }
+.chart-title[tabindex], table.chart-source { scroll-margin-top: 110px; }
+.chart-title[tabindex]:focus, table.chart-source:focus { outline: 2px solid var(--accent); outline-offset: 4px; }
+@media print {
+  .chart-tools, .chart-return { display: none; }
+  .chart-title[tabindex]:focus, table.chart-source:focus { outline: none; }
+}
+
+/* A persistent source lens coordinates marks and rows without hiding either. */
+.chart-readout { margin-top: 14px; padding: 12px 14px; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--paper)); border-radius: 0 8px 8px 0; }
+.chart-readout-position { display: block; color: var(--muted); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; }
+.chart-readout-name { display: block; margin: 3px 0 9px; font-size: .95rem; }
+.chart-readout dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 20px; margin: 0; }
+.chart-readout dt { color: var(--muted); font-size: .75rem; line-height: 1.45; overflow-wrap: anywhere; }
+.chart-readout dd { margin: 2px 0 0; color: var(--ink); font-size: .87rem; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.page .chart-readout-hint { margin: 10px 0 0; color: var(--muted); font-size: .75rem; }
+.chart-source tr.is-linked { outline: 2px solid var(--accent); outline-offset: -2px; background: color-mix(in srgb, var(--accent) 8%, var(--paper)); }
+.chart-source tr:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.chart .mark.is-linked .hit { fill: color-mix(in srgb, var(--accent) 8%, transparent); stroke: var(--accent); stroke-width: 1.5; }
+@media (forced-colors: active) {
+  .chart-source tr.is-linked { outline-color: Highlight; }
+  .chart .mark.is-linked .hit { fill: none; stroke: Highlight; }
+  .chart-readout { border-color: Highlight; }
+}
+@media print {
+  .chart-readout { display: none; }
+  .chart-source tr.is-linked, .chart-source tr:focus-visible { outline: none; background: none; }
+  .chart .mark.is-linked .hit { fill: none; stroke: none; }
 }

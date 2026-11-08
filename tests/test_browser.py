@@ -590,3 +590,88 @@ def test_numbered_research_notes_work_without_javascript(site):
         expect(page).to_have_url(re.compile(r"#fnref17$"))
     finally:
         page.close()
+
+
+@pytest.mark.parametrize("width,theme", [(375, "light"), (375, "dark"), (1280, "light"), (1280, "dark")])
+def test_chart_source_round_trip_without_script(site, width, theme):
+    """Evidence links must move keyboard focus and work without enhancement JS."""
+    browser, base = site
+    context = browser.new_context(viewport={"width": width, "height": 900}, color_scheme=theme, java_script_enabled=False)
+    page = context.new_page()
+    try:
+        for path in CHART_PAGES:
+            page.goto(base + path)
+            for figure in page.locator("figure.chart").all():
+                forward = figure.locator(".chart-tools a")
+                table = page.locator(forward.get_attribute("href"))
+                assert table.evaluate("el => el.tagName === 'TABLE'")
+                forward.focus()
+                page.keyboard.press("Enter")
+                expect(table).to_be_focused()
+                assert page.url.endswith(forward.get_attribute("href"))
+                back = table.locator("xpath=following-sibling::p[1]").locator("a")
+                caption = page.locator(back.get_attribute("href"))
+                back.focus()
+                page.keyboard.press("Enter")
+                expect(caption).to_be_focused()
+                expect(caption).to_have_text(figure.locator("figcaption").inner_text())
+    finally:
+        context.close()
+
+
+@pytest.mark.parametrize("width,theme", [(375, "light"), (375, "dark"), (1280, "light"), (1280, "dark")])
+def test_chart_evidence_linking_uses_every_source_row(site, width, theme):
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 1000}, color_scheme=theme, reduced_motion="reduce")
+    try:
+        for path in CHART_PAGES:
+            page.goto(base + path)
+            for figure in page.locator("figure.chart").all():
+                table = page.locator(figure.locator(".chart-tools a").get_attribute("href"))
+                rows = table.locator("tbody tr")
+                readout = figure.locator(".chart-readout")
+                expect(readout).to_be_visible()
+                for mark in figure.locator(".mark").all():
+                    index = int(mark.get_attribute("data-source-row")) - 1
+                    row = rows.nth(index)
+                    cells = [" ".join(text.split()) for text in row.locator("td").all_text_contents()]
+                    assert mark.get_attribute("data-tip-label").startswith(cells[0])
+                    mark.focus()
+                    expect(row).to_have_class(re.compile(r"\bis-linked\b"))
+                    for text in cells:
+                        expect(readout).to_contain_text(text)
+                    assert row.evaluate("el => getComputedStyle(el).outlineWidth") == "2px"
+                # Reverse direction: keyboard focus in the table selects all its marks,
+                # including every replicate in a benchmark-strip panel.
+                for index in range(rows.count()):
+                    rows.nth(index).focus()
+                    selected = figure.locator(".mark.is-linked")
+                    assert selected.count() > 0
+                    assert all(int(m.get_attribute("data-source-row")) == index + 1 for m in selected.all())
+                page.emulate_media(media="print")
+                expect(readout).to_be_hidden()
+                expect(table).to_be_visible()
+                expect(figure.locator("svg")).to_be_visible()
+                page.emulate_media(media="screen")
+    finally:
+        page.close()
+
+
+@pytest.mark.parametrize("width", [375, 414, 768, 1280])
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_stacked_benchmark_caption_preserves_reading_width(site, width, theme):
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 1000}, color_scheme=theme)
+    try:
+        page.goto(base + "projects/langtons-ant.html")
+        table = page.locator("table.chart-source")
+        caption = table.locator("caption")
+        expect(caption).to_contain_text("These are not browser frame rates")
+        assert caption.bounding_box()["width"] >= table.bounding_box()["width"] * .9
+        if width <= 768:
+            assert caption.bounding_box()["height"] < 180
+        else:
+            expect(caption).to_have_css("display", "table-caption")
+        assert table.locator("tbody tr").count() == 2
+    finally:
+        page.close()

@@ -1,0 +1,11 @@
+{
+  "pages": 43,
+  "missingDescription": [],
+  "missingCanonical": [],
+  "missingOgImage": [],
+  "duplicateTitles": [],
+  "missingLocalDestinations": [],
+  "missingAnchorTargets": [],
+  "fontBytes": 225640,
+  "limits": "Static built-artifact inventory; excludes external destinations, runtime-inserted anchors, asset dimensions, metadata semantics, transfer/compression, CLS and browser paint timings."
+}

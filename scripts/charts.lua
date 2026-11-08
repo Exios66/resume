@@ -188,9 +188,9 @@ local function hit(x, y, w, h)
 end
 
 -- One datum: focusable, named for screen readers, and carrying its tooltip text.
-local function mark(tip_value, tip_label, body)
-  return string.format('<g class="mark" tabindex="0" role="img" aria-label="%s" data-tip-value="%s" data-tip-label="%s">%s</g>',
-    esc(tip_label .. ": " .. tip_value), esc(tip_value), esc(tip_label), body)
+local function mark(tip_value, tip_label, body, row_index)
+  return string.format('<g class="mark" tabindex="0" role="img" aria-label="%s" data-tip-value="%s" data-tip-label="%s" data-source-row="%d">%s</g>',
+    esc(tip_label .. ": " .. tip_value), esc(tip_value), esc(tip_label), row_index, body)
 end
 
 --- Return SVG text for a row label, right-aligned in the gutter and centered on cy.
@@ -312,7 +312,7 @@ function DRAW.bars(spec, rows)
     local tip = v >= 0 and text("val", vx + 6, y + BAND / 2 + 4.5, "start", value_text)
       or text("val", vx - 6, y + BAND / 2 + 4.5, "end", value_text)
     out[#out + 1] = mark(value_text, label, hit(0, y, W, BAND) .. row_label(row[spec.label], y + BAND / 2, gutter)
-      .. bar_path(color, sx(math.max(lo, 0)), vx, y + (BAND - BAR) / 2) .. tip)
+      .. bar_path(color, sx(math.max(lo, 0)), vx, y + (BAND - BAR) / 2) .. tip, i)
   end
   return out, bottom + 28, legend, function(i) return i end
 end
@@ -334,7 +334,7 @@ function DRAW.dumbbell(spec, rows)
       hit(0, y, W, BAND) .. row_label(row[spec.label], cy)
       .. line("link", fx, cy, tx, cy, PAINT.muted) .. dot("c1s", fx, cy) .. dot("c1", tx, cy)
       .. (tx >= fx and text("val", tx + 10, cy + 4.5, "start", M.fmt(b[i], spec.unit))
-        or text("val", tx - 10, cy + 4.5, "end", M.fmt(b[i], spec.unit))))
+        or text("val", tx - 10, cy + 4.5, "end", M.fmt(b[i], spec.unit))), i)
   end
   return out, bottom + 28, { spec["from-name"] or spec.from, spec["to-name"] or spec.to }, nil
 end
@@ -371,7 +371,7 @@ function DRAW.step(spec, rows)
     local body = hit(x0, top, x1 - x0, bottom - top)
       .. dot("c1", x, sy(ys[i])) .. text("tick", x, bottom + 18, "middle", short)
     if i == #rows then body = body .. text("val", x, sy(ys[i]) - 12, "middle", M.fmt(ys[i], spec.unit)) end
-    out[#out + 1] = mark(M.fmt(ys[i], spec.unit), row[spec.label] .. " tokens", body)
+    out[#out + 1] = mark(M.fmt(ys[i], spec.unit), row[spec.label] .. " tokens", body, i)
   end
   return out, bottom + 30, {}, nil
 end
@@ -405,7 +405,7 @@ function DRAW.strip(spec, rows)
         if k ~= j and other > xs[j] then x1 = math.min(x1, (other + xs[j]) / 2) end
       end
       panel[#panel + 1] = mark(M.fmt(v, spec.unit), row[spec.label] .. " · " .. who,
-        hit(x0, cy - 12, x1 - x0, 24) .. dot(color, xs[j], cy))
+        hit(x0, cy - 12, x1 - x0, 24) .. dot(color, xs[j], cy), i)
     end
     out[#out + 1] = '<g class="panel">' .. table.concat(panel) .. "</g>"
   end
@@ -453,11 +453,14 @@ function M.render(spec, rows)
     end
     legend_html = '<ul class="chart-legend">' .. table.concat(items) .. "</ul>"
   end
-  return string.format('<figure class="chart chart-%s"><figcaption class="chart-title">%s</figcaption>%s'
+  local title_attr = spec.evidence_id and (' id="' .. esc(spec.evidence_id .. '-title') .. '" tabindex="-1"') or ""
+  local tools = spec.source_id and ('<p class="chart-tools"><a href="#' .. esc(spec.source_id)
+    .. '" aria-label="View exact values for ' .. esc(spec.title or "Chart") .. '">View exact values</a></p>') or ""
+  return string.format('<figure class="chart chart-%s"><figcaption class="chart-title"%s>%s</figcaption>%s'
     .. '<div class="chart-body" tabindex="0" role="group" aria-label="%s">'
-    .. '<svg viewBox="0 0 %d %s" width="%d" height="%s" role="group" aria-label="%s">%s</svg></div></figure>',
-    spec.kind, esc(spec.title or ""), legend_html, esc((spec.title or "Chart") .. ", scrollable"),
-    W, num(height), W, num(height), esc(summary(spec, rows)), table.concat(body))
+    .. '<svg viewBox="0 0 %d %s" width="%d" height="%s" role="group" aria-label="%s">%s</svg></div>%s</figure>',
+    spec.kind, title_attr, esc(spec.title or ""), legend_html, esc((spec.title or "Chart") .. ", scrollable"),
+    W, num(height), W, num(height), esc(summary(spec, rows)), table.concat(body), tools)
 end
 
 -- ------------------------------------------------------------------- filter
@@ -472,6 +475,8 @@ local function cells_text(row)
   for i, c in ipairs(row.cells) do out[i] = pandoc.utils.stringify(c.contents) end
   return out
 end
+
+local chart_count = 0
 
 --- Replace a `.chart` Div with the chart figure followed by its table.
 function Div(el)
@@ -493,11 +498,22 @@ function Div(el)
       rows[#rows + 1] = row
     end
   end
+  chart_count = chart_count + 1
+  spec.evidence_id = "chart-evidence-" .. chart_count
+  spec.source_id = tbl.attr.identifier ~= "" and tbl.attr.identifier or (spec.evidence_id .. "-data")
+  tbl.attr.identifier = spec.source_id
+  tbl.attr.classes:insert("chart-source")
+  tbl.attr.attributes["tabindex"] = "-1"
+  tbl.attr.attributes["aria-labelledby"] = spec.evidence_id .. "-title"
   -- Keep every authored block; the figure goes directly before the charted table.
   local out = {}
   for i, block in ipairs(el.content) do
     if i == at then out[#out + 1] = pandoc.RawBlock("html", M.render(spec, rows)) end
     out[#out + 1] = block
+    if i == at then
+      out[#out + 1] = pandoc.RawBlock("html", '<p class="chart-return"><a href="#' .. esc(spec.evidence_id .. '-title')
+        .. '" aria-label="Return to chart: ' .. esc(spec.title or "Chart") .. '">Return to chart</a></p>')
+    end
   end
   return out
 end

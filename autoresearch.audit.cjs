@@ -54,7 +54,7 @@ function serve() {
 function inspect(mobile) {
   const vw = document.documentElement.clientWidth;
   const out = { pageOverflow: document.documentElement.scrollWidth > vw + 1, tap: [], tiny: [], crushed: 0,
-    tableOverflow: 0, citations: [], tocAlignment: [], tocTargets: [], smallSvg: [], invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
+    tableOverflow: 0, narrowCaptions: [], citations: [], tocAlignment: [], tocTargets: [], smallSvg: [], invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
     sepStart: 0, sepEnd: 0, headingWidows: 0, where: { crushed: [], tables: [], sepStart: [], sepEnd: [], widows: [] } };
   const visible = el => { const s = getComputedStyle(el); const r = el.getBoundingClientRect();
     return s.visibility !== 'hidden' && s.display !== 'none' && r.width > 0 && r.height > 0; };
@@ -147,6 +147,15 @@ function inspect(mobile) {
     }
     if (smallest) out.smallSvg.push(sig(figure) + ' | ' + smallest.px.toFixed(2) + 'px | ' + smallest.text.slice(0, 80));
   }
+  // Stacked tables use block layout; their captions must keep the reading width.
+  // Native table captions at desktop widths are intentionally outside this check.
+  for (const table of document.querySelectorAll('main table.stack')) {
+    const caption = table.querySelector('caption');
+    if (!caption || !visible(caption) || getComputedStyle(table).display !== 'block') continue;
+    const width = table.getBoundingClientRect().width;
+    const captionWidth = caption.getBoundingClientRect().width;
+    if (captionWidth < width * 0.9) out.narrowCaptions.push(sig(table) + ' | caption ' + captionWidth.toFixed(1) + 'px / table ' + width.toFixed(1) + 'px');
+  }
   // Typography. Separators (• ·) that start or end a wrapped line, and headings whose last line is one word.
   const charRect = (node, i) => { const rg = document.createRange(); rg.setStart(node, i); rg.setEnd(node, i + 1);
     return rg.getClientRects()[0]; };
@@ -205,6 +214,42 @@ function inspect(mobile) {
   out.h1 = document.querySelectorAll('h1, [role="heading"][aria-level="1"]').length;
   for (const img of document.images) if (img.complete && img.naturalWidth === 0) out.brokenImages++;
   return out;
+}
+
+// Chart evidence: keep the visual and its authored source table connected.
+// Run after ordinary layout inspection so focus cannot change that sample.
+function inspectChartEvidence() {
+  const navigation = [], linking = [];
+  const visible = el => !!el && el.getBoundingClientRect().width > 0 && el.getBoundingClientRect().height > 0
+    && getComputedStyle(el).visibility !== 'hidden';
+  const normalized = text => text.replace(/\s+/g, ' ').trim();
+  for (const figure of document.querySelectorAll('figure.chart')) {
+    const caption = figure.querySelector('figcaption');
+    const title = normalized(caption.textContent);
+    const table = figure.nextElementSibling;
+    const link = [...figure.querySelectorAll('a[href]')].find(a => table && table.id && a.hash === '#' + table.id);
+    const back = table && table.nextElementSibling && [...table.nextElementSibling.querySelectorAll('a[href]')]
+      .find(a => caption.id && a.hash === '#' + caption.id);
+    if (!table || table.tagName !== 'TABLE' || !visible(link) || !visible(back)
+      || document.querySelectorAll('[id="' + (table && table.id) + '"]').length !== 1
+      || !table.hasAttribute('tabindex') || !caption.hasAttribute('tabindex')) navigation.push(title);
+    const rows = table && table.tagName === 'TABLE' ? [...table.querySelectorAll('tbody tr')] : [];
+    const marks = [...figure.querySelectorAll('.mark')];
+    const readout = figure.querySelector('.chart-readout');
+    let linked = !!rows.length && !!marks.length && visible(readout);
+    for (const mark of [marks[0], marks[marks.length - 1]].filter(Boolean)) {
+      mark.focus({preventScroll: true});
+      const name = mark.getAttribute('data-tip-label') || '';
+      const row = rows.find(r => name.startsWith(normalized(r.cells[0].textContent)));
+      const cells = row ? [...row.cells].map(c => normalized(c.textContent)) : [];
+      linked = linked && !!row && getComputedStyle(row).outlineStyle !== 'none'
+        && parseFloat(getComputedStyle(row).outlineWidth) >= 2
+        && cells.every(cell => normalized(readout.textContent).includes(cell));
+      mark.blur();
+    }
+    if (!linked) linking.push(title);
+  }
+  return {navigation, linking};
 }
 
 // Exercise discovery against real indexed results, preserving the unfiltered set.
@@ -302,6 +347,8 @@ function lints() {
           note(c, p, 'small tap target', r.tap); note(c, p, 'text < 12px', r.tiny); }
       }
       if (!c.layoutOnly) {
+        add('layout', 'stacked table caption below reading width', r.narrowCaptions.length);
+        note(c, p, 'narrow table caption', r.narrowCaptions);
         add('structure', 'numbered research citation navigation', r.citations.length);
         note(c, p, 'research citation navigation', r.citations);
         add('layout', 'report contents column alignment', r.tocAlignment.length);
@@ -324,6 +371,13 @@ function lints() {
         add('type', 'heading ends with a one-word line', r.headingWidows);
         note(c, p, 'separator starts line', r.where.sepStart); note(c, p, 'separator ends line', r.where.sepEnd);
         note(c, p, 'heading widow', r.where.widows);
+      }
+      if (!c.layoutOnly) {
+        const evidence = await page.evaluate(inspectChartEvidence);
+        add('structure', 'chart source and return navigation', evidence.navigation.length);
+        add('structure', 'chart focus linked to full source row', evidence.linking.length);
+        note(c, p, 'chart evidence navigation', evidence.navigation);
+        note(c, p, 'chart linked reading', evidence.linking);
       }
       // Paper has no use for screen navigation. Inspect CSS print media once per
       // built page, while ensuring that its primary reading title survives.
