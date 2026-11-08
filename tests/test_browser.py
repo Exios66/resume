@@ -245,14 +245,17 @@ def test_search_before_index_load_and_after_failure(site):
     try:
         page.goto(base + "search.html")
         search = page.get_by_label("Search this site")
+        expect(page.get_by_label("Page type", exact=True)).to_be_disabled()
         search.fill("M9c")
         search.press("Enter")
         assert not errors
         page.evaluate("window.releaseIndex()")
         expect(page.locator('#search-results a[href$="projects/mailroom-ml.html"]')).to_have_count(1)
+        expect(page.get_by_label("Page type", exact=True)).to_be_enabled()
 
         page.goto(base + "search.html")
         page.evaluate("window.rejectIndex()")
+        expect(page.get_by_label("Page type", exact=True)).to_be_disabled()
         expect(page.locator("#search-status")).to_have_text("Search is unavailable right now.")
         search.fill("M9c")
         search.press("Escape")
@@ -470,5 +473,71 @@ def test_chart_tooltip_hides_on_sideways_scroll_and_stays_on_screen(site):
         page.mouse.wheel(0, 300)
         page.wait_for_timeout(200)
         assert follows_mark(), "tooltip follows its mark on page scroll"
+    finally:
+        page.close()
+
+
+@pytest.mark.parametrize("width", [375, 1280])
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_search_type_filter_url_and_restoration(site, width, theme):
+    """The new native filter preserves exact route subsets and shareable state."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 900}, color_scheme=theme)
+    try:
+        page.goto(base + "search.html?q=calibration&type=report")
+        control = page.get_by_label("Page type", exact=True)
+        results = page.locator("#search-results a.result-title")
+        expect(control).to_be_enabled()
+        expect(control).to_have_value("report")
+        expect(results).to_have_count(3)
+        assert all(a.get_attribute("href").endswith("/report.html") for a in results.all())
+        control.select_option("all")
+        expect(results).to_have_count(11)
+        original = [a.get_attribute("href") for a in results.all()]
+        for kind, expected in (
+            ("case-study", [u for u in original if re.fullmatch(r"projects/(?!index\.html)[^/]+\.html", u)]),
+            ("appendix", [u for u in original if u.endswith("/appendix.html")]),
+            ("report", [u for u in original if u.endswith("/report.html")]),
+            ("other", [u for u in original if not u.startswith("projects/") or u == "projects/index.html"]),
+        ):
+            control.select_option(kind)
+            expect(results).to_have_count(len(expected))
+            assert [a.get_attribute("href") for a in results.all()] == expected
+            assert page.evaluate("new URLSearchParams(location.search).get('type')") == kind
+            expect(page.get_by_label("Search this site")).to_have_value("calibration")
+        control.select_option("all")
+        assert [a.get_attribute("href") for a in results.all()] == original
+        assert page.evaluate("new URLSearchParams(location.search).has('type')") is False
+        control.select_option("appendix")
+        page.reload()
+        expect(control).to_be_enabled()
+        expect(control).to_have_value("appendix")
+        expect(results).to_have_count(2)
+        search = page.get_by_label("Search this site")
+        search.fill("zzzznothing")
+        expect(results).to_have_count(0)
+        expect(page.locator("#search-status")).to_contain_text("in appendices")
+        search.press("Escape")
+        expect(search).to_have_value("")
+        assert page.evaluate("new URLSearchParams(location.search).has('q')") is False
+        page.goto(base + "search.html?q=calibration&type=unknown")
+        expect(control).to_be_enabled()
+        expect(control).to_have_value("all")
+        expect(results).to_have_count(11)
+        assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    finally:
+        page.close()
+
+
+def test_search_without_javascript_keeps_browse_fallback(site):
+    """The disabled filter must not block the existing non-JavaScript browse path."""
+    browser, base = site
+    page = browser.new_page(java_script_enabled=False)
+    try:
+        page.goto(base + "search.html")
+        expect(page.get_by_label("Page type", exact=True)).to_be_disabled()
+        expect(page.locator("noscript p")).to_contain_text("Search needs JavaScript")
+        page.get_by_role("link", name="projects index", exact=True).click()
+        expect(page.get_by_role("heading", level=1)).to_have_text("Projects")
     finally:
         page.close()

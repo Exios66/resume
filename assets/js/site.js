@@ -159,6 +159,8 @@
     var list = doc.getElementById("search-results");
     var status = doc.getElementById("search-status");
     if (!input || !list || !status) return;
+    var typeControl = doc.getElementById("search-type");
+    if (!typeControl) return;
     var pages = null;
 
     function node(tag, text) {
@@ -210,9 +212,14 @@
         hits.push({ page: page, score: score });
       });
       hits.sort(function (a, b) { return b.score - a.score || a.page.t.localeCompare(b.page.t); });
+      var total = hits.length;
+      var activeType = typeControl.value;
+      if (activeType !== "all") hits = hits.filter(function (hit) { return pageType(hit.page.u).key === activeType; });
+      var scope = activeType === "all" ? "" : " in " + typeControl.options[typeControl.selectedIndex].textContent.toLowerCase();
+      var across = activeType === "all" ? "" : " (" + total + " across all types)";
       status.textContent = hits.length
-        ? hits.length + (hits.length === 1 ? " page matches “" : " pages match “") + query + "”"
-        : "No pages match “" + query + "”.";
+        ? hits.length + (hits.length === 1 ? " page matches “" : " pages match “") + query + "”" + scope + across
+        : "No pages match “" + query + "”" + scope + "." + across;
       hits.forEach(function (hit) {
         var item = node("li");
         var type = pageType(hit.page.u);
@@ -231,24 +238,41 @@
       });
     }
 
-    var params = new URLSearchParams(location.search);
-    var initial = params.get("q") || "";
-    input.value = initial;
+    function readLocation() {
+      var params = new URLSearchParams(location.search);
+      input.value = params.get("q") || "";
+      var type = params.get("type") || "all";
+      typeControl.value = ["all", "case-study", "report", "appendix", "other"].indexOf(type) >= 0 ? type : "all";
+    }
+
+    function writeLocation() {
+      try {
+        var url = new URL(location.href);
+        if (input.value) url.searchParams.set("q", input.value); else url.searchParams.delete("q");
+        if (typeControl.value !== "all") url.searchParams.set("type", typeControl.value); else url.searchParams.delete("type");
+        history.replaceState(null, "", url.pathname + url.search + url.hash);
+      } catch (e) { /* Search still works when URL updates are unavailable. */ }
+    }
+
+    readLocation();
     fetch("search-index.json").then(function (response) {
       if (!response.ok) throw new Error("no index");
       return response.json();
     }).then(function (data) {
       pages = data;
+      typeControl.disabled = false;
       render(input.value);
     }).catch(function () { status.textContent = "Search is unavailable right now."; });
 
-    input.addEventListener("input", function () { render(input.value); });
+    input.addEventListener("input", function () { writeLocation(); render(input.value); });
+    typeControl.addEventListener("change", function () { writeLocation(); render(input.value); });
+    window.addEventListener("popstate", function () { readLocation(); render(input.value); });
     input.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") { input.value = ""; render(""); }
+      if (event.key === "Escape") { input.value = ""; writeLocation(); render(""); }
     });
     input.form.addEventListener("submit", function (event) {
       event.preventDefault();
-      try { history.replaceState(null, "", "?q=" + encodeURIComponent(input.value)); } catch (e) {}
+      writeLocation();
       render(input.value);
     });
   })();
