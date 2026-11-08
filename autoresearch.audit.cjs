@@ -48,7 +48,7 @@ function serve() {
 function inspect(mobile) {
   const vw = document.documentElement.clientWidth;
   const out = { pageOverflow: document.documentElement.scrollWidth > vw + 1, tap: [], tiny: [], crushed: 0,
-    tableOverflow: 0, invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
+    tableOverflow: 0, smallSvg: [], invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
     sepStart: 0, sepEnd: 0, headingWidows: 0, where: { crushed: [], tables: [], sepStart: [], sepEnd: [], widows: [] } };
   const visible = el => { const s = getComputedStyle(el); const r = el.getBoundingClientRect();
     return s.visibility !== 'hidden' && s.display !== 'none' && r.width > 0 && r.height > 0; };
@@ -104,6 +104,20 @@ function inspect(mobile) {
         if (lines > words + 1 || clipped) { out.crushed++; out.where.crushed.push((clipped ? 'clipped ' : '') + lines + ' lines | ' + text.slice(0, 80)); }
       }
     }
+  }
+  // SVG text scales with the viewBox: a CSS 12px tick can be only 9.75px on a phone.
+  // Score once per figure, reporting its smallest rendered label. Offscreen portions
+  // of a scrollable figure still need legible text when the reader scrolls to them.
+  for (const figure of document.querySelectorAll('figure.chart, figure.diagram')) {
+    let smallest = null;
+    for (const text of figure.querySelectorAll('svg text, svg tspan')) {
+      if (!text.textContent.trim() || !visible(text)) continue;
+      const matrix = text.getScreenCTM();
+      if (!matrix) continue;
+      const px = parseFloat(getComputedStyle(text).fontSize) * Math.hypot(matrix.c, matrix.d);
+      if (px < 11.95 && (!smallest || px < smallest.px)) smallest = { px, text: text.textContent.trim() };
+    }
+    if (smallest) out.smallSvg.push(sig(figure) + ' | ' + smallest.px.toFixed(2) + 'px | ' + smallest.text.slice(0, 80));
   }
   // Typography. Separators (• ·) that start or end a wrapped line, and headings whose last line is one word.
   const charRect = (node, i) => { const rg = document.createRange(); rg.setStart(node, i); rg.setEnd(node, i + 1);
@@ -209,7 +223,9 @@ function lints() {
         if (!c.layoutOnly) { add('layout', 'tap targets < 24px', r.tap.length); add('layout', 'text < 12px', r.tiny.length);
           note(c, p, 'small tap target', r.tap); note(c, p, 'text < 12px', r.tiny); }
       }
-      if (!c.layoutOnly) { add('layout', 'invisible focusable controls', 5 * r.invisibleFocusable.length);
+      if (!c.layoutOnly) { add('layout', 'SVG figures with text < 12px', r.smallSvg.length);
+        note(c, p, 'small SVG text', r.smallSvg);
+        add('layout', 'invisible focusable controls', 5 * r.invisibleFocusable.length);
         note(c, p, 'invisible focusable', r.invisibleFocusable); }
       if (c.w === 1280 && c.theme === 'light') {
         add('structure', 'heading level skips', 2 * r.headingSkips);

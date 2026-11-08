@@ -35,7 +35,7 @@ when they pin the exact text or markup an experiment changes on purpose (say so 
 
 ## Audit (what the number means)
 
-Every page in `docs/` at 375 px and 1280 px in light and dark themes, plus 320 px for layout only.
+Every page in `docs/` at 375, 414, 768 and 1280 px in light and dark themes, plus 320 px for layout only.
 
 | Bucket | Finding | Points |
 |---|---|---|
@@ -45,6 +45,7 @@ Every page in `docs/` at 375 px and 1280 px in light and dark themes, plus 320 p
 | layout | table wider than the screen (320, 375 px) | 1 |
 | layout | tap target under 24 px (375 px; a stretched-link overlay counts as its box) | 1 |
 | layout | distinct text under 12 px (375 px) | 1 |
+| layout | SVG figure with rendered text under 12 px (one point per figure and viewport/theme) | 1 |
 | layout | focusable control under 8 px | 5 |
 | structure | heading level skipped; not exactly one h1 (1280 light) | 2 |
 | type | visible `•`/`·` separator starting a wrapped line / ending one (375, 1280 light) | 2 / 1 |
