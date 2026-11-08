@@ -133,3 +133,15 @@ Project numbers and claims (must match source repos). Removing or hiding content
 Baseline run 44: 24 points at 414/768 added coverage. Hypothesis: extending only prose-table stacking to 800px removes the 10 crushed tablet cells while preserving desktop grids.
 
 Run 45 kept: 24 → 4; ten crushed tablet cells removed. Run 46 hypothesis: separating the undergraduate credential from its concentration and GPA makes the education block easier to scan and removes two orphan separators at 414 px. Facts unchanged. Regenerate the resume PDF.
+
+Run 46 kept: 4 → 2. Segment 5 closes with zero layout/axe/error/structure/lint/separator points; two heading widows remain.
+
+## Segment 6: visualization legibility
+Add one point per chart/diagram per audited viewport/theme with text rendered below 12px (0.05px tolerance). Measure font size through the SVG screen transform, including scrollable offscreen labels. Baseline before changing any site CSS. Browser confirmed NATD ticks render at 9.75px on a 375px phone; current HTML-only tiny-text check skips SVG.
+
+Segment 6 baseline run 47: 174 points (172 small-SVG figure findings, two heading widows). Run 48 hypothesis: preserve the 640px chart and 800px diagram coordinate widths rather than downscaling text; contain horizontal scrolling, keep captions visible, extend chart scroll guidance through tablet widths and remove minimum widths in print. Prototype confirms 9.75px → 12px phone chart ticks without page overflow.
+
+Run 48 refinement before decision: initial label-size fix scored 2 but screenshots showed cropped desktop diagrams and hidden positive bars on phones. Correctness also caught the initial focused mark tooltip being out of view. Expand diagram width within desktop paper margins, retain print margins, and size bar-label gutters to short category names so the positive zero line stays visible. The Lua collision assertion now checks against the intentionally changed category-label coordinate rather than a fixed 190px gutter. Rebenchmark and rerun all checks on amended commit.
+
+## PR progress evidence policy
+For every candidate that proceeds, update PR #107 with actual reviewed screenshots, the fixed segment's before/after metrics and findings delta, checks on the experiment commit, and why the candidate was kept. Store review images under `.autoresearch/screenshots/`, outside `docs/`, and embed durable raw image URLs. Include refinements and any failed checks honestly; never advance a candidate on score alone.
