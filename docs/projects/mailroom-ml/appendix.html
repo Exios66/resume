@@ -215,39 +215,39 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <p>The calibration figure is a window-level ECE, not a document-level probability check. The acceptance figure is confidence-only; it omits the support, catch-all, head-exclusion and subclass-projection guards, so the full gate can accept fewer documents.</p>
 <h2 id="release-gates">Release gates</h2>
-<table class="caption-top">
+<table class="caption-top stack" role="table">
 <thead>
-<tr class="header">
-<th>Gate</th>
-<th style="text-align: right;">Actual</th>
-<th style="text-align: right;">Threshold</th>
-<th>Result</th>
+<tr class="header" role="row">
+<th role="columnheader">Gate</th>
+<th style="text-align: right;" role="columnheader">Actual</th>
+<th style="text-align: right;" role="columnheader">Threshold</th>
+<th role="columnheader">Result</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Contract test macro-F1</td>
-<td style="text-align: right;">0.3589</td>
-<td style="text-align: right;">≥ 0.20</td>
-<td>Met</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Gate">Contract test macro-F1</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Actual">0.3589</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Threshold">≥ 0.20</td>
+<td role="cell" data-label="Result">Met</td>
 </tr>
-<tr class="even">
-<td>Correspondence test macro-F1</td>
-<td style="text-align: right;">0.5249</td>
-<td style="text-align: right;">≥ 0.25</td>
-<td>Met</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Gate">Correspondence test macro-F1</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Actual">0.5249</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Threshold">≥ 0.25</td>
+<td role="cell" data-label="Result">Met</td>
 </tr>
-<tr class="odd">
-<td>Document-type test accuracy</td>
-<td style="text-align: right;">0.9598</td>
-<td style="text-align: right;">≥ 0.89</td>
-<td>Met</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Gate">Document-type test accuracy</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Actual">0.9598</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Threshold">≥ 0.89</td>
+<td role="cell" data-label="Result">Met</td>
 </tr>
-<tr class="even">
-<td>Window ECE, document type</td>
-<td style="text-align: right;">0.0189</td>
-<td style="text-align: right;">≤ 0.05</td>
-<td>Met</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Gate">Window ECE, document type</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Actual">0.0189</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Threshold">≤ 0.05</td>
+<td role="cell" data-label="Result">Met</td>
 </tr>
 </tbody>
 </table>

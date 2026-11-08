@@ -97,9 +97,23 @@ local function stack_table(tbl)
   for i, n in pairs(col_cells) do
     if col_numeric[i] / n < 0.5 and col_max[i] >= 45 then prose_column = true end
   end
+  -- The same for the row-label column, which the loop above skips: a row label of
+  -- 20+ characters (a model name, "Deceitful (Alan, Enigma, Scarlet)") cannot be
+  -- read inside one narrow cell of a four-plus-column grid on a phone, so the
+  -- table stacks and the label gets the full width.
+  local first_max = 0
+  for _, body in ipairs(tbl.bodies) do
+    for _, row in ipairs(body.body) do
+      local cell = row.cells[1]
+      if cell then first_max = math.max(first_max, #pandoc.utils.stringify(cell.contents)) end
+    end
+  end
+  local long_row_label = first_max >= 20 and #labels >= 4
+  -- Mostly numeric cells (the "wordy" test) that also carry some long entries read
+  -- as a grid; anything else compares better stacked.
   local wordy = numeric / cells < 0.5
     and (longest >= 40 or total / cells >= 20 or #labels >= 4 or has_code)
-  if not (prose_column or wordy) then return nil end
+  if not (prose_column or wordy or long_row_label) then return nil end
   tbl.attr.classes:insert("stack")
   tbl.attr.attributes["role"] = "table"
   for _, row in ipairs(head_rows) do
