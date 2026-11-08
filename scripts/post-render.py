@@ -176,6 +176,9 @@ def build_search_index():
     so a word deep in a report is still found.
     """
     entries = []
+    site = site_title()
+    # Every result is on this site, so its name after a dash in a title is noise.
+    suffix = re.compile(r"\s+[—–-]\s+" + re.escape(site) + r"$") if site else None
     for page in sorted(DOCS.rglob("*.html")):
         rel = page.relative_to(DOCS).as_posix()
         if rel in {"search.html", "404.html"} or "site_libs" in page.parts:
@@ -188,7 +191,7 @@ def build_search_index():
         headings = " ".join(plain_text(h) for h in re.findall(r"<h[23][^>]*>(.*?)</h[23]>", body_source, re.S))
         entries.append({
             "u": rel,
-            "t": plain_text(title.group(1)) if title else rel,
+            "t": (suffix.sub("", plain_text(title.group(1))) if suffix else plain_text(title.group(1))) if title else rel,
             "d": plain_text(description.group(1)) if description else "",
             "h": headings[:400],
             "b": search_body(body_source),

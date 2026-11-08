@@ -120,6 +120,8 @@ class SearchTests(unittest.TestCase):
         self.assertEqual(len(listed), len(set(listed)))
         for entry in entries:
             self.assertTrue(entry["t"])
+            # Every result is on this site; repeating its name in each title is noise.
+            self.assertFalse(entry["t"].endswith("— Jack J. Burleson"), entry["u"])
             # Markup must be stripped; literal text such as "/summon <domain>-expert" is fine,
             # because the search page inserts results with textContent.
             self.assertNotRegex(entry["b"] + entry["h"],
