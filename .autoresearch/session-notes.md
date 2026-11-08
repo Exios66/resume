@@ -68,13 +68,52 @@ Project numbers and claims (must match source repos). Removing or hiding content
 | 20 | 3 | Segment 3 baseline | 63 | keep |
 | 21 | 3 | Separators never start or end a wrapped label | 42 | keep |
 | 22 | 3 | Balanced heading lines (text-wrap: balance on h1-h3) | 22 | keep |
+| 23 | 3 | Baseline on this machine (Quarto 1.10.19, LC_ALL=C) | 22 | keep |
+| 24 | 3 | <wbr> after separators in long inline code inside table cells | 20 | keep |
+| 25 | 3 | min-width 12ch for first table column on phones | 20 | discard |
+| 26 | 3 | Second tightening notch for number grids at 480 px | 20 | discard |
+| 27 | 3 | Stack classifier prose threshold 60 -> 45 characters | 19 | keep |
+| 28 | 3 | Sticky first column with scroll edge on phone number grids (metric-blind) | 19 | keep |
+
+| 28 | 3 | Sticky first column with scroll edge on phone number grids (metric-blind) | 19 | keep |
+| 29 | 3 | Stack 4+-column grids whose first column holds a 20+ char row label | 9 | keep |
+| 30 | 3 | Scope tabular-nums to numeric cells (metric-blind) | 9 | keep |
+| 31 | 3 | Stack grids with 16+ char row labels | 7 | keep |
+| 32 | 3 | Low vs high AUC header text | 5 | keep |
+| 33 | 3 | Split band shares into one row per band (metric-blind) | 5 | keep |
+| 34 | 3 | rvl-cdip appendix v0 cell names its slice (metric-blind) | 5 | keep |
+| 35 | 3 | Label prose row headings in stacked tables (metric-blind) | 5 | keep |
+| 36 | 3 | Run-comparison header names the subclass condition in prose | 5 | discard |
+| 37 | 3 | Compact phone header nav (metric-blind) | 5 | keep |
+| 38 | 3 | Remove duplicate back link on report and appendix pages (metric-blind) | 5 | keep |
+
+## Remaining at 5 points
+- Tables wider than the screen: 4 findings (AUC band table at 320; mailroom-ml cohort table at 320 and 375; mailroom-ml report run comparison at 320). They scroll with a sticky label column and a scroll edge; the remaining width is bound by the content (number columns + unbreakable column words), not by styling. Options: splitting a table into two at the source, or reading values from narrower columns -- owner call.
+- Heading widow: 1 ("Graduate research, UW–Madison" at 375 px; UW–Madison is one unit, acceptable).
+- Crushed cells: 0 (was 8 pts; the model table, group table and AUC header are all clean).
+
+## Environment notes from this resume
+- This machine's Quarto is 1.9.38; the site was built with 1.10.19. `QUARTO=$PWD/.autoresearch-tools/bin/quarto` points at a locally downloaded 1.10.19.
+- This machine's `LANG=C.UTF-8` changed Lua pattern byte semantics (pandoc's embedded Lua treats UTF-8 lead bytes as `%a`), failing `tests/test_charts.lua`'s "4×" formatting and differing from the committed docs. Run the loop with `LC_ALL=C`.
 
 ## Remaining at 22 points
-- Tables wider than the screen: 13 (5-6 column number grids in psychometric-digital-twin, mailroom-ml appendix, natd at 320 px). They scroll and are keyboard reachable.
+- Tables wider than the screen: 13 (see "Remaining at 19 points" above). They scroll and are keyboard reachable.
 - Crushed table cells: 4 cells (8 pts), long code paths and model names in narrow columns.
 - Heading widow: 1 ("Graduate research, UW–Madison" at 375 px; UW–Madison is one unit, acceptable).
 
 ## Learnings
+- This machine's default `LANG=C.UTF-8` made pandoc's embedded Lua treat UTF-8 lead bytes as `%a` in patterns
+  ("×" matched, `fmt(4, "×")` rendered "4 ×"); `LC_ALL=C` restores byte-based semantics everywhere.
+- Inter's `tnum` widens the hyphen ("x-x" 21.7px -> 25.1px measured in the browser), so table-wide
+  `font-variant-numeric: tabular-nums` put gaps into labels like DeepSeek-R1-Distill-Llama-8B; it now applies
+  to right-aligned cells and .num cells only.
+- A stacking classifier works best from three signals: a prose column of 45+ chars, a row label of 16+ chars
+  in a 4+-column grid, and plain wordiness; each converted real crush/wide findings.
+- `position: sticky` on the first column of phone grids plus a scroll-only edge (`site.js` data-scrolls)
+  makes wide number grids readable without gaming the audit.
+- The site's browser test pins 44 px nav touch targets; shrink headings only in width, not height.
+- Stacked rows whose first cell is a full claim (40+ chars) need their column label displayed
+  (tables.lua data-prose-rows, CSS in the 720 px block).
 - Quarto base CSS sets `code { white-space: pre }` and relaxes it only for `p code`/`dd code`; table-cell code can't wrap.
 - Quarto's copy button needs Bootstrap Icons, which `theme: none` never loads, so it renders 12x2 px.
 - `quarto render` rewrites every `lastmod` in `docs/sitemap.xml`; that churn is expected (restore it on discards).
