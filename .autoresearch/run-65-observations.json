@@ -1,0 +1,130 @@
+[
+  {
+    "route": "projects/natd.html",
+    "width": 375,
+    "theme": "light",
+    "sourceRow": 3,
+    "readout": "SOURCE ROW 3 OF 5\nEnigma\nType\nDeceitful\nSessions\n3\nMean exam change (points)\n+4.7\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-bars-375-light.png"
+  },
+  {
+    "route": "projects/mailroom-ml/report.html",
+    "width": 375,
+    "theme": "light",
+    "sourceRow": 2,
+    "readout": "SOURCE ROW 2 OF 5\ncorporate_record\nArm B\n0.2485\nFinal\n0.904\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-dumbbell-375-light.png"
+  },
+  {
+    "route": "projects/mailroom-corpus-eda/report.html",
+    "width": 375,
+    "theme": "light",
+    "sourceRow": 3,
+    "readout": "SOURCE ROW 3 OF 5\n32,768\nDocuments that fit\n93.2%\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-step-375-light.png"
+  },
+  {
+    "route": "projects/langtons-ant.html",
+    "width": 375,
+    "theme": "light",
+    "sourceRow": 2,
+    "readout": "SOURCE ROW 2 OF 2\nColony of 25 ants\nREADME: Apple M2, macOS, Node 22.14.0\n0.54 million steps per second, 13.39 million cell updates per second\nRe-runs: shared 4-core Linux container, Node 22.22.0\n0.19, 0.29 and 0.31 million in three re-runs\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-strip-375-light.png"
+  },
+  {
+    "route": "projects/natd.html",
+    "width": 375,
+    "theme": "dark",
+    "sourceRow": 3,
+    "readout": "SOURCE ROW 3 OF 5\nEnigma\nType\nDeceitful\nSessions\n3\nMean exam change (points)\n+4.7\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-bars-375-dark.png"
+  },
+  {
+    "route": "projects/mailroom-ml/report.html",
+    "width": 375,
+    "theme": "dark",
+    "sourceRow": 2,
+    "readout": "SOURCE ROW 2 OF 5\ncorporate_record\nArm B\n0.2485\nFinal\n0.904\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-dumbbell-375-dark.png"
+  },
+  {
+    "route": "projects/mailroom-corpus-eda/report.html",
+    "width": 375,
+    "theme": "dark",
+    "sourceRow": 3,
+    "readout": "SOURCE ROW 3 OF 5\n32,768\nDocuments that fit\n93.2%\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-step-375-dark.png"
+  },
+  {
+    "route": "projects/langtons-ant.html",
+    "width": 375,
+    "theme": "dark",
+    "sourceRow": 2,
+    "readout": "SOURCE ROW 2 OF 2\nColony of 25 ants\nREADME: Apple M2, macOS, Node 22.14.0\n0.54 million steps per second, 13.39 million cell updates per second\nRe-runs: shared 4-core Linux container, Node 22.22.0\n0.19, 0.29 and 0.31 million in three re-runs\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-strip-375-dark.png"
+  },
+  {
+    "route": "projects/natd.html",
+    "width": 1280,
+    "theme": "light",
+    "sourceRow": 3,
+    "readout": "SOURCE ROW 3 OF 5\nEnigma\nType\nDeceitful\nSessions\n3\nMean exam change (points)\n+4.7\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-bars-1280-light.png"
+  },
+  {
+    "route": "projects/mailroom-ml/report.html",
+    "width": 1280,
+    "theme": "light",
+    "sourceRow": 2,
+    "readout": "SOURCE ROW 2 OF 5\ncorporate_record\nArm B\n0.2485\nFinal\n0.904\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-dumbbell-1280-light.png"
+  },
+  {
+    "route": "projects/mailroom-corpus-eda/report.html",
+    "width": 1280,
+    "theme": "light",
+    "sourceRow": 3,
+    "readout": "SOURCE ROW 3 OF 5\n32,768\nDocuments that fit\n93.2%\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-step-1280-light.png"
+  },
+  {
+    "route": "projects/langtons-ant.html",
+    "width": 1280,
+    "theme": "light",
+    "sourceRow": 2,
+    "readout": "SOURCE ROW 2 OF 2\nColony of 25 ants\nREADME: Apple M2, macOS, Node 22.14.0\n0.54 million steps per second, 13.39 million cell updates per second\nRe-runs: shared 4-core Linux container, Node 22.22.0\n0.19, 0.29 and 0.31 million in three re-runs\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-strip-1280-light.png"
+  },
+  {
+    "route": "projects/natd.html",
+    "width": 1280,
+    "theme": "dark",
+    "sourceRow": 3,
+    "readout": "SOURCE ROW 3 OF 5\nEnigma\nType\nDeceitful\nSessions\n3\nMean exam change (points)\n+4.7\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-bars-1280-dark.png"
+  },
+  {
+    "route": "projects/mailroom-ml/report.html",
+    "width": 1280,
+    "theme": "dark",
+    "sourceRow": 2,
+    "readout": "SOURCE ROW 2 OF 5\ncorporate_record\nArm B\n0.2485\nFinal\n0.904\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-dumbbell-1280-dark.png"
+  },
+  {
+    "route": "projects/mailroom-corpus-eda/report.html",
+    "width": 1280,
+    "theme": "dark",
+    "sourceRow": 3,
+    "readout": "SOURCE ROW 3 OF 5\n32,768\nDocuments that fit\n93.2%\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-step-1280-dark.png"
+  },
+  {
+    "route": "projects/langtons-ant.html",
+    "width": 1280,
+    "theme": "dark",
+    "sourceRow": 2,
+    "readout": "SOURCE ROW 2 OF 2\nColony of 25 ants\nREADME: Apple M2, macOS, Node 22.14.0\n0.54 million steps per second, 13.39 million cell updates per second\nRe-runs: shared 4-core Linux container, Node 22.22.0\n0.19, 0.29 and 0.31 million in three re-runs\n\nFocus or point to a mark or data row to connect the evidence.",
+    "screenshot": "run-65-strip-1280-dark.png"
+  }
+]

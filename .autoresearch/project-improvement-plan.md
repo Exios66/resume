@@ -2,7 +2,7 @@
 
 This queue combines the saved backlog with ideas from inspecting the Projects index, Mailroom-ML report and RVL-CDIP report. These are hypotheses, not measured improvements. Preserve the source-backed claims, historical run labels and limitations. Define each evaluation before changing the implementation; use a new fixed audit segment when adding scored checks.
 
-## Current batch: report navigation
+## Completed foundation: report navigation
 
 1. Align report contents columns with a responsive grid. Measure column starts in CSS pixels, preserve DOM order and all section destinations, and inspect phone/tablet/desktop layouts in both themes.
 2. Expand standalone contents links to at least 44×44 CSS px on touch layouts. Exercise keyboard activation, visible focus, pointer activation, section positioning and overflow. Review the added vertical space before keeping it.
@@ -33,3 +33,6 @@ Projects category links already have 44px targets and a 4px row gap. The old “
 ## Evidence and delivery
 
 Each progressing candidate needs its own experiment commit, fixed-segment baseline/delta, full correctness gate on that commit, actual inspected screenshots, interaction observations, a keep/discard rationale and durable PR evidence. Archive outside `docs/`. A local root/Pages-prefix simulation is required; native Linux and live deployment remain separate open checks.
+
+## Current follow-on queue
+Native chart/source navigation and coordinated source reading are completed in PR110. See [uncovered-aspects-queue.md](uncovered-aspects-queue.md) for the ranked next objectives and required evaluations. A zero score covers only the fixed measured criteria.
