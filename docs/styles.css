@@ -281,6 +281,18 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 .card :is(h2, h3) a:hover { text-decoration: none; color: var(--accent); }
 .card .icon-go { color: var(--muted); }
 .card .kicker { margin-bottom: 8px; font-size: .75rem; }
+/* Labels written "A · B · C" (scripts/site.lua splits them). A separator leads its part, so it
+   never ends a line; one that would start a line falls in a gutter that is clipped off. */
+.segs .seg { display: inline-block; }
+:is(.kicker, .sample-source).segs .seg-line { display: block; overflow: hidden; }
+:is(.kicker, .sample-source).segs .seg-run { display: block; margin-left: -1.4em; }
+:is(.kicker, .sample-source).segs .seg { position: relative; padding-left: 1.4em; }
+:is(.kicker, .sample-source).segs .sep { position: absolute; left: 0; width: 1.4em; text-align: center; }
+/* The centred hero line cannot clip a gutter, so on phones each part takes its own line. */
+@media (max-width: 560px) {
+  .role.segs .seg { display: block; }
+  .role.segs .sep { display: none; }
+}
 .card p { margin: 0 0 10px; color: var(--muted); font-size: .92rem; }
 .card p:last-child { margin-bottom: 0; }
 .card p:has(.tag) { margin-top: auto; padding-top: 6px; }
