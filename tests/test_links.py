@@ -129,10 +129,16 @@ def link_values(tag, attributes):
 
 def link_problem(page, value):
     """Return why an internal link is broken, or None when it resolves to a file inside docs/."""
-    if value.startswith("/"):
-        return "root-relative link; the site is served under /resume/"
     path = unquote(urlsplit(value).path)
-    candidate = page.parent / path if path else page
+    if value.startswith("/"):
+        # GitHub Pages shows the root 404.html at whatever depth was requested, so only
+        # that page may (and must) link absolutely under the published site path.
+        if not (page == DOCS / "404.html" and value.startswith("/resume/")):
+            return "root-relative link; the site is served under /resume/"
+        path = path[len("/resume/"):]
+        candidate = DOCS / path
+    else:
+        candidate = page.parent / path if path else page
     target = candidate.resolve()
     try:
         target.relative_to(DOCS.resolve())

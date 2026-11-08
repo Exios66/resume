@@ -114,7 +114,8 @@ class SearchTests(unittest.TestCase):
     def test_search_index_covers_every_public_page_once(self):
         entries = json.loads((checks.DOCS / "search-index.json").read_text(encoding="utf-8"))
         listed = [entry["u"] for entry in entries]
-        public = [p.relative_to(checks.DOCS).as_posix() for p in pages() if p.name != "search.html"]
+        # The search page and the 404 page are not destinations, so they stay out of the index.
+        public = [p.relative_to(checks.DOCS).as_posix() for p in pages() if p.name not in {"search.html", "404.html"}]
         self.assertEqual(sorted(listed), sorted(public))
         self.assertEqual(len(listed), len(set(listed)))
         for entry in entries:
@@ -160,7 +161,8 @@ class RenderingIntegrityTests(unittest.TestCase):
         locations = [node.text for node in ET.parse(checks.DOCS / "sitemap.xml").findall("{*}url/{*}loc")]
         for page in pages():
             rel = page.relative_to(checks.DOCS).as_posix()
-            self.assertEqual(locations.count(SITE + rel), 1, rel)
+            # Quarto leaves the 404 page out of the sitemap; search engines should not index it.
+            self.assertEqual(locations.count(SITE + rel), 0 if rel == "404.html" else 1, rel)
 
     def test_no_rendered_page_leaks_source_paths_or_todo(self):
         for page in pages():
