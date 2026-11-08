@@ -250,7 +250,7 @@ p { margin: 0 0 12px; }
 h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var(--serif); font-optical-sizing: auto; letter-spacing: -.01em; }
 .page > h1 + p, .page > .kicker + p { margin-top: 0; }
 .kicker { display: block; margin-bottom: 14px; color: var(--accent); font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
-.back { display: inline-flex; align-items: center; gap: .4em; margin-bottom: 14px; font-size: .88rem; font-weight: 600; }
+.back { display: inline-flex; align-items: center; gap: .4em; min-height: 24px; margin-bottom: 14px; font-size: .88rem; font-weight: 600; }
 .lede { max-width: 56ch; margin: 18px auto 0; }
 .lede p { margin: 0; color: var(--muted); font-size: 1.05rem; }
 .more { display: inline-flex; align-items: center; font-weight: 600; }
@@ -644,7 +644,8 @@ body::before {
 }
 
 /* Header: frosted glass once the page scrolls under it. */
-.site-title { display: inline-flex; align-items: center; gap: .6em; }
+/* Padding grows the tap target to 24px+ and the negative margin keeps the header from moving. */
+.site-title { display: inline-flex; align-items: center; gap: .6em; padding: 4px 0; margin: -4px 0; }
 .site-title::before {
   content: ""; width: .62em; height: .62em; flex: none; border-radius: 2px; transform: rotate(45deg);
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
