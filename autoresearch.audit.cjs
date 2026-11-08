@@ -1,5 +1,6 @@
 // Polish audit for the rendered site in docs/. Prints METRIC lines; lower polish_defects is better.
-// Usage: node autoresearch.audit.cjs   (AXE_PATH and SHOT_DIR are optional env vars)
+// Usage: node autoresearch.audit.cjs   (AXE_PATH, SHOT_DIR and AUDIT_LIST are optional env vars)
+// AUDIT_LIST=<file> writes one line per scored finding (width, theme, page, kind, where); scores are unchanged.
 // Every check measures something a visitor sees or a keyboard or screen-reader user meets.
 // Weights favour defects that block reading or access over cosmetic ones.
 const { chromium } = require('playwright');
@@ -11,6 +12,8 @@ const ROOT = __dirname;
 const DOCS = path.join(ROOT, 'docs');
 const AXE = fs.readFileSync(process.env.AXE_PATH || require.resolve('axe-core/axe.min.js'), 'utf8');
 const SHOT_DIR = process.env.SHOT_DIR || '';
+const LIST = process.env.AUDIT_LIST || '';
+const listed = [];
 const IMPACT = { critical: 10, serious: 5, moderate: 2, minor: 1 };
 
 function walk(dir) {
@@ -45,7 +48,7 @@ function inspect(mobile) {
   const vw = document.documentElement.clientWidth;
   const out = { pageOverflow: document.documentElement.scrollWidth > vw + 1, tap: [], tiny: [], crushed: 0,
     tableOverflow: 0, invisibleFocusable: [], headingSkips: 0, h1: 0, brokenImages: 0,
-    sepStart: 0, sepEnd: 0, headingWidows: 0 };
+    sepStart: 0, sepEnd: 0, headingWidows: 0, where: { crushed: [], tables: [], sepStart: [], sepEnd: [], widows: [] } };
   const visible = el => { const s = getComputedStyle(el); const r = el.getBoundingClientRect();
     return s.visibility !== 'hidden' && s.display !== 'none' && r.width > 0 && r.height > 0; };
   const sig = el => { const parts = []; while (el && el.nodeType === 1 && parts.length < 3) {
@@ -90,14 +93,14 @@ function inspect(mobile) {
     }
     for (const t of document.querySelectorAll('main table')) {
       if (!visible(t)) continue;
-      if (t.scrollWidth > t.clientWidth + 1 || t.getBoundingClientRect().right > vw + 1) out.tableOverflow++;
+      if (t.scrollWidth > t.clientWidth + 1 || t.getBoundingClientRect().right > vw + 1) { out.tableOverflow++; out.where.tables.push(sig(t) + ' | ' + [...(t.rows[0] || { cells: [] }).cells].map(c => c.textContent.trim()).join(' | ').slice(0, 100)); }
       for (const cell of t.querySelectorAll('td, th')) {
         const text = cell.textContent.trim(); if (!text) continue;
         // Count the text's own line boxes, not the row height that a taller neighbour sets.
         const lines = lineCount(cell);
         const words = text.split(/\s+/).length;
         const clipped = [...cell.querySelectorAll('code')].some(c => c.getBoundingClientRect().right > cell.getBoundingClientRect().right + 1);
-        if (lines > words + 1 || clipped) out.crushed++;
+        if (lines > words + 1 || clipped) { out.crushed++; out.where.crushed.push((clipped ? 'clipped ' : '') + lines + ' lines | ' + text.slice(0, 80)); }
       }
     }
   }
@@ -126,8 +129,8 @@ function inspect(mobile) {
       const here = charRect(m, i); if (!here || !here.width || clipped(m.parentElement, here)) return;
       const before = k > 0 ? charRect(...seq[k - 1]) : null;
       const after = k < seq.length - 1 ? charRect(...seq[k + 1]) : null;
-      if (before && !sameLine(before, here)) out.sepStart++;
-      else if (after && !sameLine(after, here)) out.sepEnd++;
+      if (before && !sameLine(before, here)) { out.sepStart++; out.where.sepStart.push(sig(block) + ' | ' + block.textContent.trim().slice(0, 80)); }
+      else if (after && !sameLine(after, here)) { out.sepEnd++; out.where.sepEnd.push(sig(block) + ' | ' + block.textContent.trim().slice(0, 80)); }
     });
   }
   for (const h of document.querySelectorAll('h1, h2, h3')) {
@@ -140,7 +143,7 @@ function inspect(mobile) {
         const q = [...rg.getClientRects()].pop(); if (q && q.width) words.push(q);
       }
     }
-    if (words.length >= 3 && !sameLine(words[words.length - 1], words[words.length - 2])) out.headingWidows++;
+    if (words.length >= 3 && !sameLine(words[words.length - 1], words[words.length - 2])) { out.headingWidows++; out.where.widows.push(h.tagName.toLowerCase() + ' | ' + h.textContent.trim().slice(0, 80)); }
   }
   let prev = 0;
   for (const h of document.querySelectorAll('h1, h2, h3, h4, h5, h6')) {
@@ -174,6 +177,7 @@ function lints() {
     { w: 1280, theme: 'light' }, { w: 1280, theme: 'dark' }, { w: 320, theme: 'light', mobile: true, layoutOnly: true }];
   const totals = { axe: 0, layout: 0, errors: 0, structure: 0, type: 0, axeIds: {}, details: {} };
   const add = (bucket, key, pts) => { totals[bucket] += pts; totals.details[key] = (totals.details[key] || 0) + pts; };
+  const note = (c, p, kind, items) => { if (LIST) for (const i of items) listed.push([c.w, c.theme, p, kind, i].join('\t')); };
   await Promise.all(combos.map(async c => {
     const ctx = await browser.newContext({ viewport: { width: c.w, height: 900 }, colorScheme: c.theme, reducedMotion: 'reduce' });
     for (const p of PAGES) {
@@ -190,28 +194,35 @@ function lints() {
         const violations = await page.evaluate(async () => (await axe.run(document, { runOnly: { type: 'tag',
           values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'] } })).violations
           .map(v => ({ id: v.id, impact: v.impact, n: v.nodes.length })));
-        for (const v of violations) { const pts = v.n * (IMPACT[v.impact] || 1); add('axe', 'axe:' + v.id, pts);
+        for (const v of violations) { const pts = v.n * (IMPACT[v.impact] || 1); add('axe', 'axe:' + v.id, pts); note(c, p, 'axe', [v.id + ' x' + v.n]);
           totals.axeIds[v.id] = (totals.axeIds[v.id] || 0) + v.n; }
       }
       const r = await page.evaluate(inspect, !!c.mobile);
-      if (r.pageOverflow) add('layout', 'page overflow', 20);
+      if (r.pageOverflow) { add('layout', 'page overflow', 20); note(c, p, 'page overflow', ['']); }
       if (c.mobile) {
         add('layout', 'crushed table cells', 2 * r.crushed);
         add('layout', 'tables wider than screen', r.tableOverflow);
-        if (!c.layoutOnly) { add('layout', 'tap targets < 24px', r.tap.length); add('layout', 'text < 12px', r.tiny.length); }
+        note(c, p, 'crushed cell', r.where.crushed); note(c, p, 'wide table', r.where.tables);
+        if (!c.layoutOnly) { add('layout', 'tap targets < 24px', r.tap.length); add('layout', 'text < 12px', r.tiny.length);
+          note(c, p, 'small tap target', r.tap); note(c, p, 'text < 12px', r.tiny); }
       }
-      if (!c.layoutOnly) add('layout', 'invisible focusable controls', 5 * r.invisibleFocusable.length);
+      if (!c.layoutOnly) { add('layout', 'invisible focusable controls', 5 * r.invisibleFocusable.length);
+        note(c, p, 'invisible focusable', r.invisibleFocusable); }
       if (c.w === 1280 && c.theme === 'light') {
         add('structure', 'heading level skips', 2 * r.headingSkips);
-        if (r.h1 !== 1) add('structure', 'pages without exactly one h1', 2);
+        if (r.h1 !== 1) { add('structure', 'pages without exactly one h1', 2); note(c, p, 'h1 count', [String(r.h1)]); }
+        if (r.headingSkips) note(c, p, 'heading skip', [String(r.headingSkips)]);
       }
       if (c.theme === 'light' && !c.layoutOnly) {
         add('type', 'separator starts a line', 2 * r.sepStart);
         add('type', 'separator ends a line', r.sepEnd);
         add('type', 'heading ends with a one-word line', r.headingWidows);
+        note(c, p, 'separator starts line', r.where.sepStart); note(c, p, 'separator ends line', r.where.sepEnd);
+        note(c, p, 'heading widow', r.where.widows);
       }
       add('errors', 'broken images', 10 * r.brokenImages);
       add('errors', 'console or network errors', 10 * errs.size);
+      if (r.brokenImages) note(c, p, 'broken image', [String(r.brokenImages)]); note(c, p, 'error', [...errs]);
       if (SHOT_DIR && !c.layoutOnly && c.theme === 'light') {
         fs.mkdirSync(SHOT_DIR, { recursive: true });
         await page.screenshot({ path: path.join(SHOT_DIR, `${p.replace(/\//g, '__').replace('.html', '')}_${c.w}.png`), fullPage: true });
@@ -224,7 +235,8 @@ function lints() {
   server.close();
   const lintFound = lints();
   const lintPts = lintFound.reduce((s, [, w]) => s + w, 0);
-  for (const [k, w] of lintFound) totals.details['lint: ' + k] = w;
+  for (const [k, w] of lintFound) { totals.details['lint: ' + k] = w; if (LIST) listed.push(['-', '-', '-', 'lint', k].join('\t')); }
+  if (LIST) fs.writeFileSync(LIST, listed.sort().join('\n') + (listed.length ? '\n' : ''));
   const total = totals.axe + totals.layout + totals.errors + totals.structure + totals.type + lintPts;
   console.error(JSON.stringify({ details: totals.details, axeIds: totals.axeIds }, null, 1));
   const css = fs.statSync(path.join(DOCS, 'styles.css')).size;

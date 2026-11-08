@@ -19,23 +19,14 @@ Thumbs.db
 __pycache__/
 .pytest_cache/
 
-# Autoresearch session files (living state, never committed)
+# Polish hill-climb: living session state and local outputs (snapshots go in .autoresearch/)
 autoresearch.jsonl
-
-# Autoresearch session files (living state, never committed)
 autoresearch.md
-
-# Autoresearch session files (living state, never committed)
 autoresearch.ideas.md
-
-# Autoresearch session files (living state, never committed)
 run.log
-
-# Autoresearch session files (living state, never committed)
-audit.details.json
-
-# Autoresearch session files (living state, never committed)
+checks.log
 render.err
-
-# Autoresearch session files (living state, never committed)
+audit.details.json
+findings.tsv
 .autoresearch-tools/
+.hillclimb-shots/
