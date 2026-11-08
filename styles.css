@@ -153,6 +153,8 @@ a.chip:hover { text-decoration: none; filter: brightness(.95); }
 .btn.primary:hover { filter: brightness(1.08); background: var(--accent); }
 
 /* ---------- Sections ---------- */
+/* Even line lengths: a wrapped heading never ends on a lone word. */
+h1, h2, h3 { text-wrap: balance; }
 h2 {
   margin: 36px 0 14px;
   padding-bottom: 6px;
