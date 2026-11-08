@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=e47ac3add9">
+<link rel="stylesheet" href="../styles.css?v=32735b2a28">
 <meta property="og:title" content="MapReduce-Reloaded — Jack J. Burleson">
 <meta property="og:description" content="A from-scratch MapReduce rebuild: a Go cluster and Python reference, a 24-item paper mapping, S3 storage, compression, fault injection and a small-scale VM evaluation. In active development.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -264,6 +264,40 @@ ul.task-list li input[type="checkbox"] {
 <p class="chart-return"><a href="#chart-evidence-2-title" aria-label="Return to chart: With a slow worker: job time (seconds)">Return to chart</a></p>
 <p>Lower is faster. These saved medians give more precision than the rounded overview above; they do not establish a drift-controlled effect or performance on independent machines.</p>
 </div>
+<div id="mr-backup-uncertainty" class="mr-experiment">
+<h3 id="backups-without-an-injected-straggler">Backups without an injected straggler</h3>
+<p>A separate E2 experiment used ten interleaved pairs on the same VM. The dot shows the mean difference, <strong>backups on minus off</strong>; the whisker shows the reported 95% paired interval.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>Negative means faster with backups; positive means slower. The interval crosses no change and <strong>does not prove zero cost</strong>. It describes the mean paired difference, not the spread of individual runs.</p>
+<figure class="chart chart-interval"><figcaption class="chart-title" id="chart-evidence-3-title" tabindex="-1">No slow worker: mean difference and 95% interval (s)</figcaption><div class="chart-body" tabindex="0" role="group" aria-label="No slow worker: mean difference and 95% interval (s), scrollable"><svg viewbox="0 0 320 184" width="320" height="184" role="group" aria-label="No slow worker: mean difference and 95% interval (s): Backups on minus off mean −0.11, 95% paired interval −0.38 to +0.16. Zero is no change. Full values in the table below."><line class="grid" x1="44" y1="70" x2="44" y2="150" fill="none" stroke="#e2e8eb"></line><text class="tick" x="44" y="168" text-anchor="middle">−0.5 s</text><line class="grid" x1="107" y1="70" x2="107" y2="150" fill="none" stroke="#e2e8eb"></line><text class="tick" x="107" y="168" text-anchor="middle">−0.25 s</text><line class="grid" x1="170" y1="70" x2="170" y2="150" fill="none" stroke="#e2e8eb"></line><text class="tick" x="170" y="168" text-anchor="middle">0 s</text><line class="grid" x1="233" y1="70" x2="233" y2="150" fill="none" stroke="#e2e8eb"></line><text class="tick" x="233" y="168" text-anchor="middle">0.25 s</text><line class="grid" x1="296" y1="70" x2="296" y2="150" fill="none" stroke="#e2e8eb"></line><text class="tick" x="296" y="168" text-anchor="middle">0.5 s</text><line class="ref" x1="170" y1="62" x2="170" y2="150" fill="none" stroke="#5b6970"></line><text class="ref-label" x="170" y="58" text-anchor="middle">no change</text><g class="mark" tabindex="0" role="img" aria-label="Backups on minus off (mean and 95% paired interval): −0.11 s; −0.38 s to +0.16 s" data-tip-value="−0.11 s; −0.38 s to +0.16 s" data-tip-label="Backups on minus off (mean and 95% paired interval)" data-source-row="1"><rect class="hit" x="0" y="70" width="320" height="80" fill="transparent" stroke="none"></rect><text class="cat" x="0" y="22" text-anchor="start">Backups on minus off</text><line class="interval-range c1" x1="74.2" y1="102" x2="210.3" y2="102" fill="none" stroke="#008b9a"></line><line class="interval-cap c1" x1="74.2" y1="95" x2="74.2" y2="109" fill="none" stroke="#008b9a"></line><line class="interval-cap c1" x1="210.3" y1="95" x2="210.3" y2="109" fill="none" stroke="#008b9a"></line><circle class="dot c1" cx="142.3" cy="102" r="5" fill="#008b9a" stroke="#ffffff" stroke-width="2"></circle><text class="val" x="74.2" y="88" text-anchor="middle">−0.38 s</text><text class="val" x="210.3" y="88" text-anchor="middle">+0.16 s</text><text class="val" x="142.3" y="126" text-anchor="middle">−0.11 s</text></g></svg></div><p class="chart-tools"><a href="#chart-evidence-3-data" aria-label="View exact values for No slow worker: mean difference and 95% interval (s)">View exact values</a></p></figure>
+<table id="chart-evidence-3-data" class="chart-source caption-top stack" tabindex="-1" aria-labelledby="chart-evidence-3-title" role="table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header" role="row">
+<th role="columnheader">Comparison</th>
+<th style="text-align: right;" role="columnheader">Mean difference (s)</th>
+<th style="text-align: right;" role="columnheader">95% lower (s)</th>
+<th style="text-align: right;" role="columnheader">95% upper (s)</th>
+<th style="text-align: right;" role="columnheader">Pairs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd" role="row">
+<td role="cell" data-label="Comparison">Backups on minus off</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Mean difference (s)">−0.11</td>
+<td class="num" style="text-align: right;" role="cell" data-label="95% lower (s)">−0.38</td>
+<td class="num" style="text-align: right;" role="cell" data-label="95% upper (s)">+0.16</td>
+<td class="num" style="text-align: right;" role="cell" data-label="Pairs">10</td>
+</tr>
+</tbody>
+</table>
+<p class="chart-return"><a href="#chart-evidence-3-title" aria-label="Return to chart: No slow worker: mean difference and 95% interval (s)">Return to chart</a></p>
+</div>
 <p>The <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/report.md">final report⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> links the raw results, design decisions and reproduction steps.</p>
 <h2 id="what-is-planned">What is planned</h2>
 <p>Python workers and a complete Go/Python interoperability matrix, coordinator high availability, skew handling and Parquet input remain stretch goals. LATE-style speculation is built as an opt-in mode, but its E7 evaluation has not been run; there is no measured claim that it is faster.</p>
@@ -282,6 +316,7 @@ ul.task-list li input[type="checkbox"] {
 <hr>
 <ol>
 <li id="fn1"><p>Source: <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/evaluation.md#backup-tasks-54">E2 evaluation at revision 4dd1ca4⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> and <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/bench/README.md#e2-backup-tasks-and-a-straggler">benchmark notes⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>. Reported measurements, not rerun here.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Source: <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/evaluation.md#backup-tasks-54">E2 evaluation at revision 4dd1ca4⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> and <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/bench/README.md#e2-backup-tasks-and-a-straggler">benchmark notes⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>. Reported measurements, not rerun here.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></main>
 <footer class="site-footer">

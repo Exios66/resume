@@ -709,3 +709,35 @@ def test_mapreduce_duration_keeps_condition_and_source_context(site, width, them
         assert page.locator('#fn1 a[href*="4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387"]').count() == 2
     finally:
         page.close()
+
+
+@pytest.mark.parametrize("width,theme", [(375, "light"), (375, "dark"), (1280, "light"), (1280, "dark")])
+def test_mapreduce_interval_distinguishes_mean_bounds_and_zero(site, width, theme):
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 1100}, color_scheme=theme, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/mapreduce-reloaded.html")
+        panel = page.locator("#mr-backup-uncertainty")
+        expect(panel).to_contain_text("ten interleaved pairs")
+        expect(panel).to_contain_text("backups on minus off")
+        expect(panel).to_contain_text("does not prove zero cost")
+        plot = panel.locator("figure.chart")
+        mark = plot.locator(".mark")
+        expect(mark).to_have_count(1)
+        assert mark.get_attribute("data-tip-value") == "−0.11 s; −0.38 s to +0.16 s"
+        geometry = plot.evaluate("""el => {
+            const line = el.querySelector('.interval-range'), dot = el.querySelector('.dot'), zero = el.querySelector('line.ref');
+            return [Number(line.getAttribute('x1')), Number(dot.getAttribute('cx')), Number(zero.getAttribute('x1')), Number(line.getAttribute('x2'))];
+        }""")
+        assert geometry == sorted(geometry)
+        mark.focus()
+        for value in ("−0.11", "−0.38", "+0.16", "10"):
+            expect(plot.locator(".chart-readout")).to_contain_text(value)
+        page.emulate_media(media="print")
+        expect(plot.locator("svg")).to_be_visible()
+        expect(panel.locator("table")).to_be_visible()
+        expect(plot.locator(".chart-readout")).to_be_hidden()
+        page.emulate_media(media="screen", forced_colors="active")
+        expect(plot.locator(".interval-range")).to_have_css("stroke-width", "2px")
+    finally:
+        page.close()

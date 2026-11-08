@@ -18,7 +18,7 @@ PAGES = {
     "projects/mailroom-ml/report.html": 1,
     "projects/mailroom-corpus-eda/report.html": 1,
     "projects/rvl-cdip-classifier.html": 1,
-    "projects/mapreduce-reloaded.html": 2,
+    "projects/mapreduce-reloaded.html": 3,
     "projects/langtons-ant.html": 1,
 }
 FIGURE = re.compile(r'<figure class="chart chart-\w+">.*?</figure>', re.S)

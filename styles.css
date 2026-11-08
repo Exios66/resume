@@ -982,3 +982,17 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
 #mr-backup-duration .chart svg { min-width: 300px; max-width: 640px; }
 #mr-backup-duration .chart text.tick { font-size: 13px; }
 .page #mr-backup-duration figure.chart::after { content: none; }
+
+/* Interval marks retain explicit endpoints and a zero reference in both themes. */
+.chart-interval svg { min-width: 300px; max-width: 640px; }
+.chart-interval text.tick, .chart-interval text.ref-label { font-size: 13px; }
+.chart .interval-range.c1, .chart .interval-cap.c1 { stroke: var(--chart-1); stroke-width: 2; }
+.chart-interval .ref { stroke-dasharray: 4 4; }
+@media (forced-colors: active) {
+  .chart .interval-range.c1, .chart .interval-cap.c1 { stroke: CanvasText; }
+}
+
+/* This compact interval fits normal phone widths; retain a cue only at 320px. */
+@media (min-width: 361px) {
+  .page figure.chart-interval::after { content: none; }
+}
