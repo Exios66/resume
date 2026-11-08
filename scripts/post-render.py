@@ -93,9 +93,12 @@ def asset_versions():
 
 
 def cache_bust(text, versions):
-    """Append ?v=<hash> to href/src links that point at a versioned asset (any ../ depth)."""
+    """Append ?v=<hash> to href/src links that point at a versioned asset.
+
+    Links may be relative at any ../ depth or absolute under the site path, as on 404.html.
+    """
     for rel, version in versions.items():
-        pattern = r'((?:href|src)="(?:\.\./)*' + re.escape(rel) + r')(?:\?v=[0-9a-f]+)?"'
+        pattern = r'((?:href|src)="(?:(?:\.\./)*|/(?:[\w.-]+/)*)' + re.escape(rel) + r')(?:\?v=[0-9a-f]+)?"'
         text = re.sub(pattern, lambda m: f'{m.group(1)}?v={version}"', text)
     return text
 
@@ -175,7 +178,7 @@ def build_search_index():
     entries = []
     for page in sorted(DOCS.rglob("*.html")):
         rel = page.relative_to(DOCS).as_posix()
-        if rel == "search.html" or "site_libs" in page.parts:
+        if rel in {"search.html", "404.html"} or "site_libs" in page.parts:
             continue
         source = page.read_text(encoding="utf-8")
         title = re.search(r"<title>(.*?)</title>", source, re.S)

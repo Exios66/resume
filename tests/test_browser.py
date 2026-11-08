@@ -35,6 +35,13 @@ def site(playwright):
         def log_message(self, *_):
             pass
 
+        def translate_path(self, path):
+            # GitHub Pages serves docs/ at /resume/; 404.html links there absolutely
+            # because it is shown at whatever depth the missing address had.
+            if path.startswith("/resume/"):
+                path = "/docs/" + path[len("/resume/"):]
+            return super().translate_path(path)
+
     server = ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=ROOT))
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
