@@ -555,9 +555,7 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   .page table:not(.stack) { font-size: .84rem; }
   .page table:not(.stack) code { font-size: .9em; }
   .page table:not(.stack) :is(th, td) { padding: 7px 8px; }
-  /* Row-label columns keep room for long tokens (model names, paths) to wrap into
-     at most two lines instead of three or four. Nothing narrower benefit from. */
-  .page table:not(.stack) :is(th, td):first-child { padding-left: 2px; min-width: 12ch; }
+  .page table:not(.stack) :is(th, td):first-child { padding-left: 2px; }
   .page table:not(.stack) :is(th, td):last-child { padding-right: 2px; }
   /* Text tables: each row becomes a block, each cell labelled with its column. */
   .page table.stack, .page table.stack tbody, .page table.stack tr, .page table.stack td { display: block; width: auto; }
