@@ -492,9 +492,9 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 /* On-page contents, reports and appendices only */
 .page-toc { margin: 22px 0; padding: 14px 16px; border: 1px solid var(--rule); border-radius: 10px; background: var(--bg); }
 .page-toc .toc-label { margin: 0 0 8px; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.page-toc ul { margin: 0; padding-left: 1.1rem; columns: 2; column-gap: 28px; }
-.page-toc li { margin: 3px 0; break-inside: avoid; }
-@media (max-width: 720px) { .page-toc ul { columns: 1; } }
+.page-toc ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 28px; margin: 0; padding-left: 1.1rem; }
+.page-toc li { margin: 0; min-width: 0; }
+@media (max-width: 720px) { .page-toc ul { grid-template-columns: minmax(0, 1fr); } }
 
 /* Previous/next project pager */
 .project-pager { display: flex; gap: 12px; justify-content: space-between; margin: 24px 0 4px; padding-top: 14px; border-top: 1px solid var(--rule); }
