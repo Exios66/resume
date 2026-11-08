@@ -325,6 +325,23 @@ function lints() {
         note(c, p, 'separator starts line', r.where.sepStart); note(c, p, 'separator ends line', r.where.sepEnd);
         note(c, p, 'heading widow', r.where.widows);
       }
+      // Paper has no use for screen navigation. Inspect CSS print media once per
+      // built page, while ensuring that its primary reading title survives.
+      if (c.w === 1280 && c.theme === 'light') {
+        await page.emulateMedia({ media: 'print' });
+        const printed = await page.evaluate(() => {
+          const visible = el => { const r = el.getBoundingClientRect(), s = getComputedStyle(el);
+            return r.width > 0 && r.height > 0 && s.display !== 'none' && s.visibility !== 'hidden'; };
+          const selectors = ['.site-header', '.site-footer', '.project-nav', '.page-toc',
+            '.project-pager', '.site-search', '.search-suggest', '#search-status', '#search-results'];
+          return { controls: selectors.flatMap(sel => [...document.querySelectorAll(sel)].filter(visible).map(() => sel)),
+            titleHidden: ![...document.querySelectorAll('main h1, main [role="heading"][aria-level="1"]')].some(visible) };
+        });
+        add('layout', 'screen navigation visible in print', printed.controls.length);
+        note(c, p, 'print navigation', printed.controls);
+        if (printed.titleHidden) { add('structure', 'primary title hidden in print', 1); note(c, p, 'print title', ['main h1 hidden']); }
+        await page.emulateMedia({ media: 'screen' });
+      }
       add('errors', 'broken images', 10 * r.brokenImages);
       add('errors', 'console or network errors', 10 * errs.size);
       if (r.brokenImages) note(c, p, 'broken image', [String(r.brokenImages)]); note(c, p, 'error', [...errs]);

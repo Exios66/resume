@@ -1,0 +1,66 @@
+[
+  {
+    "page": "projects/mailroom-ml.html",
+    "width": 375,
+    "theme": "light",
+    "screenNavigationVisible": false,
+    "primaryTitleVisible": true,
+    "screenshot": "run-62-print-project-375-light.png"
+  },
+  {
+    "page": "search.html?q=calibration",
+    "width": 375,
+    "theme": "light",
+    "screenNavigationVisible": false,
+    "primaryTitleVisible": true,
+    "screenshot": "run-62-print-search-375-light.png"
+  },
+  {
+    "page": "projects/mailroom-ml.html",
+    "width": 375,
+    "theme": "dark",
+    "screenNavigationVisible": false,
+    "primaryTitleVisible": true,
+    "screenshot": "run-62-print-project-375-dark.png"
+  },
+  {
+    "page": "search.html?q=calibration",
+    "width": 375,
+    "theme": "dark",
+    "screenNavigationVisible": false,
+    "primaryTitleVisible": true,
+    "screenshot": "run-62-print-search-375-dark.png"
+  },
+  {
+    "page": "projects/mailroom-ml.html",
+    "width": 1280,
+    "theme": "light",
+    "screenNavigationVisible": false,
+    "primaryTitleVisible": true,
+    "screenshot": "run-62-print-project-1280-light.png"
+  },
+  {
+    "page": "search.html?q=calibration",
+    "width": 1280,
+    "theme": "light",
+    "screenNavigationVisible": false,
+    "primaryTitleVisible": true,
+    "screenshot": "run-62-print-search-1280-light.png"
+  },
+  {
+    "page": "projects/mailroom-ml.html",
+    "width": 1280,
+    "theme": "dark",
+    "screenNavigationVisible": false,
+    "primaryTitleVisible": true,
+    "screenshot": "run-62-print-project-1280-dark.png"
+  },
+  {
+    "page": "search.html?q=calibration",
+    "width": 1280,
+    "theme": "dark",
+    "screenNavigationVisible": false,
+    "primaryTitleVisible": true,
+    "screenshot": "run-62-print-search-1280-dark.png"
+  }
+]
