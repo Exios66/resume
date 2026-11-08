@@ -75,6 +75,7 @@ local ICONS = {
   { "scale", [=[<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>]=] },
   { "waves", [=[<path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>]=] },
   { "database", [=[<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/>]=] },
+  { "globe", [=[<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>]=] },
   { "clock", [=[<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>]=] },
 }
 
@@ -158,6 +159,7 @@ function contact_icon_name(href)
   if lower:match("^https?://[%w%.]*linkedin%.com") then return "linkedin" end
   if lower:match("^https?://github%.com/exios66/?$") then return "github" end
   if lower:match("%.pdf$") or lower:match("%.pdf[?#]") then return "download" end
+  if lower:match("^https?://exios66%.github%.io/resume/?$") then return "globe" end
   return nil
 end
 

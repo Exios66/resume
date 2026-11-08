@@ -214,12 +214,12 @@ local sprite_html = Pandoc({ blocks = {} }).blocks[2].text
 local used = {}
 for _, name in ipairs({ "book-open", "file-text", "code", "play", "arrow-left", "arrow-right",
                         "arrow-up-right", "download", "map-pin", "sun", "moon", "layers", "brain",
-                        "scale", "waves", "database", "clock", "github", "linkedin", "mail" }) do
+                        "scale", "waves", "database", "clock", "globe", "github", "linkedin", "mail" }) do
   contains(sprite_html, '<symbol id="i-' .. name .. '"')
   used[name] = true
 end
 local _, symbols = sprite_html:gsub("<symbol ", "")
-assert(symbols == 20, "Unexpected icon count: " .. symbols)
+assert(symbols == 21, "Unexpected icon count: " .. symbols)
 
 -- The new database symbol must render a shape, not just resolve to an empty id.
 local database_symbol = sprite_html:match('(<symbol id="i%-database".-</symbol>)')
@@ -285,6 +285,8 @@ local cases_contact = {
   { "https://github.com/Exios66/", "github" },
   { "mailto:jackjburleson@proton.me", "mail" },
   { "assets/Jack_Burleson_Resume.pdf", "download" },
+  { "https://exios66.github.io/resume/", "globe" },
+  { "https://exios66.github.io/resume/projects/", nil },
   { "https://github.com/Exios66/degen-llms", nil },
   { "https://github.com/Exios66x", nil },
   { "resume.qmd", nil },

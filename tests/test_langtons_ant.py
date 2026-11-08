@@ -61,7 +61,9 @@ class LangtonsAntTests(unittest.TestCase):
         self.assertEqual([checks.attr(attrs, "href") for attrs in uses], ["#i-waves"])
         _, parser = self.read_page()
         symbols = [checks.attr(attrs, "id") for tag, attrs, _ in parser.elements if tag == "symbol"]
-        self.assertEqual(len(symbols), 20, "The sprite must keep exactly the existing 20 symbols")
+        # 21 since the résumé contact line gained a globe icon for the portfolio address.
+        self.assertEqual(len(symbols), 21, "The sprite must keep exactly the existing 21 symbols")
+        self.assertNotIn("i-ant", symbols)
         self.assertEqual(len(symbols), len(set(symbols)))
         for tag, attrs, _ in parser.elements:
             if tag == "svg" and "icon" in checks.classes(attrs):

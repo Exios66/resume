@@ -58,7 +58,8 @@ class MapReduceReloadedTests(unittest.TestCase):
         uses = [attrs for tag, attrs in index.children(heading) if tag == "use"]
         self.assertEqual([checks.attr(attrs, "href") for attrs in uses], ["#i-layers"])
         symbols = [checks.attr(attrs, "id") for tag, attrs, _ in index.elements if tag == "symbol"]
-        self.assertEqual(len(symbols), 20, "The sprite must keep exactly the existing 20 symbols")
+        # 21 since the résumé contact line gained a globe icon for the portfolio address.
+        self.assertEqual(len(symbols), 21, "The sprite must keep exactly the existing 21 symbols")
         for tag, attrs, _ in self.read_page()[1].elements:
             if tag == "svg" and "icon" in checks.classes(attrs):
                 self.assertEqual(checks.attr(attrs, "width"), "1em")
