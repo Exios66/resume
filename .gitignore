@@ -30,3 +30,6 @@ audit.details.json
 findings.tsv
 .autoresearch-tools/
 .hillclimb-shots/
+checks.ok
+findings.best.tsv
+.hillclimb-evidence/

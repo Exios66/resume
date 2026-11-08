@@ -27,10 +27,12 @@ for (let i = 0; i < rest.length; i++) {
 }
 
 const server = http.createServer((req, res) => {
-  const url = decodeURIComponent(req.url.split('?')[0].split('#')[0]);
+  let url = '';
+  try { url = decodeURIComponent(req.url.split('?')[0].split('#')[0]); } catch { /* malformed: answer 404 below */ }
   let file = url.startsWith('/resume/') ? path.join(DOCS, url.slice('/resume/'.length)) : '';
+  if (file && file !== DOCS && !file.startsWith(DOCS + path.sep)) file = '';
   if (file && fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');
-  if (!file || !file.startsWith(DOCS) || !fs.existsSync(file)) {
+  if (!file || !fs.existsSync(file)) {
     res.writeHead(404, { 'Content-Type': 'text/html' });
     return fs.existsSync(path.join(DOCS, '404.html')) ? fs.createReadStream(path.join(DOCS, '404.html')).pipe(res) : res.end();
   }
