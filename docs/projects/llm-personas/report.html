@@ -202,7 +202,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd" role="row">
 <td role="cell" data-label="Role">Witnesses</td>
 <td class="num" role="cell" data-label="Votes">0</td>
-<td role="cell" data-label="Notes">Expert domains called with <code>/summon &lt;domain&gt;-expert</code></td>
+<td role="cell" data-label="Notes">Expert domains called with <code>/summon &lt;domain&gt;-</code><wbr><code>expert</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Role">Specialists</td>
@@ -240,24 +240,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd" role="row">
-<td role="cell" data-label="Item"><code>state/current.md</code></td>
-<td role="cell" data-label="What it does">Session state, validated against <code>core/state-schema.md</code></td>
+<td role="cell" data-label="Item"><code>state/</code><wbr><code>current.</code><wbr><code>md</code></td>
+<td role="cell" data-label="What it does">Session state, validated against <code>core/</code><wbr><code>state-</code><wbr><code>schema.</code><wbr><code>md</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Item">Case IDs</td>
-<td role="cell" data-label="What it does"><code>2026-DEL-005-001</code> style: year, category, case number, deliberation number</td>
+<td role="cell" data-label="What it does"><code>2026-</code><wbr><code>DEL-</code><wbr><code>005-</code><wbr><code>001</code> style: year, category, case number, deliberation number</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="Item"><code>courtroom/case-registry.yaml</code></td>
-<td role="cell" data-label="What it does">Holds the next case number per category; <code>allocate_case_no</code> in <code>run.py</code> increments it</td>
+<td role="cell" data-label="Item"><code>courtroom/</code><wbr><code>case-</code><wbr><code>registry.</code><wbr><code>yaml</code></td>
+<td role="cell" data-label="What it does">Holds the next case number per category; <code>allocate_</code><wbr><code>case_</code><wbr><code>no</code> in <code>run.py</code> increments it</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="Item"><code>courtroom/reporter.py</code></td>
+<td role="cell" data-label="Item"><code>courtroom/</code><wbr><code>reporter.</code><wbr><code>py</code></td>
 <td role="cell" data-label="What it does">Audits transcript names and headers, regenerates the portal manifest, prints an integration report</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Item">Court Reporter agent</td>
-<td role="cell" data-label="What it does">Acts on that report: updates <code>courtroom/precedents.md</code> and <code>state/metrics.md</code></td>
+<td role="cell" data-label="What it does">Acts on that report: updates <code>courtroom/</code><wbr><code>precedents.</code><wbr><code>md</code> and <code>state/</code><wbr><code>metrics.</code><wbr><code>md</code></td>
 </tr>
 </tbody>
 </table>
@@ -276,7 +276,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd" role="row">
-<td role="cell" data-label="Module"><code>judicial_log.py</code></td>
+<td role="cell" data-label="Module"><code>judicial_</code><wbr><code>log.</code><wbr><code>py</code></td>
 <td role="cell" data-label="Behaviour">Append-only log. Each entry carries a SHA-256 entry hash and the previous entry’s hash, and <code>verify()</code> walks the chain</td>
 </tr>
 <tr class="even" role="row">
@@ -333,7 +333,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even" role="row">
 <td role="cell" data-label="Suite">Test functions by grep</td>
 <td role="cell" data-label="Count">59 <code>def test_</code> in 13 files</td>
-<td role="cell" data-label="Where"><code>tests/test_*.py</code></td>
+<td role="cell" data-label="Where"><code>tests/</code><wbr><code>test_</code><wbr><code>*.</code><wbr><code>py</code></td>
 </tr>
 </tbody>
 </table>

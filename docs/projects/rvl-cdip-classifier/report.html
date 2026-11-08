@@ -182,32 +182,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">Slice building</td>
 <td role="cell" data-label="What it does">Streams a 100-per-class Hugging Face mirror of RVL-CDIP, seeds the sampler, can skip images whose rendered pixels match an exclusion set, writes 1024×1024 grayscale PNGs with white padding</td>
-<td role="cell" data-label="Module"><code>scripts/datasets/</code>, <code>scripts/braintrust/create_braintrust_*_dataset.py</code>, <code>src/image_utils.py</code></td>
+<td role="cell" data-label="Module"><code>scripts/</code><wbr><code>datasets/</code>, <code>scripts/</code><wbr><code>braintrust/</code><wbr><code>create_</code><wbr><code>braintrust_</code><wbr><code>*_</code><wbr><code>dataset.</code><wbr><code>py</code>, <code>src/</code><wbr><code>image_</code><wbr><code>utils.</code><wbr><code>py</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">Preprocessing (separate tool)</td>
 <td role="cell" data-label="What it does">Converts TIFF/PDF pages to 300-DPI grayscale images and extracts OCR text with bounding boxes via Tesseract</td>
-<td role="cell" data-label="Module"><code>src/document_processor.py</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>document_</code><wbr><code>processor.</code><wbr><code>py</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">Prompting</td>
 <td role="cell" data-label="What it does">Versioned, append-only prompt registry</td>
-<td role="cell" data-label="Module"><code>src/prompts.py</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>prompts.</code><wbr><code>py</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">Classification</td>
 <td role="cell" data-label="What it does">Builds a message with the prompt and one image, calls OpenRouter, parses the label and a runner-up</td>
-<td role="cell" data-label="Module"><code>src/openrouter_classifier.py</code>, <code>src/openrouter_utils.py</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>openrouter_</code><wbr><code>classifier.</code><wbr><code>py</code>, <code>src/</code><wbr><code>openrouter_</code><wbr><code>utils.</code><wbr><code>py</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">Evaluation</td>
 <td role="cell" data-label="What it does">Exact-match scoring, per-class tables, confusion matrices, near-miss counts, billed cost</td>
-<td role="cell" data-label="Module"><code>src/evaluation.py</code>, <code>scripts/braintrust/</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>evaluation.</code><wbr><code>py</code>, <code>scripts/</code><wbr><code>braintrust/</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">Simulation</td>
 <td role="cell" data-label="What it does">Bootstrap analyses of voting, routing and failure handling over a pooled per-image corpus</td>
-<td role="cell" data-label="Module"><code>src/monte_carlo.py</code>, <code>src/routing.py</code></td>
+<td role="cell" data-label="Module"><code>src/</code><wbr><code>monte_</code><wbr><code>carlo.</code><wbr><code>py</code>, <code>src/</code><wbr><code>routing.</code><wbr><code>py</code></td>
 </tr>
 </tbody>
 </table>
@@ -394,12 +394,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even" role="row">
 <td role="cell" data-label="Tool">Monte Carlo pages and reports</td>
 <td role="cell" data-label="What it does">Ten pages and the raw tables for the analyses above.</td>
-<td role="cell" data-label="Where"><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/montecarlo"><code>website/montecarlo/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>, <a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/reports/monte_carlo"><code>reports/monte_carlo/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
+<td role="cell" data-label="Where"><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/montecarlo"><code>website/</code><wbr><code>montecarlo/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>, <a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/reports/monte_carlo"><code>reports/</code><wbr><code>monte_</code><wbr><code>carlo/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Tool">Interactive pages</td>
 <td role="cell" data-label="What it does">A cost calculator and an experiment explorer.</td>
-<td role="cell" data-label="Where"><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/interactive"><code>website/interactive/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
+<td role="cell" data-label="Where"><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/interactive"><code>website/</code><wbr><code>interactive/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Tool">Data exploration</td>
@@ -409,7 +409,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd" role="row">
 <td role="cell" data-label="Tool">Braintrust tooling</td>
 <td role="cell" data-label="What it does">Dataset builders, evaluation runs logged as Braintrust experiments, summaries, reports, metric charts, and the Monte Carlo scripts.</td>
-<td role="cell" data-label="Where"><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/scripts/braintrust"><code>scripts/braintrust/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
+<td role="cell" data-label="Where"><a href="https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/scripts/braintrust"><code>scripts/</code><wbr><code>braintrust/</code>⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Tool">Notebooks</td>

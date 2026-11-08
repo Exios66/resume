@@ -14,6 +14,43 @@ local function looks_numeric(text)
   return t:match("^%d[%d.,]*%%?%s*%S*$") ~= nil and #t <= 24
 end
 
+--- Give long inline code in a table cell break opportunities after path and name
+--- separators ("/", "_", "-", "."), so a narrow column breaks at those points
+-- instead of clipping the code or crushing it into mid-word lines. Inbox wrapping:
+-- the browser only breaks when the code would otherwise overflow. Only code of
+-- 14+ characters gets this; short tokens like "R1" or "x" stay one piece.
+-- @param contents pandoc.Inlines
+-- @return pandoc.Inlines
+local function split_long_code(contents)
+  return contents:walk {
+    Code = function(code)
+      local text, attr = code.text, code.attr
+      if #text < 14 then return nil end
+      -- Collect positions just after separators, skipping runs so each break
+      -- lands on the end of the longest separator run.
+      local parts = {}
+      local from = 1
+      for i = 2, #text - 1 do
+        local c = text:sub(i, i)
+        local next_c = text:sub(i + 1, i + 1)
+        if (c == "/" or c == "-" or c == "_" or c == ".") and next_c ~= c
+          and next_c ~= "/" and next_c ~= "-" and next_c ~= "_" and next_c ~= "." then
+          parts[#parts + 1] = text:sub(from, i)
+          from = i + 1
+        end
+      end
+      parts[#parts + 1] = text:sub(from)
+      if #parts < 2 then return nil end
+      local out = {}
+      for j, part in ipairs(parts) do
+        if j > 1 then out[#out + 1] = pandoc.RawInline("html", "<wbr>") end
+        out[#out + 1] = pandoc.Code(part, attr)
+      end
+      return out
+    end,
+  }
+end
+
 --- Mark text-heavy tables with class "stack" and give every body cell a data-label
 -- naming its column. On small screens styles.css shows each row as a labelled block
 -- instead of squeezing prose into narrow columns. Number tables keep their grid and
@@ -28,11 +65,15 @@ local function stack_table(tbl)
   for i, cell in ipairs(head_rows[#head_rows].cells) do
     labels[i] = pandoc.utils.stringify(cell.contents)
   end
+  for _, cell in ipairs(head_rows[#head_rows].cells) do
+    cell.contents = split_long_code(cell.contents)
+  end
   local cells, numeric, longest, total, has_code = 0, 0, 0, 0, false
   local col_max, col_numeric, col_cells = {}, {}, {}
   for _, body in ipairs(tbl.bodies) do
     for _, row in ipairs(body.body) do
       for i, cell in ipairs(row.cells) do
+        cell.contents = split_long_code(cell.contents)
         local text = pandoc.utils.stringify(cell.contents)
         longest = math.max(longest, #text)
         pandoc.walk_block(pandoc.Div(cell.contents), { Code = function() has_code = true end })

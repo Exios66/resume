@@ -264,7 +264,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">Welch PSD, statistics, MSI</td>
-<td role="cell" data-label="Module path"><code>src/instruments/</code></td>
+<td role="cell" data-label="Module path"><code>src/</code><wbr><code>instruments/</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">Simulation kernel, worker, client</td>
@@ -312,35 +312,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd" role="row">
-<td role="cell" data-label="File"><code>ocean/ocean.validation.ts</code></td>
+<td role="cell" data-label="File"><code>ocean/</code><wbr><code>ocean.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">A virtual wave gauge reproduces the requested JONSWAP spectrum; linear seas have Gaussian elevations and H1/3 close to Hm0; choppy seas show positive skewness (sharper crests)</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="File"><code>sim/rogue.validation.ts</code></td>
+<td role="cell" data-label="File"><code>sim/</code><wbr><code>rogue.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">A 12 m NewWave crest peaks at the focus gauge near t = 75 s and the ship ships green water</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="File"><code>vessel/vessel.waves.validation.ts</code></td>
+<td role="cell" data-label="File"><code>vessel/</code><wbr><code>vessel.</code><wbr><code>waves.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">Heave RAO close to 1 for 20 s head seas; slamming and green water in steep head seas</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="File"><code>vessel/vessel.manoeuvring.validation.ts</code></td>
+<td role="cell" data-label="File"><code>vessel/</code><wbr><code>vessel.</code><wbr><code>manoeuvring.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">Plausible steady speeds, 30° autopilot turns without large overshoot, rudder sign and rate limit</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="File"><code>vessel/vessel.wind.validation.ts</code></td>
+<td role="cell" data-label="File"><code>vessel/</code><wbr><code>vessel.</code><wbr><code>wind.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">Leeway and heel in a beam wind, carrier course holding, square-rig sailing, reefing in a storm</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="File"><code>vessel/flooding.validation.ts</code>, <code>damage.validation.ts</code></td>
+<td role="cell" data-label="File"><code>vessel/</code><wbr><code>flooding.</code><wbr><code>validation.</code><wbr><code>ts</code>, <code>damage.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">Flooding and damage behaviour, including Torricelli decay and flooded-barge roll period</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="File"><code>vessel/mooring.validation.ts</code></td>
+<td role="cell" data-label="File"><code>vessel/</code><wbr><code>mooring.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">A trawler in a 15 m/s wind settles at a chain pull of 3.9 kN against a 3.8 kN wind load; a cargo ship stays within its watch circle in a 2 m swell; the anchor drags in a 45 m/s gale</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="File"><code>vessel/vessel.perf.validation.ts</code></td>
+<td role="cell" data-label="File"><code>vessel/</code><wbr><code>vessel.</code><wbr><code>perf.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="What it checks">Performance check</td>
 </tr>
 </tbody>
@@ -364,18 +364,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd" role="row">
 <td role="cell" data-label="Suite">Unit</td>
-<td role="cell" data-label="Count">481 definitions in <code>src/**/*.test.ts</code></td>
+<td role="cell" data-label="Count">481 definitions in <code>src/</code><wbr><code>**/</code><wbr><code>*.</code><wbr><code>test.</code><wbr><code>ts</code></td>
 <td role="cell" data-label="Where">Counted by grep at the 24 October snapshot</td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Suite">Validation</td>
 <td role="cell" data-label="Count">25 definitions in 9 files</td>
-<td role="cell" data-label="Where"><code>src/**/*.validation.ts</code></td>
+<td role="cell" data-label="Where"><code>src/</code><wbr><code>**/</code><wbr><code>*.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Suite">Browser (Playwright)</td>
 <td role="cell" data-label="Count">27 definitions in 2 files: 22 desktop, 5 mobile</td>
-<td role="cell" data-label="Where"><code>e2e/app.spec.ts</code>, <code>e2e/mobile.spec.ts</code></td>
+<td role="cell" data-label="Where"><code>e2e/</code><wbr><code>app.</code><wbr><code>spec.</code><wbr><code>ts</code>, <code>e2e/</code><wbr><code>mobile.</code><wbr><code>spec.</code><wbr><code>ts</code></td>
 </tr>
 </tbody>
 </table>
