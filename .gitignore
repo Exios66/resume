@@ -18,3 +18,24 @@ Thumbs.db
 .venv/
 __pycache__/
 .pytest_cache/
+
+# Autoresearch session files (living state, never committed)
+autoresearch.jsonl
+
+# Autoresearch session files (living state, never committed)
+autoresearch.md
+
+# Autoresearch session files (living state, never committed)
+autoresearch.ideas.md
+
+# Autoresearch session files (living state, never committed)
+run.log
+
+# Autoresearch session files (living state, never committed)
+audit.details.json
+
+# Autoresearch session files (living state, never committed)
+render.err
+
+# Autoresearch session files (living state, never committed)
+.autoresearch-tools/
