@@ -17,7 +17,7 @@ except ImportError:  # pragma: no cover - optional dependency
 
 ROOT = Path(__file__).resolve().parents[1]
 PDF = ROOT / "docs" / "assets" / "Jack_Burleson_Resume.pdf"
-PROJECTS = ("Digital-Mailroom", "mailroom-ml", "RVL-CDIP-Classifier",
+PROJECTS = ("Digital-Mailroom", "Mailroom-ML", "RVL-CDIP-Classifier",
             "Psychometric Digital Twin", "Neuron Atlas", "MapReduce-Reloaded")
 
 
@@ -117,11 +117,13 @@ class ResumePdfLayout(unittest.TestCase):
         links = [annotation.get_object().get("/A", {}).get("/URI")
                  for annotation in self.reader.pages[0].get("/Annots", [])]
         self.assertIn("https://exios66.github.io/resume/", links)
+        self.assertIn("https://github.com/Exios66", links)
         self.assertFalse([url for url in links if url and url.startswith("tel:")])
         self.assertNotRegex(self.raw_pages[0], r"(?<!\d)\d{3}[-.\s]\d{3}[-.\s]\d{4}(?!\d)")
         header = " ".join(self.raw_pages[0].split())
-        for text in ("Madison, WI · Open to Relocation", "jackjburleson@proton.me",
-                     "linkedin.com/in/jackjburleson", "Portfolio"):
+        # Printed and parsed copies need the addresses as text, not just as links.
+        for text in ("Madison, WI · Open to relocation", "jackjburleson@proton.me",
+                     "linkedin.com/in/jackjburleson", "github.com/Exios66", "exios66.github.io/resume"):
             with self.subTest(text=text):
                 self.assertIn(text, header)
 

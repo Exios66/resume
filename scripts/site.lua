@@ -75,6 +75,7 @@ local ICONS = {
   { "scale", [=[<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>]=] },
   { "waves", [=[<path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>]=] },
   { "database", [=[<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/>]=] },
+  { "globe", [=[<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>]=] },
   { "clock", [=[<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>]=] },
 }
 
@@ -158,6 +159,7 @@ function contact_icon_name(href)
   if lower:match("^https?://[%w%.]*linkedin%.com") then return "linkedin" end
   if lower:match("^https?://github%.com/exios66/?$") then return "github" end
   if lower:match("%.pdf$") or lower:match("%.pdf[?#]") then return "download" end
+  if lower:match("^https?://exios66%.github%.io/resume/?$") then return "globe" end
   return nil
 end
 
@@ -271,8 +273,47 @@ end
 function decorate_span(span)
   if has_class(span, "chip") and text_of(span):match("^Madison") then
     prepend(span, icon_inline("map-pin"))
+  elseif has_class(span, "kicker") or has_class(span, "role") or has_class(span, "sample-source") then
+    split_separators(span)
   end
   return span
+end
+
+local SEPARATORS = { ["·"] = true, ["•"] = true }
+
+--- Split "A · B · C" into one span per part, the separator leading each later part.
+-- styles.css keeps a separator from ending a line and hides one that starts a line,
+-- so a wrapped label never shows a stray dot. The text itself is unchanged.
+-- @param span Pandoc Span; its content is replaced when it holds a spaced separator.
+function split_separators(span)
+  local content = span.content
+  local parts, current = {}, {}
+  for i, el in ipairs(content) do
+    local prev, nxt = content[i - 1], content[i + 1]
+    if el.tag == "Str" and SEPARATORS[el.text] and prev and prev.tag == "Space"
+        and nxt and nxt.tag == "Space" and #current > 0 then
+      if current[#current].tag == "Space" then table.remove(current) end
+      parts[#parts + 1] = { inlines = current, sep = el.text }
+      current = {}
+    elseif not (el.tag == "Space" and #current == 0 and #parts > 0) then
+      current[#current + 1] = el
+    end
+  end
+  if #parts == 0 then return end
+  parts[#parts + 1] = { inlines = current }
+  local out = {}
+  for i, part in ipairs(parts) do
+    local inlines = {}
+    if i > 1 then
+      inlines[1] = pandoc.Space()
+      inlines[2] = pandoc.Span({ pandoc.Str(parts[i - 1].sep) }, pandoc.Attr("", { "sep" }))
+      inlines[3] = pandoc.Space()
+    end
+    for _, el in ipairs(part.inlines) do inlines[#inlines + 1] = el end
+    out[#out + 1] = pandoc.Span(inlines, pandoc.Attr("", { "seg" }))
+  end
+  span.content = { pandoc.Span({ pandoc.Span(out, pandoc.Attr("", { "seg-run" })) }, pandoc.Attr("", { "seg-line" })) }
+  span.classes:insert("segs")
 end
 
 local DECORATE = {

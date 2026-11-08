@@ -93,9 +93,12 @@ def asset_versions():
 
 
 def cache_bust(text, versions):
-    """Append ?v=<hash> to href/src links that point at a versioned asset (any ../ depth)."""
+    """Append ?v=<hash> to href/src links that point at a versioned asset.
+
+    Links may be relative at any ../ depth or absolute under the site path, as on 404.html.
+    """
     for rel, version in versions.items():
-        pattern = r'((?:href|src)="(?:\.\./)*' + re.escape(rel) + r')(?:\?v=[0-9a-f]+)?"'
+        pattern = r'((?:href|src)="(?:(?:\.\./)*|/(?:[\w.-]+/)*)' + re.escape(rel) + r')(?:\?v=[0-9a-f]+)?"'
         text = re.sub(pattern, lambda m: f'{m.group(1)}?v={version}"', text)
     return text
 
@@ -173,9 +176,12 @@ def build_search_index():
     so a word deep in a report is still found.
     """
     entries = []
+    site = site_title()
+    # Every result is on this site, so its name after a dash in a title is noise.
+    suffix = re.compile(r"\s+[—–-]\s+" + re.escape(site) + r"$") if site else None
     for page in sorted(DOCS.rglob("*.html")):
         rel = page.relative_to(DOCS).as_posix()
-        if rel == "search.html" or "site_libs" in page.parts:
+        if rel in {"search.html", "404.html"} or "site_libs" in page.parts:
             continue
         source = page.read_text(encoding="utf-8")
         title = re.search(r"<title>(.*?)</title>", source, re.S)
@@ -185,7 +191,7 @@ def build_search_index():
         headings = " ".join(plain_text(h) for h in re.findall(r"<h[23][^>]*>(.*?)</h[23]>", body_source, re.S))
         entries.append({
             "u": rel,
-            "t": plain_text(title.group(1)) if title else rel,
+            "t": (suffix.sub("", plain_text(title.group(1))) if suffix else plain_text(title.group(1))) if title else rel,
             "d": plain_text(description.group(1)) if description else "",
             "h": headings[:400],
             "b": search_body(body_source),

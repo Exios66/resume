@@ -153,6 +153,8 @@ a.chip:hover { text-decoration: none; filter: brightness(.95); }
 .btn.primary:hover { filter: brightness(1.08); background: var(--accent); }
 
 /* ---------- Sections ---------- */
+/* Even line lengths: a wrapped heading never ends on a lone word. */
+h1, h2, h3 { text-wrap: balance; }
 h2 {
   margin: 36px 0 14px;
   padding-bottom: 6px;
@@ -250,7 +252,7 @@ p { margin: 0 0 12px; }
 h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var(--serif); font-optical-sizing: auto; letter-spacing: -.01em; }
 .page > h1 + p, .page > .kicker + p { margin-top: 0; }
 .kicker { display: block; margin-bottom: 14px; color: var(--accent); font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
-.back { display: inline-flex; align-items: center; gap: .4em; margin-bottom: 14px; font-size: .88rem; font-weight: 600; }
+.back { display: inline-flex; align-items: center; gap: .4em; min-height: 24px; margin-bottom: 14px; font-size: .88rem; font-weight: 600; }
 .lede { max-width: 56ch; margin: 18px auto 0; }
 .lede p { margin: 0; color: var(--muted); font-size: 1.05rem; }
 .more { display: inline-flex; align-items: center; font-weight: 600; }
@@ -280,7 +282,21 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 .card :is(h2, h3) a::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
 .card :is(h2, h3) a:hover { text-decoration: none; color: var(--accent); }
 .card .icon-go { color: var(--muted); }
-.card .kicker { margin-bottom: 8px; font-size: .7rem; }
+.card .kicker { margin-bottom: 8px; font-size: .75rem; }
+/* Labels written "A · B · C" (scripts/site.lua splits them). A separator leads its part, so it
+   never ends a line; one that would start a line falls in a gutter that is clipped off. */
+.segs .seg { display: inline-block; }
+:is(.kicker, .sample-source).segs .seg-line { display: block; overflow: hidden; }
+:is(.kicker, .sample-source).segs .seg-run { display: block; margin-left: -1.4em; }
+:is(.kicker, .sample-source).segs .seg { position: relative; padding-left: 1.4em; }
+:is(.kicker, .sample-source).segs .sep { position: absolute; left: 0; width: 1.4em; text-align: center; }
+/* The centred hero line cannot clip a gutter, so on phones each part takes its own line. Wider,
+   keep the space before each separator, which an inline-block would otherwise drop. */
+@media (min-width: 561px) { .role.segs .seg { white-space: pre-wrap; } }
+@media (max-width: 560px) {
+  .role.segs .seg { display: block; }
+  .role.segs .sep { display: none; }
+}
 .card p { margin: 0 0 10px; color: var(--muted); font-size: .92rem; }
 .card p:last-child { margin-bottom: 0; }
 .card p:has(.tag) { margin-top: auto; padding-top: 6px; }
@@ -388,6 +404,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .page figcaption, .page .figure-caption {
   margin-top: 8px; font-size: .84rem; line-height: 1.45; color: var(--muted); text-align: left;
 }
+.page figcaption code { font-size: .9em; } /* keeps code in captions at 12px or more */
 /* Charts have white/transparent backgrounds and dark text: seat them on a light plate in dark mode */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .page img.fig { background: #fff; padding: 10px; }
@@ -440,7 +457,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .sample-doc { margin: 18px 0; background: var(--paper); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
 .sample-doc > p { margin: 0; }
 .sample-source {
-  display: block; padding: 8px 14px; font-size: .72rem; font-weight: 600; letter-spacing: .1em;
+  display: block; padding: 8px 14px; font-size: .75rem; font-weight: 600; letter-spacing: .1em;
   text-transform: uppercase; color: var(--muted); background: var(--accent-soft); border-bottom: 1px solid var(--rule);
 }
 .sample-doc pre, .sample-doc div.sourceCode { margin: 0; border: 0; border-radius: 0; }
@@ -456,7 +473,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 
 /* On-page contents, reports and appendices only */
 .page-toc { margin: 22px 0; padding: 14px 16px; border: 1px solid var(--rule); border-radius: 10px; background: var(--bg); }
-.page-toc .toc-label { margin: 0 0 8px; font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.page-toc .toc-label { margin: 0 0 8px; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .page-toc ul { margin: 0; padding-left: 1.1rem; columns: 2; column-gap: 28px; }
 .page-toc li { margin: 3px 0; break-inside: avoid; }
 @media (max-width: 720px) { .page-toc ul { columns: 1; } }
@@ -467,10 +484,16 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .project-pager a { display: flex; align-items: center; gap: 8px; max-width: 48%; min-height: 44px; padding: 8px 12px; border: 1.5px solid var(--rule); border-radius: 10px; }
 .project-pager a:hover { border-color: var(--accent); background: var(--accent-soft); text-decoration: none; }
 .project-pager .pager-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.project-pager .pager-label { font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.project-pager .pager-label { font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .project-pager .pager-name { font-size: .9rem; font-weight: 600; }
 .project-pager .pager-next { margin-left: auto; text-align: right; }
 .project-pager .pager-next .pager-text { align-items: flex-end; }
+@media (max-width: 480px) {
+  /* Side by side, each half is too narrow for the label and a long project name. */
+  .project-pager { flex-direction: column; }
+  .project-pager a { max-width: none; }
+  .project-pager .pager-next { margin-left: 0; justify-content: flex-end; }
+}
 
 /* Search */
 .site-search label { display: block; margin-bottom: 6px; font-weight: 600; }
@@ -501,13 +524,60 @@ div.sourceCode pre, div.sourceCode pre.sourceCode { margin: 0; padding: 12px 14p
 pre code { padding: 0; background: none; font: inherit; overflow-wrap: normal; white-space: pre; }
 div.sourceCode pre.sourceCode, pre.sourceCode code, code.sourceCode > span { color: var(--ink); }
 pre span, .page pre code span, .page div.sourceCode pre code span { color: inherit !important; font-style: normal !important; font-weight: inherit; background: none !important; }
-pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+pre:focus-visible, .page table:focus-visible, div.sourceCode:focus-visible, figure.diagram:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+
+/* Copy button on code blocks. Quarto draws it with an icon font this site does not load,
+   so it gets a text label and the site's own button styling. */
+div.code-copy-outer-scaffold { position: relative; }
+div.code-copy-outer-scaffold pre { padding-right: 76px; }
+.page .code-copy-button {
+  position: absolute; top: 7px; right: 7px; margin: 0;
+  min-height: 26px; padding: 3px 10px;
+  font: 600 .75rem/1.4 var(--sans); letter-spacing: .02em; color: var(--muted);
+  background: var(--paper); border: 1px solid var(--rule); border-radius: 6px;
+  cursor: pointer; transition: color .15s, border-color .15s;
+}
+.page .code-copy-button .bi { display: none; }
+.page .code-copy-button::before { content: "Copy"; }
+.page .code-copy-button-checked::before { content: "Copied"; }
+.page .code-copy-button:hover, .page .code-copy-button-checked { color: var(--accent); border-color: var(--accent); }
+.page .code-copy-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media print { .page .code-copy-button { display: none; } div.code-copy-outer-scaffold pre { padding-right: 14px; } }
 
 /* Project pages: small screens */
 @media (max-width: 720px) {
   .project-nav { gap: 6px; }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .page table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* Number grids stay grids: tighter cells let most of them fit a phone without scrolling. */
+  .page table:not(.stack) { font-size: .84rem; }
+  .page table:not(.stack) code { font-size: .9em; }
+  .page table:not(.stack) :is(th, td) { padding: 7px 8px; }
+  .page table:not(.stack) :is(th, td):first-child { padding-left: 2px; }
+  .page table:not(.stack) :is(th, td):last-child { padding-right: 2px; }
+  /* Text tables: each row becomes a block, each cell labelled with its column. */
+  .page table.stack, .page table.stack tbody, .page table.stack tr, .page table.stack td { display: block; width: auto; }
+  .page table.stack { overflow: visible; border-top: 2px solid var(--accent); }
+  .page table.stack colgroup { display: none; }
+  .page table.stack thead {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .page table.stack tr { padding: 12px 2px; border-bottom: 1px solid var(--rule); }
+  .page table.stack tbody tr:last-child { border-bottom: 0; }
+  .page table.stack td { padding: 0; border: 0; text-align: left !important; }
+  .page table.stack td.num { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .page table.stack td.num::before { margin: 0; }
+  .page table.stack td + td { margin-top: 8px; }
+  .page table.stack td:first-child { font-weight: 700; color: var(--ink); }
+  .page table.stack td + td::before {
+    content: attr(data-label) / "";
+    display: block; margin-bottom: 1px;
+    font: 700 .75rem/1.4 var(--sans); letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
+  }
+  .page table.stack td code { white-space: pre-wrap; overflow-wrap: anywhere; }
   .chart-scroll { overflow-x: auto; }
   .chart-scroll img.fig { min-width: 700px; }
   .chart-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -603,7 +673,8 @@ body::before {
 }
 
 /* Header: frosted glass once the page scrolls under it. */
-.site-title { display: inline-flex; align-items: center; gap: .6em; }
+/* Padding grows the tap target to 24px+ and the negative margin keeps the header from moving. */
+.site-title { display: inline-flex; align-items: center; gap: .6em; padding: 4px 0; margin: -4px 0; }
 .site-title::before {
   content: ""; width: .62em; height: .62em; flex: none; border-radius: 2px; transform: rotate(45deg);
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
@@ -812,3 +883,6 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
   .page figure.chart::after, .chart-tooltip { display: none; }
   .chart .mark .hit { fill: none; stroke: none; }
 }
+
+/* 404 page: buttons line up with the text above them. */
+.not-found .actions { justify-content: flex-start; }

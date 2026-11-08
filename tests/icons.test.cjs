@@ -48,14 +48,15 @@ test('only one theme-toggle icon is visible before scripts or styles load', () =
 
 test('the site stylesheet link is cache-busted', () => {
   for (const { file, html } of built) {
-    assert.match(html, /href="(?:\.\.\/)*styles\.css\?v=[0-9a-f]{10}"/, file);
-    assert.doesNotMatch(html, /href="(?:\.\.\/)*styles\.css"/, file);
+    // 404.html links absolutely under /resume/ because GitHub Pages shows it at any depth.
+    assert.match(html, /href="(?:(?:\.\.\/)*|\/resume\/)styles\.css\?v=[0-9a-f]{10}"/, file);
+    assert.doesNotMatch(html, /href="(?:(?:\.\.\/)*|\/resume\/)styles\.css"/, file);
   }
 });
 
 test('the site script is loaded once per page and cache-busted', () => {
   for (const { file, html } of built) {
-    const scripts = html.match(/<script src="(?:\.\.\/)*assets\/js\/site\.js\?v=[0-9a-f]{10}" defer(?:="")?><\/script>/g) ?? [];
+    const scripts = html.match(/<script src="(?:(?:\.\.\/)*|\/resume\/)assets\/js\/site\.js\?v=[0-9a-f]{10}" defer(?:="")?><\/script>/g) ?? [];
     assert.equal(scripts.length, 1, file);
   }
 });

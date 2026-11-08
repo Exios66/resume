@@ -11,10 +11,11 @@ description: "Résumé of Jack J. Burleson: M.S. candidate in Psychology: Data S
 [Machine Learning • Data Science • AI Engineering & Safety]{.role}
 
 ::: {.contact}
-[Madison, WI · Open to Relocation]{.chip}
+[Madison, WI · Open to relocation]{.chip}
 [jackjburleson@proton.me](mailto:jackjburleson@proton.me){.chip}
 [linkedin.com/in/jackjburleson](https://www.linkedin.com/in/jackjburleson){.chip}
-[Portfolio](https://exios66.github.io/resume/){.chip}
+[github.com/Exios66](https://github.com/Exios66){.chip}
+[exios66.github.io/resume](https://exios66.github.io/resume/){.chip}
 :::
 
 ::: {.actions}
@@ -101,7 +102,7 @@ UW–Madison M.S. candidate in Psychology: Data Science in Human Behavior (expec
 
 ::: {.entry}
 ::: {.entry-head}
-**[mailroom-ml](https://github.com/LLM-Mailroom-Services/mailroom-ml)** [ML training, evaluation & fine-tuning]{.sub}
+**[Mailroom-ML](https://github.com/LLM-Mailroom-Services/mailroom-ml)** [ML training, evaluation & fine-tuning]{.sub}
 :::
 
 - Developed a ModernBERT document classifier with end-to-end training, evaluation, and fine-tuning pipelines — including data lineage tracking, probability calibration, and production routing logic.

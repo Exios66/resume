@@ -61,7 +61,9 @@ class LangtonsAntTests(unittest.TestCase):
         self.assertEqual([checks.attr(attrs, "href") for attrs in uses], ["#i-waves"])
         _, parser = self.read_page()
         symbols = [checks.attr(attrs, "id") for tag, attrs, _ in parser.elements if tag == "symbol"]
-        self.assertEqual(len(symbols), 20, "The sprite must keep exactly the existing 20 symbols")
+        # 21 since the résumé contact line gained a globe icon for the portfolio address.
+        self.assertEqual(len(symbols), 21, "The sprite must keep exactly the existing 21 symbols")
+        self.assertNotIn("i-ant", symbols)
         self.assertEqual(len(symbols), len(set(symbols)))
         for tag, attrs, _ in parser.elements:
             if tag == "svg" and "icon" in checks.classes(attrs):
@@ -134,8 +136,10 @@ class LangtonsAntTests(unittest.TestCase):
 
     def test_page_keeps_its_honesty_sections(self):
         _, parser = self.read_page()
-        kicker = self.one(parser, "span", **{"class": "kicker"})
-        self.assertIn("version 0.1.0", parser.text(kicker))
+        kickers = [attrs for element, attrs, _ in parser.elements
+                   if element == "span" and "kicker" in checks.classes(attrs)]
+        self.assertEqual(len(kickers), 1)
+        self.assertIn("version 0.1.0", parser.text(kickers[0]))
         self.assertNotIn("What does not work yet", " ".join("".join(d for d, _ in parser.text_fragments).split()))
         sources = self.one(parser, "h2", id="where-the-mathematics-comes-from")
         start = next(i for i, (_, attrs, _) in enumerate(parser.elements) if attrs is sources)

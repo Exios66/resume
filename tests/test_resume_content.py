@@ -14,7 +14,7 @@ from test_portfolio_additions import ContentParser
 # MapReduce-Reloaded stays unlinked; every other project links its public repository.
 PROJECT_REPOS = (
     ("Digital-Mailroom", "https://github.com/LLM-Mailroom-Services/Digital-Mailroom"),
-    ("mailroom-ml", "https://github.com/LLM-Mailroom-Services/mailroom-ml"),
+    ("Mailroom-ML", "https://github.com/LLM-Mailroom-Services/mailroom-ml"),
     ("RVL-CDIP-Classifier", "https://github.com/Exios66/RVL-CDIP-Classifier"),
     ("Psychometric Digital Twin", "https://github.com/Exios66/psych755-jjb"),
     ("Neuron Atlas", "https://github.com/Exios66/LLM_Viz"),
@@ -191,7 +191,7 @@ class ResumeContentTests(unittest.TestCase):
         claims = {
             "Digital-Mailroom": ("5 Python packages", "Enterprise Data Science division",
                                  "unified LangGraph pipeline", "reproducible Docker environment"),
-            "mailroom-ml": ("ModernBERT document classifier", "data lineage tracking",
+            "Mailroom-ML": ("ModernBERT document classifier", "data lineage tracking",
                             "probability calibration", "ONNX export for FastAPI serving on Modal"),
             "RVL-CDIP-Classifier": ("16 RVL-CDIP categories", "300-DPI", "OpenRouter vision models",
                                     "29 prompt versions", "cost projections"),

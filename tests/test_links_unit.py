@@ -125,6 +125,17 @@ class LinkHelperTests(TemporarySiteTestCase):
         self.assertEqual(checks.link_problem(self.page, "/resume/index.html"),
                          "root-relative link; the site is served under /resume/")
 
+    def test_only_the_root_404_page_links_under_the_site_path(self):
+        self.write("index.html", "Home")
+        not_found = self.docs / "404.html"
+        not_found.write_text("Not found", encoding="utf-8")
+        self.assertIsNone(checks.link_problem(not_found, "/resume/index.html"))
+        self.assertIsNone(checks.link_problem(not_found, "/resume/./index.html?v=1#top"))
+        self.assertEqual(checks.link_problem(not_found, "/resume/absent.html"), "missing target")
+        self.assertEqual(checks.link_problem(not_found, "/index.html"),
+                         "root-relative link; the site is served under /resume/")
+        self.assertEqual(checks.link_problem(not_found, "/resume/../private.html"), "resolves outside docs/")
+
     def test_linked_targets_only_collects_relative_anchor_destinations(self):
         self.page.write_text(
             '<a href="../index.html?x=1#top">Home</a><a href="../index.html">Again</a>'

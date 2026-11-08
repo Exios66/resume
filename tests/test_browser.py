@@ -35,6 +35,13 @@ def site(playwright):
         def log_message(self, *_):
             pass
 
+        def translate_path(self, path):
+            # GitHub Pages serves docs/ at /resume/; 404.html links there absolutely
+            # because it is shown at whatever depth the missing address had.
+            if path.startswith("/resume/"):
+                path = "/docs/" + path[len("/resume/"):]
+            return super().translate_path(path)
+
     server = ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=ROOT))
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -66,7 +73,8 @@ def test_every_page_layout_and_resources(site, width, theme):
             page.evaluate("document.fonts.ready")
             expect(page.locator("main")).to_have_count(1)
             expect(page.get_by_role("heading", level=1)).to_have_count(1)
-            expect(page.locator('.site-nav [aria-current="page"]')).to_have_count(1)
+            # The 404 page is not a section of the site, so no nav item is current there.
+            expect(page.locator('.site-nav [aria-current="page"]')).to_have_count(0 if path == "404.html" else 1)
             failures = page.evaluate("""() => {
               const failures = [];
               if (document.documentElement.scrollWidth > innerWidth + 1) failures.push('page overflow');

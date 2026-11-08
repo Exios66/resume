@@ -214,12 +214,12 @@ local sprite_html = Pandoc({ blocks = {} }).blocks[2].text
 local used = {}
 for _, name in ipairs({ "book-open", "file-text", "code", "play", "arrow-left", "arrow-right",
                         "arrow-up-right", "download", "map-pin", "sun", "moon", "layers", "brain",
-                        "scale", "waves", "database", "clock", "github", "linkedin", "mail" }) do
+                        "scale", "waves", "database", "clock", "globe", "github", "linkedin", "mail" }) do
   contains(sprite_html, '<symbol id="i-' .. name .. '"')
   used[name] = true
 end
 local _, symbols = sprite_html:gsub("<symbol ", "")
-assert(symbols == 20, "Unexpected icon count: " .. symbols)
+assert(symbols == 21, "Unexpected icon count: " .. symbols)
 
 -- The new database symbol must render a shape, not just resolve to an empty id.
 local database_symbol = sprite_html:match('(<symbol id="i%-database".-</symbol>)')
@@ -285,6 +285,8 @@ local cases_contact = {
   { "https://github.com/Exios66/", "github" },
   { "mailto:jackjburleson@proton.me", "mail" },
   { "assets/Jack_Burleson_Resume.pdf", "download" },
+  { "https://exios66.github.io/resume/", "globe" },
+  { "https://exios66.github.io/resume/projects/", nil },
   { "https://github.com/Exios66/degen-llms", nil },
   { "https://github.com/Exios66x", nil },
   { "resume.qmd", nil },
@@ -399,6 +401,23 @@ local place = decorate_span({ tag = "Span", classes = { "chip" }, content = { st
 assert(uses(place.content, "map-pin"))
 local other_chip = decorate_span({ tag = "Span", classes = { "chip" }, content = { str("Remote") } })
 assert(#other_chip.content == 1)
+-- "A · B · C" labels: one span per part, each later part led by its separator, text unchanged
+pandoc.Space = function() return { tag = "Space" } end
+pandoc.Attr = function(id, classes) return { identifier = id, classes = classes } end
+pandoc.Span = function(content, attr) return { tag = "Span", content = content, classes = attr.classes } end
+local space = { tag = "Space" }
+local label = decorate_span({ tag = "Span", classes = setmetatable({ "kicker" }, { __index = table }),
+  content = { str("Simulation"), space, str("·"), space, str("runs"), space, str("in"), space, str("the"),
+    space, str("browser") } })
+local run = label.content[1].content[1]
+assert(label.classes[2] == "segs" and label.content[1].classes[1] == "seg-line" and run.classes[1] == "seg-run")
+assert(#run.content == 2, "two parts")
+assert(pandoc.utils.stringify(run.content[1]) == "Simulation")
+assert(run.content[2].content[2].classes[1] == "sep" and pandoc.utils.stringify(run.content[2].content[2]) == "·")
+assert(pandoc.utils.stringify(run.content[2]) == " · runs in the browser", pandoc.utils.stringify(run.content[2]))
+local plain = decorate_span({ tag = "Span", classes = setmetatable({ "kicker" }, { __index = table }),
+  content = { str("Capstone"), space, str("project") } })
+assert(#plain.content == 3 and plain.classes[2] == nil, "labels without a separator are left alone")
 -- every icon self-sizes, so a missing stylesheet cannot blow it up to the 300x150 SVG default
 assert(icon_html("code") == '<svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false">'
   .. '<use href="#i-code"/></svg>', icon_html("code"))
