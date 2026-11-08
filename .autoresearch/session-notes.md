@@ -41,6 +41,7 @@ Project numbers and claims (must match source repos). Removing or hiding content
 - 2: adds typography (separator that starts a line 2, ends a line 1; heading ending on a one-word line 1, at 375 and 1280 light);
   stretched card links measured by the overlay box; table-cell lines counted from text nodes, not padded code boxes.
 - 3: characters clipped by an overflow ancestor are not counted (they are not seen).
+- 4: mobile checks (crushed cells, table overflow, tap targets, small text) also run at 375 px dark.
 
 ## What's been tried
 | # | Seg | Description | polish_defects | Status |
@@ -74,8 +75,6 @@ Project numbers and claims (must match source repos). Removing or hiding content
 | 26 | 3 | Second tightening notch for number grids at 480 px | 20 | discard |
 | 27 | 3 | Stack classifier prose threshold 60 -> 45 characters | 19 | keep |
 | 28 | 3 | Sticky first column with scroll edge on phone number grids (metric-blind) | 19 | keep |
-
-| 28 | 3 | Sticky first column with scroll edge on phone number grids (metric-blind) | 19 | keep |
 | 29 | 3 | Stack 4+-column grids whose first column holds a 20+ char row label | 9 | keep |
 | 30 | 3 | Scope tabular-nums to numeric cells (metric-blind) | 9 | keep |
 | 31 | 3 | Stack grids with 16+ char row labels | 7 | keep |
@@ -86,11 +85,17 @@ Project numbers and claims (must match source repos). Removing or hiding content
 | 36 | 3 | Run-comparison header names the subclass condition in prose | 5 | discard |
 | 37 | 3 | Compact phone header nav (metric-blind) | 5 | keep |
 | 38 | 3 | Remove duplicate back link on report and appendix pages (metric-blind) | 5 | keep |
+| 39 | 4 | Baseline: tap targets, small text, crushed cells and table overflow now checked at 375 px dark | 6 | keep |
+| 40 | 4 | Stack grids of at most two rows and four or more columns | 3 | keep |
+| 41 | 4 | Trim horizontal grid padding at 480 px | 3 | discard |
+| 42 | 4 | Stack grids with 12+ char row labels | 2 | keep |
+| 43 | 4 | Stack five-plus-column grids with three or more rows | 1 | keep |
 
-## Remaining at 5 points
-- Tables wider than the screen: 4 findings (AUC band table at 320; mailroom-ml cohort table at 320 and 375; mailroom-ml report run comparison at 320). They scroll with a sticky label column and a scroll edge; the remaining width is bound by the content (number columns + unbreakable column words), not by styling. Options: splitting a table into two at the source, or reading values from narrower columns -- owner call.
-- Heading widow: 1 ("Graduate research, UW–Madison" at 375 px; UW–Madison is one unit, acceptable).
-- Crushed cells: 0 (was 8 pts; the model table, group table and AUC header are all clean).
+## Remaining at 1 point
+- Heading widow: 1 ("Graduate research, UW–Madison" at 375 px; UW–Madison is one unit, acceptable). Layout defects are zero (no page overflow, no wide tables, no crushed or clipped cells, no tiny text, no small tap targets in light or dark).
+
+## Remaining at 5 points (superseded: segment 4 landed 0 layout points, see "Remaining at 1 point")
+- Tables wider than the screen: 4 findings at the close of segment 3 (AUC band table at 320; mailroom-ml cohort table at 320 and 375; mailroom-ml report run comparison at 320). All have been stacked in segment 4.
 
 ## Environment notes from this resume
 - This machine's Quarto is 1.9.38; the site was built with 1.10.19. `QUARTO=$PWD/.autoresearch-tools/bin/quarto` points at a locally downloaded 1.10.19.

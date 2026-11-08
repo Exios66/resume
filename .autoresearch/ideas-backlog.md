@@ -1,18 +1,19 @@
 # Ideas backlog (prune as they land)
 
 Done: copy button, scroll-region access, stacked tables, 404 page, résumé contact, search titles, tap targets,
-tiny text, separators, balanced headings, wbr in table-cell code, prose/row-label stack thresholds,
-sticky first column + scroll edge, scoped tabular-nums, AUC / band / v0 content fixes, labelled prose rows,
-compact phone header, duplicate back link removed.
+tiny text, separators, balanced headings, wbr in table-cell code, stack classifier (prose column 45+, row label
+12+, two-row grids, five-column grids), sticky first column + scroll edge, scoped tabular-nums, AUC / band /
+v0 content fixes, labelled prose rows, compact phone header, duplicate back link removed, mobile checks at
+375 px dark (segment 4).
 
 Open:
-1. Four wide number grids remain (AUC table at 320; mailroom-ml cohort at 320 and 375; mailroom-ml report run comparison at 320).
-   Next honest door at source: split a table in two, or trim column words with the owner.
-2. Psychometric-digital-twin: nothing left scored.
-3. The "Low / moderate / high" reshuffle and the v0 slice rename are done; see audit in a future segment if more
-   metric-blind checks should score.
-4. Projects page jump links have large row gaps on phones; consider chip styling.
-5. Report contents box column misalignment; the duplicate back link is fixed (run 38), alignment still open.
-6. Content: unify date formats; "Simulations" shortcut vs "Side projects & interests" heading; expand "DSHB".
-7. Audit coverage: real Firefox/WebKit, real devices and screen readers were never checked. New audit segments to
-   consider are listed in issue 106.
+1. Layout findings are 0. The one accepted finding is the "Graduate research, UW–Madison" heading widow
+   (UW–Madison is a single unit).
+2. Projects page jump links have large row gaps on phones; consider chip styling.
+3. Report contents box column misalignment (run 38 removed the duplicate back link; alignment still open).
+4. Content consistency (owner facts needed): unify date formats; "Simulations" shortcut vs "Side projects &
+   interests" heading; expand "DSHB" on first use.
+5. Audit coverage: real Firefox/WebKit, real devices and screen readers were never checked.
+6. New audit segments from issue 106 still available: more viewports (768/414), performance budget, chart and
+   diagram contrast, link and asset integrity, metadata (titles, canonical, og:image), print layout, reduced
+   motion, other engines.
