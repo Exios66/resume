@@ -27,9 +27,11 @@ const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascrip
   '.pdf': 'application/pdf', '.txt': 'text/plain', '.xml': 'application/xml' };
 function serve() {
   const server = http.createServer((req, res) => {
+    // Serve docs/ at /resume/, the path GitHub Pages publishes it under, so pages that
+    // link absolutely to the site path (404.html must) load as they do in production.
     const url = decodeURIComponent(req.url.split('?')[0].split('#')[0]);
-    let file = path.join(ROOT, url);
-    if (!file.startsWith(DOCS)) { res.writeHead(404); return res.end(); }
+    let file = url.startsWith('/resume/') ? path.join(DOCS, url.slice('/resume/'.length)) : '';
+    if (!file || !file.startsWith(DOCS)) { res.writeHead(404); return res.end(); }
     if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');
     if (!fs.existsSync(file)) { res.writeHead(404); return res.end('not found'); }
     res.writeHead(200, { 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream' });
@@ -108,7 +110,7 @@ function lints() {
 (async () => {
   const t0 = Date.now();
   const server = await serve();
-  const base = `http://127.0.0.1:${server.address().port}/docs/`;
+  const base = `http://127.0.0.1:${server.address().port}/resume/`;
   const browser = await chromium.launch();
   const combos = [{ w: 375, theme: 'light', mobile: true }, { w: 375, theme: 'dark' },
     { w: 1280, theme: 'light' }, { w: 1280, theme: 'dark' }, { w: 320, theme: 'light', mobile: true, layoutOnly: true }];
