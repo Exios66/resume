@@ -36,6 +36,8 @@ format:
     theme: none
     css: styles.css
     toc: false
+    footnotes-hover: false
+    reference-location: document
     page-layout: full
     filters:
       - scripts/charts.lua

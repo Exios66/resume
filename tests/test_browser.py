@@ -543,3 +543,50 @@ def test_search_without_javascript_keeps_browse_fallback(site):
         expect(page.get_by_role("heading", level=1)).to_have_text("Projects")
     finally:
         page.close()
+
+
+@pytest.mark.parametrize("width", [375, 1280])
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_numbered_research_sources_and_return_links(site, width, theme):
+    """Native numbered notes retain sources and return navigation without overlays."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 900}, color_scheme=theme, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/natd/report.html")
+        refs = page.locator('a[role="doc-noteref"]')
+        expect(refs).to_have_count(17)
+        for i, ref in enumerate(refs.all(), 1):
+            assert ref.inner_text() == str(i)
+            note = page.locator(ref.get_attribute("href"))
+            expect(note).to_have_count(1)
+            assert note.locator('a[href^="https://"]').count() == 1
+            expect(note.locator('a[href="#' + ref.get_attribute("id") + '"]')).to_have_count(1)
+        first = refs.first
+        first.focus()
+        page.keyboard.press("Enter")
+        expect(page).to_have_url(re.compile(r"#fn1$"))
+        note = page.locator("#fn1")
+        expect(note).to_be_in_viewport()
+        note.locator('a[role="doc-backlink"]').click()
+        expect(page).to_have_url(re.compile(r"#fnref1$"))
+        expect(first).to_be_in_viewport()
+        first.hover()
+        expect(page.locator(".tippy-box")).to_have_count(0)
+        assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+        page.emulate_media(media="print")
+        expect(page.locator("#footnotes")).to_be_visible()
+    finally:
+        page.close()
+
+
+def test_numbered_research_notes_work_without_javascript(site):
+    browser, base = site
+    page = browser.new_page(java_script_enabled=False)
+    try:
+        page.goto(base + "projects/natd/report.html")
+        page.locator("#fnref17").click()
+        expect(page).to_have_url(re.compile(r"#fn17$"))
+        page.locator('#fn17 a[role="doc-backlink"]').click()
+        expect(page).to_have_url(re.compile(r"#fnref17$"))
+    finally:
+        page.close()
