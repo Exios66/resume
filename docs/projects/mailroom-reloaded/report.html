@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="Mailroom Reloaded: technical report — Jack J. Burleson">
 <meta property="og:description" content="Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -165,64 +165,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The package is version 0.4.2 and requires Python 3.11 or 3.12. No accuracy or cost results are committed to the repository, so this report publishes none. It describes what the system does and the evidence that it runs.</p>
 <h2 id="system-and-data">System and data</h2>
 <p>The canonical main path is <code>ingest</code>, <code>bert_primary</code>, <code>sort</code>, <code>gate_classify</code>, <code>extract</code>, <code>gate_extract</code>, then <code>report_catalog_archive</code> (<code>pipeline/state.py</code>). The two gates are pure route computations. <code>verify</code>, <code>boss</code>, <code>human_review</code> and an evaluation-only <code>grade</code> step are dispatched by the driver outside that tuple.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Node</th>
-<th>Kind</th>
-<th>Module</th>
+<tr class="header" role="row">
+<th role="columnheader">Node</th>
+<th role="columnheader">Kind</th>
+<th role="columnheader">Module</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td><code>ingest</code></td>
-<td>deterministic: text normalisation, PDF text layer, else vision transcription</td>
-<td><code>ingest/clerk.py</code>, <code>ingest/pdf.py</code>, <code>ingest/vision.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Node"><code>ingest</code></td>
+<td role="cell" data-label="Kind">deterministic: text normalisation, PDF text layer, else vision transcription</td>
+<td role="cell" data-label="Module"><code>ingest/clerk.py</code>, <code>ingest/pdf.py</code>, <code>ingest/vision.py</code></td>
 </tr>
-<tr class="even">
-<td><code>bert_primary</code></td>
-<td>local ModernBERT classification plus a handoff policy; fails open</td>
-<td><code>ingest/bert.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Node"><code>bert_primary</code></td>
+<td role="cell" data-label="Kind">local ModernBERT classification plus a handoff policy; fails open</td>
+<td role="cell" data-label="Module"><code>ingest/bert.py</code></td>
 </tr>
-<tr class="odd">
-<td><code>sort</code></td>
-<td>LLM call 1: structured sorter</td>
-<td><code>agents/sorter.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Node"><code>sort</code></td>
+<td role="cell" data-label="Kind">LLM call 1: structured sorter</td>
+<td role="cell" data-label="Module"><code>agents/sorter.py</code></td>
 </tr>
-<tr class="even">
-<td><code>gate_classify</code>, <code>gate_extract</code></td>
-<td>deterministic route decisions, zero LLM calls</td>
-<td><code>agents/gate.py</code>, <code>pipeline/flow.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Node"><code>gate_classify</code>, <code>gate_extract</code></td>
+<td role="cell" data-label="Kind">deterministic route decisions, zero LLM calls</td>
+<td role="cell" data-label="Module"><code>agents/gate.py</code>, <code>pipeline/flow.py</code></td>
 </tr>
-<tr class="odd">
-<td><code>extract</code></td>
-<td>LLM call 2: per-class specialist</td>
-<td><code>agents/specialists.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Node"><code>extract</code></td>
+<td role="cell" data-label="Kind">LLM call 2: per-class specialist</td>
+<td role="cell" data-label="Module"><code>agents/specialists.py</code></td>
 </tr>
-<tr class="even">
-<td><code>verify</code></td>
-<td>LLM: judge, then arbiter</td>
-<td><code>agents/judge.py</code>, <code>agents/arbiter.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Node"><code>verify</code></td>
+<td role="cell" data-label="Kind">LLM: judge, then arbiter</td>
+<td role="cell" data-label="Module"><code>agents/judge.py</code>, <code>agents/arbiter.py</code></td>
 </tr>
-<tr class="odd">
-<td><code>boss</code></td>
-<td>LLM: escalation and class reassignment</td>
-<td><code>agents/boss.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Node"><code>boss</code></td>
+<td role="cell" data-label="Kind">LLM: escalation and class reassignment</td>
+<td role="cell" data-label="Module"><code>agents/boss.py</code></td>
 </tr>
-<tr class="even">
-<td><code>report_catalog_archive</code></td>
-<td>deterministic: report, move to archive, catalog row</td>
-<td><code>pipeline/report.py</code>, <code>pipeline/archivist.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Node"><code>report_catalog_archive</code></td>
+<td role="cell" data-label="Kind">deterministic: report, move to archive, catalog row</td>
+<td role="cell" data-label="Module"><code>pipeline/report.py</code>, <code>pipeline/archivist.py</code></td>
 </tr>
-<tr class="odd">
-<td><code>human_review</code></td>
-<td>deterministic: park in <code>review/</code></td>
-<td><code>pipeline/flow.py</code>, <code>review.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Node"><code>human_review</code></td>
+<td role="cell" data-label="Kind">deterministic: park in <code>review/</code></td>
+<td role="cell" data-label="Module"><code>pipeline/flow.py</code>, <code>review.py</code></td>
 </tr>
 </tbody>
 </table>
@@ -231,64 +231,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>ingest</code> and <code>bert_primary</code> are local, so they add no LLM calls. If ModernBERT is flagged off, missing, given an oversized input, or raises, the adapter returns an “unavailable” verdict and the handoff forces a full sort. Classes listed under <code>defer_classes</code> (by default <code>contract</code> and <code>merger_agreement</code>) and multi-window verdicts also fall back to a full sort. The model comes from <a href="../../projects/mailroom-ml.html">Mailroom-ML</a> through the optional <code>bert</code> extra.</p>
 <h3 id="the-gates-and-their-escalation-paths">The gates and their escalation paths</h3>
 <p><code>BandGate</code> applies per-class thresholds from <code>config/taxonomy.yaml</code>. The global defaults are a high band of 0.95, a low band of 0.70, and <code>retry_max</code> of 2. Some classes override them.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Stage</th>
-<th>Condition</th>
-<th>Action</th>
+<tr class="header" role="row">
+<th role="columnheader">Stage</th>
+<th role="columnheader">Condition</th>
+<th role="columnheader">Action</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>classify</td>
-<td>BERT and sorter disagree, not yet re-sorted</td>
-<td><code>re_sort</code> (once, as a full sort)</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">classify</td>
+<td role="cell" data-label="Condition">BERT and sorter disagree, not yet re-sorted</td>
+<td role="cell" data-label="Action"><code>re_sort</code> (once, as a full sort)</td>
 </tr>
-<tr class="even">
-<td>classify</td>
-<td>confidence at or above the high band</td>
-<td>proceed</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">classify</td>
+<td role="cell" data-label="Condition">confidence at or above the high band</td>
+<td role="cell" data-label="Action">proceed</td>
 </tr>
-<tr class="odd">
-<td>classify</td>
-<td>below high, retries left</td>
-<td>retry the sort</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">classify</td>
+<td role="cell" data-label="Condition">below high, retries left</td>
+<td role="cell" data-label="Action">retry the sort</td>
 </tr>
-<tr class="even">
-<td>classify</td>
-<td>below high, retries spent</td>
-<td><code>human_review</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">classify</td>
+<td role="cell" data-label="Condition">below high, retries spent</td>
+<td role="cell" data-label="Action"><code>human_review</code></td>
 </tr>
-<tr class="odd">
-<td>extract</td>
-<td>length-capped or schema-invalid output</td>
-<td>retry, then <code>human_review</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">extract</td>
+<td role="cell" data-label="Condition">length-capped or schema-invalid output</td>
+<td role="cell" data-label="Action">retry, then <code>human_review</code></td>
 </tr>
-<tr class="even">
-<td>extract</td>
-<td>confidence at or above <code>judge_band_high</code></td>
-<td>proceed</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">extract</td>
+<td role="cell" data-label="Condition">confidence at or above <code>judge_band_high</code></td>
+<td role="cell" data-label="Action">proceed</td>
 </tr>
-<tr class="odd">
-<td>extract</td>
-<td>between low and <code>judge_band_high</code></td>
-<td><code>verify</code> (judge, then arbiter)</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">extract</td>
+<td role="cell" data-label="Condition">between low and <code>judge_band_high</code></td>
+<td role="cell" data-label="Action"><code>verify</code> (judge, then arbiter)</td>
 </tr>
-<tr class="even">
-<td>extract</td>
-<td>below low, retries left</td>
-<td>retry the extraction</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">extract</td>
+<td role="cell" data-label="Condition">below low, retries left</td>
+<td role="cell" data-label="Action">retry the extraction</td>
 </tr>
-<tr class="odd">
-<td>extract</td>
-<td>below low, retries spent</td>
-<td><code>boss</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">extract</td>
+<td role="cell" data-label="Condition">below low, retries spent</td>
+<td role="cell" data-label="Action"><code>boss</code></td>
 </tr>
 </tbody>
 </table>

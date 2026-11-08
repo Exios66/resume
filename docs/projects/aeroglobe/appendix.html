@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="AeroGlobe: appendix — Jack J. Burleson">
 <meta property="og:description" content="Supporting notes for the AeroGlobe case study: pipeline stages, data sources and licences, snapshot counts and the built-versus-planned checklist.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -162,107 +162,107 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>These notes support the <a href="../../projects/aeroglobe.html">AeroGlobe case study</a> and describe the 23 October 2026 snapshot. They are a scope record, not a live status page.</p>
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#pipeline-stages">Pipeline stages</a></li><li><a href="#data-sources">Data sources</a></li><li><a href="#built-versus-planned-at-the-snapshot">Built versus planned at the snapshot</a></li><li><a href="#snapshot-counts">Snapshot counts</a></li><li><a href="#reproduce">Reproduce</a></li></ul></nav>
 <h2 id="pipeline-stages">Pipeline stages</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Stage</th>
-<th>Input</th>
-<th>Output</th>
+<tr class="header" role="row">
+<th role="columnheader">Stage</th>
+<th role="columnheader">Input</th>
+<th role="columnheader">Output</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Normalize</td>
-<td>OpenSky state vectors or adsb.lol day files</td>
-<td>One record shape</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Normalize</td>
+<td role="cell" data-label="Input">OpenSky state vectors or adsb.lol day files</td>
+<td role="cell" data-label="Output">One record shape</td>
 </tr>
-<tr class="even">
-<td>Segment</td>
-<td>Normalized observations</td>
-<td>Per-aircraft tracks and flights</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Segment</td>
+<td role="cell" data-label="Input">Normalized observations</td>
+<td role="cell" data-label="Output">Per-aircraft tracks and flights</td>
 </tr>
-<tr class="odd">
-<td>Chunk</td>
-<td>Flights</td>
-<td>Hourly JSON chunks with a size limit</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Chunk</td>
+<td role="cell" data-label="Input">Flights</td>
+<td role="cell" data-label="Output">Hourly JSON chunks with a size limit</td>
 </tr>
-<tr class="even">
-<td>Catalog</td>
-<td>Chunks</td>
-<td>The manifest the browser loads</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Catalog</td>
+<td role="cell" data-label="Input">Chunks</td>
+<td role="cell" data-label="Output">The manifest the browser loads</td>
 </tr>
 </tbody>
 </table>
 <h2 id="data-sources">Data sources</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Source</th>
-<th>Use</th>
-<th>Terms</th>
+<tr class="header" role="row">
+<th role="columnheader">Source</th>
+<th role="columnheader">Use</th>
+<th role="columnheader">Terms</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>OpenSky snapshots</td>
-<td>A few real observations for the live demo</td>
-<td>OpenSky terms; rate-limited</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Source">OpenSky snapshots</td>
+<td role="cell" data-label="Use">A few real observations for the live demo</td>
+<td role="cell" data-label="Terms">OpenSky terms; rate-limited</td>
 </tr>
-<tr class="even">
-<td>adsb.lol daily files</td>
-<td>Full historical days, built on the owner’s machine</td>
-<td>ODbL, © adsb.lol contributors</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Source">adsb.lol daily files</td>
+<td role="cell" data-label="Use">Full historical days, built on the owner’s machine</td>
+<td role="cell" data-label="Terms">ODbL, © adsb.lol contributors</td>
 </tr>
-<tr class="odd">
-<td>Generated fixtures</td>
-<td>Deterministic offline tests and the labeled sample day</td>
-<td>Project code</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Source">Generated fixtures</td>
+<td role="cell" data-label="Use">Deterministic offline tests and the labeled sample day</td>
+<td role="cell" data-label="Terms">Project code</td>
 </tr>
 </tbody>
 </table>
 <p>A full global day needs about 10 GB of disk and roughly 6 GB of RAM at build time.</p>
 <h2 id="built-versus-planned-at-the-snapshot">Built versus planned at the snapshot</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Built</th>
-<th>Planned, not built</th>
+<tr class="header" role="row">
+<th role="columnheader">Built</th>
+<th role="columnheader">Planned, not built</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Globe client with search, filters and flight cards</td>
-<td>A published real historical day</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Built">Globe client with search, filters and flight cards</td>
+<td role="cell" data-label="Planned, not built">A published real historical day</td>
 </tr>
-<tr class="even">
-<td>Playback, track replay and trails</td>
-<td>Off-main-thread decoding and a transport bar</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Built">Playback, track replay and trails</td>
+<td role="cell" data-label="Planned, not built">Off-main-thread decoding and a transport bar</td>
 </tr>
-<tr class="odd">
-<td>Static pipeline, catalog and hourly chunks</td>
-<td>Inferred routes and a time-zone overlay</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Built">Static pipeline, catalog and hourly chunks</td>
+<td role="cell" data-label="Planned, not built">Inferred routes and a time-zone overlay</td>
 </tr>
-<tr class="even">
-<td>OpenSky snapshot and fixture commands</td>
-<td>Per-aircraft history and a browser logbook</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Built">OpenSky snapshot and fixture commands</td>
+<td role="cell" data-label="Planned, not built">Per-aircraft history and a browser logbook</td>
 </tr>
-<tr class="odd">
-<td>Reference airport, airline and time-zone tables</td>
-<td>—</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Built">Reference airport, airline and time-zone tables</td>
+<td role="cell" data-label="Planned, not built">—</td>
 </tr>
 </tbody>
 </table>

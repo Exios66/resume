@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../styles.css?v=404df5bfc1">
 <meta property="og:title" content="MapReduce-Reloaded — Jack J. Burleson">
 <meta property="og:description" content="A from-scratch MapReduce rebuild: a Go cluster and Python reference, a 24-item paper mapping, S3 storage, compression, fault injection and a small-scale VM evaluation. In active development.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -175,39 +175,39 @@ ul.task-list li input[type="checkbox"] {
 <p>The original test runs in one process, so a “dead” worker behaves like a machine cut off from the network, not one that lost power. The repository now also has a seeded <code>make chaos</code> driver for container kills, pauses and coordinator crashes in Compose. Dropped-packet fault injection remains out of scope.</p>
 <h2 id="evaluation-at-small-scale">Evaluation at small scale</h2>
 <p>The <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/evaluation.md">evaluation⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> compares the paper’s mechanisms, not its absolute throughput: four containers share one 4-vCPU, 8 GB VM and one disk, versus roughly 1,800 machines in the paper.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Experiment</th>
-<th>Reported observation</th>
-<th>Limit</th>
+<tr class="header" role="row">
+<th role="columnheader">Experiment</th>
+<th role="columnheader">Reported observation</th>
+<th role="columnheader">Limit</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Scaling, 1 GiB input</td>
-<td>Four workers: word count 3.8×, sort 2.9× and grep 2.3× faster than one</td>
-<td>Median of three runs; shared-disk bottleneck</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Experiment">Scaling, 1 GiB input</td>
+<td role="cell" data-label="Reported observation">Four workers: word count 3.8×, sort 2.9× and grep 2.3× faster than one</td>
+<td role="cell" data-label="Limit">Median of three runs; shared-disk bottleneck</td>
 </tr>
-<tr class="even">
-<td>Backup tasks with an injected slow worker</td>
-<td>17.6 s without backups, 11.2 s with them</td>
-<td>Three runs per setting, fixed setting order; not drift-controlled</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Experiment">Backup tasks with an injected slow worker</td>
+<td role="cell" data-label="Reported observation">17.6 s without backups, 11.2 s with them</td>
+<td role="cell" data-label="Limit">Three runs per setting, fixed setting order; not drift-controlled</td>
 </tr>
-<tr class="odd">
-<td>Backup tasks without a slow worker</td>
-<td>Mean difference −0.11 s, 95% interval −0.38 to +0.16 s</td>
-<td>Ten interleaved pairs; does not prove zero cost</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Experiment">Backup tasks without a slow worker</td>
+<td role="cell" data-label="Reported observation">Mean difference −0.11 s, 95% interval −0.38 to +0.16 s</td>
+<td role="cell" data-label="Limit">Ten interleaved pairs; does not prove zero cost</td>
 </tr>
-<tr class="even">
-<td>Worker loss</td>
-<td>Every measured job finished with a checksum matching the normal run</td>
-<td>Agreement with a baseline, not an independent correctness proof</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Experiment">Worker loss</td>
+<td role="cell" data-label="Reported observation">Every measured job finished with a checksum matching the normal run</td>
+<td role="cell" data-label="Limit">Agreement with a baseline, not an independent correctness proof</td>
 </tr>
 </tbody>
 </table>

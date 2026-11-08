@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="Psychometric Digital Twin: technical report — Jack J. Burleson">
 <meta property="og:description" content="Technical report on a PSYCH 755 study of LLM personas against classical ML for predicting PRCA communication apprehension: data, models, per-tier results, bias slices, secondary studies, reproduction and limits.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -208,33 +208,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 id="persona-tiers">Persona tiers</h3>
 <figure class="diagram" role="img" aria-labelledby="psych-twin-cap" tabindex="0"><svg viewbox="0 0 800 340" aria-hidden="true" focusable="false"><defs><marker id="psych-twin-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="16" y="30" width="150" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="91" y="64" text-anchor="middle" font-weight="600">Survey data</text><text x="91" y="82" text-anchor="middle">241 analysed</text><rect class="d-box" x="222" y="30" width="150" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="297" y="60" text-anchor="middle" font-weight="600">Cumulative tiers</text><text x="297" y="78" text-anchor="middle">demos, jobs,</text><text x="297" y="96" text-anchor="middle">place, transit</text><rect class="d-box d-accent" x="428" y="30" width="150" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="503" y="60" text-anchor="middle" font-weight="600">LLM personas</text><text x="503" y="78" text-anchor="middle">second-person</text><text x="503" y="96" text-anchor="middle">prompts, vLLM</text><rect class="d-box" x="428" y="230" width="150" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="503" y="260" text-anchor="middle" font-weight="600">ML baselines</text><text x="503" y="278" text-anchor="middle">7 models,</text><text x="503" y="296" text-anchor="middle">5-fold CV</text><rect class="d-box" x="634" y="130" width="150" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="709" y="160" text-anchor="middle" font-weight="600">Score vs PRCA</text><text x="709" y="178" text-anchor="middle">MAE, bands,</text><text x="709" y="196" text-anchor="middle">F1, AUC</text><rect class="d-box" x="634" y="250" width="150" height="64" rx="8" fill="none" stroke="currentColor"></rect><text x="709" y="278" text-anchor="middle" font-weight="600">Bias check</text><text x="709" y="296" text-anchor="middle">error by group</text><path class="d-arrow" d="M166 72H220" marker-end="url(#psych-twin-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M372 72H426" marker-end="url(#psych-twin-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M297 114V272H426" fill="none" marker-end="url(#psych-twin-ah)" stroke="currentColor"></path><path class="d-arrow" d="M578 72H606V160H632" fill="none" marker-end="url(#psych-twin-ah)" stroke="currentColor"></path><path class="d-arrow" d="M578 272H606V184H632" fill="none" marker-end="url(#psych-twin-ah)" stroke="currentColor"></path><path class="d-arrow" d="M709 214V248" marker-end="url(#psych-twin-ah)" fill="none" stroke="currentColor"></path><text class="d-muted" x="297" y="214" text-anchor="middle" font-size="13">same features</text></svg><figcaption id="psych-twin-cap">Study design: matched survey data feed cumulative information tiers. Each tier becomes a second-person prompt for an LLM and a feature set for seven classical ML models. Both are scored against the respondent's own PRCA subscale scores, then checked for error by group.</figcaption></figure>
 <p>Each tier adds to the one before it.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <thead>
-<tr class="header">
-<th>Tier</th>
-<th>Adds</th>
+<tr class="header" role="row">
+<th role="columnheader">Tier</th>
+<th role="columnheader">Adds</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>demos</td>
-<td>Age, sex, country, student status</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Tier">demos</td>
+<td role="cell" data-label="Adds">Age, sex, country, student status</td>
 </tr>
-<tr class="even">
-<td>employment</td>
-<td>Employment status</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Tier">employment</td>
+<td role="cell" data-label="Adds">Employment status</td>
 </tr>
-<tr class="odd">
-<td>geo</td>
-<td>Survey latitude and longitude</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Tier">geo</td>
+<td role="cell" data-label="Adds">Survey latitude and longitude</td>
 </tr>
-<tr class="even">
-<td>transit</td>
-<td>Public-transit, ride-share, licence and car-access answers</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Tier">transit</td>
+<td role="cell" data-label="Adds">Public-transit, ride-share, licence and car-access answers</td>
 </tr>
-<tr class="odd">
-<td>full</td>
-<td>Two open-text answers (LLM prompts only)</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Tier">full</td>
+<td role="cell" data-label="Adds">Two open-text answers (LLM prompts only)</td>
 </tr>
 </tbody>
 </table>
@@ -560,37 +560,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Employment is the clear gap. Errors were about 1.2 to 1.8 points larger for part-time and other respondents, and the model under-predicted them. Those groups did score higher in the survey (16.16 and 16.95 against 13.32), so this is a calibration miss on real differences, and the model did not invent a stereotype. Sex gaps were under 0.5 points. Student-status slices were small (34 students) and noisy. Tier-by-tier values for the employment slices are in the repository’s export tables. Different tiers moved them by up to about 1.6 points, so I would not read the second decimal.</p>
 <h3 id="secondary-studies-regular-public-transit-use">Secondary studies: regular public-transit use</h3>
 <p>These use no LLM. “Regular” means Q26 answers of four or more days a month, which is 101 regular and 140 non-regular respondents (41.9%). AUCs are from stratified 5-fold random forests at seed 42.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Question</th>
-<th>Result</th>
+<tr class="header" role="row">
+<th role="columnheader">Question</th>
+<th role="columnheader">Result</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Do regular riders differ in CA?</td>
-<td>Group CA 13.04 against 15.76 (difference -2.72, d = -0.46, Welch p &lt; .001, bootstrap 95% CI -4.15 to -1.28). Interpersonal 13.31 against 15.04 (difference -1.73, d = -0.30, p = .020, CI -3.12 to -0.25).</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Question">Do regular riders differ in CA?</td>
+<td role="cell" data-label="Result">Group CA 13.04 against 15.76 (difference -2.72, d = -0.46, Welch p &lt; .001, bootstrap 95% CI -4.15 to -1.28). Interpersonal 13.31 against 15.04 (difference -1.73, d = -0.30, p = .020, CI -3.12 to -0.25).</td>
 </tr>
-<tr class="even">
-<td>Does location predict regular use?</td>
-<td>Latitude and longitude: AUC 0.551. Country alone: 0.549. Near chance.</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Question">Does location predict regular use?</td>
+<td role="cell" data-label="Result">Latitude and longitude: AUC 0.551. Country alone: 0.549. Near chance.</td>
 </tr>
-<tr class="odd">
-<td>Do CA scores predict it?</td>
-<td>Group plus interpersonal: 0.590. Group only 0.555, interpersonal only 0.507.</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Question">Do CA scores predict it?</td>
+<td role="cell" data-label="Result">Group plus interpersonal: 0.590. Group only 0.555, interpersonal only 0.507.</td>
 </tr>
-<tr class="even">
-<td>Do Q27 and Q28?</td>
-<td>Q28 (ride-share days) 0.762, Q27 (rides per day) 0.589, both together 0.761.</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Question">Do Q27 and Q28?</td>
+<td role="cell" data-label="Result">Q28 (ride-share days) 0.762, Q27 (rides per day) 0.589, both together 0.761.</td>
 </tr>
-<tr class="odd">
-<td>Follow-ups</td>
-<td>Q28 after conditioning on car access (n = 149): 0.730. Age, sex and student status (n = 224): 0.618. Holding all transit questions out, demographics plus employment and location: 0.662, or 0.672 with CA.</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Question">Follow-ups</td>
+<td role="cell" data-label="Result">Q28 after conditioning on car access (n = 149): 0.730. Age, sex and student status (n = 224): 0.618. Holding all transit questions out, demographics plus employment and location: 0.662, or 0.672 with CA.</td>
 </tr>
 </tbody>
 </table>

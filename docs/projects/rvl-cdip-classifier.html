@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../styles.css?v=404df5bfc1">
 <meta property="og:title" content="RVL-CDIP-Classifier — Jack J. Burleson">
 <meta property="og:description" content="A prompt-engineering study that sorts scanned documents into the 16 RVL-CDIP categories with an off-the-shelf vision model, reporting 82.6% on a larger 1,120-image slice that overlaps the 800-image slice; its overlap with the 160-image tuning slice was not verified.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -174,44 +174,44 @@ ul.task-list li input[type="checkbox"] {
 <p>Where it fails is consistent. Budget (67.1%), letter (70.0%), presentation (70.0%) and scientific report (71.4%) are the weak classes on the 1,120 run, and the most common single error is letter predicted as memo (16 cases). In 72 of the misses, the correct class was the model’s own runner-up.</p>
 <h2 id="what-the-simulations-showed">What the simulations showed</h2>
 <p>The repository’s Monte Carlo scripts treat every recorded run as a draw from a per-image distribution of answers, then resample it to ask “what if” questions without spending any model credits. They work on a pooled corpus of 5,599 rows covering 1,512 images from 18 experiments. The corpus mixes prompt versions and models, so its 82.1% baseline is a pooled rate and not the best prompt’s accuracy. For the same reason, a “read” in the voting forecast is a draw from that mixed pool, not a repeat of one fixed classifier.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Question</th>
-<th>What the simulation said</th>
-<th>What I measured</th>
+<tr class="header" role="row">
+<th role="columnheader">Question</th>
+<th role="columnheader">What the simulation said</th>
+<th role="columnheader">What I measured</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Would majority voting help?</td>
-<td>Forecast from the pooled, mixed-model corpus, not repeated reads of one fixed classifier: 7 reads, 85.0%; 25 reads, 86.3%. Cost is assumed to scale with the number of reads; it is not a measured rerun cost.</td>
-<td>Not tested on a live run.</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Question">Would majority voting help?</td>
+<td role="cell" data-label="What the simulation said">Forecast from the pooled, mixed-model corpus, not repeated reads of one fixed classifier: 7 reads, 85.0%; 25 reads, 86.3%. Cost is assumed to scale with the number of reads; it is not a measured rerun cost.</td>
+<td role="cell" data-label="What I measured">Not tested on a live run.</td>
 </tr>
-<tr class="even">
-<td>Would sending the least-confident pages to a stronger model help?</td>
-<td>The least-confident 40%: 91.9% at 1.8 times the cost, if the stronger model is 90% accurate at 3 times the cost.</td>
-<td>Down, not up. On a 48-image low-confidence slice, 66.7% became 62.5%. On the tuning slice, v19 went from 97.5% to 96.9% at 7.8 times the cost.</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Question">Would sending the least-confident pages to a stronger model help?</td>
+<td role="cell" data-label="What the simulation said">The least-confident 40%: 91.9% at 1.8 times the cost, if the stronger model is 90% accurate at 3 times the cost.</td>
+<td role="cell" data-label="What I measured">Down, not up. On a 48-image low-confidence slice, 66.7% became 62.5%. On the tuning slice, v19 went from 97.5% to 96.9% at 7.8 times the cost.</td>
 </tr>
-<tr class="odd">
-<td>Would a few worked examples for the commonest confusions help?</td>
-<td>About 4.3% of errors fixed (33 of 767).</td>
-<td>Down. On a 48-image slice, 68.8% became 64.6%.</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Question">Would a few worked examples for the commonest confusions help?</td>
+<td role="cell" data-label="What the simulation said">About 4.3% of errors fixed (33 of 767).</td>
+<td role="cell" data-label="What I measured">Down. On a 48-image slice, 68.8% became 64.6%.</td>
 </tr>
-<tr class="even">
-<td>Which prompt changes were real?</td>
-<td>A paired bootstrap on shared images puts v0 to v11.8 at +13.0 points (95% interval 10.1 to 15.9, 898 images).</td>
-<td>This one is a test of measured runs, not a forecast.</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Question">Which prompt changes were real?</td>
+<td role="cell" data-label="What the simulation said">A paired bootstrap on shared images puts v0 to v11.8 at +13.0 points (95% interval 10.1 to 15.9, 898 images).</td>
+<td role="cell" data-label="What I measured">This one is a test of measured runs, not a forecast.</td>
 </tr>
-<tr class="odd">
-<td>Would retries and a fallback model cover API failures?</td>
-<td>With a fallback, 0.11% of calls fail, against about 2.9% without one. Extra retries barely matter.</td>
-<td>Modelled only.</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Question">Would retries and a fallback model cover API failures?</td>
+<td role="cell" data-label="What the simulation said">With a fallback, 0.11% of calls fail, against about 2.9% without one. Extra retries barely matter.</td>
+<td role="cell" data-label="What I measured">Modelled only.</td>
 </tr>
 </tbody>
 </table>

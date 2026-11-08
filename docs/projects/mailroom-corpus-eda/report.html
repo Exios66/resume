@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="Mailroom-Corpus-EDA: technical report — Jack J. Burleson">
 <meta property="og:description" content="Sources and licences, identity and provenance design, label separation, split rule, intent hydration, audit pipeline, revision history, test results and limitations for the mailroom dataset and its audit repository.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -169,7 +169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>It is an evaluation and ingress-simulation corpus for the mailroom projects. It is not a training set, and the report says where that matters.</p>
 <h2 id="system-and-data">System and data</h2>
 <h3 id="sources">Sources</h3>
-<table class="caption-top" style="width:100%;">
+<table class="stack caption-top" style="width:100%;" role="table">
 <colgroup>
 <col style="width: 23%">
 <col style="width: 30%">
@@ -177,43 +177,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <col style="width: 23%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Class</th>
-<th style="text-align: right;">Documents</th>
-<th>Source</th>
-<th>Licence</th>
+<tr class="header" role="row">
+<th role="columnheader">Class</th>
+<th style="text-align: right;" role="columnheader">Documents</th>
+<th role="columnheader">Source</th>
+<th role="columnheader">Licence</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td><code>insurance_claim</code></td>
-<td style="text-align: right;">1,100</td>
-<td>CMS DE-SynPUF, GNOTHEIA, a motor-claims decision set, INSURBIAS</td>
-<td>Apache-2.0, MIT or CC BY 4.0, depending on the source</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Class"><code>insurance_claim</code></td>
+<td style="text-align: right;" role="cell" data-label="Documents">1,100</td>
+<td role="cell" data-label="Source">CMS DE-SynPUF, GNOTHEIA, a motor-claims decision set, INSURBIAS</td>
+<td role="cell" data-label="Licence">Apache-2.0, MIT or CC BY 4.0, depending on the source</td>
 </tr>
-<tr class="even">
-<td><code>correspondence</code></td>
-<td style="text-align: right;">1,000</td>
-<td>Enron email, deduplicated (a pool of 247,523 rows)</td>
-<td>Research use; real named individuals, so handled conservatively</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Class"><code>correspondence</code></td>
+<td style="text-align: right;" role="cell" data-label="Documents">1,000</td>
+<td role="cell" data-label="Source">Enron email, deduplicated (a pool of 247,523 rows)</td>
+<td role="cell" data-label="Licence">Research use; real named individuals, so handled conservatively</td>
 </tr>
-<tr class="odd">
-<td><code>contract</code></td>
-<td style="text-align: right;">600</td>
-<td>CUAD v1 (509) and SEC EDGAR exhibits (91)</td>
-<td>CC BY 4.0 and US public domain</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Class"><code>contract</code></td>
+<td style="text-align: right;" role="cell" data-label="Documents">600</td>
+<td role="cell" data-label="Source">CUAD v1 (509) and SEC EDGAR exhibits (91)</td>
+<td role="cell" data-label="Licence">CC BY 4.0 and US public domain</td>
 </tr>
-<tr class="even">
-<td><code>corporate_record</code></td>
-<td style="text-align: right;">450</td>
-<td>SEC EDGAR filing exhibits</td>
-<td>US public domain</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Class"><code>corporate_record</code></td>
+<td style="text-align: right;" role="cell" data-label="Documents">450</td>
+<td role="cell" data-label="Source">SEC EDGAR filing exhibits</td>
+<td role="cell" data-label="Licence">US public domain</td>
 </tr>
-<tr class="odd">
-<td><code>merger_agreement</code></td>
-<td style="text-align: right;">152</td>
-<td>MAUD v1</td>
-<td>CC BY 4.0</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Class"><code>merger_agreement</code></td>
+<td style="text-align: right;" role="cell" data-label="Documents">152</td>
+<td role="cell" data-label="Source">MAUD v1</td>
+<td role="cell" data-label="Licence">CC BY 4.0</td>
 </tr>
 </tbody>
 </table>
@@ -261,54 +261,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <h3 id="pipeline">Pipeline</h3>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Phase</th>
-<th>What it does</th>
-<th>Output</th>
+<tr class="header" role="row">
+<th role="columnheader">Phase</th>
+<th role="columnheader">What it does</th>
+<th role="columnheader">Output</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>P0</td>
-<td>Download the dataset snapshot and validate its manifest</td>
-<td><code>data/parquet/</code> (git-ignored)</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Phase">P0</td>
+<td role="cell" data-label="What it does">Download the dataset snapshot and validate its manifest</td>
+<td role="cell" data-label="Output"><code>data/parquet/</code> (git-ignored)</td>
 </tr>
-<tr class="even">
-<td>P1</td>
-<td>Structural integrity and provenance audit</td>
-<td><code>reports/tables/integrity_report.json</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Phase">P1</td>
+<td role="cell" data-label="What it does">Structural integrity and provenance audit</td>
+<td role="cell" data-label="Output"><code>reports/tables/integrity_report.json</code></td>
 </tr>
-<tr class="odd">
-<td>P2</td>
-<td>Composition: strata, imbalance, provenance, metadata coverage</td>
-<td>strata and imbalance tables</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Phase">P2</td>
+<td role="cell" data-label="What it does">Composition: strata, imbalance, provenance, metadata coverage</td>
+<td role="cell" data-label="Output">strata and imbalance tables</td>
 </tr>
-<tr class="even">
-<td>P3</td>
-<td>Static figures and tables</td>
-<td>30 PNGs</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Phase">P3</td>
+<td role="cell" data-label="What it does">Static figures and tables</td>
+<td role="cell" data-label="Output">30 PNGs</td>
 </tr>
-<tr class="odd">
-<td>P4</td>
-<td>Interactive figures</td>
-<td>18 Plotly HTML files</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Phase">P4</td>
+<td role="cell" data-label="What it does">Interactive figures</td>
+<td role="cell" data-label="Output">18 Plotly HTML files</td>
 </tr>
-<tr class="even">
-<td>P5</td>
-<td>Cast-safe JSONL and parquet staging helpers</td>
-<td><code>data/staging/</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Phase">P5</td>
+<td role="cell" data-label="What it does">Cast-safe JSONL and parquet staging helpers</td>
+<td role="cell" data-label="Output"><code>data/staging/</code></td>
 </tr>
-<tr class="odd">
-<td>P6</td>
-<td>Correspondence intent coverage and provenance audit</td>
-<td><code>reports/SUMMARY_REPORT.json</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Phase">P6</td>
+<td role="cell" data-label="What it does">Correspondence intent coverage and provenance audit</td>
+<td role="cell" data-label="Output"><code>reports/SUMMARY_REPORT.json</code></td>
 </tr>
 </tbody>
 </table>

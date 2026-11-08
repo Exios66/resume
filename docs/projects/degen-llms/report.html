@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="The Mandalay Bay: technical report — Jack J. Burleson">
 <meta property="og:description" content="Architecture, shared-screen rule, save format, randomness, exact slot return calculation, test counts, bugs fixed and limitations for The Mandalay Bay.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -168,34 +168,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>It is satire. Chips are fictional, no real money is involved, and it is not affiliated with MGM Resorts International or the real Mandalay Bay.</p>
 <h2 id="system-and-data">System and data</h2>
 <h3 id="surfaces">Surfaces</h3>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Surface</th>
-<th>Entry</th>
-<th>Role</th>
+<tr class="header" role="row">
+<th role="columnheader">Surface</th>
+<th role="columnheader">Entry</th>
+<th role="columnheader">Role</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Python CLI</td>
-<td><code>python3 -m mandalay_bay</code></td>
-<td>Reference rules. Standard library only at runtime, Python 3.11 or later</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Surface">Python CLI</td>
+<td role="cell" data-label="Entry"><code>python3 -m mandalay_bay</code></td>
+<td role="cell" data-label="Role">Reference rules. Standard library only at runtime, Python 3.11 or later</td>
 </tr>
-<tr class="even">
-<td>Browser terminal</td>
-<td><code>docs/index.html</code></td>
-<td>Hand-written vanilla JavaScript ES modules under <code>docs/js/</code>. Not Python compiled for the browser</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Surface">Browser terminal</td>
+<td role="cell" data-label="Entry"><code>docs/index.html</code></td>
+<td role="cell" data-label="Role">Hand-written vanilla JavaScript ES modules under <code>docs/js/</code>. Not Python compiled for the browser</td>
 </tr>
-<tr class="odd">
-<td>Pixel RPG</td>
-<td><code>docs/rpg/index.html</code></td>
-<td>Phaser overworld over the same modules</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Surface">Pixel RPG</td>
+<td role="cell" data-label="Entry"><code>docs/rpg/index.html</code></td>
+<td role="cell" data-label="Role">Phaser overworld over the same modules</td>
 </tr>
 </tbody>
 </table>
@@ -262,34 +262,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>There are no performance benchmarks. The evidence is the test suite, the CI run list and the screenshots below.</p>
 <h3 id="test-counts">Test counts</h3>
 <p>These are collected, not pass rates. I did not run the suite for this report.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Suite</th>
-<th>Count</th>
-<th>Source</th>
+<tr class="header" role="row">
+<th role="columnheader">Suite</th>
+<th role="columnheader">Count</th>
+<th role="columnheader">Source</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>pytest</td>
-<td>379 <code>def test_</code> declarations at the 30 October 2026 snapshot</td>
-<td>grep over <code>tests/</code>; not a collected or passing count</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Suite">pytest</td>
+<td role="cell" data-label="Count">379 <code>def test_</code> declarations at the 30 October 2026 snapshot</td>
+<td role="cell" data-label="Source">grep over <code>tests/</code>; not a collected or passing count</td>
 </tr>
-<tr class="even">
-<td>Node smoke scripts</td>
-<td>12 scripts</td>
-<td><code>scripts/smoke-test-*.mjs</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Suite">Node smoke scripts</td>
+<td role="cell" data-label="Count">12 scripts</td>
+<td role="cell" data-label="Source"><code>scripts/smoke-test-*.mjs</code></td>
 </tr>
-<tr class="odd">
-<td>Browser smoke test</td>
-<td>1 script</td>
-<td><code>scripts/smoke-test-web.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Suite">Browser smoke test</td>
+<td role="cell" data-label="Count">1 script</td>
+<td role="cell" data-label="Source"><code>scripts/smoke-test-web.py</code></td>
 </tr>
 </tbody>
 </table>

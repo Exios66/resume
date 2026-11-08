@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="Mailroom-ML: technical report — Jack J. Burleson">
 <meta property="og:description" content="Historical technical report through Mailroom-ML M9b: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits. See the case study for M9c.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -169,74 +169,74 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Numbers on this page labelled “test split” come from those 323 documents. The split was kept out of training, out of checkpoint selection (done on validation) and out of calibration fitting. It is not untouched, though. I used it to compare runs, to run the selective-risk sweep that supports the 0.97 cutoff, and to run the decode sweep. The 0.97 value itself is a preset in the project’s config, and the sweep recommended the same value. I name the project’s runs as follows: Run 3 is an early two-epoch run, Arm A and Arm B are two comparison runs (a one-epoch smoke run and a three-epoch run), and M9b is the final four-epoch run. The six figures are from Arm B, not from the final run. Where the two differ I say so.</p>
 <h2 id="system-and-data">System and data</h2>
 <h3 id="stages-and-modules">Stages and modules</h3>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Stage</th>
-<th>What it does</th>
-<th>Module</th>
+<tr class="header" role="row">
+<th role="columnheader">Stage</th>
+<th role="columnheader">What it does</th>
+<th role="columnheader">Module</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Configuration</td>
-<td>One file holds the pinned data revisions, taxonomy, window sizes and routing thresholds that every other module imports</td>
-<td><code>src/mailroom_ml/config.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Configuration</td>
+<td role="cell" data-label="What it does">One file holds the pinned data revisions, taxonomy, window sizes and routing thresholds that every other module imports</td>
+<td role="cell" data-label="Module"><code>src/mailroom_ml/config.py</code></td>
 </tr>
-<tr class="even">
-<td>Normalisation</td>
-<td>A deterministic text clerk that runs before training and before inference, so the two see the same bytes</td>
-<td><code>src/mailroom_ml/normalize.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Normalisation</td>
+<td role="cell" data-label="What it does">A deterministic text clerk that runs before training and before inference, so the two see the same bytes</td>
+<td role="cell" data-label="Module"><code>src/mailroom_ml/normalize.py</code></td>
 </tr>
-<tr class="odd">
-<td>Windowing</td>
-<td>Token-level windows of 8,192 tokens with 512 tokens of overlap, plurality vote across windows</td>
-<td><code>src/mailroom_ml/windows.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Windowing</td>
+<td role="cell" data-label="What it does">Token-level windows of 8,192 tokens with 512 tokens of overlap, plurality vote across windows</td>
+<td role="cell" data-label="Module"><code>src/mailroom_ml/windows.py</code></td>
 </tr>
-<tr class="even">
-<td>Dataset build</td>
-<td>Stages the training set, splits it, and runs the leak audits</td>
-<td><code>src/mailroom_ml/dataset.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Dataset build</td>
+<td role="cell" data-label="What it does">Stages the training set, splits it, and runs the leak audits</td>
+<td role="cell" data-label="Module"><code>src/mailroom_ml/dataset.py</code></td>
 </tr>
-<tr class="odd">
-<td>Provenance</td>
-<td>sha256 helpers and a byte-deterministic build manifest</td>
-<td><code>src/mailroom_ml/provenance.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Provenance</td>
+<td role="cell" data-label="What it does">sha256 helpers and a byte-deterministic build manifest</td>
+<td role="cell" data-label="Module"><code>src/mailroom_ml/provenance.py</code></td>
 </tr>
-<tr class="even">
-<td>Training</td>
-<td>PyTorch training with checkpoint selection on validation</td>
-<td><code>training/train/train_modernbert.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Training</td>
+<td role="cell" data-label="What it does">PyTorch training with checkpoint selection on validation</td>
+<td role="cell" data-label="Module"><code>training/train/train_modernbert.py</code></td>
 </tr>
-<tr class="odd">
-<td>Calibration</td>
-<td>Per-head temperature scaling, ECE, Wilson bounds, selective-risk sweep</td>
-<td><code>src/mailroom_ml/calibration.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Calibration</td>
+<td role="cell" data-label="What it does">Per-head temperature scaling, ECE, Wilson bounds, selective-risk sweep</td>
+<td role="cell" data-label="Module"><code>src/mailroom_ml/calibration.py</code></td>
 </tr>
-<tr class="even">
-<td>Out-of-distribution</td>
-<td>Energy probe on the document-type logits, fit on validation</td>
-<td><code>src/mailroom_ml/ood.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Out-of-distribution</td>
+<td role="cell" data-label="What it does">Energy probe on the document-type logits, fit on validation</td>
+<td role="cell" data-label="Module"><code>src/mailroom_ml/ood.py</code></td>
 </tr>
-<tr class="odd">
-<td>Routing</td>
-<td>Fast-path gate over calibrated confidence, agreement and margin</td>
-<td><code>src/mailroom_ml/routing.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Routing</td>
+<td role="cell" data-label="What it does">Fast-path gate over calibrated confidence, agreement and margin</td>
+<td role="cell" data-label="Module"><code>src/mailroom_ml/routing.py</code></td>
 </tr>
-<tr class="even">
-<td>Evaluation</td>
-<td>Test-split scoring, cohorts, selective risk, paired bootstrap comparison</td>
-<td><code>training/eval/eval_modernbert.py</code>, <code>training/eval/compare_runs.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Evaluation</td>
+<td role="cell" data-label="What it does">Test-split scoring, cohorts, selective risk, paired bootstrap comparison</td>
+<td role="cell" data-label="Module"><code>training/eval/eval_modernbert.py</code>, <code>training/eval/compare_runs.py</code></td>
 </tr>
-<tr class="odd">
-<td>Deployment</td>
-<td>ONNX export, parity check, Modal train and serve apps</td>
-<td><code>deploy/onnx_export.py</code>, <code>deploy/onnx_parity_check.py</code>, <code>deploy/modal_app.py</code>, <code>deploy/serve_app.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Deployment</td>
+<td role="cell" data-label="What it does">ONNX export, parity check, Modal train and serve apps</td>
+<td role="cell" data-label="Module"><code>deploy/onnx_export.py</code>, <code>deploy/onnx_parity_check.py</code>, <code>deploy/modal_app.py</code>, <code>deploy/serve_app.py</code></td>
 </tr>
 </tbody>
 </table>

@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="MORNINGSTAR: appendix — Jack J. Burleson">
 <meta property="og:description" content="Supporting scope notes for MORNINGSTAR: the self-reported deliberation counts, the case-ID schema, and what the system has not measured.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -160,65 +160,65 @@ ul.task-list li input[type="checkbox"] {
 <p>The three outcome categories add up to 11, not 12, so the metrics file is not internally consistent. The discrepancy is recorded rather than smoothed over.</p>
 <p>One model plays every seat. Unanimity therefore says little about deliberation quality: it may reflect a consistent persona rather than agreement among independent judges.</p>
 <h2 id="case-and-proceeding-schema">Case and proceeding schema</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Field</th>
-<th>Shape</th>
+<tr class="header" role="row">
+<th role="columnheader">Field</th>
+<th role="columnheader">Shape</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Case ID</td>
-<td><code>2026-DEL-005-001</code>: year, category, case number, deliberation number</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Field">Case ID</td>
+<td role="cell" data-label="Shape"><code>2026-DEL-005-001</code>: year, category, case number, deliberation number</td>
 </tr>
-<tr class="even">
-<td>Feasibility tiers</td>
-<td>F0 to F5; F3 and above require deliberation, F4 a transcript, F5 a full record</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Field">Feasibility tiers</td>
+<td role="cell" data-label="Shape">F0 to F5; F3 and above require deliberation, F4 a transcript, F5 a full record</td>
 </tr>
-<tr class="odd">
-<td>Proceedings</td>
-<td>Standard, expedited, special-interest hearing, contempt hearing</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Field">Proceedings</td>
+<td role="cell" data-label="Shape">Standard, expedited, special-interest hearing, contempt hearing</td>
 </tr>
-<tr class="even">
-<td>Special-interest hearing</td>
-<td>Testimony and findings, no final vote</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Field">Special-interest hearing</td>
+<td role="cell" data-label="Shape">Testimony and findings, no final vote</td>
 </tr>
 </tbody>
 </table>
 <p>The feasibility labels are not fully consistent across the rules files: <code>courtroom/RULES.md</code> calls F0 “Trivial” while <code>core/MFAF.md</code> calls it “Infrastructural”.</p>
 <h2 id="what-has-not-been-measured">What has not been measured</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Missing evidence</th>
-<th>Why it matters</th>
+<tr class="header" role="row">
+<th role="columnheader">Missing evidence</th>
+<th role="columnheader">Why it matters</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>A single-prompt baseline</td>
-<td>Without it, the courtroom structure has no measured benefit</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Missing evidence">A single-prompt baseline</td>
+<td role="cell" data-label="Why it matters">Without it, the courtroom structure has no measured benefit</td>
 </tr>
-<tr class="even">
-<td>A second model or independent judges</td>
-<td>Unanimity from one model is not agreement</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Missing evidence">A second model or independent judges</td>
+<td role="cell" data-label="Why it matters">Unanimity from one model is not agreement</td>
 </tr>
-<tr class="odd">
-<td>A tamper-evident log in the live path</td>
-<td>The hash-chain library exists but the runner does not call it</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Missing evidence">A tamper-evident log in the live path</td>
+<td role="cell" data-label="Why it matters">The hash-chain library exists but the runner does not call it</td>
 </tr>
-<tr class="even">
-<td>An external evaluation of rulings</td>
-<td>The system grades its own output</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Missing evidence">An external evaluation of rulings</td>
+<td role="cell" data-label="Why it matters">The system grades its own output</td>
 </tr>
 </tbody>
 </table>

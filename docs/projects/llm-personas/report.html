@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="MORNINGSTAR: technical report — Jack J. Burleson">
 <meta property="og:description" content="Court structure, voting rules, runner design, executive layer, test counts, limitations and a proposed evaluation for MORNINGSTAR, a deliberative persona framework with no published evaluation.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -165,54 +165,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>One point matters more than the rest. The runner makes one model call that plays every seat. It is not a multi-model system. There is also no evaluation: no baseline and no comparison with a single prompt. This report describes the design and the evidence that it runs, and it publishes no quality claim.</p>
 <h2 id="system-and-data">System and data</h2>
 <h3 id="the-cast-and-the-rules">The cast and the rules</h3>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Role</th>
-<th>Votes</th>
-<th>Notes</th>
+<tr class="header" role="row">
+<th role="columnheader">Role</th>
+<th role="columnheader">Votes</th>
+<th role="columnheader">Notes</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Judge</td>
-<td>tie-break only</td>
-<td>Presides, seats specialists, casts the deciding vote with an explanation</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Role">Judge</td>
+<td role="cell" data-label="Votes">tie-break only</td>
+<td role="cell" data-label="Notes">Presides, seats specialists, casts the deciding vote with an explanation</td>
 </tr>
-<tr class="even">
-<td>Architect, Engineer, Debugger, Prophet, Counsel</td>
-<td>1 each</td>
-<td>The five standard voters, cast in that order</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Role">Architect, Engineer, Debugger, Prophet, Counsel</td>
+<td role="cell" data-label="Votes">1 each</td>
+<td role="cell" data-label="Notes">The five standard voters, cast in that order</td>
 </tr>
-<tr class="odd">
-<td>Scribe</td>
-<td>0</td>
-<td>Records decisions and maintains state</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Role">Scribe</td>
+<td role="cell" data-label="Votes">0</td>
+<td role="cell" data-label="Notes">Records decisions and maintains state</td>
 </tr>
-<tr class="even">
-<td>Non-voting consultant persona</td>
-<td>0</td>
-<td>Advisory, invoked by the judge</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Role">Non-voting consultant persona</td>
+<td role="cell" data-label="Votes">0</td>
+<td role="cell" data-label="Notes">Advisory, invoked by the judge</td>
 </tr>
-<tr class="odd">
-<td>Witnesses</td>
-<td>0</td>
-<td>Expert domains called with <code>/summon &lt;domain&gt;-expert</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Role">Witnesses</td>
+<td role="cell" data-label="Votes">0</td>
+<td role="cell" data-label="Notes">Expert domains called with <code>/summon &lt;domain&gt;-expert</code></td>
 </tr>
-<tr class="even">
-<td>Specialists</td>
-<td>1 each</td>
-<td>Seated by the judge only, F3 and above, up to 2 at a time</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Role">Specialists</td>
+<td role="cell" data-label="Votes">1 each</td>
+<td role="cell" data-label="Notes">Seated by the judge only, F3 and above, up to 2 at a time</td>
 </tr>
-<tr class="odd">
-<td>Spectators</td>
-<td>0</td>
-<td>Optional commentary; they do not deliberate, testify or vote</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Role">Spectators</td>
+<td role="cell" data-label="Votes">0</td>
+<td role="cell" data-label="Notes">Optional commentary; they do not deliberate, testify or vote</td>
 </tr>
 </tbody>
 </table>
@@ -227,69 +227,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 id="what-the-prompt-contains">What the prompt contains</h3>
 <p>The system prompt is assembled from the framework files: procedures, rules, personalities, checklists, the expert registry, the feasibility framework and optionally spectators and templates. A short runner instruction tells the model to produce a complete transcript with all phases and to end with scribe certification. The user prompt carries the matter, the feasibility level, the hearing type and a state summary. The model is told to follow the procedure. Nothing in code checks that it did, apart from the separate transcript audit described below.</p>
 <h3 id="records-and-state">Records and state</h3>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Item</th>
-<th>What it does</th>
+<tr class="header" role="row">
+<th role="columnheader">Item</th>
+<th role="columnheader">What it does</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td><code>state/current.md</code></td>
-<td>Session state, validated against <code>core/state-schema.md</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Item"><code>state/current.md</code></td>
+<td role="cell" data-label="What it does">Session state, validated against <code>core/state-schema.md</code></td>
 </tr>
-<tr class="even">
-<td>Case IDs</td>
-<td><code>2026-DEL-005-001</code> style: year, category, case number, deliberation number</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Item">Case IDs</td>
+<td role="cell" data-label="What it does"><code>2026-DEL-005-001</code> style: year, category, case number, deliberation number</td>
 </tr>
-<tr class="odd">
-<td><code>courtroom/case-registry.yaml</code></td>
-<td>Holds the next case number per category; <code>allocate_case_no</code> in <code>run.py</code> increments it</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Item"><code>courtroom/case-registry.yaml</code></td>
+<td role="cell" data-label="What it does">Holds the next case number per category; <code>allocate_case_no</code> in <code>run.py</code> increments it</td>
 </tr>
-<tr class="even">
-<td><code>courtroom/reporter.py</code></td>
-<td>Audits transcript names and headers, regenerates the portal manifest, prints an integration report</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Item"><code>courtroom/reporter.py</code></td>
+<td role="cell" data-label="What it does">Audits transcript names and headers, regenerates the portal manifest, prints an integration report</td>
 </tr>
-<tr class="odd">
-<td>Court Reporter agent</td>
-<td>Acts on that report: updates <code>courtroom/precedents.md</code> and <code>state/metrics.md</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Item">Court Reporter agent</td>
+<td role="cell" data-label="What it does">Acts on that report: updates <code>courtroom/precedents.md</code> and <code>state/metrics.md</code></td>
 </tr>
 </tbody>
 </table>
 <h3 id="the-executive-layer">The executive layer</h3>
 <p>The <code>executive/</code> package has four standard-library modules, about 600 lines in all. By design it executes rulings and does not make decisions.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Module</th>
-<th>Behaviour</th>
+<tr class="header" role="row">
+<th role="columnheader">Module</th>
+<th role="columnheader">Behaviour</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td><code>judicial_log.py</code></td>
-<td>Append-only log. Each entry carries a SHA-256 entry hash and the previous entry’s hash, and <code>verify()</code> walks the chain</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Module"><code>judicial_log.py</code></td>
+<td role="cell" data-label="Behaviour">Append-only log. Each entry carries a SHA-256 entry hash and the previous entry’s hash, and <code>verify()</code> walks the chain</td>
 </tr>
-<tr class="even">
-<td><code>proof.py</code></td>
-<td>HMAC-SHA256 proof over ruling ID, reason and timestamp, required to override a ruling. The secret file is gitignored</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Module"><code>proof.py</code></td>
+<td role="cell" data-label="Behaviour">HMAC-SHA256 proof over ruling ID, reason and timestamp, required to override a ruling. The secret file is gitignored</td>
 </tr>
-<tr class="odd">
-<td><code>watchdog.py</code></td>
-<td>Flags actions with no logged approval and no override proof, log integrity failures, and more than 5 overrides</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Module"><code>watchdog.py</code></td>
+<td role="cell" data-label="Behaviour">Flags actions with no logged approval and no override proof, log integrity failures, and more than 5 overrides</td>
 </tr>
-<tr class="even">
-<td><code>consensus.py</code></td>
-<td>File-based proposal, vote, quorum (default 3 of 5) and commit</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Module"><code>consensus.py</code></td>
+<td role="cell" data-label="Behaviour">File-based proposal, vote, quorum (default 3 of 5) and commit</td>
 </tr>
 </tbody>
 </table>

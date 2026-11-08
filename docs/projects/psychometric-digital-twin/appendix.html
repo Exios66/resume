@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="Psychometric Digital Twin: appendix — Jack J. Burleson">
 <meta property="og:description" content="Supporting notes for the Psychometric Digital Twin: cohort, model roster, tier definitions and the evaluation metrics.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -154,25 +154,25 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 <h2 id="model-roster">Model roster</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Family</th>
-<th>Members</th>
+<tr class="header" role="row">
+<th role="columnheader">Family</th>
+<th role="columnheader">Members</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Classical</td>
-<td>Ridge, Elastic Net, k-NN, random forest, histogram gradient boosting, XGBoost, small neural net</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Family">Classical</td>
+<td role="cell" data-label="Members">Ridge, Elastic Net, k-NN, random forest, histogram gradient boosting, XGBoost, small neural net</td>
 </tr>
-<tr class="even">
-<td>LLM</td>
-<td>Llama 3.1 8B Instruct, Llama 3.2 3B Instruct, DeepSeek-R1-Distill-Llama-8B, Llama 3.3 70B Instruct (AWQ)</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Family">LLM</td>
+<td role="cell" data-label="Members">Llama 3.1 8B Instruct, Llama 3.2 3B Instruct, DeepSeek-R1-Distill-Llama-8B, Llama 3.3 70B Instruct (AWQ)</td>
 </tr>
 </tbody>
 </table>
@@ -210,41 +210,41 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <p>Classical models see the tabular tiers; the LLM prompts add the open text.</p>
 <h2 id="metrics">Metrics</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Metric</th>
-<th>Meaning</th>
+<tr class="header" role="row">
+<th role="columnheader">Metric</th>
+<th role="columnheader">Meaning</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Error in points</td>
-<td>Mean absolute error on the 6–30 subscale</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Metric">Error in points</td>
+<td role="cell" data-label="Meaning">Mean absolute error on the 6–30 subscale</td>
 </tr>
-<tr class="even">
-<td>Exact match</td>
-<td>Predicted band equals the reported band</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Metric">Exact match</td>
+<td role="cell" data-label="Meaning">Predicted band equals the reported band</td>
 </tr>
-<tr class="odd">
-<td>Band accuracy</td>
-<td>Low, moderate or high agreement</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Metric">Band accuracy</td>
+<td role="cell" data-label="Meaning">Low, moderate or high agreement</td>
 </tr>
-<tr class="even">
-<td>F1, per band</td>
-<td>Classification quality within each band separately, not one aggregate score</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Metric">F1, per band</td>
+<td role="cell" data-label="Meaning">Classification quality within each band separately, not one aggregate score</td>
 </tr>
-<tr class="odd">
-<td>AUC</td>
-<td>Ranking quality for low versus high apprehension</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Metric">AUC</td>
+<td role="cell" data-label="Meaning">Ranking quality for low versus high apprehension</td>
 </tr>
-<tr class="even">
-<td>Group error</td>
-<td>Error computed within demographic groups</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Metric">Group error</td>
+<td role="cell" data-label="Meaning">Error computed within demographic groups</td>
 </tr>
 </tbody>
 </table>

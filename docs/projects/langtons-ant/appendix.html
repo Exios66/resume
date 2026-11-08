@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="Langton’s Ant: appendix — Jack J. Burleson">
 <meta property="og:description" content="Supporting notes for the Langton’s Ant case study: the full 20-machine preset gallery, rule notations and the determinism check.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -162,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Supporting material for the <a href="../../projects/langtons-ant.html">Langton’s Ant case study</a>. The machines and their milestones come from the cited literature and the GollyGang rule table repository; they are not my results.</p>
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#the-20-presets">The 20 presets</a></li><li><a href="#rule-notations">Rule notations</a></li><li><a href="#determinism-check">Determinism check</a></li><li><a href="#reproduce">Reproduce</a></li></ul></nav>
 <h2 id="the-20-presets">The 20 presets</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 25%">
 <col style="width: 25%">
@@ -170,165 +170,165 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <col style="width: 25%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Name</th>
-<th>Rule</th>
-<th>Space</th>
-<th>Known milestone</th>
+<tr class="header" role="row">
+<th role="columnheader">Name</th>
+<th role="columnheader">Rule</th>
+<th role="columnheader">Space</th>
+<th role="columnheader">Known milestone</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Classic Langton’s Ant</td>
-<td><code>RL</code></td>
-<td>1 state × 2 colors</td>
-<td>Highway onset ≈ 9,977 steps</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Name">Classic Langton’s Ant</td>
+<td role="cell" data-label="Rule"><code>RL</code></td>
+<td role="cell" data-label="Space">1 state × 2 colors</td>
+<td role="cell" data-label="Known milestone">Highway onset ≈ 9,977 steps</td>
 </tr>
-<tr class="even">
-<td>RLR</td>
-<td><code>RLR</code></td>
-<td>1 × 3</td>
-<td>Chaotic growth; no known highway</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Name">RLR</td>
+<td role="cell" data-label="Rule"><code>RLR</code></td>
+<td role="cell" data-label="Space">1 × 3</td>
+<td role="cell" data-label="Known milestone">Chaotic growth; no known highway</td>
 </tr>
-<tr class="odd">
-<td>LLRR</td>
-<td><code>LLRR</code></td>
-<td>1 × 4</td>
-<td>Ever-growing bilateral symmetry</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Name">LLRR</td>
+<td role="cell" data-label="Rule"><code>LLRR</code></td>
+<td role="cell" data-label="Space">1 × 4</td>
+<td role="cell" data-label="Known milestone">Ever-growing bilateral symmetry</td>
 </tr>
-<tr class="even">
-<td>LRRL</td>
-<td><code>LRRL</code></td>
-<td>1 × 4</td>
-<td>Chiral mirror of LLRR</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Name">LRRL</td>
+<td role="cell" data-label="Rule"><code>LRRL</code></td>
+<td role="cell" data-label="Space">1 × 4</td>
+<td role="cell" data-label="Known milestone">Chiral mirror of LLRR</td>
 </tr>
-<tr class="odd">
-<td>LRRRRRLLR</td>
-<td><code>LRRRRRLLR</code></td>
-<td>1 × 8</td>
-<td>Fills a solid square, spirals through it</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Name">LRRRRRLLR</td>
+<td role="cell" data-label="Rule"><code>LRRRRRLLR</code></td>
+<td role="cell" data-label="Space">1 × 8</td>
+<td role="cell" data-label="Known milestone">Fills a solid square, spirals through it</td>
 </tr>
-<tr class="even">
-<td>RRLLLRLLLRRR</td>
-<td><code>RRLLLRLLLRRR</code></td>
-<td>1 × 12</td>
-<td>Marching filled triangle</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Name">RRLLLRLLLRRR</td>
+<td role="cell" data-label="Rule"><code>RRLLLRLLLRRR</code></td>
+<td role="cell" data-label="Space">1 × 12</td>
+<td role="cell" data-label="Known milestone">Marching filled triangle</td>
 </tr>
-<tr class="odd">
-<td>LLLR</td>
-<td><code>LLLR</code></td>
-<td>1 × 4</td>
-<td>Proven harmonic highways</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Name">LLLR</td>
+<td role="cell" data-label="Rule"><code>LLLR</code></td>
+<td role="cell" data-label="Space">1 × 4</td>
+<td role="cell" data-label="Known milestone">Proven harmonic highways</td>
 </tr>
-<tr class="even">
-<td>LLRLRL</td>
-<td><code>LLRLRL</code></td>
-<td>1 × 6</td>
-<td>Infinitely many highways</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Name">LLRLRL</td>
+<td role="cell" data-label="Rule"><code>LLRLRL</code></td>
+<td role="cell" data-label="Space">1 × 6</td>
+<td role="cell" data-label="Known milestone">Infinitely many highways</td>
 </tr>
-<tr class="odd">
-<td>LLRRRL</td>
-<td><code>LLRRRL</code></td>
-<td>1 × 6</td>
-<td>Provably no extended highway</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Name">LLRRRL</td>
+<td role="cell" data-label="Rule"><code>LLRRRL</code></td>
+<td role="cell" data-label="Space">1 × 6</td>
+<td role="cell" data-label="Known milestone">Provably no extended highway</td>
 </tr>
-<tr class="even">
-<td>Jeronimus</td>
-<td>triple table</td>
-<td>2 × 2</td>
-<td>Highway after ≈ 8.36 × 10⁹ steps</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Name">Jeronimus</td>
+<td role="cell" data-label="Rule">triple table</td>
+<td role="cell" data-label="Space">2 × 2</td>
+<td role="cell" data-label="Known milestone">Highway after ≈ 8.36 × 10⁹ steps</td>
 </tr>
-<tr class="odd">
-<td>Perfectionist</td>
-<td>triple table</td>
-<td>3 × 2</td>
-<td>Highway after ≈ 15.5 × 10⁶ steps</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Name">Perfectionist</td>
+<td role="cell" data-label="Rule">triple table</td>
+<td role="cell" data-label="Space">3 × 2</td>
+<td role="cell" data-label="Known milestone">Highway after ≈ 15.5 × 10⁶ steps</td>
 </tr>
-<tr class="even">
-<td>NKS p.185(e)</td>
-<td>triple table</td>
-<td>4 × 2</td>
-<td>Proved periodic</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Name">NKS p.185(e)</td>
+<td role="cell" data-label="Rule">triple table</td>
+<td role="cell" data-label="Space">4 × 2</td>
+<td role="cell" data-label="Known milestone">Proved periodic</td>
 </tr>
-<tr class="odd">
-<td>Commons Chaos→Highway</td>
-<td><code>121021110111</code></td>
-<td>2 × 2</td>
-<td>Texture first, highway later</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Name">Commons Chaos→Highway</td>
+<td role="cell" data-label="Rule"><code>121021110111</code></td>
+<td role="cell" data-label="Space">2 × 2</td>
+<td role="cell" data-label="Known milestone">Texture first, highway later</td>
 </tr>
-<tr class="even">
-<td>Base-φ Counter</td>
-<td>triple table</td>
-<td>3 × 2</td>
-<td>Logarithmic growth</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Name">Base-φ Counter</td>
+<td role="cell" data-label="Rule">triple table</td>
+<td role="cell" data-label="Space">3 × 2</td>
+<td role="cell" data-label="Known milestone">Logarithmic growth</td>
 </tr>
-<tr class="odd">
-<td>LLRRRLRLRLLR</td>
-<td><code>LLRRRLRLRLLR</code></td>
-<td>1 × 12</td>
-<td>Convoluted diagonal highway</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Name">LLRRRLRLRLLR</td>
+<td role="cell" data-label="Rule"><code>LLRRRLRLRLLR</code></td>
+<td role="cell" data-label="Space">1 × 12</td>
+<td role="cell" data-label="Known milestone">Convoluted diagonal highway</td>
 </tr>
-<tr class="even">
-<td>Brady Busy Beaver</td>
-<td>triple table</td>
-<td>2 × 2</td>
-<td>Halts at step 121</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Name">Brady Busy Beaver</td>
+<td role="cell" data-label="Rule">triple table</td>
+<td role="cell" data-label="Space">2 × 2</td>
+<td role="cell" data-label="Known milestone">Halts at step 121</td>
 </tr>
-<tr class="odd">
-<td>Brady Sigma Champion</td>
-<td>triple table</td>
-<td>2 × 2</td>
-<td>Halts after 37 painted cells</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Name">Brady Sigma Champion</td>
+<td role="cell" data-label="Rule">triple table</td>
+<td role="cell" data-label="Space">2 × 2</td>
+<td role="cell" data-label="Known milestone">Halts after 37 painted cells</td>
 </tr>
-<tr class="even">
-<td>Fay Champion</td>
-<td>triple table</td>
-<td>2 × 3</td>
-<td>Halts after 59,348,218 steps</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Name">Fay Champion</td>
+<td role="cell" data-label="Rule">triple table</td>
+<td role="cell" data-label="Space">2 × 3</td>
+<td role="cell" data-label="Known milestone">Halts after 59,348,218 steps</td>
 </tr>
-<tr class="odd">
-<td>Commons Spiral</td>
-<td><code>111180121010</code></td>
-<td>2 × 2</td>
-<td>Intricate spiral texture</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Name">Commons Spiral</td>
+<td role="cell" data-label="Rule"><code>111180121010</code></td>
+<td role="cell" data-label="Space">2 × 2</td>
+<td role="cell" data-label="Known milestone">Intricate spiral texture</td>
 </tr>
-<tr class="even">
-<td>Commons Fibonacci Spiral</td>
-<td><code>181181121010</code></td>
-<td>2 × 2</td>
-<td>Order that reads like geometry</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Name">Commons Fibonacci Spiral</td>
+<td role="cell" data-label="Rule"><code>181181121010</code></td>
+<td role="cell" data-label="Space">2 × 2</td>
+<td role="cell" data-label="Known milestone">Order that reads like geometry</td>
 </tr>
 </tbody>
 </table>
 <h2 id="rule-notations">Rule notations</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Notation</th>
-<th>Grammar</th>
-<th>Example</th>
+<tr class="header" role="row">
+<th role="columnheader">Notation</th>
+<th role="columnheader">Grammar</th>
+<th role="columnheader">Example</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Ant string</td>
-<td><code>L</code> <code>R</code> <code>N</code> <code>U</code> sequence per color</td>
-<td><code>RL</code>, <code>LLRR</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Notation">Ant string</td>
+<td role="cell" data-label="Grammar"><code>L</code> <code>R</code> <code>N</code> <code>U</code> sequence per color</td>
+<td role="cell" data-label="Example"><code>RL</code>, <code>LLRR</code></td>
 </tr>
-<tr class="even">
-<td>Triples</td>
-<td><code>(write, turn, next-state)</code> per state and color</td>
-<td><code>{{{1,2,0},{0,8,0}}}</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Notation">Triples</td>
+<td role="cell" data-label="Grammar"><code>(write, turn, next-state)</code> per state and color</td>
+<td role="cell" data-label="Example"><code>{{{1,2,0},{0,8,0}}}</code></td>
 </tr>
-<tr class="odd">
-<td>Decimal ID</td>
-<td>Wikipedia-Commons 2-color encoding</td>
-<td><code>111180121010</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Notation">Decimal ID</td>
+<td role="cell" data-label="Grammar">Wikipedia-Commons 2-color encoding</td>
+<td role="cell" data-label="Example"><code>111180121010</code></td>
 </tr>
 </tbody>
 </table>

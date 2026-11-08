@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="Wave Laboratory: technical report — Jack J. Burleson">
 <meta property="og:description" content="Wave spectra and ship-dynamics models, architecture, validation suite, test counts, limitations and plan-versus-shipped notes for Wave Laboratory.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -170,54 +170,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 id="physics-models">Physics models</h3>
 <p><strong>Linear waves.</strong> Dispersion is ω² = (g k + (σ/ρ) k³) tanh(k h), with finite depth h and surface tension σ. Dynamic pressure attenuates with depth by cosh(k(z+h)) / cosh(kh). Below the surface, pressure uses Wheeler stretching.</p>
 <p><strong>Spectra.</strong> Each wave system has an energy spectrum, a directional spreading function and a seed. The table gives what is implemented.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Model</th>
-<th>Role</th>
-<th>Key parameters and notes</th>
+<tr class="header" role="row">
+<th role="columnheader">Model</th>
+<th role="columnheader">Role</th>
+<th role="columnheader">Key parameters and notes</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>JONSWAP</td>
-<td>Developing wind sea</td>
-<td>α, peak frequency ω_p, peak enhancement γ (3.3 used for focused groups), σ = 0.07 below and 0.09 above the peak; normalised so 4√m₀ = H_s</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Model">JONSWAP</td>
+<td role="cell" data-label="Role">Developing wind sea</td>
+<td role="cell" data-label="Key parameters and notes">α, peak frequency ω_p, peak enhancement γ (3.3 used for focused groups), σ = 0.07 below and 0.09 above the peak; normalised so 4√m₀ = H_s</td>
 </tr>
-<tr class="even">
-<td>Pierson–Moskowitz</td>
-<td>Fully developed sea</td>
-<td>JONSWAP with γ = 1, normalised to H_s</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Model">Pierson–Moskowitz</td>
+<td role="cell" data-label="Role">Fully developed sea</td>
+<td role="cell" data-label="Key parameters and notes">JONSWAP with γ = 1, normalised to H_s</td>
 </tr>
-<tr class="odd">
-<td>Bretschneider</td>
-<td>Two-parameter sea</td>
-<td>Same family as above, normalised to H_s</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Model">Bretschneider</td>
+<td role="cell" data-label="Role">Two-parameter sea</td>
+<td role="cell" data-label="Key parameters and notes">Same family as above, normalised to H_s</td>
 </tr>
-<tr class="even">
-<td>TMA</td>
-<td>Finite-depth correction</td>
-<td>Kitaigorodskii depth factor, applied when depth is under 1000 m; H_s re-normalised</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Model">TMA</td>
+<td role="cell" data-label="Role">Finite-depth correction</td>
+<td role="cell" data-label="Key parameters and notes">Kitaigorodskii depth factor, applied when depth is under 1000 m; H_s re-normalised</td>
 </tr>
-<tr class="odd">
-<td>Hasselmann et al.&nbsp;(1973)</td>
-<td>Fetch-limited wind sea</td>
-<td>Growth with fetch, capped at the fully developed limit, H_s ≈ 0.209 U²/g</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Model">Hasselmann et al.&nbsp;(1973)</td>
+<td role="cell" data-label="Role">Fetch-limited wind sea</td>
+<td role="cell" data-label="Key parameters and notes">Growth with fetch, capped at the fully developed limit, H_s ≈ 0.209 U²/g</td>
 </tr>
-<tr class="even">
-<td>Regular (Airy)</td>
-<td>Single analytic wave</td>
-<td>η = a cos θ; a second-order Stokes harmonic is added when choppiness is above zero</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Model">Regular (Airy)</td>
+<td role="cell" data-label="Role">Single analytic wave</td>
+<td role="cell" data-label="Key parameters and notes">η = a cos θ; a second-order Stokes harmonic is added when choppiness is above zero</td>
 </tr>
-<tr class="odd">
-<td>NewWave (Tromans et al.&nbsp;1991)</td>
-<td>Focused rogue group</td>
-<td>40 linear components between 0.6 ω_p and 3 ω_p, phased so crests coincide at a chosen place and time</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Model">NewWave (Tromans et al.&nbsp;1991)</td>
+<td role="cell" data-label="Role">Focused rogue group</td>
+<td role="cell" data-label="Key parameters and notes">40 linear components between 0.6 ω_p and 3 ω_p, phased so crests coincide at a chosen place and time</td>
 </tr>
 </tbody>
 </table>
@@ -230,53 +230,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Underwater optics.</strong> Jerlov water types give diffuse attenuation coefficients K_d for red, green and blue. They drive rendering only, not the physics. Light is attenuated as c·e^(−K_d·d) plus in-scattered colour, and from below the surface shows the rippled sky inside Snell’s window (48.6°) and a mirror outside it.</p>
 <h3 id="architecture">Architecture</h3>
 <p>The main thread runs the React UI, a Zustand store and the renderer. A Web Worker runs the simulation: the CPU ocean field, the vessels and a fixed-rate recorder. <code>SimClient</code> keeps one request in flight. Edits go through a Zod-validated store, which also keeps undo history and bumps a revision that reloads the worker.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Stage</th>
-<th>Module path</th>
+<tr class="header" role="row">
+<th role="columnheader">Stage</th>
+<th role="columnheader">Module path</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Maths, RNG, fixed-step clock, units</td>
-<td><code>src/core/</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Maths, RNG, fixed-step clock, units</td>
+<td role="cell" data-label="Module path"><code>src/core/</code></td>
 </tr>
-<tr class="even">
-<td>Experiment schema (Zod) and presets</td>
-<td><code>src/schema/</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Experiment schema (Zod) and presets</td>
+<td role="cell" data-label="Module path"><code>src/schema/</code></td>
 </tr>
-<tr class="odd">
-<td>Dispersion, spectra, spreading, cascades, CPU FFT</td>
-<td><code>src/ocean/</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Dispersion, spectra, spreading, cascades, CPU FFT</td>
+<td role="cell" data-label="Module path"><code>src/ocean/</code></td>
 </tr>
-<tr class="even">
-<td>Hulls, hydrostatics, hydrodynamics, wind, sails, flooding, mooring</td>
-<td><code>src/vessel/</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Hulls, hydrostatics, hydrodynamics, wind, sails, flooding, mooring</td>
+<td role="cell" data-label="Module path"><code>src/vessel/</code></td>
 </tr>
-<tr class="odd">
-<td>Gusts, squalls, rain, lightning</td>
-<td><code>src/weather/</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Gusts, squalls, rain, lightning</td>
+<td role="cell" data-label="Module path"><code>src/weather/</code></td>
 </tr>
-<tr class="even">
-<td>Welch PSD, statistics, MSI</td>
-<td><code>src/instruments/</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Welch PSD, statistics, MSI</td>
+<td role="cell" data-label="Module path"><code>src/instruments/</code></td>
 </tr>
-<tr class="odd">
-<td>Simulation kernel, worker, client</td>
-<td><code>src/sim/</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Simulation kernel, worker, client</td>
+<td role="cell" data-label="Module path"><code>src/sim/</code></td>
 </tr>
-<tr class="even">
-<td>WebGL 2 renderer, GPU FFT ocean, post stack, underwater pass</td>
-<td><code>src/render/</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">WebGL 2 renderer, GPU FFT ocean, post stack, underwater pass</td>
+<td role="cell" data-label="Module path"><code>src/render/</code></td>
 </tr>
-<tr class="odd">
-<td>React application</td>
-<td><code>src/ui/</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">React application</td>
+<td role="cell" data-label="Module path"><code>src/ui/</code></td>
 </tr>
 </tbody>
 </table>
@@ -299,83 +299,83 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>There are no benchmark numbers against external data. The evidence is the validation suite below.</p>
 <h3 id="validation-suite">Validation suite</h3>
 <p>The longer statistical checks live in <code>*.validation.ts</code> files and run with <code>pnpm validate</code>, with a 120-second timeout per test. There are 9 files and 25 test definitions.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>File</th>
-<th>What it checks</th>
+<tr class="header" role="row">
+<th role="columnheader">File</th>
+<th role="columnheader">What it checks</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td><code>ocean/ocean.validation.ts</code></td>
-<td>A virtual wave gauge reproduces the requested JONSWAP spectrum; linear seas have Gaussian elevations and H1/3 close to Hm0; choppy seas show positive skewness (sharper crests)</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="File"><code>ocean/ocean.validation.ts</code></td>
+<td role="cell" data-label="What it checks">A virtual wave gauge reproduces the requested JONSWAP spectrum; linear seas have Gaussian elevations and H1/3 close to Hm0; choppy seas show positive skewness (sharper crests)</td>
 </tr>
-<tr class="even">
-<td><code>sim/rogue.validation.ts</code></td>
-<td>A 12 m NewWave crest peaks at the focus gauge near t = 75 s and the ship ships green water</td>
+<tr class="even" role="row">
+<td role="cell" data-label="File"><code>sim/rogue.validation.ts</code></td>
+<td role="cell" data-label="What it checks">A 12 m NewWave crest peaks at the focus gauge near t = 75 s and the ship ships green water</td>
 </tr>
-<tr class="odd">
-<td><code>vessel/vessel.waves.validation.ts</code></td>
-<td>Heave RAO close to 1 for 20 s head seas; slamming and green water in steep head seas</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="File"><code>vessel/vessel.waves.validation.ts</code></td>
+<td role="cell" data-label="What it checks">Heave RAO close to 1 for 20 s head seas; slamming and green water in steep head seas</td>
 </tr>
-<tr class="even">
-<td><code>vessel/vessel.manoeuvring.validation.ts</code></td>
-<td>Plausible steady speeds, 30° autopilot turns without large overshoot, rudder sign and rate limit</td>
+<tr class="even" role="row">
+<td role="cell" data-label="File"><code>vessel/vessel.manoeuvring.validation.ts</code></td>
+<td role="cell" data-label="What it checks">Plausible steady speeds, 30° autopilot turns without large overshoot, rudder sign and rate limit</td>
 </tr>
-<tr class="odd">
-<td><code>vessel/vessel.wind.validation.ts</code></td>
-<td>Leeway and heel in a beam wind, carrier course holding, square-rig sailing, reefing in a storm</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="File"><code>vessel/vessel.wind.validation.ts</code></td>
+<td role="cell" data-label="What it checks">Leeway and heel in a beam wind, carrier course holding, square-rig sailing, reefing in a storm</td>
 </tr>
-<tr class="even">
-<td><code>vessel/flooding.validation.ts</code>, <code>damage.validation.ts</code></td>
-<td>Flooding and damage behaviour, including Torricelli decay and flooded-barge roll period</td>
+<tr class="even" role="row">
+<td role="cell" data-label="File"><code>vessel/flooding.validation.ts</code>, <code>damage.validation.ts</code></td>
+<td role="cell" data-label="What it checks">Flooding and damage behaviour, including Torricelli decay and flooded-barge roll period</td>
 </tr>
-<tr class="odd">
-<td><code>vessel/mooring.validation.ts</code></td>
-<td>A trawler in a 15 m/s wind settles at a chain pull of 3.9 kN against a 3.8 kN wind load; a cargo ship stays within its watch circle in a 2 m swell; the anchor drags in a 45 m/s gale</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="File"><code>vessel/mooring.validation.ts</code></td>
+<td role="cell" data-label="What it checks">A trawler in a 15 m/s wind settles at a chain pull of 3.9 kN against a 3.8 kN wind load; a cargo ship stays within its watch circle in a 2 m swell; the anchor drags in a 45 m/s gale</td>
 </tr>
-<tr class="even">
-<td><code>vessel/vessel.perf.validation.ts</code></td>
-<td>Performance check</td>
+<tr class="even" role="row">
+<td role="cell" data-label="File"><code>vessel/vessel.perf.validation.ts</code></td>
+<td role="cell" data-label="What it checks">Performance check</td>
 </tr>
 </tbody>
 </table>
 <p>The physics note also records that the simulated roll period of a flooded barge matches the closed-form value within 1 per cent, and that the elastic catenary was compared with a direct numerical integration of the governing equations for three stiffnesses.</p>
 <h3 id="test-counts">Test counts</h3>
 <p>These are counts of test definitions found by grep, not a run result. I did not run the suite for this report, so I make no pass-rate claim.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Suite</th>
-<th>Count</th>
-<th>Where</th>
+<tr class="header" role="row">
+<th role="columnheader">Suite</th>
+<th role="columnheader">Count</th>
+<th role="columnheader">Where</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Unit</td>
-<td>481 definitions in <code>src/**/*.test.ts</code></td>
-<td>Counted by grep at the 24 October snapshot</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Suite">Unit</td>
+<td role="cell" data-label="Count">481 definitions in <code>src/**/*.test.ts</code></td>
+<td role="cell" data-label="Where">Counted by grep at the 24 October snapshot</td>
 </tr>
-<tr class="even">
-<td>Validation</td>
-<td>25 definitions in 9 files</td>
-<td><code>src/**/*.validation.ts</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Suite">Validation</td>
+<td role="cell" data-label="Count">25 definitions in 9 files</td>
+<td role="cell" data-label="Where"><code>src/**/*.validation.ts</code></td>
 </tr>
-<tr class="odd">
-<td>Browser (Playwright)</td>
-<td>27 definitions in 2 files: 22 desktop, 5 mobile</td>
-<td><code>e2e/app.spec.ts</code>, <code>e2e/mobile.spec.ts</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Suite">Browser (Playwright)</td>
+<td role="cell" data-label="Count">27 definitions in 2 files: 22 desktop, 5 mobile</td>
+<td role="cell" data-label="Where"><code>e2e/app.spec.ts</code>, <code>e2e/mobile.spec.ts</code></td>
 </tr>
 </tbody>
 </table>

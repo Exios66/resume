@@ -528,6 +528,25 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
   .project-nav { gap: 6px; }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .page table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* Text tables: each row becomes a block, each cell labelled with its column. */
+  .page table.stack, .page table.stack tbody, .page table.stack tr, .page table.stack td { display: block; width: auto; }
+  .page table.stack { overflow: visible; border-top: 2px solid var(--accent); }
+  .page table.stack colgroup { display: none; }
+  .page table.stack thead {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .page table.stack tr { padding: 12px 2px; border-bottom: 1px solid var(--rule); }
+  .page table.stack tbody tr:last-child { border-bottom: 0; }
+  .page table.stack td { padding: 0; border: 0; }
+  .page table.stack td + td { margin-top: 8px; }
+  .page table.stack td:first-child { font-weight: 700; color: var(--ink); }
+  .page table.stack td + td::before {
+    content: attr(data-label) / "";
+    display: block; margin-bottom: 1px;
+    font: 700 .75rem/1.4 var(--sans); letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
+  }
+  .page table.stack td code { white-space: pre-wrap; overflow-wrap: anywhere; }
   .chart-scroll { overflow-x: auto; }
   .chart-scroll img.fig { min-width: 700px; }
   .chart-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }

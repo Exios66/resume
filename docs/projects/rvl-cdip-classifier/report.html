@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="RVL-CDIP-Classifier: technical report — Jack J. Burleson">
 <meta property="og:description" content="Method, iteration history, results and limits of a prompt-only, zero-shot RVL-CDIP classifier built on an off-the-shelf vision model.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -165,49 +165,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The number to quote is <strong>82.6% (925 of 1,120)</strong> for prompt v11.8 on a balanced slice of 70 images per class. That slice is a seeded, class-balanced sample of the Hugging Face mirror of RVL-CDIP, which holds 100 images per class across its three splits. It shares at least 20 images per class (320 in all) with the 800-image slice, so those two results are not independent. I did not verify its overlap with the 160-image slice I tuned on. On the tuning slice the same prompt reaches 99.4% (157 of 158), which I treat as an optimistic upper bound because I wrote rules for individual misses on that slice. Cost is about $0.0004 per image. Simulations of voting and routing looked promising, but none of the three routing tests I measured reproduced the gain.</p>
 <h2 id="system-and-data">System and data</h2>
 <p>The pipeline has these stages.</p>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Stage</th>
-<th>What it does</th>
-<th>Module</th>
+<tr class="header" role="row">
+<th role="columnheader">Stage</th>
+<th role="columnheader">What it does</th>
+<th role="columnheader">Module</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Slice building</td>
-<td>Streams a 100-per-class Hugging Face mirror of RVL-CDIP, seeds the sampler, can skip images whose rendered pixels match an exclusion set, writes 1024×1024 grayscale PNGs with white padding</td>
-<td><code>scripts/datasets/</code>, <code>scripts/braintrust/create_braintrust_*_dataset.py</code>, <code>src/image_utils.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Slice building</td>
+<td role="cell" data-label="What it does">Streams a 100-per-class Hugging Face mirror of RVL-CDIP, seeds the sampler, can skip images whose rendered pixels match an exclusion set, writes 1024×1024 grayscale PNGs with white padding</td>
+<td role="cell" data-label="Module"><code>scripts/datasets/</code>, <code>scripts/braintrust/create_braintrust_*_dataset.py</code>, <code>src/image_utils.py</code></td>
 </tr>
-<tr class="even">
-<td>Preprocessing (separate tool)</td>
-<td>Converts TIFF/PDF pages to 300-DPI grayscale images and extracts OCR text with bounding boxes via Tesseract</td>
-<td><code>src/document_processor.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Preprocessing (separate tool)</td>
+<td role="cell" data-label="What it does">Converts TIFF/PDF pages to 300-DPI grayscale images and extracts OCR text with bounding boxes via Tesseract</td>
+<td role="cell" data-label="Module"><code>src/document_processor.py</code></td>
 </tr>
-<tr class="odd">
-<td>Prompting</td>
-<td>Versioned, append-only prompt registry</td>
-<td><code>src/prompts.py</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Prompting</td>
+<td role="cell" data-label="What it does">Versioned, append-only prompt registry</td>
+<td role="cell" data-label="Module"><code>src/prompts.py</code></td>
 </tr>
-<tr class="even">
-<td>Classification</td>
-<td>Builds a message with the prompt and one image, calls OpenRouter, parses the label and a runner-up</td>
-<td><code>src/openrouter_classifier.py</code>, <code>src/openrouter_utils.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Classification</td>
+<td role="cell" data-label="What it does">Builds a message with the prompt and one image, calls OpenRouter, parses the label and a runner-up</td>
+<td role="cell" data-label="Module"><code>src/openrouter_classifier.py</code>, <code>src/openrouter_utils.py</code></td>
 </tr>
-<tr class="odd">
-<td>Evaluation</td>
-<td>Exact-match scoring, per-class tables, confusion matrices, near-miss counts, billed cost</td>
-<td><code>src/evaluation.py</code>, <code>scripts/braintrust/</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Stage">Evaluation</td>
+<td role="cell" data-label="What it does">Exact-match scoring, per-class tables, confusion matrices, near-miss counts, billed cost</td>
+<td role="cell" data-label="Module"><code>src/evaluation.py</code>, <code>scripts/braintrust/</code></td>
 </tr>
-<tr class="even">
-<td>Simulation</td>
-<td>Bootstrap analyses of voting, routing and failure handling over a pooled per-image corpus</td>
-<td><code>src/monte_carlo.py</code>, <code>src/routing.py</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Stage">Simulation</td>
+<td role="cell" data-label="What it does">Bootstrap analyses of voting, routing and failure handling over a pooled per-image corpus</td>
+<td role="cell" data-label="Module"><code>src/monte_carlo.py</code>, <code>src/routing.py</code></td>
 </tr>
 </tbody>
 </table>

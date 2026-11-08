@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=9cfd4f51ae">
+<link rel="stylesheet" href="../../styles.css?v=404df5bfc1">
 <meta property="og:title" content="Mailroom-ML: appendix — Jack J. Burleson">
 <meta property="og:description" content="Supporting tables for the Mailroom-ML M9c release: evaluation protocol, release gates, per-head results, cohorts and selective-risk checks.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -127,41 +127,41 @@ ul.task-list li input[type="checkbox"] {
 <p>These tables support the <a href="../../projects/mailroom-ml.html">Mailroom-ML case study</a>. Every number below comes from the held-out test report for run <code>m9c-20261014-113614</code>, or from the trainer configuration recorded in it. They are copied, not re-run here.</p>
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#evaluation-protocol">Evaluation protocol</a></li><li><a href="#headline-metrics">Headline metrics</a></li><li><a href="#release-gates">Release gates</a></li><li><a href="#per-head-results">Per-head results</a></li><li><a href="#cohorts-and-selective-risk">Cohorts and selective risk</a></li><li><a href="#test-split-composition">Test-split composition</a></li><li><a href="#sources">Sources</a></li><li><a href="#scope">Scope</a></li></ul></nav>
 <h2 id="evaluation-protocol">Evaluation protocol</h2>
-<table class="caption-top">
+<table class="stack caption-top" role="table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead>
-<tr class="header">
-<th>Setting</th>
-<th>Value</th>
+<tr class="header" role="row">
+<th role="columnheader">Setting</th>
+<th role="columnheader">Value</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Run tag</td>
-<td><code>m9c-20261014-113614</code></td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Setting">Run tag</td>
+<td role="cell" data-label="Value"><code>m9c-20261014-113614</code></td>
 </tr>
-<tr class="even">
-<td>Model</td>
-<td><code>answerdotai/ModernBERT-base</code>, hierarchical heads</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Setting">Model</td>
+<td role="cell" data-label="Value"><code>answerdotai/ModernBERT-base</code>, hierarchical heads</td>
 </tr>
-<tr class="odd">
-<td>Documents</td>
-<td>323 held-out test documents</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Setting">Documents</td>
+<td role="cell" data-label="Value">323 held-out test documents</td>
 </tr>
-<tr class="even">
-<td>Windows</td>
-<td>541 (8,192 tokens, 512-token overlap)</td>
+<tr class="even" role="row">
+<td role="cell" data-label="Setting">Windows</td>
+<td role="cell" data-label="Value">541 (8,192 tokens, 512-token overlap)</td>
 </tr>
-<tr class="odd">
-<td>Seed</td>
-<td>42</td>
+<tr class="odd" role="row">
+<td role="cell" data-label="Setting">Seed</td>
+<td role="cell" data-label="Value">42</td>
 </tr>
-<tr class="even">
-<td>Reported by</td>
-<td><code>training/eval/eval_modernbert.py</code>, <code>--subset test --sample 0</code></td>
+<tr class="even" role="row">
+<td role="cell" data-label="Setting">Reported by</td>
+<td role="cell" data-label="Value"><code>training/eval/eval_modernbert.py</code>, <code>--subset test --sample 0</code></td>
 </tr>
 </tbody>
 </table>
