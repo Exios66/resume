@@ -68,7 +68,7 @@ Patch validation supersedes that initial review: all confirmed code/documentatio
 - [x] Native page-type filter, exact subsets/order restoration, shareable q/type URLs and safe readiness/fallback behavior, run 55: 12 → 4.
 - [ ] Next measurable polish: search snippet separator wrapping at 375/414 (3 typography points newly exposed by the populated-search baseline). Prefer informative body context over repeated title/kicker text while retaining provenance and claims.
 - [ ] Next creative leg: report evidence-first openings; project cards with explicit live-demo/recording/report/source artifact distinctions; chart-to-table navigation. Establish the evaluation before changing the UI.
-- PR108 is stacked on PR107 at 2425775. Merge PR107 first; retarget after confirming its actual merge method. Merge-commit integration simulated cleanly against main 13c9afb. Squash/rebase merges need transplanting only the child-leg commits onto updated main.
+- PR107 and PR108 are merged; PR108 merge is 8d430f2. PR109 starts from that actual main revision.
 
 Pre-publication print-form regression repaired in 3eed785; screen-only grid rule and four print assertions, full gate 225 passed/611 subtests. Print pagination and pre-existing search-suggestion print styling remain unmeasured backlog items.
 
@@ -84,3 +84,9 @@ Open (segments must be re-baselined per issue 106's contract before adding check
 5. Print layout: report-page table and figure breaks (the resume already prints on two pages).
 6. Search: page type labels live; informative snippets gate may be worth a segment of its own.
 7. Other engines (Firefox/WebKit), real devices, screen readers, live deployment.
+
+## Segment 12 completion
+- [x] Print navigation cascade: project pagers and search suggestions hidden in print; 36 → 0, run62. Screen interactions preserved.
+- [x] Bounded live deployment smoke for merged PR108 (see pr108-live-smoke.md); broad live coverage and native Linux remain open.
+- [ ] Print report table/figure pagination and native PDF output need a separate evaluation.
+- [ ] Next creative candidate: evidence-first report opening with explicit finding, evidence and constraint, retaining every historical split/run caveat.
