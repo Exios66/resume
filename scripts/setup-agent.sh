@@ -1,145 +1,116 @@
 #!/usr/bin/env bash
-# One-time setup for an agent or a fresh clone so the hill-climb can run at once.
-# Idempotent: every step re-checks and skips what is already installed. Afterwards
-# source the printed env file before running tools from scripts/hillclimb/hc.sh:
-#
-#   bash scripts/setup-agent.sh
-#   . "$PWD/.autoresearch-tools/env.sh"
-#   bash scripts/hillclimb/hc.sh doctor   # must end with: All tools present.
-#
-# What it installs, all inside the repo or ignored paths (never system-wide):
-# - Python venv .venv with tests' requirements
-# - Node's playwright package (no-save, in .autoresearch-tools) used by the audit
-# - a Chromium for playwright
-# - Quarto 1.10.19 into .autoresearch-tools/ if no Quarto 1.10.x is on PATH
-#
-# Environment notes:
-# - The rendered docs/ were built with Quarto 1.10.19 set here; other versions change
-#   generator metas and Libs bundle hashes and churn docs/.
-# - This script probes the locale. On machines whose LANG forces pandoc's embedded
-#   Lua away from byte-based pattern matching (this was the case with LANG=C.UTF-8,
-#   where "×" matched ^%a and chart labels came out "4 ×"), the env file gains
-#   LC_ALL=C so the pattern semantics match the committed site and the tests.
-set -uo pipefail
+# Prepare this worktree for rendering and validation. Installs only into ignored
+# project paths and Playwright's user cache; never installs system packages.
+# Source .autoresearch-tools/env.sh afterwards, then run hc.sh doctor.
+set -euo pipefail
 
-ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || { echo "Run from inside the repository (git required)"; exit 1; }
-cd "$ROOT"
-
-TOOLS=.autoresearch-tools
-ENV_FILE="$TOOLS/env.sh"
 QUARTO_VERSION=1.10.19
 
 say() { printf '%s\n' "setup-agent: $*"; }
 
-need() {
-  # need <check-commands> <fixed> <how-to-install-text>
-  if eval "$1" >/dev/null 2>&1; then say "ok   $2"; else say "MISS $2 -> $3"; return 1; fi
+# Select the official archive and how many leading archive components to remove.
+quarto_archive() {
+  case "$1 $2" in
+    Darwin\ *) printf 'quarto-%s-macos.tar.gz 0\n' "$QUARTO_VERSION" ;;
+    Linux\ aarch64|Linux\ arm64) printf 'quarto-%s-linux-arm64.tar.gz 1\n' "$QUARTO_VERSION" ;;
+    Linux\ x86_64|Linux\ amd64) printf 'quarto-%s-linux-amd64.tar.gz 1\n' "$QUARTO_VERSION" ;;
+    *) say "unsupported platform $1 $2; install Quarto $QUARTO_VERSION and set QUARTO" >&2; return 1 ;;
+  esac
 }
 
-# ---------------------------------------------------------------- base tools
-fails=0
-need "command -v git" "git" "required; install git first" || fails=$((fails+1))
-need "command -v node" "node 18+" "install Node 18+ (nodejs.org, or brew install node)" || fails=$((fails+1))
-need "command -v npm" "npm" "ships with Node 18+" || fails=$((fails+1))
-need "command -v python3" "python3" "install Python 3.11+ from python.org" || fails=$((fails+1))
-[ "$fails" = 0 ] || { say "fix the base tools above, then re-run"; exit 1; }
-NODE_MAJOR="$(node -p 'process.versions.node.split(".")[0]')"
-if [ "$NODE_MAJOR" -lt 18 ]; then say "node $NODE_MAJOR is too old; install Node 18+ (nodejs.org)"; exit 1; fi
+# Every selection path, including an explicit override, must use the build pin.
+quarto_ok() { [ -x "$1" ] && [ "$("$1" --version 2>/dev/null)" = "$QUARTO_VERSION" ]; }
 
-# ----------------------------------------------------------------------- venv
-if [ ! -x .venv/bin/pytest ] || ! .venv/bin/python -c 'import playwright' >/dev/null 2>&1; then
-  say "creating .venv and installing tests' requirements"
-  python3 -m venv .venv
-  .venv/bin/pip install --quiet --disable-pip-version-check -r requirements-test.txt
-else
-  say "ok   .venv with pytest and playwright"
-fi
+# Test the actual revision required by each client, not the presence of any cache directory.
+node_chromium() { node -e 'require("playwright").chromium.launch().then(b => b.close()).catch(() => process.exit(1))'; }
+python_chromium() {
+  .venv/bin/python -c 'from playwright.sync_api import sync_playwright
+with sync_playwright() as p:
+    browser = p.chromium.launch()
+    browser.close()'
+}
 
-# ------------------------------------------------------- node browser package
-if ! node -e "require('playwright')" >/dev/null 2>&1; then
-  say "installing node playwright (no-save)"
-  npm install --no-save playwright >/dev/null \
-    || { say "npm install failed; run 'npm install --no-save playwright' and see the error"; exit 1; }
-else
-  say "ok   node playwright"
-fi
+main() {
+  local root tools env_file node_major playwright_version node_version
+  local env_quarto quarto asset strip archive_spec pandoc_bin probe probe_result candidate
+  root="$(git rev-parse --show-toplevel)"
+  cd "$root"
+  tools=.autoresearch-tools
+  env_file="$tools/env.sh"
+  mkdir -p "$tools"
 
-CHROME_STEM="chromium_headless_shell"
-BROWSER_DIR="${PLAYWRIGHT_BROWSERS_PATH:-$HOME/Library/Caches/ms-playwright}"
-case "$(uname -s)" in Linux*) BROWSER_DIR="${PLAYWRIGHT_BROWSERS_PATH:-$HOME/.cache/ms-playwright}";; esac
-if ! find "$BROWSER_DIR" -maxdepth 1 -name "${CHROME_STEM}-*" 2>/dev/null | grep -q .; then
-  say "installing chromium for playwright"
-  npx playwright install chromium
-else
-  say "ok   chromium for playwright"
-fi
+  for tool in git node npm python3; do
+    command -v "$tool" >/dev/null || { say "missing $tool; install it and rerun" >&2; return 1; }
+  done
+  node_major="$(node -p 'process.versions.node.split(".")[0]')"
+  [ "$node_major" -ge 18 ] || { say 'Node 18+ is required' >&2; return 1; }
 
-# --------------------------------------------------------------------- quarto
-quarto_ok() { "$1" --version 2>/dev/null | grep -q "^1\.10\."; }
-ENV_QUARTO="${QUARTO-}"
-QUARTO="$ROOT/$TOOLS/bin/quarto"
-if [ -n "$ENV_QUARTO" ] && [ -x "$ENV_QUARTO" ]; then
-  QUARTO="$ENV_QUARTO"
-  say "ok   QUARTO from environment ($QUARTO)"
-elif quarto_ok "$QUARTO"; then
-  say "ok   $QUARTO"
-elif quarto_ok "$(command -v quarto 2>/dev/null || true)"; then
-  QUARTO="$(command -v quarto)"
-  say "ok   quarto on PATH ($QUARTO)"
-elif [ -x /opt/quarto/quarto-"$QUARTO_VERSION"/bin/quarto ]; then
-  QUARTO=/opt/quarto/quarto-"$QUARTO_VERSION"/bin/quarto
-  say "ok   $QUARTO"
-else
-  say "installing Quarto $QUARTO_VERSION into $TOOLS/"
-  case "$(uname -sm)" in
-    Darwin*)  ASSET="quarto-$QUARTO_VERSION-macos.tar.gz";;
-    Linux*arm64) ASSET="quarto-$QUARTO_VERSION-linux-arm64.tar.gz";;
-    Linux*)   ASSET="quarto-$QUARTO_VERSION-linux-amd64.tar.gz";;
-    *) say "unsupported platform $(uname -sm); install Quarto 1.10.x from quarto.org and re-run"; exit 1;;
-  esac
-  mkdir -p "$TOOLS"
-  URL="https://github.com/quarto-dev/quarto-cli/releases/download/v$QUARTO_VERSION/$ASSET"
-  curl -fsSL -o "$TOOLS/$ASSET" "$URL" \
-    || { say "download failed: $URL ; install Quarto 1.10.x and re-run"; exit 1; }
-  tar -xzf "$TOOLS/$ASSET" -C "$TOOLS/"
-  rm "$TOOLS/$ASSET"
-  quarto_ok "$QUARTO" || { say "the installed Quarto is not 1.10.x; install Quarto 1.10.x and re-run"; exit 1; }
-  say "ok   $QUARTO"
-fi
+  # Synchronize existing environments too: pytest/playwright imports alone do not
+  # establish that pypdf or the required package versions are available.
+  [ -x .venv/bin/python ] || python3 -m venv .venv
+  .venv/bin/python -m pip install --quiet --disable-pip-version-check -r requirements-test.txt
+  .venv/bin/python -m pip check
+  .venv/bin/python -c 'import pytest, playwright, pypdf'
+  playwright_version="$(.venv/bin/python -c 'from importlib.metadata import version; print(version("playwright"))')"
+  node_version="$(node -p 'require("playwright/package.json").version' 2>/dev/null || true)"
+  if [ "$node_version" != "$playwright_version" ]; then
+    npm install --no-save --no-package-lock "playwright@$playwright_version"
+  fi
+  [ "$(node -p 'require("playwright/package.json").version')" = "$playwright_version" ]
+  if ! node_chromium >/dev/null 2>&1; then
+    npx --no-install playwright install chromium
+  fi
+  if ! python_chromium >/dev/null 2>&1; then
+    .venv/bin/python -m playwright install chromium
+  fi
+  node_chromium
+  python_chromium
+  say "Python and Node Playwright $playwright_version, both Chromium launches verified"
 
-# ---------------------------------------------------------------- locale probe
-# Byte-based Lua patterns are assumed by the filters, the audit and the committed
-# docs. If pandoc's Lua treats "×" as ^%a, LC_ALL=C is required for every render.
-PANDOC_BIN="$(ls "$(dirname "$(readlink -f "$QUARTO")")"/tools/*/pandoc 2>/dev/null | head -1)"
-PROBE="$TOOLS/probe.lua"
-printf 'print(tostring(("\\u{00d7}"):match("^%%a") ~= nil))\n' > "$PROBE"
-if [ -n "$PANDOC_BIN" ] && [ "$("$PANDOC_BIN" lua "$PROBE" 2>/dev/null | tail -1)" = "true" ]; then
-  NEEDS_C=1
-else
-  NEEDS_C=""
-fi
-rm -f "$PROBE"
+  env_quarto="${QUARTO-}"
+  quarto="$root/$tools/bin/quarto"
+  if [ -n "$env_quarto" ]; then
+    quarto_ok "$env_quarto" || { say "QUARTO must point to Quarto $QUARTO_VERSION; correct it or unset QUARTO" >&2; return 1; }
+    quarto="$env_quarto"
+  elif quarto_ok "$quarto"; then
+    :
+  elif quarto_ok "$(command -v quarto || true)"; then
+    quarto="$(command -v quarto)"
+  elif quarto_ok "/opt/quarto/quarto-$QUARTO_VERSION/bin/quarto"; then
+    quarto="/opt/quarto/quarto-$QUARTO_VERSION/bin/quarto"
+  else
+    archive_spec="$(quarto_archive "$(uname -s)" "$(uname -m)")"
+    read -r asset strip <<< "$archive_spec"
+    say "installing Quarto $QUARTO_VERSION ($asset)"
+    curl -fsSL -o "$tools/$asset" "https://github.com/quarto-dev/quarto-cli/releases/download/v$QUARTO_VERSION/$asset"
+    # Linux archives have a quarto-<version>/ root; the macOS archive is flat.
+    tar -xzf "$tools/$asset" -C "$tools/" --strip-components="$strip"
+    rm "$tools/$asset"
+    quarto_ok "$quarto" || { say 'extracted Quarto did not match the required version' >&2; return 1; }
+  fi
 
-# ------------------------------------------------------------------ env file
-mkdir -p "$TOOLS"
-{
-  echo "# Source this before the hill-climb: . \"$ROOT/$TOOLS/env.sh\""
-  echo "export QUARTO=\"$QUARTO\""
-  [ "$NEEDS_C" = 1 ] && echo "# Byte-based Lua patterns require a C locale here (see setup-agent.sh)"
-  [ "$NEEDS_C" = 1 ] && echo "export LC_ALL=C"
-} > "$ENV_FILE"
-if [ "$NEEDS_C" = 1 ]; then
-  say "locale probe: this environment changes Lua pattern semantics; env file sets LC_ALL=C"
-else
-  say "locale probe: byte-based Lua patterns already fine"
-fi
+  pandoc_bin=''
+  for candidate in "$(dirname "$(readlink -f "$quarto")")"/tools/*/pandoc; do
+    if [ -x "$candidate" ]; then pandoc_bin="$candidate"; break; fi
+  done
+  [ -n "$pandoc_bin" ] || { say 'Quarto bundled pandoc is missing' >&2; return 1; }
+  probe="$tools/probe.lua"
+  printf 'print(tostring(("\\u{00d7}"):match("^%%a") ~= nil))\n' > "$probe"
+  # Probe the default locale even when rerun from a shell that sourced env.sh.
+  probe_result="$(env -u LC_ALL "$pandoc_bin" lua "$probe")"
+  rm "$probe"
+  case "$probe_result" in true|false) ;; *) say 'Lua locale probe failed' >&2; return 1;; esac
+  {
+    printf '# Source this before rendering, auditing or testing.\n'
+    printf 'export QUARTO=%q\n' "$quarto"
+    # A fixed locale makes every render deterministic, including subsequent shells.
+    printf 'export LC_ALL=C\n'
+  } > "$env_file"
+  say "locale probe: UTF-8 letter match=$probe_result; env.sh forces byte-based C locale"
+  . "$env_file"
+  bash scripts/hillclimb/hc.sh doctor
+  say "agent environment ready; source $env_file"
+}
 
-say "env file written: . .autoresearch-tools/env.sh"
-
-# --------------------------------------------------------------------- doctor
-if . "$ENV_FILE" && bash scripts/hillclimb/hc.sh doctor | tail -4; then
-  say "agent environment ready."
-else
-  say "doctor still reports problems; fix them and re-run setup-agent.sh"
-  exit 1
-fi
+# Helpers can be sourced by the isolated bootstrap regression tests.
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then main "$@"; fi

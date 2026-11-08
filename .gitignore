@@ -5,9 +5,10 @@ _freeze/
 
 # Keep rendered site in docs/ (served by GitHub Pages)
 
-# macOS / Windows / editors
-/node_modules/
+# Local build/test dependencies (never publish them)
+node_modules/
 
+# macOS / Windows / editors
 .DS_Store
 Thumbs.db
 .vscode/

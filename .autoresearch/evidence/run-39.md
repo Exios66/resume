@@ -15,7 +15,7 @@
 - Best kept before this run: none
 - This run:
 ```
-METRIC polish_defects=6 METRIC axe_points=0 METRIC layout_points=5 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=1 METRIC pages=43 METRIC css_kb=53.6 METRIC audit_s=29.6 METRIC render_s=19 
+METRIC polish_defects=6 METRIC axe_points=0 METRIC layout_points=5 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=1 METRIC pages=43 METRIC css_kb=53.6 METRIC audit_s=29.6 METRIC render_s=19
 non-zero: {'tables wider than screen': 5, 'heading ends with a one-word line': 1}
 ```
 

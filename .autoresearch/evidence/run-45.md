@@ -15,7 +15,7 @@
 - Best kept before this run: 24
 - This run:
 ```
-METRIC polish_defects=4 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=4 METRIC pages=43 METRIC css_kb=53.6 METRIC audit_s=50.7 METRIC render_s=19 
+METRIC polish_defects=4 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=4 METRIC pages=43 METRIC css_kb=53.6 METRIC audit_s=50.7 METRIC render_s=19
 non-zero: {'separator ends a line': 2, 'heading ends with a one-word line': 2}
 ```
 
@@ -46,12 +46,12 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-45-table-1280-dark.png`
-- `.hillclimb-shots/run-45-table-1280-light.png`
-- `.hillclimb-shots/run-45-table-375-dark.png`
-- `.hillclimb-shots/run-45-table-375-light.png`
-- `.hillclimb-shots/run-45-table-768-dark.png`
-- `.hillclimb-shots/run-45-table-768-light.png`
+- [run-45-table-1280-dark.png](../screenshots/run-45-table-1280-dark.png)
+- [run-45-table-1280-light.png](../screenshots/run-45-table-1280-light.png)
+- [run-45-table-375-dark.png](../screenshots/run-45-table-375-dark.png)
+- [run-45-table-375-light.png](../screenshots/run-45-table-375-light.png)
+- [run-45-table-768-dark.png](../screenshots/run-45-table-768-dark.png)
+- [run-45-table-768-light.png](../screenshots/run-45-table-768-light.png)
 
 Reviewer notes: Opened all six run-45 screenshots at 375, 768, and 1280 px in light and dark. Model names and labels remain readable, tablet rows use the full column, and desktop keeps the comparison grid. No private information visible. Collaborative browser confirmed block rows at 768 and table cells at 1280 with no page overflow. Delta removes exactly ten crushed-cell findings; typography unchanged.
 

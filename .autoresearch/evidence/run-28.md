@@ -15,7 +15,7 @@
 - Best kept before this run: 19
 - This run:
 ```
-METRIC polish_defects=19 METRIC axe_points=0 METRIC layout_points=18 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=1 METRIC pages=43 METRIC css_kb=52.6 METRIC audit_s=30.0 METRIC render_s=19 
+METRIC polish_defects=19 METRIC axe_points=0 METRIC layout_points=18 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=1 METRIC pages=43 METRIC css_kb=52.6 METRIC audit_s=30.0 METRIC render_s=19
 non-zero: {'crushed table cells': 6, 'tables wider than screen': 12, 'heading ends with a one-word line': 1}
 ```
 

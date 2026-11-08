@@ -65,14 +65,23 @@ case "${1:-}" in
     ok=1
     check() { if eval "$2" >/dev/null 2>&1; then echo "ok    $1"; else echo "MISSING $1 -> $3"; ok=0; fi; }
     check "git" "command -v git" "install git"
-    check "quarto ($QUARTO_BIN)" "[ -x '$QUARTO_BIN' ]" "install Quarto 1.10.x (quarto.org) or set QUARTO=/path/to/quarto"
+    pinned_quarto() { [ "$("$QUARTO_BIN" --version)" = "1.10.19" ]; }
+    check "quarto 1.10.19 ($QUARTO_BIN)" "pinned_quarto" "run bash scripts/setup-agent.sh or set QUARTO to Quarto 1.10.19"
     check "pandoc lua (bundled with Quarto)" "ls '$(dirname "$(readlink -f "$QUARTO_BIN" 2>/dev/null || echo "$QUARTO_BIN")")'/tools/*/pandoc || command -v lua" "comes with Quarto; or install lua 5.4"
     check "node 18+" "node -e 'process.exit(+process.versions.node.split(\".\")[0] >= 18 ? 0 : 1)'" "install Node.js 18 or newer"
     check "npm (axe-core install)" "command -v npm" "comes with Node.js"
     check "python3" "command -v python3" "install Python 3.10+"
-    check ".venv with pytest + playwright" ".venv/bin/python -c 'import pytest, playwright'" "python3 -m venv .venv && .venv/bin/pip install -r requirements-test.txt (see .github/BUILDING.md)"
+    check ".venv with pytest + playwright + pypdf" ".venv/bin/python -c 'import pytest, playwright, pypdf'" "python3 -m venv .venv && .venv/bin/pip install -r requirements-test.txt (see .github/BUILDING.md)"
     check "node playwright" "node -e 'require(\"playwright\")'" "npm install --no-save playwright (match the Python playwright version)"
     check "chromium for playwright" "node -e 'require(\"playwright\").chromium.launch().then(b=>b.close())'" "npx playwright install chromium, or set PLAYWRIGHT_BROWSERS_PATH to preinstalled browsers"
+    matching_playwright() {
+      local node_version python_version
+      node_version="$(node -p 'require("playwright/package.json").version')" || return 1
+      python_version="$(.venv/bin/python -c 'from importlib.metadata import version; print(version("playwright"))')" || return 1
+      [ "$node_version" = "$python_version" ]
+    }
+    check "matching Python/Node Playwright versions" "matching_playwright" "run bash scripts/setup-agent.sh"
+    check "Python Chromium" ".venv/bin/python -c 'from playwright.sync_api import sync_playwright; p = sync_playwright().start(); b = p.chromium.launch(); b.close(); p.stop()'" ".venv/bin/python -m playwright install chromium"
     check "built site in docs/" "[ -f docs/index.html ]" "run: hc.sh baseline"
     [ $ok = 1 ] && echo "All tools present." || { echo "Fix the MISSING items before running the loop."; exit 1; } ;;
   status) ledger status ;;

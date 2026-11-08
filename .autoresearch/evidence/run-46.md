@@ -17,7 +17,7 @@
 - Best kept before this run: 4
 - This run:
 ```
-METRIC polish_defects=2 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=2 METRIC pages=43 METRIC css_kb=53.6 METRIC audit_s=48.5 METRIC render_s=19 
+METRIC polish_defects=2 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=2 METRIC pages=43 METRIC css_kb=53.6 METRIC audit_s=48.5 METRIC render_s=19
 non-zero: {'heading ends with a one-word line': 2}
 ```
 
@@ -40,14 +40,14 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-46-education-1280-dark.png`
-- `.hillclimb-shots/run-46-education-1280-light.png`
-- `.hillclimb-shots/run-46-education-375-dark.png`
-- `.hillclimb-shots/run-46-education-375-light.png`
-- `.hillclimb-shots/run-46-education-414-dark.png`
-- `.hillclimb-shots/run-46-education-414-light.png`
-- `.hillclimb-shots/run-46-resume-1280-dark.png`
-- `.hillclimb-shots/run-46-resume-414-light.png`
+- [run-46-education-1280-dark.png](../screenshots/run-46-education-1280-dark.png)
+- [run-46-education-1280-light.png](../screenshots/run-46-education-1280-light.png)
+- [run-46-education-375-dark.png](../screenshots/run-46-education-375-dark.png)
+- [run-46-education-375-light.png](../screenshots/run-46-education-375-light.png)
+- [run-46-education-414-dark.png](../screenshots/run-46-education-414-dark.png)
+- [run-46-education-414-light.png](../screenshots/run-46-education-414-light.png)
+- [run-46-resume-1280-dark.png](../screenshots/run-46-resume-1280-dark.png)
+- [run-46-resume-414-light.png](../screenshots/run-46-resume-414-light.png)
 
 Reviewer notes: Opened eight screenshots: About at 375, 414, 1280 light/dark; resume at 414 light and 1280 dark. Credential and concentration/GPA form two clean paragraphs, surrounding entries remain readable, and no private data is visible. Browser confirmed both paragraphs at 414 without overflow. Delta removes precisely the two separator findings. Resume PDF regenerated; two-page print correctness passes in the browser suite.
 

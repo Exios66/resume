@@ -30,7 +30,7 @@ The tuning number is an upper bound, not a generalisation result. The 1,120 slic
 
 ## Prompt history
 
-| Version | Change | Tuning-slice result |
+| Version | Change | Result (tuning slice unless stated) |
 | --- | --- | ---: |
 | v0 | Short baseline | 66.1% on the 800-image control slice (529 of 800), not the tuning slice |
 | v10 | Rules written for every v9 miss | +6.4 points over v9 |

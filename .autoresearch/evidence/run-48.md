@@ -17,7 +17,7 @@
 - Best kept before this run: 174
 - This run:
 ```
-METRIC polish_defects=2 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=2 METRIC pages=43 METRIC css_kb=53.9 METRIC audit_s=54.1 METRIC render_s=19 
+METRIC polish_defects=2 METRIC axe_points=0 METRIC layout_points=0 METRIC error_points=0 METRIC structure_points=0 METRIC lint_points=0 METRIC type_points=2 METRIC pages=43 METRIC css_kb=53.9 METRIC audit_s=54.1 METRIC render_s=19
 non-zero: {'heading ends with a one-word line': 2}
 ```
 
@@ -78,19 +78,19 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-48-chart-1280-dark.png`
-- `.hillclimb-shots/run-48-chart-1280-light.png`
-- `.hillclimb-shots/run-48-chart-375-dark.png`
-- `.hillclimb-shots/run-48-chart-375-light.png`
-- `.hillclimb-shots/run-48-chart-375-scrolled-tooltip.png`
-- `.hillclimb-shots/run-48-chart-768-dark.png`
-- `.hillclimb-shots/run-48-chart-768-light.png`
-- `.hillclimb-shots/run-48-diagram-1280-dark.png`
-- `.hillclimb-shots/run-48-diagram-1280-light.png`
-- `.hillclimb-shots/run-48-diagram-375-dark.png`
-- `.hillclimb-shots/run-48-diagram-375-light.png`
-- `.hillclimb-shots/run-48-diagram-768-dark.png`
-- `.hillclimb-shots/run-48-diagram-768-light.png`
+- [run-48-chart-1280-dark.png](../screenshots/run-48-chart-1280-dark.png)
+- [run-48-chart-1280-light.png](../screenshots/run-48-chart-1280-light.png)
+- [run-48-chart-375-dark.png](../screenshots/run-48-chart-375-dark.png)
+- [run-48-chart-375-light.png](../screenshots/run-48-chart-375-light.png)
+- [run-48-chart-375-scrolled-tooltip.png](../screenshots/run-48-chart-375-scrolled-tooltip.png)
+- [run-48-chart-768-dark.png](../screenshots/run-48-chart-768-dark.png)
+- [run-48-chart-768-light.png](../screenshots/run-48-chart-768-light.png)
+- [run-48-diagram-1280-dark.png](../screenshots/run-48-diagram-1280-dark.png)
+- [run-48-diagram-1280-light.png](../screenshots/run-48-diagram-1280-light.png)
+- [run-48-diagram-375-dark.png](../screenshots/run-48-diagram-375-dark.png)
+- [run-48-diagram-375-light.png](../screenshots/run-48-diagram-375-light.png)
+- [run-48-diagram-768-dark.png](../screenshots/run-48-diagram-768-dark.png)
+- [run-48-diagram-768-light.png](../screenshots/run-48-diagram-768-light.png)
 
 Reviewer notes: Opened all twelve final chart/diagram screenshots at 375, 768, 1280 in light/dark, plus the scrolled phone chart with tooltip. Larger text is readable, phone positive/negative bars both begin in view, desktop ecosystem diagram fits fully in its expanded paper margins, captions remain in the viewport, and nearby tables/cards remain intact. No private data visible. Browser measured chart ticks at 12px, diagram edge labels at 12px on phones and 12.21px at desktop, keyboard scrolling in chart/diagram, visible focused tooltip after bringing chart into view, and Escape dismissal. Initial version failed tooltip visibility and cropped desktop diagrams; amended gutter sizing and diagram margins, then reran AUDIT_LIST=findings.tsv bash autoresearch.sh and all checks. Lua assertion now measures collision clearance against the intentionally changed label coordinate. Final delta removes all 172 small-SVG findings, adds none.
 

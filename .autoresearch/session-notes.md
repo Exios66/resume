@@ -73,7 +73,7 @@ Project numbers and claims (must match source repos). Removing or hiding content
 | 22 | 3 | Balanced heading lines (text-wrap: balance on h1-h3) | 22 | keep |
 | 23 | 3 | Baseline on this machine (Quarto 1.10.19, LC_ALL=C) | 22 | keep |
 | 24 | 3 | <wbr> after separators in long inline code inside table cells | 20 | keep |
-| 25 | 3 | min-width 12ch for first table column on phones | 20 | discard |
+| 25 | 3 | min-width 12ch for first table column on phones | 29 | discard |
 | 26 | 3 | Second tightening notch for number grids at 480 px | 20 | discard |
 | 27 | 3 | Stack classifier prose threshold 60 -> 45 characters | 19 | keep |
 | 28 | 3 | Sticky first column with scroll edge on phone number grids (metric-blind) | 19 | keep |
@@ -131,10 +131,10 @@ Project numbers and claims (must match source repos). Removing or hiding content
 - Tests that match `class="kicker"` exactly break when a filter adds classes; match by class membership.
 - Hyphenating headers or wrapping inline code anywhere both made layout worse.
 
-## Segment 5 in progress
+## Segment 5 completed
 Baseline run 44: 24 points at 414/768 added coverage. Hypothesis: extending only prose-table stacking to 800px removes the 10 crushed tablet cells while preserving desktop grids.
 
-Run 45 kept: 24 → 4; ten crushed tablet cells removed. Run 46 hypothesis: separating the undergraduate credential from its concentration and GPA makes the education block easier to scan and removes two orphan separators at 414 px. Facts unchanged. Regenerate the resume PDF.
+Run 45 kept: 24 → 4; ten crushed tablet cells removed. Run 46 kept: 4 → 2; separating the undergraduate credential from its concentration and GPA removed two orphan separators at 414 px. Facts unchanged; résumé PDF regenerated.
 
 Run 46 kept: 4 → 2. Segment 5 closes with zero layout/axe/error/structure/lint/separator points; two heading widows remain.
 
@@ -166,3 +166,7 @@ Four kept candidates completed this batch. PR #107 includes actual screenshots, 
 Final gate on experiment 29a03e3: 197 passed, 2 deselected, 611 subtests passed in 44.50s. All 43 pages audited; axe/layout/error/structure/lint/separator points are zero. Only the accepted research heading widow at 375 light remains (UW–Madison is an indivisible name). Initial run-48 tooltip failure was fixed and checked before keeping; no other discarded candidates in this batch. Segment scores are comparable only within a segment.
 
 Next: SVG contrast, then report contents alignment, Projects category chips and page-type search labels. These need new fixed evaluations before metric-blind features can proceed. No live merge/deploy, other engines, real devices, screen readers or external destinations checked. Resume from the saved backlog on the existing branch.
+
+
+## Review remediation after run 49
+Confirmed PR #107 review findings are patched: pinned/synchronized bootstrap, both Chromium clients verified, platform/extraction and locale handling, unique code IDs, excluded local tooling from published output, corrected ledger summary/evidence links/backlog, and clarified the RVL result scope. No benchmark/check rules were weakened or changed. This is review remediation rather than a new score-seeking experiment; polish_defects remains 1. Full gate: 220 passed, 2 deselected, 611 subtests passed (100.63s). Dev-root and /resume/ deployment cases now run in the suite at 375/768/1280, both themes. Four reviewed screenshots and the exact validation record are archived in .autoresearch/. Native Linux execution and live deployment remain open.

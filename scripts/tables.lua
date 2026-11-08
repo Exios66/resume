@@ -44,7 +44,8 @@ local function split_long_code(contents)
       local out = {}
       for j, part in ipairs(parts) do
         if j > 1 then out[#out + 1] = pandoc.RawInline("html", "<wbr>") end
-        out[#out + 1] = pandoc.Code(part, attr)
+        local fragment_attr = pandoc.Attr(j == 1 and attr.identifier or "", attr.classes, attr.attributes)
+        out[#out + 1] = pandoc.Code(part, fragment_attr)
       end
       return out
     end,
