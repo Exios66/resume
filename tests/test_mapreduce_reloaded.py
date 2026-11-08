@@ -83,8 +83,10 @@ class MapReduceReloadedTests(unittest.TestCase):
 
     def test_page_keeps_its_work_in_progress_caveat_and_plan(self):
         _, parser = self.read_page()
-        kicker = self.one(parser, "span", **{"class": "kicker"})
-        self.assertIn("In active development", parser.text(kicker))
+        kickers = [attrs for element, attrs, _ in parser.elements
+                   if element == "span" and "kicker" in checks.classes(attrs)]
+        self.assertEqual(len(kickers), 1)
+        self.assertIn("In active development", parser.text(kickers[0]))
         caveat = self.one(parser, "div", **{"class": "caveat"})
         self.assertIn("Work in progress", parser.text(caveat))
         self.assertIn("now built", parser.text(caveat))

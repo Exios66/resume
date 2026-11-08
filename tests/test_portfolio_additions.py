@@ -134,8 +134,10 @@ class PortfolioAdditionTests(unittest.TestCase):
 
     def test_aeroglobe_keeps_its_development_and_planned_feature_caveats(self):
         _, parser = self.read_page("projects/aeroglobe.html")
-        kicker = self.one(parser, "span", **{"class": "kicker"})
-        self.assertIn("In active development", parser.text(kicker))
+        kickers = [attrs for element, attrs, _ in parser.elements
+                   if element == "span" and "kicker" in checks.classes(attrs)]
+        self.assertEqual(len(kickers), 1)
+        self.assertIn("In active development", parser.text(kickers[0]))
         caveat = self.one(parser, "div", **{"class": "caveat"})
         self.assertIn("Work in progress", parser.text(caveat))
         self.assertIn("no real historical day is published yet", parser.text(caveat))

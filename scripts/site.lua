@@ -273,8 +273,47 @@ end
 function decorate_span(span)
   if has_class(span, "chip") and text_of(span):match("^Madison") then
     prepend(span, icon_inline("map-pin"))
+  elseif has_class(span, "kicker") or has_class(span, "role") or has_class(span, "sample-source") then
+    split_separators(span)
   end
   return span
+end
+
+local SEPARATORS = { ["·"] = true, ["•"] = true }
+
+--- Split "A · B · C" into one span per part, the separator leading each later part.
+-- styles.css keeps a separator from ending a line and hides one that starts a line,
+-- so a wrapped label never shows a stray dot. The text itself is unchanged.
+-- @param span Pandoc Span; its content is replaced when it holds a spaced separator.
+function split_separators(span)
+  local content = span.content
+  local parts, current = {}, {}
+  for i, el in ipairs(content) do
+    local prev, nxt = content[i - 1], content[i + 1]
+    if el.tag == "Str" and SEPARATORS[el.text] and prev and prev.tag == "Space"
+        and nxt and nxt.tag == "Space" and #current > 0 then
+      if current[#current].tag == "Space" then table.remove(current) end
+      parts[#parts + 1] = { inlines = current, sep = el.text }
+      current = {}
+    elseif not (el.tag == "Space" and #current == 0 and #parts > 0) then
+      current[#current + 1] = el
+    end
+  end
+  if #parts == 0 then return end
+  parts[#parts + 1] = { inlines = current }
+  local out = {}
+  for i, part in ipairs(parts) do
+    local inlines = {}
+    if i > 1 then
+      inlines[1] = pandoc.Space()
+      inlines[2] = pandoc.Span({ pandoc.Str(parts[i - 1].sep) }, pandoc.Attr("", { "sep" }))
+      inlines[3] = pandoc.Space()
+    end
+    for _, el in ipairs(part.inlines) do inlines[#inlines + 1] = el end
+    out[#out + 1] = pandoc.Span(inlines, pandoc.Attr("", { "seg" }))
+  end
+  span.content = { pandoc.Span({ pandoc.Span(out, pandoc.Attr("", { "seg-run" })) }, pandoc.Attr("", { "seg-line" })) }
+  span.classes:insert("segs")
 end
 
 local DECORATE = {
