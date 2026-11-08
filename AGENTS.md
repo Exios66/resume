@@ -9,3 +9,7 @@
 # Polish hill-climb
 
 To polish, sweep or audit the site's quality, follow `.claude/skills/portfolio-hillclimb/SKILL.md` (any agent can; Claude Code also loads it as a skill and offers the `portfolio-hillclimber` subagent in `.claude/agents/`). It is a measured loop: one small change, `scripts/hillclimb/hc.sh experiment`, screenshots, `hc.sh checks`, then keep or revert, logged in `autoresearch.jsonl`. The audit (`autoresearch.audit.cjs`) and checks are fixed within a segment; never change them to rescue a result.
+
+# Commits, pull requests and issues
+
+Never put session links (for example `claude.ai/code/session_…`), `Claude-Session:` or `Co-Authored-By:` trailers, or "Generated with" tool footers in commit messages, pull request or issue bodies, or comments. They expose private session URLs. Write plain messages.
