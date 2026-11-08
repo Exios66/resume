@@ -91,9 +91,11 @@ local function stack_table(tbl)
   end
   if cells == 0 then return nil end
   -- A prose column (mostly words, some long entries) needs the full width on a phone.
+  -- 45+ characters is already two or more wrapped lines inside a grid column on a
+  -- phone, so the column stops being a figure-comparison cell there.
   local prose_column = false
   for i, n in pairs(col_cells) do
-    if col_numeric[i] / n < 0.5 and col_max[i] >= 60 then prose_column = true end
+    if col_numeric[i] / n < 0.5 and col_max[i] >= 45 then prose_column = true end
   end
   local wordy = numeric / cells < 0.5
     and (longest >= 40 or total / cells >= 20 or #labels >= 4 or has_code)
