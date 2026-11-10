@@ -440,7 +440,7 @@ quarto = { doc = { input_file = "projects/digital-mailroom.qmd" }, project = { d
 local schema_doc = { blocks = {}, meta = { description = 'A "capstone" & <script>',
   image = "https://example.test/card.png" } }
 local schema_footer = Pandoc(schema_doc).blocks[2].text
-local schema_json = schema_footer:match('<script type="application/ld+json">(.-)</script>')
+local schema_json = schema_footer:match('<script type="application/ld%+json">(.-)</script>')
 assert(schema_json, "project schema must be present")
 assert(schema_json:find('"@context":"https://schema.org"', 1, true))
 assert(schema_json:find('"@type":"CreativeWork"', 1, true))
