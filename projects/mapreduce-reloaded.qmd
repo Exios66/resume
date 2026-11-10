@@ -72,6 +72,17 @@ The diagram shows the core task and shuffle path only. It does not attempt to dr
 - **A Docker Compose cluster.** One coordinator and four workers, with Prometheus and Grafana as an optional profile, and a memory limit on each service so the whole cluster fits on one 8 GB virtual machine. An end-to-end script checks the cluster's output against the oracle.
 - **Storage, compression and user jobs.** S3-compatible storage with object-store commit semantics, zstd and Snappy codecs, and Go job files interpreted by workers. A Python coordinator can run with Go workers; a Python worker is not implemented.
 
+### The status page, during a job
+
+```{=html}
+<figure class="clip">
+<video controls loop muted playsinline preload="metadata" data-autoplay width="900" height="640" poster="../assets/media/mapreduce-status.png" aria-label="Screen recording of the coordinator's status page during a 1 GiB word count: the map and reduce progress bars of the second job fill to 100 %, and the table of four workers shows the task each one is running.">
+<source src="../assets/media/mapreduce-status.mp4" type="video/mp4">
+</video>
+<figcaption>The coordinator's status page during one whole 1 GiB word count (32 map tasks, 4 reduce tasks, four workers), recorded in the source repository. It is a time-lapse: consecutive frames are 9 seconds of real time apart. The first job had already finished when the recording began.</figcaption>
+</figure>
+```
+
 ## What chaos testing found
 
 The chaos test runs word count while, at random moments, workers die, new ones join, workers stall for 50–250 ms and the coordinator restarts from its log. A run passes only if the output files and the counters equal single-machine mode. Each run's choices come from a seed, so a failure can be replayed.

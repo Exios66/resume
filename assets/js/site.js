@@ -158,6 +158,19 @@
   var reduce = false;
   try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 
+  // Screen recordings play while they are on screen, unless reduced motion is asked for.
+  // The controls stay, so the reader can always pause.
+  if (!reduce && "IntersectionObserver" in window) {
+    var clips = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) { entry.target.pause(); return; }
+        var started = entry.target.play();
+        if (started && started.catch) started.catch(function () {});
+      });
+    }, { threshold: 0.5 });
+    Array.prototype.forEach.call(doc.querySelectorAll("video[data-autoplay]"), function (video) { clips.observe(video); });
+  }
+
   var frame = 0;
   var tasks = [];
   /** Run all registered scroll tasks once per animation frame. */
