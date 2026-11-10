@@ -316,9 +316,31 @@ function split_separators(span)
   span.classes:insert("segs")
 end
 
+--- Put a project's drawn motif at the top of a card written as `::: {.card cover="<slug>"}`.
+-- The SVG comes from partials/covers/<slug>.svg and is decorative: the card's heading already names the project.
+-- An unknown slug stops the render, so a typo cannot ship a card with no cover.
+-- @param div Pandoc Div with class "card".
+-- @return Pandoc Div|nil The card with its cover, or nil when it asks for none.
+function add_cover(div)
+  local slug = div.attributes and div.attributes.cover
+  if not slug or slug == "" then return nil end
+  assert(slug:match("^[%w-]+$"), "card cover must be a project slug, got: " .. slug)
+  local root = (quarto and quarto.project and quarto.project.directory) or "."
+  local path = root .. "/partials/covers/" .. slug .. ".svg"
+  local file = assert(io.open(path, "r"), "card cover not found: " .. path)
+  local svg = file:read("a"):gsub("%s+$", "")
+  file:close()
+  div.attributes.cover = nil
+  div.classes:insert("has-cover")
+  table.insert(div.content, 1, pandoc.RawBlock("html",
+    '<div class="card-cover" aria-hidden="true">' .. svg .. '</div>'))
+  return div
+end
+
 local DECORATE = {
   traverse = "topdown",
   Div = function(div)
+    if has_class(div, "card") then return add_cover(div) end
     if has_class(div, "project-nav") then
       return pandoc.walk_block(div, { Link = decorate_nav_link }), false
     end

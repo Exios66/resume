@@ -996,3 +996,27 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
 @media (min-width: 361px) {
   .page figure.chart-interval::after { content: none; }
 }
+
+/* ---------- Project covers ----------
+   A drawn motif per project (partials/covers/<slug>.svg, inlined by scripts/site.lua). Decorative: it
+   pictures the subject and carries no data. Colours come from the theme tokens. */
+.card-cover {
+  aspect-ratio: 8 / 3; margin: -18px -20px 14px; overflow: hidden; border-radius: 11px 11px 0 0; color: var(--accent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-soft) 70%, var(--paper)), var(--paper));
+  border-bottom: 1px solid var(--rule);
+}
+.card-cover svg { display: block; width: 100%; height: 100%; fill: none; stroke: none; }
+.card-cover :is(.cv-line, .cv-accent, .cv-page) { stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.card-cover .cv-line { stroke-opacity: .42; }
+.card-cover .cv-faint { stroke-opacity: .24; }
+.card-cover .cv-dash { stroke-dasharray: 4 4; }
+.card-cover .cv-page { stroke-opacity: .5; fill: var(--paper); }
+.card-cover .cv-soft { fill: currentColor; fill-opacity: .1; }
+.card-cover .cv-fill, .card-cover .cv-dot { fill: currentColor; }
+.card-cover .cv-dotsoft { fill: currentColor; fill-opacity: .2; }
+@media (prefers-reduced-motion: no-preference) {
+  .card-cover svg { transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
+  .card:is(:hover, :focus-within) .card-cover svg { transform: scale(1.04); }
+}
+@media (forced-colors: active) { .card-cover { color: CanvasText; background: none; } }
+@media print { .card-cover { display: none; } }
