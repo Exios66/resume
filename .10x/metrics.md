@@ -39,6 +39,27 @@ It is the sum of the counts below. Baseline measured on `main` after pull reques
 Secondary numbers, reported but not summed: `gz_index` 14,127; `gz_projects_index` 23,702; `gz_styles_css` 14,935;
 `gz_site_js` 5,683 (gzip bytes). Watch them for sudden growth. Soft limits: CSS 20,000; JavaScript 9,000.
 
+## Page transfer budgets
+
+Recorded on 10 November 2026 against the same render as the baseline above. Sizes are gzipped HTML bytes at
+compression level 9; the shared stylesheet and script are measured separately because every page pays for them.
+`tests/test_page_budget.py` checks every built page, not only the example named here, and fails with the page path,
+its size and its budget.
+
+| Page type | Heaviest page at baseline | Measured | Budget |
+| --- | --- | ---: | ---: |
+| Home | `index.html` | 14,127 | 16,000 |
+| Projects index | `projects/index.html` | 23,702 | 26,000 |
+| Case study | `projects/mapreduce-reloaded.html` | 16,028 | 19,000 |
+| Technical report | `projects/natd/report.html` | 19,345 | 22,000 |
+| Appendix | `projects/mailroom-ml/appendix.html` | 11,018 | 13,000 |
+| Other page | `resume.html` | 12,099 | 15,000 |
+| Shared stylesheet | `styles.css` | 14,935 | 20,000 |
+| Shared script | `assets/js/site.js` | 5,683 | 9,000 |
+
+Each budget leaves about 15 percent headroom over its baseline. Raising one is a deliberate decision that belongs in
+the pull request, with the reason and the new measurement.
+
 ## Judged indicators (a person or a reviewing agent scores these; a script cannot)
 
 | Indicator | Now | Target | How it is scored |
