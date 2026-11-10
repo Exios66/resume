@@ -14,31 +14,45 @@ OUT = pathlib.Path(__file__).resolve().parent.parent / "partials" / "covers"
 
 
 def n(x):
+    """Return a decimal string rounded to one place without trailing zeros."""
     return f"{x:.1f}".rstrip("0").rstrip(".")
 
 
 def el(tag, cls, **a):
+    """Return a self-closing SVG element with a class and attributes.
+
+    Attribute names replace underscores with hyphens; numeric values use n().
+    Attribute values are inserted without XML escaping.
+    """
     attrs = "".join(f' {k.replace("_", "-")}="{n(v) if isinstance(v, (int, float)) else v}"' for k, v in a.items())
     return f'<{tag} class="{cls}"{attrs}/>'
 
 
 def path(cls, d):
+    """Return an SVG path with the given class and path data."""
     return el("path", cls, d=d)
 
 
 def circle(cls, x, y, r):
+    """Return an SVG circle centered at (x, y) with radius r."""
     return el("circle", cls, cx=x, cy=y, r=r)
 
 
 def rect(cls, x, y, w, h, rx=0):
+    """Return an SVG rectangle with corner radius rx in viewBox units."""
     return el("rect", cls, x=x, y=y, width=w, height=h, rx=rx)
 
 
 def poly(pts, close=False):
+    """Return path data through pts, optionally closing the path.
+
+    An empty sequence produces "M" (or "M Z" when closed).
+    """
     return "M" + " L".join(f"{n(x)} {n(y)}" for x, y in pts) + (" Z" if close else "")
 
 
 def page(x, y, w=40, h=52, lines=4):
+    """Return SVG markup for a page with the requested number of text lines."""
     out = rect("cv-page", x, y, w, h, 4)
     for k in range(lines):
         out += path("cv-line", f"M{n(x + 7)} {n(y + 11 + k * 9)} h{n((w - 14) * (0.55 if k == lines - 1 else 1))}")
@@ -46,19 +60,24 @@ def page(x, y, w=40, h=52, lines=4):
 
 
 def pill(x, y, w=66, h=24, line=0.55):
+    """Return a pill-shaped SVG label; line scales its inner line's (w - 24) length."""
     return rect("cv-page", x, y, w, h, 6) + path("cv-line", f"M{n(x + 12)} {n(y + h / 2)} h{n((w - 24) * line)}")
 
 
 def branch(x0, y0, x1, y1, cls="cv-accent"):
+    """Return a curved SVG path between two points."""
     mid = (x0 + x1) / 2
     return path(cls, f"M{n(x0)} {n(y0)} C{n(mid + 6)} {n(y0)} {n(mid - 6)} {n(y1)} {n(x1)} {n(y1)}")
 
 
 def wave_laboratory():
+    """Return SVG markup for a ship on layered waves."""
     def surf(y0, parts):
+        """Return a wave-height function from (amplitude, wavelength, phase) tuples."""
         return lambda x: y0 + sum(a * math.sin(2 * math.pi * x / lam + ph) for a, lam, ph in parts)
 
     def band(fn, line_cls):
+        """Return SVG markup for a filled wave band and its outline."""
         pts = [(x, round(fn(x), 1)) for x in range(-4, W + 8, 4)]
         d = poly(pts)
         return path("cv-soft", d + f" L{W + 4} {H} L-4 {H} Z") + path(line_cls, d)
@@ -85,6 +104,7 @@ def wave_laboratory():
 
 
 def neuron_atlas():
+    """Return SVG markup for a grid of neurons with highlighted connections."""
     rng = random.Random(11)
     out, act = "", []
     for r in range(6):
@@ -107,6 +127,7 @@ def neuron_atlas():
 
 
 def digital_mailroom():
+    """Return SVG markup for documents routed to three destinations."""
     out = rect("cv-page", 34, 38, 44, 58, 4) + rect("cv-page", 42, 30, 44, 58, 4) + page(50, 22, 44, 58)
     out += path("cv-accent", "M100 51 H138") + circle("cv-dot", 146, 51, 7)
     for y, line in ((24, 0.9), (60, 0.6), (96, 0.75)):
@@ -115,6 +136,7 @@ def digital_mailroom():
 
 
 def mailroom_ml():
+    """Return SVG markup for a calibration curve and routing gate."""
     x0, y0, s = 44, 102, 84
     gate = x0 + 0.7 * s
     out = path("cv-line cv-faint", f"M{x0} {y0 - s} V{y0} H{x0 + s}")
@@ -131,6 +153,7 @@ def mailroom_ml():
 
 
 def mailroom_reloaded():
+    """Return SVG markup for an agent workflow and audit log."""
     # agents run in a fixed order; one step escalates; every decision lands in the audit log
     out = page(26, 22, 36, 46, 3)
     xs = (96, 136, 176, 216)
@@ -150,6 +173,7 @@ def mailroom_reloaded():
 
 
 def rvl_cdip_classifier():
+    """Return SVG markup for a scanned page and its classification."""
     # a scanned page, a vision model, sixteen classes with one chosen
     x, y = 34, 20
     out = rect("cv-page", x, y, 58, 78, 4) + rect("cv-soft", x + 8, y + 9, 42, 22)
@@ -167,6 +191,7 @@ def rvl_cdip_classifier():
 
 
 def mailroom_corpus_eda():
+    """Return SVG markup for documents gathered into an audited dataset."""
     # documents from several public sources, gathered into one audited dataset
     out = ""
     docs = [(22, 14, 0), (58, 8, 1), (40, 46, 2), (78, 40, 0), (24, 78, 1), (64, 76, 2)]
@@ -187,6 +212,7 @@ def mailroom_corpus_eda():
 
 
 def aeroglobe():
+    """Return SVG markup for a globe with flight routes."""
     cx, cy, r = 160, 62, 47
     out = circle("cv-soft", cx, cy, r) + circle("cv-accent", cx, cy, r)
     for rx in (16, 33):
@@ -206,6 +232,7 @@ def aeroglobe():
 
 
 def mapreduce_reloaded():
+    """Return SVG markup for map, shuffle, and reduce stages."""
     # input splits, map workers, the shuffle, reduce workers, one output
     ys4 = (22, 47, 72, 97)
     ys2 = (40, 80)
@@ -224,8 +251,10 @@ def mapreduce_reloaded():
 
 
 def psychometric_digital_twin():
+    """Return SVG markup comparing a respondent and a digital twin."""
     # a respondent, a persona built to answer as them, and their answers side by side on survey scales
     def person(x, cls):
+        """Return SVG markup for a person centered at x."""
         return circle(cls, x, 42, 13) + path(cls, f"M{x - 26} 98 a26 26 0 0 1 52 0")
 
     out = person(54, "cv-page") + person(266, "cv-accent cv-dash")
@@ -241,8 +270,10 @@ def psychometric_digital_twin():
 
 
 def natd():
+    """Return SVG markup for chat bubbles and stylized EEG traces."""
     # two chatbots, one helpful and one deceptive, and the EEG recorded while people talk to them
     def bubble(x, y, cls, flip):
+        """Return a chat bubble; flip moves its tail to the right."""
         tail = f"M{x + 14} {y + 28} l-6 10 l14 -10" if not flip else f"M{x + 62} {y + 28} l6 10 l-14 -10"
         return rect(cls, x, y, 76, 28, 9) + path(cls, tail) + path("cv-line", f"M{x + 12} {y + 10} h52 M{x + 12} {y + 18} h34")
 
@@ -262,6 +293,7 @@ def natd():
 
 
 def llm_personas():
+    """Return SVG markup for personas, their votes, and a ruling."""
     # a bench of personas, their votes, and a written ruling
     cx, cy = 118, 104
     out = ""
@@ -282,6 +314,10 @@ def llm_personas():
 
 
 def langtons_ant():
+    """Return SVG markup for Langton's ant after 900 steps from an empty grid.
+
+    Raises AssertionError if the pattern is too tall for the cover.
+    """
     # the real automaton: one ant, the first few hundred steps from an empty grid
     cells, x, y, dx, dy = set(), 0, 0, 0, -1
     for _ in range(900):
@@ -303,6 +339,7 @@ def langtons_ant():
 
 
 def degen_llms():
+    """Return SVG markup for a terminal, chips, and playing cards."""
     # one chip wallet shared by a terminal game, a card table and a pixel overworld
     out = rect("cv-page", 24, 22, 92, 68, 6) + path("cv-line", "M24 36 H116")
     out += circle("cv-dotsoft", 33, 29, 2) + circle("cv-dotsoft", 41, 29, 2) + circle("cv-dotsoft", 49, 29, 2)

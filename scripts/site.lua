@@ -316,9 +316,11 @@ function split_separators(span)
   span.classes:insert("segs")
 end
 
---- Put a project's drawn motif at the top of a card written as `::: {.card cover="<slug>"}`.
+--- Add a project's drawn motif to a card written as `::: {.card cover="<slug>"}`.
 -- The SVG comes from partials/covers/<slug>.svg and is decorative: the card's heading already names the project.
--- An unknown slug stops the render, so a typo cannot ship a card with no cover.
+-- Removes the cover attribute, adds the has-cover class, and inserts the SVG after an initial heading or first otherwise.
+-- A missing or empty cover leaves the card untouched. A slug with characters other than letters, digits, or hyphens,
+-- or a cover file that cannot be opened, raises an error; read failures also raise an error.
 -- @param div Pandoc Div with class "card".
 -- @return Pandoc Div|nil The card with its cover, or nil when it asks for none.
 function add_cover(div)
