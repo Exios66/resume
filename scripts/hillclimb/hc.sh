@@ -73,7 +73,9 @@ case "${1:-}" in
     check "python3" "command -v python3" "install Python 3.10+"
     check ".venv with pytest + playwright + pypdf" ".venv/bin/python -c 'import pytest, playwright, pypdf'" "python3 -m venv .venv && .venv/bin/pip install -r requirements-test.txt (see .github/BUILDING.md)"
     check "node playwright" "node -e 'require(\"playwright\")'" "npm install --no-save playwright (match the Python playwright version)"
-    check "chromium for playwright" "node -e 'require(\"playwright\").chromium.launch().then(b=>b.close())'" "npx playwright install chromium, or set PLAYWRIGHT_BROWSERS_PATH to preinstalled browsers"
+    for engine in chromium firefox webkit; do
+      check "node $engine" "node -e 'require(\"playwright\").$engine.launch().then(b=>b.close())'" "npx playwright install $engine, or set PLAYWRIGHT_BROWSERS_PATH to preinstalled browsers"
+    done
     matching_playwright() {
       local node_version python_version
       node_version="$(node -p 'require("playwright/package.json").version')" || return 1
@@ -81,7 +83,9 @@ case "${1:-}" in
       [ "$node_version" = "$python_version" ]
     }
     check "matching Python/Node Playwright versions" "matching_playwright" "run bash scripts/setup-agent.sh"
-    check "Python Chromium" ".venv/bin/python -c 'from playwright.sync_api import sync_playwright; p = sync_playwright().start(); b = p.chromium.launch(); b.close(); p.stop()'" ".venv/bin/python -m playwright install chromium"
+    for engine in chromium firefox webkit; do
+      check "Python $engine" ".venv/bin/python -c 'from playwright.sync_api import sync_playwright; p = sync_playwright().start(); b = p.$engine.launch(); b.close(); p.stop()'" ".venv/bin/python -m playwright install $engine"
+    done
     check "built site in docs/" "[ -f docs/index.html ]" "run: hc.sh baseline"
     [ $ok = 1 ] && echo "All tools present." || { echo "Fix the MISSING items before running the loop."; exit 1; } ;;
   status) ledger status ;;

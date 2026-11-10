@@ -104,8 +104,8 @@ def test_existing_venv_stale_cache_and_sourced_locale_are_repaired(setup_tree):
     calls = (root / 'state/calls').read_text()
     assert "'pip', 'install'" in calls
     assert 'playwright@1.64.1' in calls
-    assert "npx ['--no-install', 'playwright', 'install', 'chromium']" in calls
-    assert "python ['-m', 'playwright', 'install', 'chromium']" in calls
+    assert "npx ['--no-install', 'playwright', 'install', 'chromium', 'firefox', 'webkit']" in calls
+    assert "python ['-m', 'playwright', 'install', 'chromium', 'firefox', 'webkit']" in calls
     assert 'All tools present.' in result.stdout
     # The env file must safely round-trip a Quarto path containing spaces.
     check = subprocess.run(['bash', '-c', '. "$1"; "$QUARTO" --version; echo "$LC_ALL"',
