@@ -57,7 +57,7 @@ its size and its budget.
 | Shared stylesheet | `styles.css` | 14,935 | 20,000 |
 | Shared script | `assets/js/site.js` | 5,683 | 9,000 |
 
-Each budget leaves about 15 percent headroom over its baseline. Raising one is a deliberate decision that belongs in
+Page budgets leave roughly 10–24 percent headroom over their baselines; shared CSS and JavaScript budgets allow roughly 34 and 58 percent, respectively. Raising one is a deliberate decision that belongs in
 the pull request, with the reason and the new measurement.
 
 ## Judged indicators (a person or a reviewing agent scores these; a script cannot)
