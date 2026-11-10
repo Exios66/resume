@@ -158,14 +158,21 @@ def neuron_atlas():
 
 
 def digital_mailroom():
-    # a stack of incoming documents, one router, three destinations
-    out = rect("cv-page", 30, 40, 44, 58, 4) + rect("cv-page", 38, 32, 44, 58, 4)
-    out += shaded(46, 24, 44, 58, 4) + rect("cv-soft", 53, 32, 30, 9, 2)
-    out += path("cv-line", "M53 50 h30 M53 59 h30 M53 68 h17")
-    out += glow(146, 53, 28) + path("cv-accent", "M97 53 H137") + circle("cv-dot cv-pop", 146, 53, 7.5)
-    for y, line, mark in ((24, 0.9, "cv-dot"), (60, 0.55, "cv-dotsoft"), (96, 0.75, "cv-dotsoft")):
-        out += branch(154, 53, 212, y) + pill(214, y - 12, 72, 24, line, mark)
-    return out
+    # an inbox tray of legal documents; the router sends each one to the cheapest step that can handle it,
+    # drawn as three steps of rising cost, with the dearer steps only as dashed fallbacks
+    out = rect("cv-page", 32, 40, 30, 40, 3) + rect("cv-page", 39, 33, 30, 40, 3) + shaded(46, 26, 30, 40, 3)
+    out += path("cv-line", "M52 35 h18 M52 42 h18 M52 49 h18 M52 56 h10")
+    out += shaded(24, 66, 64, 32, 5) + path("cv-accent", "M46 82 h20")
+    out += glow(120, 60, 26) + path("cv-accent", "M91 60 H112")
+    out += path("cv-line", "M150 104 H196 V74 H242 V44 H296")
+    steps = ((173, 98, 5.5, 2.2, 196, 104), (219, 65, 8.5, 3.2, 242, 74), (269, 31.5, 12, 4.4, 296, 44))
+    for k, (x, y, r, core, edge, tread) in enumerate(steps):
+        cls = "cv-accent" if k == 0 else "cv-accent cv-dash"
+        out += path(cls, f"M128 60 C{n(128 + (x - r - 128) * 0.5)} 60 {n(128 + (x - r - 128) * 0.5)} {y} {n(x - r - 1)} {y}")
+        out += circle("cv-page", x, y, r) + circle("cv-dot" if k == 0 else "cv-dotsoft", x, y, core)
+        for c in range(k + 1):
+            out += circle("cv-dotsoft", edge - 8 - c * 7, tread + 7, 2.2)
+    return out + circle("cv-dot cv-pop", 120, 60, 7.5)
 
 
 def mailroom_ml():
@@ -207,23 +214,42 @@ def mailroom_reloaded():
 
 
 def rvl_cdip_classifier():
-    # a scanned page, a vision model, sixteen classes with one chosen
-    x, y = 30, 20
-    out = shaded(x, y, 60, 80, 4) + rect("cv-soft", x + 8, y + 9, 44, 24, 2)
-    out += path("cv-line", f"M{x + 8} {y + 33} l13 -13 l9 8 l8 -7 l14 12") + circle("cv-dotsoft", x + 43, y + 16, 3)
-    for k in range(4):
-        out += path("cv-line", f"M{x + 8} {y + 44 + k * 9} h{(44, 44, 34, 22)[k]}")
-    out += glow(150, 60, 30) + path("cv-accent", "M98 60 H124 M176 60 H202")
+    # a skewed scan of a letter, a vision model, and the sixteen RVL-CDIP classes as page glyphs:
+    # the model picks letter; memo, the class it most often confuses with letter, is ringed
+    scan = shaded(-28, -38, 56, 76, 3) + path("cv-line", "M-20 -27 h16 M-20 -21 h11")
+    scan += "".join(path("cv-line", f"M-20 {y} h{w}") for y, w in ((-9, 40), (-2, 40), (5, 40), (12, 26)))
+    scan += path("cv-accent", "M2 27 q4 -7 8 -1 t7 -2 t5 1")
+    out = group("translate(60 60) rotate(-5)", scan)
+    out += glow(150, 60, 30) + path("cv-accent", "M98 60 H124 M176 60 H200")
     out += path("cv-page", "M126 60 Q150 36 174 60 Q150 84 126 60 Z") + path("cv-accent", "M126 60 Q150 36 174 60 Q150 84 126 60 Z")
     out += circle("cv-accent", 150, 60, 10) + circle("cv-dot", 150, 60, 5)
-    for r in range(4):
-        for c in range(4):
-            cx, cy = 208 + c * 21, 18 + r * 21
-            if (r, c) == (1, 2):
-                out += rect("cv-shade", cx + 3, cy + 3, 17, 17, 4) + rect("cv-fill cv-pop", cx, cy, 17, 17, 4)
-                out += path("cv-tick", f"M{cx + 4.5} {cy + 9} l3 3 l5.5 -6")
-            else:
-                out += rect("cv-page", cx, cy, 17, 17, 4)
+    glyphs = (
+        "M4 6h12v9h-12z M4 6l6 5l6-5",                                      # email
+        "M5 5h4v4h-4z M11 7h4 M5 11h4v4h-4z M11 13h4",                      # form
+        "M4 8q2-3 4 0t4 0t4 0 M4 13q2-3 4 0t4 0",                           # handwritten
+        "M5 5h10v6h-10z M5 14h10",                                          # advertisement
+        "M5 5h10 M5 8h4.5 M5 11h4.5 M5 14h4.5 M10.5 8h4.5 M10.5 11h4.5 M10.5 14h4.5",  # scientific report
+        "M5 5h10 M7 7.5h6 M5 10.5h10 M5 13h10 M5 15.5h6",                   # scientific publication
+        "M5 6h10 M5 9.5h10 M5 13h6 M11.5 15.5q1.5-2.5 3.5 0",               # letter
+        "M4.5 5h11v10h-11z M4.5 8.5h11 M4.5 12h11 M9 5v10",                 # specification
+        "M4 7h4l1.5 1.5h6.5v7h-12z",                                        # file folder
+        "M4.5 5.5h11 M4.5 8.5h3v6.5h-3z M9.5 8.5h6 M9.5 11.5h6 M9.5 14.5h6",  # news article
+        "M5 5.5h4 M5 8h6 M4.5 10.5h11 M5 13.5h10 M5 16h6",                  # memo
+        "M5 6h5 M13 6h2 M5 9.5h5 M13 9.5h2 M5 13h5 M13 13h2 M12 15.5h3.5",  # budget
+        "M5 5.5h5 M5 9h10 M5 12h10 M10 15h5",                               # invoice
+        "M4 6h12v8h-12z M7 9h6 M10 14v2.5",                                 # presentation
+        "M5 7l1.2 1.2l2-2.4 M10 7h5 M5 13l1.2 1.2l2-2.4 M10 13h5",          # questionnaire
+        "M5 5.5h3v3h-3z M10 6h5 M10 8.5h3 M5 12h10 M5 15h7",                # resume
+    )
+    for i, d in enumerate(glyphs):
+        cx, cy = 205 + (i % 4) * 23, 15 + (i // 4) * 23
+        if i == 6:
+            body = rect("cv-shade", cx + 3, cy + 3, 20, 20, 4) + rect("cv-fill cv-pop", cx, cy, 20, 20, 4)
+            out += body + group(f"translate({cx} {cy})", path("cv-cut", d))
+        else:
+            out += rect("cv-page", cx, cy, 20, 20, 4) + group(f"translate({cx} {cy})", path("cv-line", d))
+            if i == 10:
+                out += rect("cv-accent cv-dash", cx - 2.5, cy - 2.5, 25, 25, 6)
     return out
 
 
@@ -278,22 +304,28 @@ def aeroglobe():
 
 
 def mapreduce_reloaded():
-    # input splits, map workers, the shuffle, reduce workers, one output
+    # input splits, map workers, the shuffle, reduce workers, one output. One map worker has died:
+    # its split is handed to a backup worker, which finishes the task (the fault-injection tests)
     ys4, ys2 = (21, 47, 73, 99), (40, 80)
-    out = glow(206, 60, 40)
+    dead, bx, by = 2, 132, 88
+    out = glow(bx, by, 24)
     for y in ys4:
-        out += shaded(24, y - 9, 36, 18, 4) + path("cv-line", f"M32 {y} h20") + path("cv-accent", f"M60 {y} H99")
+        out += shaded(24, y - 9, 36, 18, 4) + path("cv-line", f"M32 {y} h20")
     for i, y in enumerate(ys4):
+        out += path("cv-line cv-dash" if i == dead else "cv-accent", f"M60 {y} H{91 if i == dead else 93}")
+        x0, y0 = (bx + 9, by) if i == dead else (111, y)
         for j, y2 in enumerate(ys2):
-            if (i + j) % 2:
-                out += branch(117, y, 196, y2, "cv-line")
-    for i, y in enumerate(ys4):
-        for j, y2 in enumerate(ys2):
-            if (i + j) % 2 == 0:
-                out += branch(117, y, 196, y2)
+            out += branch(x0, y0, 196, y2, "cv-accent" if (i + j) % 2 == 0 else "cv-line")
+    out += path("cv-accent cv-dash cv-pop", f"M60 {ys4[dead] + 5} C84 {by + 4} 100 {by} {bx - 10} {by}")
     for y2 in ys2:
         out += branch(216, y2, 254, 60)
-    out += "".join(node(108, y) for y in ys4) + "".join(circle("cv-page", 206, y2, 10) + circle("cv-dot cv-pop", 206, y2, 4) for y2 in ys2)
+    for i, y in enumerate(ys4):
+        if i == dead:
+            out += circle("cv-under", 102, y, 9) + circle("cv-line cv-dash", 102, y, 9) + path("cv-line", f"M98 {y - 4} l8 8 M106 {y - 4} l-8 8")
+        else:
+            out += node(102, y)
+    out += circle("cv-under", bx, by, 9) + circle("cv-accent cv-pop", bx, by, 9) + circle("cv-dot cv-pop", bx, by, 3.5)
+    out += "".join(circle("cv-page", 206, y2, 10) + circle("cv-dot", 206, y2, 4) for y2 in ys2)
     out += shaded(256, 43, 42, 34, 5) + path("cv-line", "M265 53.5 h24 M265 60 h24 M265 66.5 h15")
     return out
 
