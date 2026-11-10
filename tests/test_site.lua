@@ -422,4 +422,15 @@ assert(#plain.content == 3 and plain.classes[2] == nil, "labels without a separa
 assert(icon_html("code") == '<svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false">'
   .. '<use href="#i-code"/></svg>', icon_html("code"))
 assert(icon_html("arrow-up-right", "icon-ext"):find('class="icon icon-ext" width="1em" height="1em"', 1, true))
+-- project covers: the motif is inlined first, marked decorative, and an unknown slug fails loudly
+local card = add_cover({ attributes = { cover = "wave-laboratory" },
+  classes = setmetatable({ "card" }, { __index = table }), content = { "body" } })
+assert(card.content[1].text:find('^<div class="card%-cover" aria%-hidden="true"><svg viewBox="0 0 320 120"'), card.content[1].text:sub(1, 80))
+assert(card.content[2] == "body" and card.classes[2] == "has-cover" and card.attributes.cover == nil)
+local headed = add_cover({ attributes = { cover = "neuron-atlas" }, classes = setmetatable({ "card" }, { __index = table }),
+  content = { { t = "Header" }, "body" } })
+assert(headed.content[1].t == "Header" and headed.content[2].text:find("card%-cover"), "the heading stays first so the card keeps its id")
+assert(add_cover({ attributes = {}, classes = {}, content = {} }) == nil, "cards without a cover are untouched")
+assert(not pcall(add_cover, { attributes = { cover = "no-such-project" }, classes = {}, content = {} }))
+assert(not pcall(add_cover, { attributes = { cover = "../secret" }, classes = {}, content = {} }))
 print("icon decoration ok")

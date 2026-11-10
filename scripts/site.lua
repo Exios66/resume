@@ -316,9 +316,37 @@ function split_separators(span)
   span.classes:insert("segs")
 end
 
+--- Add a project's drawn motif to a card written as `::: {.card cover="<slug>"}`.
+-- The SVG comes from partials/covers/<slug>.svg and is decorative: the card's heading already names the project.
+-- Removes the cover attribute, adds the has-cover class, and inserts the SVG after an initial heading or first otherwise.
+-- A missing or empty cover leaves the card untouched. A slug with characters other than letters, digits, or hyphens,
+-- or a cover file that cannot be opened, raises an error; read failures also raise an error.
+-- @param div Pandoc Div with class "card".
+-- @return Pandoc Div|nil The card with its cover, or nil when it asks for none.
+function add_cover(div)
+  local slug = div.attributes and div.attributes.cover
+  if not slug or slug == "" then return nil end
+  assert(slug:match("^[%w-]+$"), "card cover must be a project slug, got: " .. slug)
+  local root = (quarto and quarto.project and quarto.project.directory) or "."
+  local path = root .. "/partials/covers/" .. slug .. ".svg"
+  local file = assert(io.open(path, "r"), "card cover not found: " .. path)
+  local svg = file:read("a"):gsub("%s+$", "")
+  file:close()
+  div.attributes.cover = nil
+  div.classes:insert("has-cover")
+  -- After the heading, not before it: Quarto gives the card the id of a heading that comes first, and
+  -- links such as projects/index.html#wave-laboratory rely on it. CSS moves the cover to the top.
+  local first = div.content[1]
+  local at = (first and (first.t == "Header" or first.tag == "Header")) and 2 or 1
+  table.insert(div.content, at, pandoc.RawBlock("html",
+    '<div class="card-cover" aria-hidden="true">' .. svg .. '</div>'))
+  return div
+end
+
 local DECORATE = {
   traverse = "topdown",
   Div = function(div)
+    if has_class(div, "card") then return add_cover(div) end
     if has_class(div, "project-nav") then
       return pandoc.walk_block(div, { Link = decorate_nav_link }), false
     end
