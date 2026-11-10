@@ -16,6 +16,7 @@
   --accent-soft: #e5f2f3;
   --accent-ink: #ffffff;
   --accent-2: #155e75;
+  --pop: #fe01b1;
   --glow: rgba(14, 111, 122, .26);
   --chart-1: #008b9a;
   --chart-2: #4f5fc4;
@@ -38,6 +39,7 @@
     --accent-soft: #16303a;
     --accent-ink: #06191d;
     --accent-2: #8fdde6;
+    --pop: #fe01b1;
     --glow: rgba(79, 193, 205, .3);
     --chart-1: #2aa3b0;
     --chart-2: #7c86f0;
@@ -57,6 +59,7 @@
     --accent-soft: #16303a;
     --accent-ink: #06191d;
     --accent-2: #8fdde6;
+    --pop: #fe01b1;
     --glow: rgba(79, 193, 205, .3);
     --chart-1: #2aa3b0;
     --chart-2: #7c86f0;
@@ -346,7 +349,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   :root:root:root, :root[data-theme="dark"]:root, :root:not([data-theme="light"]):root {
     --bg: #fff; --paper: #fff; --ink: #111; --muted: #444; --rule: #ccc;
     --accent: #0e6f7a; --accent-soft: #fff; --accent-ink: #fff; --shadow: none;
-    --accent-2: #0e6f7a; --glow: transparent;
+    --accent-2: #0e6f7a; --glow: transparent; --pop: #0e6f7a;
     --chart-1: #008b9a; --chart-2: #4f5fc4; --chart-1-soft: #6cb2bb;
     color-scheme: light;
   }
@@ -690,7 +693,7 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
    Everything here is decorative; print and reduced motion switch it off.
    ========================================================================== */
 
-::selection { background: color-mix(in srgb, var(--accent) 28%, transparent); color: inherit; }
+::selection { background: color-mix(in srgb, var(--pop) 26%, transparent); color: inherit; }
 html { scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent; }
 
 /* Atmosphere: two soft glows and a faint dot grid that fades out down the viewport. */
@@ -709,7 +712,7 @@ body::before {
 .page::before {
   content: ""; position: absolute; top: 0; left: 0; right: 0; height: 6px;
   border-radius: 14px 14px 0 0; pointer-events: none;
-  background: linear-gradient(90deg, var(--accent-2), var(--accent) 45%, color-mix(in srgb, var(--accent) 55%, var(--paper)));
+  background: linear-gradient(90deg, var(--accent-2), var(--accent) 58%, var(--pop));
 }
 
 /* Header: frosted glass once the page scrolls under it. */
@@ -717,8 +720,8 @@ body::before {
 .site-title { display: inline-flex; align-items: center; gap: .6em; padding: 4px 0; margin: -4px 0; }
 .site-title::before {
   content: ""; width: .62em; height: .62em; flex: none; border-radius: 2px; transform: rotate(45deg);
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+  background: var(--pop);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pop) 18%, transparent);
 }
 .nav-link[aria-current="page"] { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent); }
 @media (min-width: 721px) {
@@ -754,7 +757,7 @@ body::before {
 .hero .role { position: relative; padding-top: 14px; }
 .hero .role::before {
   content: ""; position: absolute; top: 0; left: 50%; width: 72px; height: 2px; margin-left: -36px; border-radius: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+  background: linear-gradient(90deg, transparent, var(--accent), var(--pop), transparent);
 }
 .chip { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent); }
 a.chip { transition: box-shadow .15s, transform .15s; }
@@ -774,7 +777,7 @@ h2 {
 h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
   content: ""; display: inline-block; width: .5em; height: .5em; margin: 0 .75em .12em .1em;
   border-radius: 1.5px; transform: rotate(45deg); vertical-align: middle;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background: var(--pop);
 }
 .card :is(h2, h3) { border-image: none; }
 .card :is(h2, h3)::before { content: none; }
@@ -796,8 +799,8 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
   box-shadow: var(--shadow), 0 14px 32px -18px var(--glow);
 }
 .card::before {
-  content: ""; position: absolute; top: -1px; left: 18px; right: 18px; height: 2px; border-radius: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  content: ""; position: absolute; top: -1px; left: 18px; right: 18px; height: 2px; border-radius: 2px; z-index: 1;
+  background: linear-gradient(90deg, var(--accent), var(--pop));
   transform: scaleX(0); transform-origin: 0 50%; pointer-events: none;
 }
 .card:is(:hover, :focus-within)::before { transform: scaleX(1); }
@@ -1015,11 +1018,20 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
 .card-cover .cv-fill, .card-cover .cv-dot { fill: currentColor; }
 .card-cover .cv-dotsoft { fill: currentColor; fill-opacity: .2; }
 .card-cover .cv-accent.cv-dash { fill: none; }
+/* The one hot-pink note in each motif: its focal element. Everything drawn inside takes the colour. */
+.card-cover .cv-pop { color: var(--pop); }
+.card-cover .cv-shade { fill: currentColor; fill-opacity: .1; }
+.card-cover .cv-glow { fill: currentColor; fill-opacity: .07; }
+.card-cover .cv-under { fill: var(--paper); }
+.card-cover .cv-crate { stroke: currentColor; stroke-width: 1; stroke-opacity: .6; fill: var(--paper); vector-effect: non-scaling-stroke; }
+.card-cover .cv-crate.cv-soft { fill: color-mix(in srgb, currentColor 22%, var(--paper)); fill-opacity: 1; }
+.card-cover .cv-cut { stroke: var(--paper); stroke-width: 1.2; stroke-linecap: round; fill: none; vector-effect: non-scaling-stroke; }
+.card-cover circle.cv-cut { fill: none; }
 .card-cover .cv-grid { stroke: currentColor; stroke-width: 1; stroke-opacity: .09; vector-effect: non-scaling-stroke; }
 .card-cover .cv-tick { stroke: var(--paper); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 /* A card alone on its row would get a very tall band, so its cover sits beside the text instead. */
 @media (min-width: 640px) {
-  .cards-wide > .card.has-cover:only-child { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); column-gap: 20px; align-content: start; }
+  .cards-wide > .card.has-cover:only-child { display: grid; grid-template-columns: minmax(0, 44%) minmax(0, 1fr); column-gap: 20px; align-content: start; }
   .cards-wide > .card.has-cover:only-child > * { grid-column: 2; }
   .cards-wide > .card.has-cover:only-child > .card-cover {
     grid-column: 1; grid-row: 1 / span 12; aspect-ratio: auto; min-height: 112px; margin: -18px 0 -18px -20px;
@@ -1033,5 +1045,11 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
   .card-cover svg { transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
   .card:is(:hover, :focus-within) .card-cover svg { transform: scale(1.04); }
 }
-@media (forced-colors: active) { .card-cover { color: CanvasText; background: none; } }
+@media (forced-colors: active) { .card-cover, .card-cover .cv-pop { color: CanvasText; background: none; } }
 @media print { .card-cover { display: none; } }
+
+/* ---------- Hot pink ----------
+   --pop (#fe01b1, the pink of the GitHub profile) is a spice, not a second brand colour: small
+   decorative marks only, never text or anything a reader must be able to see to use the page. */
+.card:is(:hover, :focus-within) .icon-go, .more:hover .icon-go { color: var(--pop); }
+.read-progress { background: linear-gradient(90deg, var(--accent), var(--pop)); }

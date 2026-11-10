@@ -11,3 +11,11 @@ Track 1, second step, 2026-11-10.
 - Fix found by the browser suite: the cover is inserted after the card's heading and moved up with CSS `order`, because Quarto takes the card's id from a leading heading and `#wave-laboratory` links depend on it.
 - Results: `bash autoresearch.checks.sh` 262 passed, 2 deselected, 634 subtests; polish audit 0; projects index grows 7.3 KB compressed.
 - Not checked: Firefox, WebKit, real devices, forced colors.
+
+## Track 1, step C: motif house style and the pink accent (10 November 2026)
+
+- All 14 motifs were redrawn to one house style in `scripts/make-covers.py`: the same line weights, page and pill shapes, soft shading, and one focal element per motif.
+- New colour token `--pop: #fe01b1`, the hot pink from the GitHub profile README. It marks the focal element of each motif (`cv-pop`) and appears in small doses: the top band, title and heading diamonds, the card hover line, link arrows on hover, the reading-progress bar and text selection. Print resets it to the teal accent.
+- Cards show the project title, not the repository slug. The site already did this; the review sheets now do too (`.10x/reviews/track1-c/motifs-*.png`).
+- Checks: `bash autoresearch.checks.sh` passed (262 passed, 2 deselected, 634 subtests); audit `polish_defects=0`.
+- Not checked: Firefox, WebKit, real devices, forced-colours rendering.
