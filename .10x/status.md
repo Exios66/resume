@@ -1,6 +1,6 @@
 # Status
 - Feature: portfolio-experience-v2
-- Phase: Phase 0 (brainstorming); design written, awaiting owner review
+- Phase: Phases 0-3 complete (design approved, ADR-001 accepted); Phase 4 implementation of track 1, pull request (a)
 - Date: 2026-11-10, main at 5d622fe
-- Blocker: owner to review the design document
+- Blocker: none
 - No code has been written for this feature.

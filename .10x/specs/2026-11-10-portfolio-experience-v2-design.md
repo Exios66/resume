@@ -1,6 +1,6 @@
 # Portfolio experience v2: design
 
-Date: 2026-11-10. Baseline: `main` at `5d622fe`. Status: awaiting owner review.
+Date: 2026-11-10. Baseline: `main` at `5d622fe`. Status: approved by the owner on 2026-11-10, with the instruction that the work is design-led and not limited to the measured polish loop.
 
 ## Goal
 
@@ -29,7 +29,10 @@ A tracked roadmap. Five tracks, each shipped as one or more small pull requests.
 6. `docs/` is rendered, never edited by hand.
 7. Each pull request includes: the commands run and their results, screenshots at 375, 768 and 1280 px in light and
    dark, and a list of what was not checked. Screenshots stay outside `docs/`.
-8. The fixed audit (`autoresearch.audit.cjs`) must not get worse, and `bash autoresearch.checks.sh` must pass.
+8. The work is design-led. The polish audit is a safety net, not the driver: new features, imagery and motion do
+   not need to move its score, and a finding caused by a deliberate design choice is recorded and judged, not
+   automatically reverted. `bash autoresearch.checks.sh` must still pass, with tests updated where behaviour
+   changes on purpose.
 9. Commits, pull requests and issues use the owner's git identity and carry no tool footers or session links.
 
 ## Track 1: visual identity and imagery
@@ -111,7 +114,8 @@ projects/<slug>/figures/*  ----> site.lua (lazy, sized)              --> docs/pr
 ### Budget and acceptance
 
 - Home page transfer grows by no more than 30 KB; projects index by no more than 40 KB.
-- No new console errors, no new audit findings, contrast unchanged.
+- No new console errors and no loss of text contrast. Any new audit finding is listed in the pull request with
+  the reason it was accepted or fixed.
 - The owner approves the motif style on three samples before the other eleven are drawn.
 
 ### Delivery
