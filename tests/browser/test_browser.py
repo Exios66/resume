@@ -172,6 +172,60 @@ def test_ecosystem_text_padding_and_code_font(site):
         page.close()
 
 
+def diagram_pages():
+    """Return built pages that carry an inline diagram."""
+    return sorted(path.relative_to(ROOT / "docs").as_posix()
+                  for path in (ROOT / "docs").rglob("*.html")
+                  if 'class="diagram' in path.read_text(encoding="utf-8"))
+
+
+def test_diagram_text_clears_arrows_and_box_borders(site):
+    browser, base = site
+    page = browser.new_page(viewport={"width": 1280, "height": 900}, reduced_motion="reduce")
+    try:
+        pages = diagram_pages()
+        assert len(pages) >= 14, pages
+        for path in pages:
+            page.goto(base + path)
+            page.evaluate("document.fonts.ready")
+            failures = page.evaluate("""() => {
+              const failures = [];
+              const svg = document.querySelector('figure.diagram svg');
+              if (!svg) return ['missing diagram svg'];
+              const name = (text) => text.textContent.trim().replace(/\\s+/g, ' ');
+              const texts = [...svg.querySelectorAll('text')].filter((text) => name(text));
+              const boxes = [...svg.querySelectorAll('rect.d-box')];
+              const points = [];
+              for (const path of svg.querySelectorAll('path.d-arrow')) {
+                const length = path.getTotalLength();
+                for (let at = 0; at <= length; at += 2) points.push(path.getPointAtLength(at));
+              }
+              for (const text of texts) {
+                const b = text.getBBox();
+                if (b.width <= 0 || b.height <= 0) continue;
+                for (const box of boxes) {
+                  const x = +box.getAttribute('x'), y = +box.getAttribute('y');
+                  const w = +box.getAttribute('width'), h = +box.getAttribute('height');
+                  const inside = b.x >= x && b.x + b.width <= x + w && b.y >= y && b.y + b.height <= y + h;
+                  const outside = b.x + b.width <= x || b.x >= x + w || b.y + b.height <= y || b.y >= y + h;
+                  if (!inside && !outside) failures.push('text crosses a box border: ' + name(text));
+                }
+                const pad = 1.5;
+                for (const p of points) {
+                  if (p.x >= b.x - pad && p.x <= b.x + b.width + pad &&
+                      p.y >= b.y - pad && p.y <= b.y + b.height + pad) {
+                    failures.push('text touches an arrow: ' + name(text));
+                    break;
+                  }
+                }
+              }
+              return failures;
+            }""")
+            assert not failures, (path, failures)
+    finally:
+        page.close()
+
+
 def test_site_search_contents_list_and_pager(site):
     browser, base = site
     page = browser.new_page(viewport={"width": 1280, "height": 900}, reduced_motion="reduce")
