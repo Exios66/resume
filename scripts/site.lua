@@ -332,7 +332,11 @@ function add_cover(div)
   file:close()
   div.attributes.cover = nil
   div.classes:insert("has-cover")
-  table.insert(div.content, 1, pandoc.RawBlock("html",
+  -- After the heading, not before it: Quarto gives the card the id of a heading that comes first, and
+  -- links such as projects/index.html#wave-laboratory rely on it. CSS moves the cover to the top.
+  local first = div.content[1]
+  local at = (first and (first.t == "Header" or first.tag == "Header")) and 2 or 1
+  table.insert(div.content, at, pandoc.RawBlock("html",
     '<div class="card-cover" aria-hidden="true">' .. svg .. '</div>'))
   return div
 end

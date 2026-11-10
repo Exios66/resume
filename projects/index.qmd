@@ -20,7 +20,7 @@ Content review: **6 November 2026**. Test totals and benchmarks belong to the sn
 ## Mechanistic interpretability {.group-title}
 
 ::: {.cards .cards-wide}
-::: {.card}
+::: {.card cover="neuron-atlas"}
 ### [Neuron Atlas](neuron-atlas.qmd)
 [Live browser model · steering & random-direction controls]{.kicker}
 
@@ -37,7 +37,7 @@ Four connected projects about one question: how do you sort and read business do
 {{< include ../partials/diagrams/_ecosystem.qmd >}}
 
 ::: {.cards .cards-wide}
-::: {.card}
+::: {.card cover="digital-mailroom"}
 ### [Digital-Mailroom](digital-mailroom.qmd)
 [Capstone · American Family Insurance]{.kicker}
 
@@ -46,7 +46,7 @@ The capstone design: five Python packages and one LangGraph pipeline for documen
 [LangGraph]{.tag} [Docker]{.tag} [Dataset design]{.tag}
 :::
 
-::: {.card}
+::: {.card cover="mailroom-ml"}
 ### [Mailroom-ML](mailroom-ml.qmd)
 [Training, evaluation & calibration]{.kicker}
 
@@ -55,7 +55,7 @@ A ModernBERT classifier that handles the easy documents quickly. It calibrates i
 [PyTorch]{.tag} [Calibration]{.tag} [ONNX]{.tag} [Modal]{.tag}
 :::
 
-::: {.card}
+::: {.card cover="mailroom-reloaded"}
 ### [Mailroom Reloaded](mailroom-reloaded.qmd)
 [Agentic pipeline · deployable rebuild]{.kicker}
 
@@ -64,7 +64,7 @@ The mailroom as one service you can deploy. A deterministic driver runs CrewAI a
 [CrewAI Flows]{.tag} [FastAPI]{.tag} [OpenTelemetry]{.tag}
 :::
 
-::: {.card}
+::: {.card cover="rvl-cdip-classifier"}
 ### [RVL-CDIP-Classifier](rvl-cdip-classifier.qmd)
 [Vision LLMs & prompt engineering]{.kicker}
 
@@ -77,7 +77,7 @@ A study of zero-shot document classification with vision LLMs. It covers 29 trac
 ## Data engineering & visualization {.group-title}
 
 ::: {.cards .cards-wide}
-::: {.card}
+::: {.card cover="mailroom-corpus-eda"}
 ### [Mailroom-Corpus-EDA](mailroom-corpus-eda.qmd)
 [Data engineering · dataset build, audit & publishing]{.kicker}
 
@@ -86,7 +86,7 @@ The data work behind the mailroom projects: 3,302 documents assembled from publi
 [Python]{.tag} [pandas]{.tag} [Hugging Face Hub]{.tag} [Provenance]{.tag}
 :::
 
-::: {.card}
+::: {.card cover="aeroglobe"}
 ### [AeroGlobe](aeroglobe.qmd)
 [In active development · 3D flight data on a globe]{.kicker}
 
@@ -99,7 +99,7 @@ A browser globe for flight tracking, built around a static data pipeline so that
 ## Big data & distributed systems {.group-title}
 
 ::: {.cards .cards-wide}
-::: {.card}
+::: {.card cover="mapreduce-reloaded"}
 ### [MapReduce-Reloaded](mapreduce-reloaded.qmd)
 [In active development · distributed systems · Go & Python]{.kicker}
 
@@ -112,7 +112,7 @@ A from-scratch rebuild of Google's 2004 MapReduce, with a Go cluster and a Pytho
 ## Behavioral machine learning {.group-title}
 
 ::: {.cards .cards-wide}
-::: {.card}
+::: {.card cover="psychometric-digital-twin"}
 ### [Psychometric Digital Twin](psychometric-digital-twin.qmd)
 [Behavioral ML research · UW–Madison]{.kicker}
 
@@ -125,7 +125,7 @@ Can an LLM, told who a survey respondent is in the second person, predict that p
 ## Cognitive neuroscience {.group-title}
 
 ::: {.cards .cards-wide}
-::: {.card}
+::: {.card cover="natd"}
 ### [The Neural Architecture of Truth and Deception](natd.qmd)
 [Cognitive neuroscience research · UW–Parkside]{.kicker}
 
@@ -138,7 +138,7 @@ Nine participants each talked to two chatbots told either to help or to deceive.
 ## LLM agent design {.group-title}
 
 ::: {.cards .cards-wide}
-::: {.card}
+::: {.card cover="llm-personas"}
 ### [MORNINGSTAR](llm-personas.qmd)
 [Persona framework · prompt architecture]{.kicker}
 
@@ -151,7 +151,7 @@ A courtroom of LLM personas that argue, vote, and issue a written ruling on engi
 ## Side projects & interests {.group-title}
 
 ::: {.cards .cards-wide}
-::: {.card}
+::: {.card cover="wave-laboratory"}
 ### [Wave Laboratory](wave-laboratory.qmd)
 [Simulation & graphics · runs in the browser]{.kicker}
 
@@ -160,7 +160,7 @@ A real-time 3D ocean you can experiment with. Spectral wave models, rogue waves,
 [TypeScript]{.tag} [Three.js]{.tag} [Physics]{.tag} [Accessibility]{.tag}
 :::
 
-::: {.card}
+::: {.card cover="langtons-ant"}
 ### [Langton's Ant](langtons-ant.qmd)
 [Simulation · runs in the browser · version 0.1.0]{.kicker}
 
@@ -169,7 +169,7 @@ A simulator for Langton's ant and other turmites on an unbounded grid, with a ga
 [TypeScript]{.tag} [Canvas2D]{.tag} [Cellular automata]{.tag} [Testing]{.tag}
 :::
 
-::: {.card}
+::: {.card cover="degen-llms"}
 ### [The Mandalay Bay](degen-llms.qmd)
 [Game systems · CLI, browser & pixel RPG]{.kicker}
 

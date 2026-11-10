@@ -1001,7 +1001,7 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
    A drawn motif per project (partials/covers/<slug>.svg, inlined by scripts/site.lua). Decorative: it
    pictures the subject and carries no data. Colours come from the theme tokens. */
 .card-cover {
-  aspect-ratio: 8 / 3; margin: -18px -20px 14px; overflow: hidden; border-radius: 11px 11px 0 0; color: var(--accent);
+  order: -1; aspect-ratio: 8 / 3; margin: -18px -20px 14px; overflow: hidden; border-radius: 11px 11px 0 0; color: var(--accent);
   background: linear-gradient(180deg, color-mix(in srgb, var(--accent-soft) 70%, var(--paper)), var(--paper));
   border-bottom: 1px solid var(--rule);
 }
@@ -1014,6 +1014,21 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
 .card-cover .cv-soft { fill: currentColor; fill-opacity: .1; }
 .card-cover .cv-fill, .card-cover .cv-dot { fill: currentColor; }
 .card-cover .cv-dotsoft { fill: currentColor; fill-opacity: .2; }
+.card-cover .cv-accent.cv-dash { fill: none; }
+.card-cover .cv-grid { stroke: currentColor; stroke-width: 1; stroke-opacity: .09; vector-effect: non-scaling-stroke; }
+.card-cover .cv-tick { stroke: var(--paper); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+/* A card alone on its row would get a very tall band, so its cover sits beside the text instead. */
+@media (min-width: 640px) {
+  .cards-wide > .card.has-cover:only-child { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); column-gap: 20px; align-content: start; }
+  .cards-wide > .card.has-cover:only-child > * { grid-column: 2; }
+  .cards-wide > .card.has-cover:only-child > .card-cover {
+    grid-column: 1; grid-row: 1 / span 12; aspect-ratio: auto; min-height: 112px; margin: -18px 0 -18px -20px;
+    border-radius: 11px 0 0 11px; border-bottom: 0; border-right: 1px solid var(--rule);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--accent-soft) 70%, var(--paper)), var(--paper));
+    display: flex; align-items: center;
+  }
+  .cards-wide > .card.has-cover:only-child > .card-cover svg { height: auto; aspect-ratio: 8 / 3; }
+}
 @media (prefers-reduced-motion: no-preference) {
   .card-cover svg { transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
   .card:is(:hover, :focus-within) .card-cover svg { transform: scale(1.04); }

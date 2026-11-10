@@ -427,6 +427,9 @@ local card = add_cover({ attributes = { cover = "wave-laboratory" },
   classes = setmetatable({ "card" }, { __index = table }), content = { "body" } })
 assert(card.content[1].text:find('^<div class="card%-cover" aria%-hidden="true"><svg viewBox="0 0 320 120"'), card.content[1].text:sub(1, 80))
 assert(card.content[2] == "body" and card.classes[2] == "has-cover" and card.attributes.cover == nil)
+local headed = add_cover({ attributes = { cover = "neuron-atlas" }, classes = setmetatable({ "card" }, { __index = table }),
+  content = { { t = "Header" }, "body" } })
+assert(headed.content[1].t == "Header" and headed.content[2].text:find("card%-cover"), "the heading stays first so the card keeps its id")
 assert(add_cover({ attributes = {}, classes = {}, content = {} }) == nil, "cards without a cover are untouched")
 assert(not pcall(add_cover, { attributes = { cover = "no-such-project" }, classes = {}, content = {} }))
 assert(not pcall(add_cover, { attributes = { cover = "../secret" }, classes = {}, content = {} }))
