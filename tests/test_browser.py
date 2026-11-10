@@ -230,6 +230,39 @@ def test_site_search_contents_list_and_pager(site):
         page.close()
 
 
+def test_slash_opens_search_without_hijacking_typing(site):
+    browser, base = site
+    page = browser.new_page(viewport={"width": 1280, "height": 900})
+    try:
+        page.goto(base + "index.html")
+        link = page.get_by_role("link", name="Search", exact=True)
+        expect(link).to_have_attribute("aria-keyshortcuts", "/")
+        expect(link.locator(".key-hint")).to_have_text("/")
+        expect(link.locator(".key-hint")).to_be_visible()
+
+        page.keyboard.press("/")
+        expect(page).to_have_url(re.compile(r"search\.html\?focus=search$"))
+        search = page.get_by_label("Search this site")
+        expect(search).to_be_focused()
+        page.keyboard.type("mailroom/")
+        expect(search).to_have_value("mailroom/")
+        assert page.url.split("?")[0].endswith("search.html")
+
+        # The shortcut resolves the relative nav link from a nested page.
+        page.goto(base + "projects/digital-mailroom.html")
+        page.keyboard.press("/")
+        expect(page).to_have_url(re.compile(r"search\.html\?focus=search$"))
+        expect(page.get_by_label("Search this site")).to_be_focused()
+
+        # The phone header hides the key cap but keeps the semantic shortcut.
+        page.set_viewport_size({"width": 375, "height": 812})
+        page.goto(base + "index.html")
+        expect(page.get_by_role("link", name="Search", exact=True)).to_have_attribute("aria-keyshortcuts", "/")
+        expect(page.locator(".nav-link .key-hint")).to_be_hidden()
+    finally:
+        page.close()
+
+
 def test_search_before_index_load_and_after_failure(site):
     browser, base = site
     page = browser.new_page()
@@ -328,6 +361,7 @@ def test_no_script_and_print_from_dark(site, tmp_path):
     page.goto(base + "projects/")
     expect(page.get_by_role("link", name="Neuron Atlas", exact=True)).to_be_visible()
     expect(page.locator(".theme-toggle")).to_be_hidden()
+    expect(page.locator(".nav-link .key-hint")).to_be_hidden()
     context.close()
 
     page = browser.new_page(color_scheme="dark")

@@ -9,7 +9,7 @@ local NAV = {
   { label = "Research", href = "research.html",       section = "research.html" },
   { label = "Writing",  href = "writing/index.html",  section = "writing/" },
   { label = "Résumé",   href = "resume.html",         section = "resume.html" },
-  { label = "Search",   href = "search.html",         section = "search.html" },
+  { label = "Search",   href = "search.html",         section = "search.html", shortcut = "/" },
 }
 
 -- Reading order for the previous/next pager; mirrors projects/index.qmd.
@@ -571,8 +571,11 @@ function Pandoc(doc)
   local links = {}
   for _, item in ipairs(NAV) do
     local current = is_current(item, path) and ' aria-current="page"' or ""
+    -- The shortcut is announced to assistive technology and shown as a key cap beside the label.
+    local shortcut = item.shortcut and (' aria-keyshortcuts="' .. item.shortcut .. '"') or ""
+    local hint = item.shortcut and (' <kbd class="key-hint" aria-hidden="true" hidden>' .. item.shortcut .. '</kbd>') or ""
     links[#links + 1] = string.format(
-      '<li><a class="nav-link" href="%s%s"%s>%s</a></li>', prefix, item.href, current, item.label)
+      '<li><a class="nav-link" href="%s%s"%s%s>%s%s</a></li>', prefix, item.href, current, shortcut, item.label, hint)
   end
 
   local header = string.format([[

@@ -337,6 +337,32 @@
       writeLocation();
       render(input.value);
     });
+
+    // A "/" shortcut lands here from another page; focus the field so the visitor can type.
+    try {
+      if (new URLSearchParams(location.search).get("focus") === "search") input.focus();
+    } catch (e) {}
+  })();
+
+  // Press "/" anywhere outside a text field to open search. On the search page itself
+  // the existing field is focused instead of reloading the page.
+  (function () {
+    var link = doc.querySelector('.nav-link[aria-keyshortcuts="/"]');
+    if (!link) return;
+    // The key cap is rendered hidden so it never advertises a shortcut that cannot work.
+    var hint = link.querySelector(".key-hint");
+    if (hint) hint.hidden = false;
+    doc.addEventListener("keydown", function (event) {
+      if (event.defaultPrevented || event.key !== "/" || event.ctrlKey || event.metaKey || event.altKey) return;
+      var target = event.target;
+      if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
+      event.preventDefault();
+      var input = doc.getElementById("site-search-input");
+      if (input) { input.focus(); return; }
+      var url = new URL(link.href, location.href);
+      url.searchParams.set("focus", "search");
+      location.href = url.pathname + url.search;
+    });
   })();
 
   if (reduce) return;
