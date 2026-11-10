@@ -10,11 +10,11 @@ PANDOC="$(ls "$QUARTO_DIR"/tools/*/pandoc 2>/dev/null | head -1)"
 LUA="$(command -v lua || echo "$PANDOC lua")"
 
 echo "Lua filter tests"
-$LUA tests/test_site.lua
-$LUA tests/test_charts.lua
+$LUA tests/lua/test_site.lua
+$LUA tests/lua/test_charts.lua
 
 echo "Node tests"
-node --test tests/theme.test.cjs tests/icons.test.cjs
+node --test tests/node/theme.test.cjs tests/node/icons.test.cjs
 
 echo "Python and browser tests (Chromium, Firefox and WebKit)"
 # Honor PLAYWRIGHT_BROWSERS_PATH when set; otherwise use the cache setup verified.

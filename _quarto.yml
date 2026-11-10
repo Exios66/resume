@@ -15,7 +15,7 @@ project:
     - "!.autoresearch-tools/**"
     - "!.autoresearch/**"
     - "!**/node_modules/**"
-  post-render: scripts/post-render.py
+  post-render: scripts/build/post-render.py
 
 website:
   title: "Jack J. Burleson"
@@ -40,17 +40,17 @@ format:
     reference-location: document
     page-layout: full
     filters:
-      - scripts/charts.lua
-      - scripts/site.lua
-      - path: scripts/tables.lua
+      - scripts/filters/charts.lua
+      - scripts/filters/site.lua
+      - path: scripts/filters/tables.lua
         at: post-render
     title-block-style: none
     minimal: false
     canonical-url: true
     anchor-sections: false
     include-in-header:
-      - partials/head.html
+      - partials/layout/head.html
     include-before-body:
-      - partials/skip-link.html
+      - partials/layout/skip-link.html
     include-after-body:
-      - partials/scripts.html
+      - partials/layout/scripts.html

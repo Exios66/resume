@@ -72,9 +72,9 @@ Attributes: `kind` (`bars` | `dumbbell` | `step` | `strip`), `title`, `label`
 `strip` `from-mode`/`to-mode` = `first` | `all` (how many numbers to take from a
 cell). Column names match header text exactly.
 
-### `scripts/charts.lua`
+### `scripts/filters/charts.lua`
 
-A Pandoc filter listed before `scripts/site.lua` in `_quarto.yml`. On a `Div` with
+A Pandoc filter listed before `scripts/filters/site.lua` in `_quarto.yml`. On a `Div` with
 class `chart` it finds the first `Table`, stringifies header and body cells, and
 replaces the Div with: a raw-HTML `<figure class="chart chart-<kind>">` holding a
 `<figcaption>` title, an optional HTML legend, and an inline SVG; then the original
@@ -120,13 +120,13 @@ the chart in light colors and keeps the table.
 
 ## Testing
 
-- `tests/test_charts.lua` (run with `lua tests/test_charts.lua`): number parsing,
+- `tests/lua/test_charts.lua` (run with `lua tests/lua/test_charts.lua`): number parsing,
   tick generation, each kind's SVG (mark count, zero baseline for negatives,
   reference line, log2 positions), error cases.
-- `tests/test_charts.py`: for each of the six pages in `docs/`, the chart exists, is
+- `tests/python/test_charts.py`: for each of the six pages in `docs/`, the chart exists, is
   followed by its table, every `data-tip-value` matches the table cell, all shapes
   have fallback fill/stroke; the two new tables' numbers appear in their page's prose.
-- `tests/test_browser.py`: hover and keyboard focus show the right tooltip and
+- `tests/browser/test_browser.py`: hover and keyboard focus show the right tooltip and
   Escape/blur hide it; charts render with JavaScript off; dark theme uses the dark
   `--chart-*` values; at 375px charts scroll and labels are not clipped. The existing
   all-pages sweep (320/375/768/1280, both themes) and print checks keep running.

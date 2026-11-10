@@ -29,7 +29,7 @@ suite, review screenshots for visual changes, and report exact commands, results
 | `findings.tsv`, `findings.best.tsv`, `checks.ok`, `checks.log`, `run.log` | Latest findings, best kept findings, checks stamp and logs (gitignored) | Written by `hc.sh` |
 | `.hillclimb-evidence/run-N.md`, `.hillclimb-shots/` | Evidence records and screenshots, outside the site (gitignored) | Written by `hc.sh` |
 
-In scope for experiments: `styles.css`, `assets/js/site.js`, `scripts/*.lua`, `scripts/post-render.py`,
+In scope for experiments: `styles.css`, `assets/js/site.js`, `scripts/filters/*.lua`, `scripts/build/post-render.py`,
 `partials/**`, `_quarto.yml`, `*.qmd`, and the rendered `docs/` (always via Quarto). Tests may change only
 when they pin the exact text or markup an experiment changes on purpose (say so in the log).
 
@@ -163,7 +163,7 @@ When stopping (owner request, wall, budget):
 - Quarto's base CSS sets `code { white-space: pre }`. Wrapping inline code anywhere made layouts worse
   twice; stacking text tables into labelled rows on phones worked.
 - Quarto's project link resolver rebuilds any table whose cells hold a link and drops attributes a filter
-  added. Table stacking therefore lives in `scripts/tables.lua`, registered `at: post-render`.
+  added. Table stacking therefore lives in `scripts/filters/tables.lua`, registered `at: post-render`.
 - Lua patterns are byte-based; compare multi-byte prefixes (≥ ≤ − ≈ ±) as whole strings.
 - `content: attr(data-label) / ""` keeps stacked-table labels from being read twice by screen readers.
 - Separators in "A · B · C" labels: lead each later part with its separator and clip a line-start one in a

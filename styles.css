@@ -293,7 +293,7 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 .card :is(h2, h3) a:hover { text-decoration: none; color: var(--accent); }
 .card .icon-go { color: var(--muted); }
 .card .kicker { margin-bottom: 8px; font-size: .75rem; }
-/* Labels written "A · B · C" (scripts/site.lua splits them). A separator leads its part, so it
+/* Labels written "A · B · C" (scripts/filters/site.lua splits them). A separator leads its part, so it
    never ends a line; one that would start a line falls in a gutter that is clipped off. */
 .segs .seg { display: inline-block; }
 :is(.kicker, .sample-source).segs .seg-line { display: block; overflow: hidden; }
@@ -877,7 +877,7 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 }
 
 /* ==========================================================================
-   Charts, drawn from report tables by scripts/charts.lua. Chart colors come from
+   Charts, drawn from report tables by scripts/filters/charts.lua. Chart colors come from
    the --chart-* tokens (validated with the dataviz palette checker in both themes);
    text always uses --ink / --muted. The table after each chart holds every value.
    ========================================================================== */
@@ -1007,7 +1007,7 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
 }
 
 /* ---------- Project covers ----------
-   A drawn motif per project (partials/covers/<slug>.svg, inlined by scripts/site.lua). Decorative: it
+   A drawn motif per project (partials/covers/<slug>.svg, inlined by scripts/filters/site.lua). Decorative: it
    pictures the subject and carries no data. Colours come from the theme tokens. */
 .card-cover {
   order: -1; aspect-ratio: 8 / 3; margin: -18px -20px 14px; overflow: hidden; border-radius: 11px 11px 0 0; color: var(--accent);

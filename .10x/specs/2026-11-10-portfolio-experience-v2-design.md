@@ -58,7 +58,7 @@ a wave spectrum for Wave Laboratory, a neuron grid for Neuron Atlas, an ant trai
 fan-in for MapReduce-Reloaded, a page with a routing fork for the mailroom projects, and so on. All 14 share one
 grid, stroke width and corner radius.
 
-**2. Cards with covers.** A card opts in with an attribute: `::: {.card cover="wave-laboratory"}`. `scripts/site.lua`
+**2. Cards with covers.** A card opts in with an attribute: `::: {.card cover="wave-laboratory"}`. `scripts/filters/site.lua`
 reads the SVG and places it at the top of the card with `aria-hidden="true"`. A missing file fails the render with
 a clear message. On the projects index the motif sits beside the text on wide screens and above it on phones. On
 the home page the four featured cards show it as a band across the top.
@@ -67,11 +67,11 @@ the home page the four featured cards show it as a band across the top.
 title, taken from the screenshots already in `projects/<slug>/figures/`. No new captures are invented; if a better
 capture is wanted, the owner supplies it.
 
-**4. A social card per project.** `scripts/make-og.py` gains a mode that renders `assets/og/<slug>.png`
+**4. A social card per project.** `scripts/build/make-og.py` gains a mode that renders `assets/og/<slug>.png`
 (1200 × 630) from the project title, its kicker line and its motif, using the existing `og-image.html` layout.
 Each case study, report and appendix sets `image:` in its front matter. Other pages keep the site card.
 
-**5. Image loading.** `scripts/site.lua` adds `loading="lazy"`, `decoding="async"` and intrinsic `width` and
+**5. Image loading.** `scripts/filters/site.lua` adds `loading="lazy"`, `decoding="async"` and intrinsic `width` and
 `height` to content images, except the first image on a page. This removes layout shift and defers about 370 KB on
 the Wave Laboratory page.
 
