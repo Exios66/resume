@@ -571,8 +571,8 @@ function Pandoc(doc)
   local links = {}
   for _, item in ipairs(NAV) do
     local current = is_current(item, path) and ' aria-current="page"' or ""
-    -- The shortcut is announced to assistive technology and shown as a key cap beside the label.
-    local shortcut = item.shortcut and (' aria-keyshortcuts="' .. item.shortcut .. '"') or ""
+    -- JavaScript advertises the shortcut only after installing its handler.
+    local shortcut = item.shortcut and (' data-search-shortcut="' .. item.shortcut .. '"') or ""
     local hint = item.shortcut and (' <kbd class="key-hint" aria-hidden="true" hidden>' .. item.shortcut .. '</kbd>') or ""
     links[#links + 1] = string.format(
       '<li><a class="nav-link" href="%s%s"%s%s>%s%s</a></li>', prefix, item.href, current, shortcut, item.label, hint)

@@ -92,7 +92,7 @@ local function check(case, root, absolute, empty)
     contains(header.text, 'class="nav-link" href="' .. case.prefix .. destination .. '"')
   end
   -- Search announces its keyboard shortcut and shows the key cap beside the label.
-  contains(header.text, 'aria-keyshortcuts="/"')
+  contains(header.text, 'data-search-shortcut="/"')
   contains(header.text, '<kbd class="key-hint" aria-hidden="true" hidden>/</kbd>')
   local _, active_count = header.text:gsub('aria%-current="page"', "")
   assert(active_count == (case.current and 1 or 0), "Unexpected active navigation count for " .. tostring(input))
