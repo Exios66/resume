@@ -12,7 +12,7 @@ SETUP = ROOT / 'scripts/setup-agent.sh'
 # A tiny executable models tool success/failure and records observable setup work.
 # Archives contain executable launchers, so the real tar command tests extraction.
 FAKE = r'''
-import os,sys,json,tarfile,io
+import os,sys,json,tarfile,io,re
 from pathlib import Path
 name=Path(sys.argv[0]).name; args=sys.argv[1:]; root=Path(os.environ['SETUP_TEST_ROOT'])
 state=root/'state'; state.mkdir(exist_ok=True)
@@ -22,9 +22,12 @@ elif name=='uname': print(os.environ.get('SETUP_TEST_OS','Darwin') if args==['-s
 elif name=='node':
  if 'process.versions' in ' '.join(args):print('22')
  elif 'package.json' in ' '.join(args):print((state/'node-version').read_text() if (state/'node-version').exists() else '1.65.0')
- else:sys.exit(0 if (state/'node-browser').exists() else 1)
+ else:
+  engines=re.findall(r'pw\.(chromium|firefox|webkit)', ' '.join(args))
+  sys.exit(0 if engines and all((state/('node-'+e)).exists() for e in engines) else 1)
 elif name=='npm':(state/'node-version').write_text('1.64.1')
-elif name=='npx':(state/'node-browser').touch()
+elif name=='npx':
+ for engine in args[args.index('install')+1:]:(state/('node-'+engine)).touch()
 elif name in ('python','python3'):
  if args[:2]==['-m','venv']:
   out=root/'.venv/bin';out.mkdir(parents=True,exist_ok=True)
@@ -33,9 +36,12 @@ elif name in ('python','python3'):
   if os.environ.get('SETUP_TEST_PIP_FAIL'):sys.exit(17)
   (state/'dependencies').touch()
  elif args[:3]==['-m','pip','check']:sys.exit(0 if (state/'dependencies').exists() else 1)
- elif args[:3]==['-m','playwright','install']:(state/'python-browser').touch()
+ elif args[:3]==['-m','playwright','install']:
+  for engine in args[3:]:(state/('python-'+engine)).touch()
  elif 'importlib.metadata' in ' '.join(args):print('1.64.1')
- elif 'sync_playwright' in ' '.join(args):sys.exit(0 if (state/'python-browser').exists() else 1)
+ elif 'sync_playwright' in ' '.join(args):
+  engines=re.findall(r'p\.(chromium|firefox|webkit)', ' '.join(args))
+  sys.exit(0 if engines and all((state/('python-'+e)).exists() for e in engines) else 1)
  else:sys.exit(0 if (state/'dependencies').exists() else 1)
 elif name=='quarto':print(os.environ.get('SETUP_TEST_QUARTO_VERSION','1.10.19'))
 elif name=='pandoc':
@@ -145,3 +151,38 @@ def test_wrong_path_version_downloads_and_extracts_the_pinned_archive(setup_tree
     assert (root / 'state/archive-url').read_text().endswith(f'quarto-1.10.19-{asset}.tar.gz')
     assert (root / '.autoresearch-tools/bin/quarto').is_file()
     assert 'All tools present.' in result.stdout
+
+
+@pytest.mark.parametrize("client", ["node", "python"])
+@pytest.mark.parametrize("missing", ["firefox", "webkit"])
+def test_setup_repairs_each_missing_engine(setup_tree, client, missing):
+    """A warm Chromium cache must not hide an absent secondary engine."""
+    root, env = setup_tree
+    state = root / 'state'
+    state.mkdir()
+    for installed_client in ('node', 'python'):
+        for engine in ('chromium', 'firefox', 'webkit'):
+            if (installed_client, engine) != (client, missing):
+                (state / f'{installed_client}-{engine}').touch()
+    result = run_setup(root, env)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert (state / f'{client}-{missing}').exists()
+    calls = (state / 'calls').read_text()
+    assert 'pw.firefox.launch()' in calls and 'pw.webkit.launch()' in calls
+    assert 'p.firefox' in calls and 'p.webkit' in calls
+
+
+@pytest.mark.parametrize('cache', [None, '/custom/browser cache'])
+def test_hillclimb_preserves_setup_cache_selection(setup_tree, cache):
+    """Even with /opt present, doctor must use setup's default or explicit cache."""
+    root, env = setup_tree
+    env.pop('PLAYWRIGHT_BROWSERS_PATH', None)
+    if cache is not None:
+        env['PLAYWRIGHT_BROWSERS_PATH'] = cache
+    prefix = (ROOT / 'scripts/hillclimb/hc.sh').read_text().split('ledger()')[0]
+    # Model a host with /opt/pw-browsers without creating a system directory.
+    command = '''function [() { if builtin [ "$#" = 2 ] && builtin [ "$1" = -d ] && builtin [ "$2" = /opt/pw-browsers ]; then return 0; fi; builtin [ "$@"; }
+''' + prefix + '\nprintf "%s\\n" "${PLAYWRIGHT_BROWSERS_PATH-unset}"'
+    result = subprocess.run(['bash', '-c', command], cwd=root, env=env,
+                            capture_output=True, text=True, check=True)
+    assert result.stdout.strip() == (cache or 'unset')

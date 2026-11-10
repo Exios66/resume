@@ -27,8 +27,7 @@ SNAP=.autoresearch
 EVID=.hillclimb-evidence
 SHOTS=.hillclimb-shots
 QUARTO_BIN="${QUARTO:-$(command -v quarto || echo /opt/quarto/quarto-1.10.19/bin/quarto)}"
-export PLAYWRIGHT_BROWSERS_PATH="${PLAYWRIGHT_BROWSERS_PATH:-$( [ -d /opt/pw-browsers ] && echo /opt/pw-browsers || echo "" )}"
-[ -n "$PLAYWRIGHT_BROWSERS_PATH" ] || unset PLAYWRIGHT_BROWSERS_PATH
+# Use the same explicit override or Playwright default cache as setup-agent.sh.
 
 ledger() { python3 "$HERE/ledger.py" "$@"; }
 

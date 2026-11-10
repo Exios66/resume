@@ -17,8 +17,7 @@ echo "Node tests"
 node --test tests/theme.test.cjs tests/icons.test.cjs
 
 echo "Python and browser tests (Chromium, Firefox and WebKit)"
-# Use preinstalled browsers when this machine has them; otherwise Playwright's default cache.
-if [ -z "${PLAYWRIGHT_BROWSERS_PATH:-}" ] && [ -d /opt/pw-browsers ]; then export PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers; fi
+# Honor PLAYWRIGHT_BROWSERS_PATH when set; otherwise use the cache setup verified.
 RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q -x tests
 
 echo "All checks passed."
