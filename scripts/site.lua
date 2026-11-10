@@ -488,6 +488,66 @@ local function add_pager(div, path, prefix)
     '<nav class="project-pager" aria-label="Project navigation">%s</nav>', table.concat(parts)))
 end
 
+local SITE_URL = "https://exios66.github.io/resume/"
+local SITE_NAME = "Jack J. Burleson"
+local SITE_IMAGE = SITE_URL .. "assets/og-image.png"
+
+--- Escape a string for a JSON string literal.
+-- Also escapes "<" so a description can never close the surrounding script element.
+-- @param value string Text to encode.
+-- @return string Quoted JSON string.
+local function json_string(value)
+  local escaped = value:gsub('[%z\1-\31\\"]', function (char)
+    if char == '"' then return '\\"' end
+    if char == "\\" then return "\\\\" end
+    if char == "\n" then return "\\n" end
+    if char == "\r" then return "\\r" end
+    if char == "\t" then return "\\t" end
+    return string.format("\\u%04x", char:byte())
+  end)
+  return '"' .. escaped:gsub("<", "\\u003c") .. '"'
+end
+
+--- Read a metadata value as plain text.
+-- @param value any Pandoc metadata value or plain string.
+-- @return string|nil Text when the value is present.
+local function meta_text(value)
+  if value == nil then return nil end
+  if type(value) == "string" then return value end
+  if pandoc.utils and pandoc.utils.stringify then return pandoc.utils.stringify(value) end
+  return tostring(value)
+end
+
+--- Build schema.org CreativeWork data for a project case study.
+-- Only one-level project pages get this; the index and nested reports keep the site Person.
+-- Description and image come from the page's own front matter, so no new claims are added.
+-- @param path string Project-relative HTML page path.
+-- @param doc Pandoc Document supplying the description and optional image.
+-- @return string HTML script element, or an empty string when the page is not a case study.
+local function project_schema(path, doc)
+  local slug = path:match("^projects/([^/]+)%.html$")
+  if not slug then return "" end
+  local label
+  for _, project in ipairs(PROJECTS) do
+    if project.slug == slug then label = project.label break end
+  end
+  if not label then return "" end
+  local description = meta_text(doc.meta and doc.meta.description) or ""
+  local image = meta_text(doc.meta and doc.meta.image)
+  if not image or image == "" or not image:match("^https?://") then image = SITE_IMAGE end
+  local url = SITE_URL .. "projects/" .. slug .. ".html"
+  local parts = {
+    '{"@context":"https://schema.org","@type":"CreativeWork"',
+    ',"name":' .. json_string(label),
+    ',"description":' .. json_string(description),
+    ',"url":' .. json_string(url),
+    ',"author":{"@type":"Person","name":' .. json_string(SITE_NAME) .. ',"url":' .. json_string(SITE_URL) .. '}',
+    ',"isPartOf":{"@type":"WebSite","name":' .. json_string(SITE_NAME) .. ',"url":' .. json_string(SITE_URL) .. '}',
+    ',"image":' .. json_string(image) .. '}',
+  }
+  return '<script type="application/ld+json">' .. table.concat(parts) .. "</script>"
+end
+
 --- Wrap the document in the site header, main landmark, and footer.
 -- Navigation links are relative to the page; the current section gets aria-current.
 -- @param doc Pandoc Document whose blocks will be modified in place.
@@ -528,14 +588,15 @@ function Pandoc(doc)
 <main id="main">]], prefix, table.concat(links, "\n      "), icon_html("sun"), icon_html("moon"))
 
   -- The sprite goes after the footer so it never sits between the header and <main> in the layout.
+  -- Project schema sits after </main> so it stays out of the main landmark.
   local footer = [[
 </main>
+]] .. project_schema(path, doc) .. string.format([[
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
 <script src="%sassets/js/site.js" defer></script>
-]] .. sprite()
-  footer = string.format(footer, prefix)
+]], prefix) .. sprite()
 
   table.insert(doc.blocks, 1, pandoc.RawBlock("html", header))
   table.insert(doc.blocks, pandoc.RawBlock("html", footer))
