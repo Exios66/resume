@@ -15,3 +15,7 @@ To polish, sweep or audit the site's quality, follow `.claude/skills/portfolio-h
 # Commits, pull requests and issues
 
 Never put session links (for example `claude.ai/code/session_…`), `Claude-Session:` or `Co-Authored-By:` trailers, or "Generated with" tool footers in commit messages, pull request or issue bodies, or comments. They expose private session URLs. Write plain messages.
+
+# Metrics for auto-research
+
+Targets, gates and success points for experiments on the site are in `.10x/metrics.md`. Measure the experience metric with `python3 scripts/hillclimb/kpi.py` after a render; the roadmap and its tasks are in issue #117.
