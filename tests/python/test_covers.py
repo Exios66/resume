@@ -26,6 +26,7 @@ def test_covers_take_colour_from_the_theme_only():
 
 
 def test_covers_match_their_generator(tmp_path):
+    """Require regeneration to reproduce each committed cover byte for byte."""
     before = {p.name: p.read_bytes() for p in COVERS.glob("*.svg")}
     subprocess.run([sys.executable, str(ROOT / "scripts" / "build" / "make-covers.py")], check=True, capture_output=True)
     assert {p.name: p.read_bytes() for p in COVERS.glob("*.svg")} == before

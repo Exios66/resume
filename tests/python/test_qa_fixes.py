@@ -156,6 +156,7 @@ class DiagramHardeningTests(unittest.TestCase):
 
 class ThemeToggleTests(unittest.TestCase):
     def test_toggle_item_is_hidden_in_markup_and_revealed_by_the_script(self):
+        """Keep the theme control hidden until its JavaScript can operate it."""
         for page in DOCS.rglob("*.html"):
             if "site_libs" in page.parts:
                 continue

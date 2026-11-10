@@ -30,6 +30,7 @@ class CodeFragments(HTMLParser):
 
 
 def test_long_code_keeps_one_anchor_and_preserves_classes_and_data():
+    """Preserve code text and attributes while assigning its anchor only once."""
     source = '| Item | Value |\n| --- | --- |\n| Key | `long/path/component`{#code-ref .token data-source="sample"} |\n'
     result = subprocess.run([os.environ.get('QUARTO', 'quarto'), 'pandoc',
                              '--from=markdown', '--to=html', '--lua-filter=scripts/filters/tables.lua'],

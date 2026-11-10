@@ -180,6 +180,7 @@ def diagram_pages():
 
 
 def test_diagram_text_clears_arrows_and_box_borders(site):
+    """Check every built diagram for text crossing an arrow or node border."""
     browser, base = site
     page = browser.new_page(viewport={"width": 1280, "height": 900}, reduced_motion="reduce")
     try:

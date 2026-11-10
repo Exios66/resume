@@ -131,6 +131,7 @@ class PostRenderTests(unittest.TestCase):
 
 class SocialImageTests(BrowserTestCase):
     def test_screenshot_dimensions_fonts_destination_and_browser_selection(self):
+        """Verify social-image capture uses the expected browser, fonts, and output."""
         for matches, expected in (([], {}), (["/b/z/chrome", "/b/a/chrome"],
                                              {"executable_path": "/b/z/chrome"})):
             with self.subTest(matches=matches), \
