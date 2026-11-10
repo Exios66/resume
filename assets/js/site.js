@@ -158,18 +158,41 @@
   var reduce = false;
   try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 
-  // Screen recordings play while they are on screen, unless reduced motion is asked for.
-  // The controls stay, so the reader can always pause.
-  if (!reduce && "IntersectionObserver" in window) {
-    var clips = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) { entry.target.pause(); return; }
-        var started = entry.target.play();
+  // Screen recordings follow visibility and live motion preferences. A reader's
+  // pause remains in effect until they explicitly play the recording again.
+  (function () {
+    if (!("IntersectionObserver" in window)) return;
+    var motion;
+    try { motion = window.matchMedia("(prefers-reduced-motion: reduce)"); } catch (e) {}
+    Array.prototype.forEach.call(doc.querySelectorAll("video[data-autoplay]"), function (video) {
+      var visible = false, manuallyPaused = false, automaticPauses = 0;
+      function update() {
+        if (!visible || (motion && motion.matches)) {
+          if (!video.paused) { automaticPauses++; video.pause(); }
+          return;
+        }
+        if (manuallyPaused) return;
+        var started = video.play();
         if (started && started.catch) started.catch(function () {});
+      }
+      video.addEventListener("pause", function () {
+        if (automaticPauses) automaticPauses--;
+        else manuallyPaused = true;
       });
-    }, { threshold: 0.5 });
-    Array.prototype.forEach.call(doc.querySelectorAll("video[data-autoplay]"), function (video) { clips.observe(video); });
-  }
+      video.addEventListener("play", function () { manuallyPaused = false; });
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          visible = entry.isIntersecting && entry.intersectionRatio >= 0.5;
+          update();
+        });
+      }, { threshold: 0.5 });
+      observer.observe(video);
+      if (motion) {
+        if (motion.addEventListener) motion.addEventListener("change", update);
+        else if (motion.addListener) motion.addListener(update);
+      }
+    });
+  })();
 
   var frame = 0;
   var tasks = [];
