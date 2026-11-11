@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Supporting notes for the Langton’s Ant case study: the full 20-machine preset gallery, rule notations and the determinism check.">
+<meta name="description" content="Supporting notes for the Langton’s Ant case study: the full 20-machine preset gallery, rule notations, the five colony scenarios and the determinism checks.">
 
 <title>Langton’s Ant: appendix — Jack J. Burleson</title>
 <style>
@@ -117,13 +117,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <link rel="stylesheet" href="../../styles.css?v=85898d7c43">
 <meta property="og:title" content="Langton’s Ant: appendix — Jack J. Burleson">
-<meta property="og:description" content="Supporting notes for the Langton’s Ant case study: the full 20-machine preset gallery, rule notations and the determinism check.">
+<meta property="og:description" content="Supporting notes for the Langton’s Ant case study: the full 20-machine preset gallery, rule notations, the five colony scenarios and the determinism checks.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta property="og:site_name" content="Jack J. Burleson">
 <meta property="og:image:alt" content="Jack J. Burleson — Machine Learning · Data Science · AI Engineering &amp; Safety">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="Langton’s Ant: appendix — Jack J. Burleson">
-<meta name="twitter:description" content="Supporting notes for the Langton’s Ant case study: the full 20-machine preset gallery, rule notations and the determinism check.">
+<meta name="twitter:description" content="Supporting notes for the Langton’s Ant case study: the full 20-machine preset gallery, rule notations, the five colony scenarios and the determinism checks.">
 <meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://exios66.github.io/resume/projects/langtons-ant/appendix.html">
@@ -157,9 +157,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><a href="../../projects/langtons-ant.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/langtons-ant/appendix.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Appendix</a> <a href="https://github.com/Exios66/langtons-ant"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a> <a href="https://exios66.github.io/langtons-ant/"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-play"></use></svg>Live demo</a></p>
 </div>
 <h1 class="page-title" id="langtons-ant-appendix">Langton’s Ant: appendix</h1>
-<p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">Preset gallery</span><span class="seg"> <span class="sep">·</span> rule notations</span><span class="seg"> <span class="sep">·</span> determinism</span></span></span></span></p>
+<p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">Preset gallery</span><span class="seg"> <span class="sep">·</span> rule notations</span><span class="seg"> <span class="sep">·</span> colony scenarios</span><span class="seg"> <span class="sep">·</span> determinism</span></span></span></span></p>
 <p>Supporting material for the <a href="../../projects/langtons-ant.html">Langton’s Ant case study</a>. The machines and their milestones come from the cited literature and the GollyGang rule table repository; they are not my results.</p>
-<nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#the-20-presets">The 20 presets</a></li><li><a href="#rule-notations">Rule notations</a></li><li><a href="#determinism-check">Determinism check</a></li><li><a href="#reproduce">Reproduce</a></li></ul></nav>
+<nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#the-20-presets">The 20 presets</a></li><li><a href="#rule-notations">Rule notations</a></li><li><a href="#the-five-colony-scenarios">The five colony scenarios</a></li><li><a href="#determinism-checks">Determinism checks</a></li><li><a href="#reproduce">Reproduce</a></li></ul></nav>
 <h2 id="the-20-presets">The 20 presets</h2>
 <table class="caption-top stack" role="table">
 <colgroup>
@@ -332,12 +332,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>Turn codes are 0 (halt), 1, 2, 4 and 8, or absolute headings <code>N</code> <code>E</code> <code>S</code> <code>W</code>. Color 0 turns right, matching the GollyGang convention.</p>
-<h2 id="determinism-check">Determinism check</h2>
+<h2 id="the-five-colony-scenarios">The five colony scenarios</h2>
+<p>Each scenario builds the same map for every seed; the seed drives only the ants. A colony link (<code>#m=colony&amp;sc=…&amp;x=…</code>) restores the scenario and the seed, not walls or food painted during a run.</p>
+<table class="caption-top stack" role="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header" role="row">
+<th role="columnheader">Scenario</th>
+<th role="columnheader">Grid (cells)</th>
+<th role="columnheader">Colonies × ants</th>
+<th role="columnheader">What it shows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd" role="row">
+<td role="cell" data-label="Scenario">Foraging trails</td>
+<td role="cell" data-label="Grid (cells)">240 × 150</td>
+<td role="cell" data-label="Colonies × ants">1 × 160</td>
+<td role="cell" data-label="What it shows">Three food patches at different distances; the nearest is stripped first, then the trail re-routes</td>
+</tr>
+<tr class="even" role="row">
+<td role="cell" data-label="Scenario">Double bridge</td>
+<td role="cell" data-label="Grid (cells)">200 × 130</td>
+<td role="cell" data-label="Colonies × ants">1 × 150</td>
+<td role="cell" data-label="What it shows">Deneubourg’s 1990 experiment: a short and a long branch to the food, and the colony converges on the short one without any ant comparing them</td>
+</tr>
+<tr class="odd" role="row">
+<td role="cell" data-label="Scenario">Two rival colonies</td>
+<td role="cell" data-label="Grid (cells)">240 × 150</td>
+<td role="cell" data-label="Colonies × ants">2 × 130</td>
+<td role="cell" data-label="What it shows">One rich patch between two nests; fights leave alarm pheromone, which draws soldiers</td>
+</tr>
+<tr class="even" role="row">
+<td role="cell" data-label="Scenario">Four-way war</td>
+<td role="cell" data-label="Grid (cells)">260 × 170</td>
+<td role="cell" data-label="Colonies × ants">4 × 100</td>
+<td role="cell" data-label="What it shows">Corner nests in a walled arena; territories form along trail networks, and colonies that lose their income starve</td>
+</tr>
+<tr class="odd" role="row">
+<td role="cell" data-label="Scenario">Maze</td>
+<td role="cell" data-label="Grid (cells)">170 × 110</td>
+<td role="cell" data-label="Colonies × ants">1 × 180</td>
+<td role="cell" data-label="What it shows">Food at the far end of a serpentine maze; once found, the trail is the colony’s memory of the route</td>
+</tr>
+</tbody>
+</table>
+<h2 id="determinism-checks">Determinism checks</h2>
 <p>From a blank grid, 11,000 steps of the classic ant hash to the committed value <code>6219b3fb</code> (FNV-1a). The same test passes on the Linux re-run, so it does not depend on the machine.</p>
+<p>The colony tests check that a scenario and seed replay identically and that another seed differs, that ants forage and deliver food, that ants stay in bounds and out of walls in every scenario, and that rival colonies fight and raise soldiers. The colony simulation uses floating-point trigonometry, so these replays hold within one JavaScript engine, not across engines.</p>
 <h2 id="reproduce">Reproduce</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> ci</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The benchmark is gated: <code>RUN_BENCH=1 npx vitest run tests/bench.test.ts</code>.</p>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> test            <span class="co"># 108 unit tests in 11 files</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run test:e2e    <span class="co"># builds the app, then 8 Playwright checks in Chromium</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The benchmark is gated: <code>RUN_BENCH=1 npx vitest run tests/bench.test.ts</code>. On 11 November 2026, at commit <code>726a29a</code>, all 108 unit tests passed. The full browser run passed 7 of 8 the first time: the start-view check failed once on a cold start. It passed when run alone and in a second full run, which passed 8 of 8.</p>
 <nav class="project-pager" aria-label="Project navigation"><a class="pager-prev" href="../../projects/wave-laboratory.html" rel="prev"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg><span class="pager-text"><span class="pager-label">Previous project</span><span class="pager-name">Wave Laboratory</span></span></a><a class="pager-next" href="../../projects/degen-llms.html" rel="next"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-right"></use></svg><span class="pager-text"><span class="pager-label">Next project</span><span class="pager-name">The Mandalay Bay</span></span></a></nav>
 </div>
 

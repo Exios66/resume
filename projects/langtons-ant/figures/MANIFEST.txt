@@ -1,2 +1,4 @@
-classic-ant-highway.png <- captured for this site: a 1280 x 720 screenshot of the app taken for this site, run from a blank grid with rule RL on the Starry Night palette, at step 15,181 (the repository's own public/social-card.png was not used because its step counter did not match the grid it showed)
+turmite-analytics.jpg <- captured for this site: a 1280 x 720 screenshot of the app built from langtons-ant commit 726a29a, served locally with vite preview, opened with no link (rule RL, default palette), run from a blank grid and paused at step 17,035, with the highway detector reading 9,900; saved as JPEG at quality 86
+colony-four-way-war.jpg <- captured for this site: a 1280 x 720 screenshot of the same build in colony mode, scenario Four-way war, seed 0x00c0ffee, paused at tick 1,111 after 20 seconds at the default speed; saved as JPEG at quality 86
+Removed: classic-ant-highway.png (step 15,181, from commit fc52838), replaced because the interface, panel and charts have changed since
 Not used: langtons-ant/public/demo.gif (2,753,077 bytes, too large for a case study page)

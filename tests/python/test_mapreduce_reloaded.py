@@ -71,7 +71,7 @@ class MapReduceReloadedTests(unittest.TestCase):
         links = [attrs for tag, attrs in parser.children(nav) if tag == "a"]
         self.assertEqual({parser.text(link): destination(page, link) for link in links},
                          {"Case study": page.resolve(), "Code": CODE_URL,
-                          "Technical report": CODE_URL + "/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/report.md"})
+                          "Technical report": CODE_URL + "/blob/def9c62846e8c560b9be6c72b76f1cf325582059/docs/report.md"})
         current = [link for link in links if checks.attr(link, "aria-current") == "page"]
         self.assertEqual(len(current), 1)
         back = self.one(parser, "a", **{"class": "back"})
@@ -90,7 +90,7 @@ class MapReduceReloadedTests(unittest.TestCase):
         caveat = self.one(parser, "div", **{"class": "caveat"})
         self.assertIn("Work in progress", parser.text(caveat))
         self.assertIn("now built", parser.text(caveat))
-        self.assertIn("6 November 2026", parser.text(caveat))
+        self.assertIn("11 November 2026", parser.text(caveat))
         self.one(parser, "h2", id="what-is-planned")
         self.assertFalse(any(tag == "img" for tag, _, _ in parser.elements), "No unverified screenshot")
 

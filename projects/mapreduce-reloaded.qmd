@@ -8,7 +8,7 @@ description: "A from-scratch MapReduce rebuild: a Go cluster and Python referenc
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](mapreduce-reloaded.qmd){aria-current="page"} [Code](https://github.com/Exios66/MapReduce-Reloaded) [Technical report](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/report.md)
+[Case study](mapreduce-reloaded.qmd){aria-current="page"} [Code](https://github.com/Exios66/MapReduce-Reloaded) [Technical report](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846e8c560b9be6c72b76f1cf325582059/docs/report.md)
 :::
 
 # MapReduce-Reloaded {.page-title}
@@ -22,7 +22,7 @@ A from-scratch rebuild of Google's MapReduce, as described by Dean and Ghemawat 
 :::
 
 ::: {.caveat}
-**Work in progress.** Reviewed on 6 November 2026 against [revision 4dd1ca4](https://github.com/Exios66/MapReduce-Reloaded/tree/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387). Object storage, compression, benchmarks and the final report are now built. Python workers and full cross-language interoperability remain stretch work. The evaluation below is reported by the source repository, not rerun for this page.
+**Work in progress.** Reviewed on 11 November 2026 against [revision def9c62](https://github.com/Exios66/MapReduce-Reloaded/tree/def9c62846e8c560b9be6c72b76f1cf325582059). Object storage, compression, benchmarks, the demo script and the final report are now built. Python workers and full cross-language interoperability remain stretch work. The evaluation below is reported by the source repository, not rerun for this page.
 :::
 
 ## At a glance
@@ -55,7 +55,7 @@ The diagram shows the core task and shuffle path only. It does not attempt to dr
 
 **One contract, two languages.** Go and Python share a gRPC and protobuf message contract, a documented on-disk record format with a checksum on every block, and a fixed FNV-1a partition hash implemented in both languages. Language-specific hash behavior is not the contract: shared test vectors and golden files hold both implementations to the same bytes for uncompressed jobs.
 
-**Small, reviewable steps.** Each piece of work is one issue and one pull request, and each phase adds a short design record. The local `make check` quality gate runs linters and tests, and CircleCI runs checks on pull requests.
+**Small, reviewable steps.** One issue and one pull request per change, 199 merged by 10 November 2026, and 22 design records. Branch protection holds `main` until six CircleCI checks pass, and CodeRabbit and CodeAnt review every pull request; several real bugs were found in review, not by the tests.
 
 ## What I built
 
@@ -70,6 +70,7 @@ The diagram shows the core task and shuffle path only. It does not attempt to dr
 - **Locality and status (§3.4, §4.8).** The scheduler prefers to run a map task on the host that holds its input. The coordinator serves a status page, the coordinator and workers export Prometheus metrics, an optional monitoring profile adds Prometheus and a Grafana dashboard, and logs can be written as structured JSON.
 - **The paper's example programs (§2.3, §5).** Grep, word count, URL access frequency, reverse web-link graph, term vectors, inverted index and distributed sort, each with a test.
 - **A Docker Compose cluster.** One coordinator and four workers, with Prometheus and Grafana as an optional profile, and a memory limit on each service so the whole cluster fits on one 8 GB virtual machine. An end-to-end script checks the cluster's output against the oracle.
+- **A six-minute demo.** A script, mirrored by a notebook that checks each step with an `assert`, kills a worker and restarts the coordinator mid-sort.
 - **Storage, compression and user jobs.** S3-compatible storage with object-store commit semantics, zstd and Snappy codecs, and Go job files interpreted by workers. A Python coordinator can run with Go workers; a Python worker is not implemented.
 
 ### The status page, during a job
@@ -96,14 +97,14 @@ The original test runs in one process, so a "dead" worker behaves like a machine
 
 ## Evaluation at small scale
 
-The [evaluation](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/evaluation.md) compares the paper's mechanisms, not its absolute throughput: four containers share one 4-vCPU, 8 GB VM and one disk, versus roughly 1,800 machines in the paper.
+The [evaluation](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846e8c560b9be6c72b76f1cf325582059/docs/evaluation.md) compares the paper's mechanisms, not its absolute throughput: four containers share one 4-vCPU, 8 GB VM and one disk, versus roughly 1,800 machines in the paper.
 
 | Experiment | Reported observation | Limit |
 | --- | --- | --- |
 | Scaling, 1 GiB input | Four workers: word count 3.8×, sort 2.9× and grep 2.3× faster than one | Median of three runs; shared-disk bottleneck |
 | Backup tasks with an injected slow worker | 17.6 s without backups, 11.2 s with them | Three runs per setting, fixed setting order; not drift-controlled |
 | Backup tasks without a slow worker | Mean difference −0.11 s, 95% interval −0.38 to +0.16 s | Ten interleaved pairs; does not prove zero cost |
-| Worker loss | Every measured job finished with a checksum matching the normal run | Agreement with a baseline, not an independent correctness proof |
+| Worker loss | Every measured job finished with the undisturbed run's output | Checksum agreement with an undisturbed run, not an independent correctness proof |
 
 The scaling run, set against the ideal of four times faster with four workers:
 
@@ -114,6 +115,38 @@ The scaling run, set against the ideal of four times faster with four workers:
 | Sort | 2.9× |
 | Grep | 2.3× |
 :::
+
+### What each failure cost
+
+Every injected failure ended with the undisturbed run's output; what differs is the time it added.[^mr-bench]
+
+::: {.chart kind="bars" title="Time added by a lost worker or a coordinator restart" label="Disturbance" value="Time added (%)" unit="%" min="0" max="250"}
+| Disturbance | Time added (%) |
+| --- | ---: |
+| Worker killed at 25% | 79 |
+| Worker killed at 50% | 102 |
+| Worker killed at 75% | 232 |
+| Coordinator restarted at 50% | 13 |
+:::
+
+A lost worker costs the 10 s heartbeat timeout, most of a 12 s job, and is not replaced; killed at 75%, its finished map output runs again. A restarted coordinator replays its write-ahead log and keeps every finished task. Settings ran in fixed order, so this is not drift-controlled.
+
+### What the combiner saves
+
+The combiner folds repeated keys inside each map task before the shuffle, so the more a key repeats, the more it saves.
+
+::: {.chart kind="dumbbell" title="1 GiB word count: job time with the combiner off and on" label="Input" from="Combiner off (s)" to="Combiner on (s)" from-name="Combiner off" to-name="Combiner on" unit="s" min="0" max="60"}
+| Input | Combiner off (s) | Combiner on (s) | Bytes, off ÷ on |
+| --- | ---: | ---: | ---: |
+| Zipf, S = 0.5 | 43.9 | 36.0 | 15× |
+| Zipf, S = 1.0 | 48.8 | 39.0 | 17× |
+| Zipf, S = 1.5 | 51.6 | 28.9 | 78× |
+| Crawled English | 50.1 | 43.1 | 5.2× |
+| Crawled, all languages | 44.3 | 41.2 | 3.2× |
+| *War and Peace* | 59.1 | 45.9 | 33× |
+:::
+
+Job time falls only 7% to 44%: the map work is unchanged.
 
 ::: {#mr-backup-duration .mr-experiment}
 
@@ -149,9 +182,11 @@ Negative means faster with backups; positive means slower. The interval crosses 
 
 :::
 
-The [final report](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/report.md) links the raw results, design decisions and reproduction steps.
+The [final report](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846e8c560b9be6c72b76f1cf325582059/docs/report.md) links the raw results, design decisions and reproduction steps.
 
-[^mr-e2]: Source: [E2 evaluation at revision 4dd1ca4](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/docs/evaluation.md#backup-tasks-54) and [benchmark notes](https://github.com/Exios66/MapReduce-Reloaded/blob/4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387/bench/README.md#e2-backup-tasks-and-a-straggler). Reported measurements, not rerun here.
+[^mr-bench]: Source: E1–E4 and E6 in the [benchmark notes at revision def9c62](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846e8c560b9be6c72b76f1cf325582059/bench/README.md#evaluation-e0e6): 1 GiB input, M = 32, R = 4, medians of three runs on four one-CPU workers sharing one VM, each output checked against the undisturbed run. Byte ratios are computed from the reported bytes shuffled. Reported, not rerun here.
+
+[^mr-e2]: Source: [E2 evaluation at revision 4dd1ca4](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846e8c560b9be6c72b76f1cf325582059/docs/evaluation.md#backup-tasks-54) and [benchmark notes](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846e8c560b9be6c72b76f1cf325582059/bench/README.md#e2-backup-tasks-and-a-straggler). Reported measurements, not rerun here.
 
 ## What is planned
 
