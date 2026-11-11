@@ -108,8 +108,10 @@ The levers below are ordered by gaps closed per pull request. Re-run `kpi.py` be
   (`assets/og-image.png`). `kpi.py` counts a project as covered only when its slug appears in its own `og:image` URL.
 - **Lever (#120):** make a 1200 × 630 PNG per project from the project's existing cover motif in `partials/covers/`.
   Use the real title and no invented imagery. Name it after the slug, for example
-  `assets/social/wave-laboratory.png`, and set `image:` in that project's front matter. Script the generator so
-  that a new project gets a card from the same command. Check one page's `og:image` and `twitter:image` in the built HTML.
+  `assets/social/wave-laboratory.png`, and set `image:` in that project's front matter to the absolute URL
+  (`https://exios66.github.io/resume/assets/social/wave-laboratory.png`). `project_schema` in `site.lua` accepts only
+  `http(s)` images and falls back to the site-wide image for a relative path, so a relative value would leave the
+  JSON-LD on the generic card. Script the generator so that a new project gets a card from the same command. Check one page's `og:image` and `twitter:image` in the built HTML.
 
 ### 3. `repo_style_titles` (5): owner decision first
 
@@ -133,7 +135,7 @@ The levers below are ordered by gaps closed per pull request. Re-run `kpi.py` be
 
 | Candidate | Why | How to count |
 | --- | --- | --- |
-| `charts_without_title` | #139 gave every chart a title; a guard keeps it that way | `.chart` divs without a `title` attribute, plus figure SVGs whose first text is not a title |
+| `charts_without_title` | #139 gave every chart a title; a guard keeps it that way | In built HTML, `figure.chart` elements whose `figcaption.chart-title` is missing or empty (the source `title` attribute becomes that caption), plus hand-drawn figure SVGs with no visible title |
 | `figures_without_alt` | Alt text is part of the experience, and the polish audit checks presence, not substance | `<img>` in `<main>` with an empty `alt` or one that repeats the caption |
 | `layout_shift` | `images_without_size` is a proxy; this measures the effect | Playwright `PerformanceObserver('layout-shift')` on the five heaviest pages at 375 px; report the worst page |
 | `largest_paint_ms` | Real speed, not only bytes | Playwright LCP on the home and projects index pages, median of 3 runs; report it, do not gate on it, because CI timing is noisy |
