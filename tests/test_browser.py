@@ -230,6 +230,62 @@ def test_site_search_contents_list_and_pager(site):
         page.close()
 
 
+def test_slash_opens_search_without_hijacking_typing(site):
+    """Verify shortcut focus, modifier handling, typing, and responsive hints."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": 1280, "height": 900})
+    try:
+        page.goto(base + "index.html")
+        link = page.get_by_role("link", name="Search", exact=True)
+        expect(link).to_have_attribute("aria-keyshortcuts", "/")
+        expect(link.locator(".key-hint")).to_have_text("/")
+        expect(link.locator(".key-hint")).to_be_visible()
+
+        # The hint inherits the hovered link's accent color in both themes.
+        link.hover()
+        assert link.locator('.key-hint').evaluate("el => getComputedStyle(el).color") == link.evaluate("el => getComputedStyle(el).color")
+
+        # Browser/OS shortcuts must remain untouched.
+        for modifiers in ({'ctrlKey': True}, {'altKey': True}, {'metaKey': True}):
+            assert page.evaluate("""modifiers => document.dispatchEvent(new KeyboardEvent(
+                'keydown', {key: '/', bubbles: true, cancelable: true, ...modifiers}))""", modifiers)
+        assert page.url.endswith('index.html')
+
+        page.keyboard.press("/")
+        expect(page).to_have_url(re.compile(r"search\.html\?focus=search$"))
+        search = page.get_by_label("Search this site")
+        expect(search).to_be_focused()
+        page.keyboard.type("mailroom/")
+        expect(search).to_have_value("mailroom/")
+        assert page.url.split("?")[0].endswith("search.html")
+
+        # The shortcut resolves the relative nav link from a nested page.
+        page.goto(base + "projects/digital-mailroom.html")
+        page.keyboard.press("/")
+        expect(page).to_have_url(re.compile(r"search\.html\?focus=search$"))
+        expect(page.get_by_label("Search this site")).to_be_focused()
+
+        # Model an AltGr slash from an international keyboard layout. Playwright's
+        # US keyboard mapping cannot generate this OS-specific modifier state.
+        page.goto(base + "index.html")
+        page.evaluate("""() => {
+            const event = new KeyboardEvent('keydown', {key: '/', ctrlKey: true,
+                altKey: true, bubbles: true, cancelable: true});
+            Object.defineProperty(event, 'getModifierState', {value: key => key === 'AltGraph'});
+            document.dispatchEvent(event);
+        }""")
+        expect(page).to_have_url(re.compile(r"search\.html\?focus=search$"))
+        expect(page.get_by_label("Search this site")).to_be_focused()
+
+        # The phone header hides the key cap but keeps the semantic shortcut.
+        page.set_viewport_size({"width": 375, "height": 812})
+        page.goto(base + "index.html")
+        expect(page.get_by_role("link", name="Search", exact=True)).to_have_attribute("aria-keyshortcuts", "/")
+        expect(page.locator(".nav-link .key-hint")).to_be_hidden()
+    finally:
+        page.close()
+
+
 def test_search_before_index_load_and_after_failure(site):
     browser, base = site
     page = browser.new_page()
@@ -322,12 +378,15 @@ def test_mobile_report_charts_in_other_engines(site, playwright, engine):
 
 
 def test_no_script_and_print_from_dark(site, tmp_path):
+    """Keep navigation usable without scripts and print the dark résumé legibly."""
     browser, base = site
     context = browser.new_context(java_script_enabled=False, viewport={"width": 375, "height": 812})
     page = context.new_page()
     page.goto(base + "projects/")
     expect(page.get_by_role("link", name="Neuron Atlas", exact=True)).to_be_visible()
     expect(page.locator(".theme-toggle")).to_be_hidden()
+    expect(page.locator(".nav-link .key-hint")).to_be_hidden()
+    expect(page.get_by_role("link", name="Search", exact=True)).not_to_have_attribute("aria-keyshortcuts")
     context.close()
 
     page = browser.new_page(color_scheme="dark")
@@ -759,5 +818,21 @@ def test_mapreduce_evidence_audit_rejects_wrong_cpu_and_missing_measurement(site
         page.reload()
         page.locator('#mr-backup-uncertainty table tbody td').nth(1).evaluate("el => el.textContent = '--'")
         assert "paired effect interval across no change, with limits" in page.evaluate(inspect)
+    finally:
+        page.close()
+
+
+def test_unavailable_script_does_not_advertise_search_shortcut(site):
+    """A failed script download leaves an ordinary usable search link."""
+    browser, base = site
+    page = browser.new_page()
+    try:
+        page.route('**/assets/js/site.js*', lambda route: route.abort())
+        page.goto(base + 'index.html')
+        link = page.get_by_role('link', name='Search', exact=True)
+        expect(link).not_to_have_attribute('aria-keyshortcuts')
+        expect(link.locator('.key-hint')).to_be_hidden()
+        link.click()
+        expect(page).to_have_url(re.compile(r'search\.html$'))
     finally:
         page.close()

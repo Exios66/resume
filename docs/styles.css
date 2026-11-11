@@ -216,6 +216,11 @@ p { margin: 0 0 12px; }
 .nav-link { display: flex; align-items: center; min-height: 44px; padding: 6px 12px; border-radius: 8px; font-size: .88rem; font-weight: 600; color: var(--muted); }
 .nav-link:hover { color: var(--accent); background: var(--accent-soft); text-decoration: none; }
 .nav-link[aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
+.nav-link .key-hint {
+  margin-left: 5px; padding: 0 4px; border: 1px solid var(--rule); border-radius: 4px;
+  font: 600 .72em/1.5 var(--mono); color: inherit;
+}
+.nav-link:hover .key-hint, .nav-link[aria-current="page"] .key-hint { border-color: currentColor; }
 .theme-toggle {
   width: 44px; height: 44px; margin-left: 4px;
   display: grid; place-items: center; padding: 0;
@@ -327,6 +332,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   .site-title { flex-basis: 100%; display: flex; align-items: center; min-height: 44px; }
   .nav-list { flex: 1 1 auto; }
   .nav-link { padding: 6px 8px; font-size: .84rem; }
+  .nav-link .key-hint { display: none; }
   .theme-toggle { margin-left: 0; flex: 0 0 auto; }
   .site-footer { padding: 0 16px; }
   .site-header + main .page { margin-top: 12px; }
