@@ -423,6 +423,8 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   margin-top: 8px; font-size: .84rem; line-height: 1.45; color: var(--muted); text-align: left;
 }
 .page figcaption code { font-size: .9em; } /* keeps code in captions at 12px or more */
+/* Screen recordings: a framed, pausable clip. */
+.page figure.clip video { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 8px; background: #0d1117; }
 /* Charts have white/transparent backgrounds and dark text: seat them on a light plate in dark mode */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .page img.fig { background: #fff; padding: 10px; }

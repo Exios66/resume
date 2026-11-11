@@ -9,7 +9,13 @@ A measured loop for making the site better without making it worse: **edit → r
 keep or revert → log → repeat**. Every experiment is one small, reviewable commit. The audit turns what
 visitors, keyboard users and screen-reader users meet into one number, `polish_defects` (lower is better).
 The number is a guide, not the goal. The goal is a polished, professional, beautiful portfolio that
-builds on the existing design.
+builds on the existing design. Routine feature fixes, review responses and documentation changes use
+normal focused verification; they do not require fabricated experiment scores.
+
+For experience work, read `.10x/metrics.md` too and run `.venv/bin/python scripts/hillclimb/kpi.py`
+after rendering. The current ledger hardcodes `polish_defects` and the benchmark does not append the
+experience KPI. A segment name does not change the primary metric. Do not claim experience-scored keeps
+until a separately reviewed tooling change implements them with a new baseline (tracked in #126).
 
 `AGENTS.md` applies throughout: `docs/` is generated (render, never hand-edit), run the real-browser
 suite, review screenshots for visual changes, and report exact commands, results and what was not checked.
@@ -20,7 +26,7 @@ suite, review screenshots for visual changes, and report exact commands, results
 |---|---|---|
 | `autoresearch.sh` | Benchmark: Quarto render, then the audit. Prints `METRIC` lines. | Only by starting a new segment |
 | `autoresearch.audit.cjs` | The audit (axe-core, layout, structure, typography, errors, lints) | Only by starting a new segment |
-| `autoresearch.checks.sh` | Correctness gate: Lua filter tests, Node tests, pytest + Chromium | No |
+| `autoresearch.checks.sh` | Correctness gate: Lua, Node, Python and Chromium; targeted Firefox/WebKit cases | No |
 | `scripts/hillclimb/hc.sh` | Helper for every step below | Fix bugs only |
 | `scripts/hillclimb/ledger.py` | Append-only run log, status, segments | Fix bugs only |
 | `scripts/hillclimb/shot.cjs` | Screenshots into `.hillclimb-shots/` (outside the site) | Fix bugs only |
@@ -58,23 +64,23 @@ an experiment, and again after one, to see exactly what moved.
 
 ## Tools and how to get them
 
-Run `scripts/hillclimb/hc.sh doctor` first. It checks each tool and prints how to install whatever is missing.
+Run `bash scripts/setup-agent.sh` once per worktree, then `. .autoresearch-tools/env.sh` in each shell before rendering or auditing. Run `scripts/hillclimb/hc.sh doctor`; it checks each tool and prints missing prerequisites. See `scripts/hillclimb/README.md` for focused checks and actual browser coverage.
 
 | Tool | Used for | How to get it |
 |---|---|---|
-| Quarto 1.10.x (bundles pandoc and its Lua) | rendering `docs/`; Lua filter tests | quarto.org, or set `QUARTO=/path/to/quarto` |
-| Node 18+ with `playwright` | the audit and screenshots | `npm install --no-save playwright` (match the Python version) |
+| Quarto 1.10.19 (bundles Pandoc and its Lua) | rendering `docs/`; Lua filter tests | `bash scripts/setup-agent.sh`; source its env.sh |
+| Node 18+ with `playwright` | the audit and screenshots | `bash scripts/setup-agent.sh` (matches the pinned Python client) |
 | axe-core 4.10.2 | accessibility rules | installed automatically into `.autoresearch-tools/` (never published) |
-| Python venv `.venv` | pytest and the browser suite | `python3 -m venv .venv && .venv/bin/pip install -r requirements-test.txt` |
-| Chromium for Playwright | audit, screenshots, browser tests | `npx playwright install chromium`, or `PLAYWRIGHT_BROWSERS_PATH` for a preinstalled set |
+| Python venv `.venv` | pytest and the browser suite | `bash scripts/setup-agent.sh` |
+| Chromium, Firefox and WebKit | Chromium audit/screenshots; primary Chromium suite and targeted secondary-engine checks | Setup installs/verifies both clients; set `PLAYWRIGHT_BROWSERS_PATH` consistently before setup if needed |
 | git | one commit per experiment | — |
 
 See `.github/BUILDING.md` for the full build setup.
 
-## Setup (once per clone)
+## Setup (once per clone or worktree)
 
 1. **Branch.** Work on the branch you were given, never on `main`.
-2. **Tools.** `hc.sh doctor` must end with `All tools present.`
+2. **Tools.** Run `bash scripts/setup-agent.sh`, source `.autoresearch-tools/env.sh`, then `scripts/hillclimb/hc.sh doctor`; it must end with `All tools present.` An unqualified `hc.sh` below means `scripts/hillclimb/hc.sh`, not a globally installed command.
 3. **Session state.**
    - Resuming: `hc.sh restore` copies `.autoresearch/` back to the living files. Read `autoresearch.md` and
      `autoresearch.ideas.md` before anything else.
@@ -137,8 +143,7 @@ never claim checks, browsers or devices you did not run.
   visitor cannot see, misses a real defect, or scores an artefact), log the affected run honestly, fix the
   audit in its own commit, `hc.sh segment "<why>"`, re-run the baseline, then reapply the experiment.
   Never change the audit to rescue a single experiment's score.
-- Metric-blind improvements (real, but the audit cannot see them) are discarded at equal score. Add them to
-  the backlog as "metric-blind" and raise them with the owner, or extend the audit in a new segment.
+- The ledger cannot automatically justify a keep at an equal polish score from an experience KPI or a judged indicator. Record those separately as ordinary scoped work with checks and evidence under the roadmap rules, or implement support in a separate tooling change/new segment. Never pretend a lower polish score or edit a run record to make it pass.
 - Do not weaken or delete a test. Update one only when it pins exactly the text or markup you changed on
   purpose (for example, a test matching `class="kicker"` exactly once a filter adds a class).
 - Project facts and numbers must match their source repositories. Do not invent results.
@@ -153,6 +158,12 @@ When stopping (owner request, wall, budget):
 3. Open or update the pull request and an issue that lists: score history, what each kept change does,
    what was discarded and why, the remaining findings, the backlog, and what was not checked (other
    browsers, real devices, screen readers). Link evidence; do not paste screenshots of private data.
+
+## Review and shipping
+
+Follow `AGENTS.md` for CodeAnt general nitpicks as well as inline threads, expected-head merge checks,
+stack ancestry, and partial issue updates. A passing or skipped bot check is not evidence that every
+suggestion was investigated. Never close a track merely because one component shipped.
 
 ## Lessons from the first run (1282 → 22 points)
 

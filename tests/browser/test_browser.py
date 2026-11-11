@@ -891,3 +891,55 @@ def test_unavailable_script_does_not_advertise_search_shortcut(site):
         expect(page).to_have_url(re.compile(r'search\.html$'))
     finally:
         page.close()
+
+
+@pytest.mark.parametrize("engine", ["chromium", "firefox", "webkit"])
+@pytest.mark.parametrize("width", [375, 1280])
+def test_recording_respects_visibility_motion_and_manual_pause(site, playwright, engine, width):
+    """Exercise actual media events, observer thresholds, and live motion changes."""
+    _, base = site
+    browser = getattr(playwright, engine).launch()
+    page = browser.new_page(viewport={"width": width, "height": 900}, reduced_motion="no-preference")
+    try:
+        page.goto(base + 'projects/mapreduce-reloaded.html')
+        video = page.locator('video[data-autoplay]')
+        video.evaluate("el => el.scrollIntoView({block: 'center'})")
+        page.wait_for_function("!document.querySelector('video').paused")
+        # Less than half visible must pause even though it still intersects.
+        video.evaluate("el => window.scrollBy(0, el.getBoundingClientRect().top + el.clientHeight * .6)")
+        page.wait_for_function("document.querySelector('video').paused")
+        video.evaluate("el => el.scrollIntoView({block: 'center'})")
+        page.wait_for_function("!document.querySelector('video').paused")
+
+        page.emulate_media(reduced_motion="reduce")
+        page.wait_for_function("document.querySelector('video').paused")
+        page.evaluate("window.scrollTo(0, 0)")
+        video.evaluate("el => el.scrollIntoView({block: 'center'})")
+        page.wait_for_timeout(150)
+        assert video.evaluate('el => el.paused')
+        page.emulate_media(reduced_motion="no-preference")
+        page.wait_for_function("!document.querySelector('video').paused")
+
+        # pause() emits the same media pause event as the native controls.
+        video.evaluate("el => new Promise(resolve => { el.addEventListener('pause', resolve, {once: true}); el.pause(); })")
+        page.evaluate("window.scrollTo(0, 0)")
+        page.wait_for_timeout(150)
+        video.evaluate("el => el.scrollIntoView({block: 'center'})")
+        page.wait_for_timeout(150)
+        assert video.evaluate('el => el.paused')
+        page.emulate_media(reduced_motion="reduce")
+        page.emulate_media(reduced_motion="no-preference")
+        assert video.evaluate('el => el.paused')
+        video.evaluate('el => el.play()')
+        page.wait_for_function("!document.querySelector('video').paused")
+
+        # Loading with reduced motion also suppresses autoplay; manual play works.
+        page.emulate_media(reduced_motion="reduce")
+        page.reload()
+        video.evaluate("el => el.scrollIntoView({block: 'center'})")
+        page.wait_for_timeout(150)
+        assert video.evaluate('el => el.paused')
+        video.evaluate('el => el.play()')
+        page.wait_for_function("!document.querySelector('video').paused")
+    finally:
+        browser.close()

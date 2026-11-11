@@ -109,3 +109,18 @@ Site pages stay at the paths that become their public URLs. Everything that supp
 ```
 
 Local dependencies (`.venv/`, `node_modules/`, `.autoresearch-tools/`, `.quarto/`) are gitignored. Add a case study by following [Adding a project](.github/BUILDING.md#adding-a-project).
+
+
+### Working on the portfolio
+
+Agents should begin with [AGENTS.md](AGENTS.md), the [current status](.10x/status.md), and the [handoff](.10x/handoff.md). The [tooling command map](scripts/hillclimb/README.md) covers pinned setup, focused tests, screenshots, review completion and measured polish experiments. The [roadmap](https://github.com/Exios66/resume/issues/117) tracks remaining work; a passing regression suite does not mean the roadmap is complete.
+
+```sh
+bash scripts/setup-agent.sh
+. .autoresearch-tools/env.sh
+scripts/hillclimb/hc.sh doctor
+"$QUARTO" render --quiet
+bash autoresearch.checks.sh
+```
+
+The site includes search with a `/` shortcut, project structured data, page transfer budgets, and a controlled MapReduce status recording. Generated pages live in `docs/`; edit the sources and render them. Browser coverage and remaining work are recorded in the build notes and handoff.

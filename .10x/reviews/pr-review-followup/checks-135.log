@@ -1,0 +1,167 @@
+Lua filter tests
+Site filter unit tests passed
+comment stripping ok
+Comment filter unit tests passed (62 cases)
+icon decoration ok
+project schema ok
+chart unit tests passed
+Node tests
+TAP version 13
+# Subtest: the site has been built
+ok 1 - the site has been built
+  ---
+  duration_ms: 0.572583
+  ...
+# Subtest: every icon svg carries its own 1em size
+ok 2 - every icon svg carries its own 1em size
+  ---
+  duration_ms: 1.22425
+  ...
+# Subtest: each page has one sprite, after the footer
+ok 3 - each page has one sprite, after the footer
+  ---
+  duration_ms: 1.420833
+  ...
+# Subtest: only one theme-toggle icon is visible before scripts or styles load
+ok 4 - only one theme-toggle icon is visible before scripts or styles load
+  ---
+  duration_ms: 0.2195
+  ...
+# Subtest: the site stylesheet link is cache-busted
+ok 5 - the site stylesheet link is cache-busted
+  ---
+  duration_ms: 1.002208
+  ...
+# Subtest: the site script is loaded once per page and cache-busted
+ok 6 - the site script is loaded once per page and cache-busted
+  ---
+  duration_ms: 0.874459
+  ...
+# Subtest: arrow icons stay smaller than the card titles they follow
+ok 7 - arrow icons stay smaller than the card titles they follow
+  ---
+  duration_ms: 0.343625
+  ...
+# Subtest: saved light theme overrides the opposite system preference before paint
+ok 8 - saved light theme overrides the opposite system preference before paint
+  ---
+  duration_ms: 2.503167
+  ...
+# Subtest: saved dark theme overrides the opposite system preference before paint
+ok 9 - saved dark theme overrides the opposite system preference before paint
+  ---
+  duration_ms: 0.838708
+  ...
+# Subtest: invalid or missing saved theme null, system dark=false
+ok 10 - invalid or missing saved theme null, system dark=false
+  ---
+  duration_ms: 0.499
+  ...
+# Subtest: invalid or missing saved theme null, system dark=true
+ok 11 - invalid or missing saved theme null, system dark=true
+  ---
+  duration_ms: 0.37675
+  ...
+# Subtest: invalid or missing saved theme "", system dark=false
+ok 12 - invalid or missing saved theme "", system dark=false
+  ---
+  duration_ms: 0.885666
+  ...
+# Subtest: invalid or missing saved theme "", system dark=true
+ok 13 - invalid or missing saved theme "", system dark=true
+  ---
+  duration_ms: 0.854833
+  ...
+# Subtest: invalid or missing saved theme "sepia", system dark=false
+ok 14 - invalid or missing saved theme "sepia", system dark=false
+  ---
+  duration_ms: 0.800375
+  ...
+# Subtest: invalid or missing saved theme "sepia", system dark=true
+ok 15 - invalid or missing saved theme "sepia", system dark=true
+  ---
+  duration_ms: 0.328
+  ...
+# Subtest: invalid or missing saved theme "DARK", system dark=false
+ok 16 - invalid or missing saved theme "DARK", system dark=false
+  ---
+  duration_ms: 0.704083
+  ...
+# Subtest: invalid or missing saved theme "DARK", system dark=true
+ok 17 - invalid or missing saved theme "DARK", system dark=true
+  ---
+  duration_ms: 0.625834
+  ...
+# Subtest: invalid or missing saved theme " light ", system dark=false
+ok 18 - invalid or missing saved theme " light ", system dark=false
+  ---
+  duration_ms: 0.444625
+  ...
+# Subtest: invalid or missing saved theme " light ", system dark=true
+ok 19 - invalid or missing saved theme " light ", system dark=true
+  ---
+  duration_ms: 0.835792
+  ...
+# Subtest: storage access errors still allow toggling, system dark=false
+ok 20 - storage access errors still allow toggling, system dark=false
+  ---
+  duration_ms: 0.640708
+  ...
+# Subtest: storage access errors still allow toggling, system dark=true
+ok 21 - storage access errors still allow toggling, system dark=true
+  ---
+  duration_ms: 0.2615
+  ...
+# Subtest: print cancels link navigation and opens one dialog, toggle present=false
+ok 22 - print cancels link navigation and opens one dialog, toggle present=false
+  ---
+  duration_ms: 0.305167
+  ...
+# Subtest: print cancels link navigation and opens one dialog, toggle present=true
+ok 23 - print cancels link navigation and opens one dialog, toggle present=true
+  ---
+  duration_ms: 0.375875
+  ...
+# Subtest: theme toggle works on pages without a print button
+ok 24 - theme toggle works on pages without a print button
+  ---
+  duration_ms: 0.379875
+  ...
+# Subtest: pages without either control initialize safely
+ok 25 - pages without either control initialize safely
+  ---
+  duration_ms: 0.52475
+  ...
+# Subtest: motion class is set only without a reduced-motion preference, reduced=false
+ok 26 - motion class is set only without a reduced-motion preference, reduced=false
+  ---
+  duration_ms: 0.737833
+  ...
+# Subtest: motion class is set only without a reduced-motion preference, reduced=true
+ok 27 - motion class is set only without a reduced-motion preference, reduced=true
+  ---
+  duration_ms: 0.251542
+  ...
+# Subtest: a failing media query does not stop the saved theme or the toggle
+ok 28 - a failing media query does not stop the saved theme or the toggle
+  ---
+  duration_ms: 0.351041
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 88.550375
+Python and browser tests (Chromium, Firefox and WebKit)
+........................................................................ [ 25%]
+............ [ 30%]
+........................... [ 39%]
+.................................................................... [ 64%]
+...................... [ 72%]
+..............................................................................                        [100%]
+279 passed, 634 subtests passed in 87.93s (0:01:27)
+All checks passed.

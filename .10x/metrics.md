@@ -66,8 +66,8 @@ the pull request, with the reason and the new measurement.
 | --- | --- | --- | --- |
 | Motifs that pass the specificity test | 8 of 14, not yet confirmed by the owner | 14 of 14, owner confirmed | Test in #118: cover the title; the drawing must fit only its project |
 | Case studies of visual projects that lead with a real screenshot | 0 of 2 | 2 of 2 | #119; real captures only |
-| Motion that is off under reduced motion, print and forced colours | no motion work yet | 100%, with a browser test | #122 |
-| Browsers checked | Chromium only | Chromium, Firefox, WebKit | #125 |
+| Motion that is off under reduced motion, print and forced colours | Live reduced-motion video pause covered; full roadmap matrix remains open | 100%, with a browser test | #122 |
+| Browsers checked | Chromium suite; targeted Firefox/WebKit chart and video cases (#133/#129) | Chromium, Firefox, WebKit with scope recorded | #125; real devices remain unverified |
 
 Do not turn a judged indicator into a number by guessing. Record who judged it and attach the screenshot.
 
@@ -77,7 +77,7 @@ Do not turn a judged indicator into a number by guessing. Record who judged it a
 2. Keep a change only if all gates hold and either `experience_gaps` falls or a judged indicator improves with evidence.
 3. Design work that moves no number is allowed (rule 8 of the design spec). Log it as a judged change with screenshots.
 4. Do not game a metric: no hidden images to satisfy a count, no fake sizes, no title changes without the owner's wording.
-5. Log each experiment in `autoresearch.jsonl` under a new segment whose config names `experience_gaps`.
+5. Report `experience_gaps` separately after each render. The current `ledger.py` hardcodes `polish_defects`, and `autoresearch.sh` does not append KPI output. Do not change a segment name/config and claim the loop scores experience. Experience-scored logging needs a separately reviewed tooling change and new baseline (#126); meanwhile retain ordinary scoped PR evidence and honest polish records.
 
 ## Success points
 
