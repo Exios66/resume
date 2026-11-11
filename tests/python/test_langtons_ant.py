@@ -17,7 +17,7 @@ SITE_URL = "https://exios66.github.io/resume/"
 PAGE = "projects/langtons-ant.html"
 DEMO_URL = "https://exios66.github.io/langtons-ant/"
 CODE_URL = "https://github.com/Exios66/langtons-ant"
-FIGURE = "classic-ant-highway.png"
+FIGURES = ["colony-four-way-war.jpg", "turmite-analytics.jpg"]
 SIDE_PROJECT_CARDS = ["wave-laboratory", "langtons-ant", "the-mandalay-bay"]
 
 
@@ -111,28 +111,29 @@ class LangtonsAntTests(unittest.TestCase):
         self.assertEqual(published.text(caption), source.text(original_caption))
         self.assertEqual(checks.attr(diagram, "role"), "img")
 
-    def test_screenshot_has_alt_caption_provenance_and_identical_published_bytes(self):
+    def test_screenshots_have_alt_caption_provenance_and_identical_published_bytes(self):
         page, parser = self.read_page()
         source_dir = checks.ROOT / "projects/langtons-ant/figures"
         manifest = (source_dir / "MANIFEST.txt").read_text(encoding="utf-8")
         images = [(attrs, ancestors) for tag, attrs, ancestors in parser.elements if tag == "img"]
         self.assertEqual([urlsplit(checks.attr(attrs, "src")).path.rsplit("/", 1)[-1] for attrs, _ in images],
-                         [FIGURE])
-        image, ancestors = images[0]
-        alt = checks.attr(image, "alt")
-        self.assertGreater(len(alt.split()), 20, "Screenshot needs descriptive alt text")
-        figures = [attrs for tag, attrs in ancestors if tag == "figure"]
-        self.assertEqual(len(figures), 1)
-        captions = [attrs for tag, attrs in parser.children(figures[0]) if tag == "figcaption"]
-        self.assertEqual(len(captions), 1)
-        self.assertTrue(parser.text(captions[0]), "Figure needs a visible caption")
-        self.assertIn(f"{FIGURE} <- captured for this site:", manifest)
-        self.assertIn("step 15,181", manifest)
-        target = (page.parent / unquote(urlsplit(checks.attr(image, "src")).path)).resolve()
-        self.assertEqual(target, (checks.DOCS / "projects/langtons-ant/figures" / FIGURE).resolve())
-        self.assertEqual(target.read_bytes(), (source_dir / FIGURE).read_bytes())
-        self.assertLess(target.stat().st_size, 200_000, "Keep the case study light; the demo GIF is too large")
-        self.assertEqual(target.read_bytes()[:8], b"\x89PNG\r\n\x1a\n")
+                         FIGURES)
+        for (image, ancestors), name in zip(images, FIGURES):
+            alt = checks.attr(image, "alt")
+            self.assertGreater(len(alt.split()), 20, f"{name} needs descriptive alt text")
+            figures = [attrs for tag, attrs in ancestors if tag == "figure"]
+            self.assertEqual(len(figures), 1)
+            captions = [attrs for tag, attrs in parser.children(figures[0]) if tag == "figcaption"]
+            self.assertEqual(len(captions), 1)
+            self.assertTrue(parser.text(captions[0]), f"{name} needs a visible caption")
+            self.assertIn(f"{name} <- captured for this site:", manifest)
+            target = (page.parent / unquote(urlsplit(checks.attr(image, "src")).path)).resolve()
+            self.assertEqual(target, (checks.DOCS / "projects/langtons-ant/figures" / name).resolve())
+            self.assertEqual(target.read_bytes(), (source_dir / name).read_bytes())
+            self.assertLess(target.stat().st_size, 200_000, "Keep the case study light; the demo GIF is too large")
+            self.assertEqual(target.read_bytes()[:3], b"\xff\xd8\xff")
+        self.assertIn("step 17,004", manifest)
+        self.assertIn("seed 0x00c0ffee", manifest)
 
     def test_page_keeps_its_honesty_sections(self):
         _, parser = self.read_page()
@@ -160,7 +161,7 @@ class LangtonsAntTests(unittest.TestCase):
         _, parser = self.read_page()
         values = [parser.text(attrs) for _, attrs, _ in parser.elements
                   if "stat-value" in checks.classes(attrs)]
-        self.assertEqual(values, ["99", "20", "64 × 64"])
+        self.assertEqual(values, ["108", "20", "5"])
 
     def test_description_canonical_and_sitemap_match_the_source(self):
         _, parser = self.read_page()
