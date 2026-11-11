@@ -32,6 +32,7 @@ def line(xs,ys):
     return 'M'+' L'.join(f'{X(a):.1f} {Y(b):.1f}' for a,b in zip(xs,ys))
 band=line(f,hi)+' L'+' L'.join(f'{X(a):.1f} {Y(b):.1f}' for a,b in zip(f[::-1],lo[::-1]))+' Z'
 ratio=m0/(2.5/4)**2;pct=round((ratio-1)*100)
+vis=np.trapezoid(P,f)/np.trapezoid(J,fj)  # area ratio over the plotted 0.03-0.30 Hz only
 g=[]
 for yv in np.arange(0,ymax+0.01,5):
     g.append(f'<line class="grid" x1="{L}" x2="{L+pw}" y1="{Y(yv):.1f}" y2="{Y(yv):.1f}"/><text class="tick" x="{L-8}" y="{Y(yv)+4:.1f}" text-anchor="end">{yv:g}</text>')
@@ -61,7 +62,7 @@ svg=f'''<svg viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-labe
 <text class="direct" x="{X(f[ip])+10:.1f}" y="{Y(P[ip])-4:.1f}">Measured peak: {1/f[ip]:.1f} s</text>
 <line class="axis" x1="{X(fj[jp])+6:.1f}" x2="{X(fj[jp])+56:.1f}" y1="{Y(J[jp]):.1f}" y2="{Y(J[jp]):.1f}"/><text class="direct" x="{X(fj[jp])+62:.1f}" y="{Y(J[jp])+4:.1f}">Requested peak: 9.0 s</text>
 <text class="note" x="{X(0.175):.1f}" y="{Y(ymax*0.62):.1f}">The area under each curve is the sea’s energy.</text>
-<text class="note strong" x="{X(0.175):.1f}" y="{Y(ymax*0.62)+18:.1f}">Measured: {ratio:.2f} × the requested area</text>
+<text class="note strong" x="{X(0.175):.1f}" y="{Y(ymax*0.62)+18:.1f}">Measured: {vis:.2f} × the requested area</text>
 <text class="foot" x="{M}" y="{H-26}">Data: Wave Laboratory CSV export, gauge at (−120, 60) m, {len(x)/10:,.0f} s at 10 Hz, seed 20240.</text>
 <text class="foot" x="{M}" y="{H-10}">Method: Welch estimate, Hann window, 1,024 points (102.4 s), 50% overlap, {K} segments. Requested curve: JONSWAP, γ 3.3.</text>
 </svg>'''
