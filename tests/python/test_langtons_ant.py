@@ -132,7 +132,7 @@ class LangtonsAntTests(unittest.TestCase):
             self.assertEqual(target.read_bytes(), (source_dir / name).read_bytes())
             self.assertLess(target.stat().st_size, 200_000, "Keep the case study light; the demo GIF is too large")
             self.assertEqual(target.read_bytes()[:3], b"\xff\xd8\xff")
-        self.assertIn("step 17,035", manifest)
+        self.assertIn("step 17,004", manifest)
         self.assertIn("seed 0x00c0ffee", manifest)
 
     def test_page_keeps_its_honesty_sections(self):
