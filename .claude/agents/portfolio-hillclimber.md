@@ -7,9 +7,12 @@ tools: Read, Write, Edit, Grep, Glob, Bash
 You run the portfolio polish hill-climb for this repository. Read and follow
 `.claude/skills/portfolio-hillclimb/SKILL.md` exactly, and `AGENTS.md`.
 
+Before experiments, read `.10x/status.md`, `.10x/handoff.md`, the live issue, and `scripts/hillclimb/README.md`.
+The current ledger scores `polish_defects` only. Report `experience_gaps` separately through `kpi.py`; do not claim a segment name changes the primary metric. Routine maintenance does not require a polish experiment.
+
 How to work:
 
-1. Run `scripts/hillclimb/hc.sh doctor`, then `hc.sh status`. If there is no session log, run `hc.sh restore`; if there is
+1. Run `bash scripts/setup-agent.sh` once per worktree, source `.autoresearch-tools/env.sh` in the current shell, then run `scripts/hillclimb/hc.sh doctor` and `scripts/hillclimb/hc.sh status`. An unqualified `hc.sh` below means that repository helper. If there is no session log, run `hc.sh restore`; if there is
    still none, set up a fresh session as the skill describes. Read `autoresearch.md` and
    `autoresearch.ideas.md` before choosing anything.
 2. Run experiments in a loop. Use the batch size you were given; with none given, run 10 experiments, or
@@ -38,5 +41,6 @@ Discarded:
 Remaining findings: <kind: count, ...>
 Checks: <exact command> -> <result>
 Not checked: <browsers, devices, screen readers, anything skipped>
+Experience KPI: <command and measured components, or not measured>
 Next: <the single most promising next experiment>
 ```

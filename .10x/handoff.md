@@ -1,7 +1,29 @@
 # Handoff
-Owner chose the tracked roadmap with Track 1 (visual identity and imagery) first.
-Design: `.10x/specs/2026-11-10-portfolio-experience-v2-design.md`. Approved by the owner on 2026-11-10.
-Merged in pull request #116: the cover motif system (ADR-001), 14 motifs in one house style, and the pink accent `--pop`.
-Remaining work is tracked in issue #117 and its sub-issues #118 to #125. Start with #118: several motifs are still
-generic diagrams and must be redrawn to be specific to their project. Three are done; #118 lists the rest.
-When a per-project social card sets `image:`, also set a matching `image-alt` (see #120).
+
+Read `AGENTS.md`, `.github/BUILDING.md`, `scripts/hillclimb/README.md`, this file, `.10x/status.md`, and the live issue before editing. Run `bash scripts/setup-agent.sh` once per worktree and source `.autoresearch-tools/env.sh` in every render/audit shell. Doctor must end with `All tools present.`
+
+## Implemented batch
+
+#131 adds project JSON-LD; #132 enforces transfer budgets; #133 aligns three-engine setup and verification caches; #134 adds slash search with progressive shortcut metadata; #135 groups supporting files and fixes diagram label collisions; #129 adds the MapReduce status recording and preserves motion preferences/manual pauses. The batch merges in that order with merge commits. Use GitHub for actual merge state rather than assuming an open historical PR has shipped.
+
+All CodeAnt inline findings and general nitpicks in this batch were inspected, including duplicate no-script ARIA and manual-pause findings. Valid defects were fixed and verified; the old missing-rendered-schema concern was already superseded by current HTML. Summary nitpicks cannot be resolved as threads: PR dispositions and `.10x/reviews/pr-review-followup/README.md` record the result. CodeRabbit's later docstring-only warning was fixed and carried through the stack.
+
+Evidence from review follow-up is under `.10x/reviews/pr-review-followup/`; diagram evidence is under `.10x/reviews/psych-twin-label/`; existing video evidence is under `.10x/reviews/track4-b/`. Keep evidence outside docs/. The checked-in source recording includes its already-public workstation hostname. No private session URLs belong in public PRs, issues or logs.
+
+## Remaining work and boundaries
+
+- The approved design remains `.10x/specs/2026-11-10-portfolio-experience-v2-design.md`. Owner priority is Track 1 first. #118 retains motif redraw/signoff work; diagram collision repair does not complete that visual review.
+- #119 still needs real lead screenshots, image dimensions/lazy loading and layout-shift checks. #120 still needs project-specific social cards and owner review; set matching image-alt when adding image front matter.
+- #121 display titles and remaining layout decisions need the owner. Do not invent replacements or project results.
+- #123 slash shortcut is implemented, but the phone header, full active section rail, category/filter work and motif-bearing project pager are not completed by this batch. Existing report/appendix TOCs and plain project pager links should not be rebuilt blindly.
+- #124 has the diagram regression and #115 recording contribution; chart conversions, new chart kinds and other visualisations remain. Existing chart restyles require the owner's draft review as specified in #124.
+- #125 structured data, transfer budgets and secondary-engine setup/tests are implemented. Broader content, forced-colour coverage and owner phone/tablet checks remain; close only the shipped subtasks.
+- #122 video behavior now follows live reduced motion, visibility and manual pause. This does not complete the roadmap's motion scale, transitions, motif/chart animation or print/forced-colour matrix.
+- #126 remains at experience_gaps=125. Ledger PRIMARY is hardcoded to polish_defects and the benchmark does not append KPI output. Changing a segment label does not solve this. Plan a separate tested tooling change before experience-scored loops.
+- #130 (landing prose) and #136 (Langton's Ant update) were not started in this batch.
+
+## Verification and shipping
+
+Use the command map for focused checks and `bash autoresearch.checks.sh` after behavior changes. Before this documentation update, combined behavior passed 285 tests/634 subtests plus 28 Node tests and Lua checks; later docstrings passed four focused browser cases. Final integration results and issue dispositions belong in the shipping report. Do not claim prior branch checks ran on a later main merge commit.
+
+For authorized PR merges, confirm current head/checks, merge with --merge and --match-head-commit, retarget the next layer to main and verify each result. Keep branches while downstream PRs use them. Close complete issues after shipping; update partial tracks with actual merged PRs, evidence and remaining scope. App-native PR watchers should be stopped on handback.
