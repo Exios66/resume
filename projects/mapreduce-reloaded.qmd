@@ -186,7 +186,7 @@ The [final report](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846
 
 [^mr-bench]: Source: E1–E4 and E6 in the [benchmark notes at revision def9c62](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846e8c560b9be6c72b76f1cf325582059/bench/README.md#evaluation-e0e6): 1 GiB input, M = 32, R = 4, medians of three runs on four one-CPU workers sharing one VM, each output checked against the undisturbed run. Byte ratios are computed from the reported bytes shuffled. Reported, not rerun here.
 
-[^mr-e2]: Source: [E2 evaluation at revision 4dd1ca4](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846e8c560b9be6c72b76f1cf325582059/docs/evaluation.md#backup-tasks-54) and [benchmark notes](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846e8c560b9be6c72b76f1cf325582059/bench/README.md#e2-backup-tasks-and-a-straggler). Reported measurements, not rerun here.
+[^mr-e2]: Source: [E2 evaluation at revision def9c62](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846e8c560b9be6c72b76f1cf325582059/docs/evaluation.md#backup-tasks-54) and [benchmark notes](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846e8c560b9be6c72b76f1cf325582059/bench/README.md#e2-backup-tasks-and-a-straggler). Reported measurements, not rerun here.
 
 ## What is planned
 
