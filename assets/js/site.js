@@ -159,27 +159,37 @@
   try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 
   // Screen recordings follow visibility and live motion preferences. A reader's
-  // pause remains in effect until they explicitly play the recording again.
+  // pause remains in effect until they explicitly play the recording again. The
+  // light and dark takes in one figure share that pause, so switching the theme
+  // does not restart a recording the reader stopped.
   (function () {
     if (!("IntersectionObserver" in window)) return;
     var motion;
     try { motion = window.matchMedia("(prefers-reduced-motion: reduce)"); } catch (e) {}
+    var groups = [];
+    function groupFor(video) {
+      var key = video.closest("figure") || video;
+      for (var i = 0; i < groups.length; i++) if (groups[i].key === key) return groups[i];
+      var group = { key: key, manuallyPaused: false };
+      groups.push(group);
+      return group;
+    }
     Array.prototype.forEach.call(doc.querySelectorAll("video[data-autoplay]"), function (video) {
-      var visible = false, manuallyPaused = false, automaticPauses = 0;
+      var visible = false, automaticPauses = 0, group = groupFor(video);
       function update() {
         if (!visible || (motion && motion.matches)) {
           if (!video.paused) { automaticPauses++; video.pause(); }
           return;
         }
-        if (manuallyPaused) return;
+        if (group.manuallyPaused) return;
         var started = video.play();
         if (started && started.catch) started.catch(function () {});
       }
       video.addEventListener("pause", function () {
         if (automaticPauses) automaticPauses--;
-        else manuallyPaused = true;
+        else group.manuallyPaused = true;
       });
-      video.addEventListener("play", function () { manuallyPaused = false; });
+      video.addEventListener("play", function () { group.manuallyPaused = false; });
       var observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           visible = entry.isIntersecting && entry.intersectionRatio >= 0.5;

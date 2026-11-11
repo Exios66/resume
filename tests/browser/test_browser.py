@@ -456,6 +456,29 @@ def test_recording_matches_the_site_theme(site, scheme, stored):
         page.close()
 
 
+def test_recording_pause_survives_theme_switch(site):
+    """A reader's pause on one take carries over to the other take after a theme switch."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": 1280, "height": 900}, color_scheme="light", reduced_motion="no-preference")
+    try:
+        page.goto(base + "projects/mapreduce-reloaded.html")
+        light, dark = page.locator("video.clip-light"), page.locator("video.clip-dark")
+        light.evaluate("el => el.scrollIntoView({block: 'center'})")
+        page.wait_for_function("!document.querySelector('video.clip-light').paused")
+        light.evaluate("el => el.pause()")
+        page.locator(".theme-toggle").click()
+        expect(dark).to_be_visible()
+        page.wait_for_timeout(800)
+        assert dark.evaluate("el => el.paused"), "the dark take autoplayed after the reader paused"
+        assert light.evaluate("el => el.paused")
+        dark.evaluate("el => el.play()")
+        page.wait_for_function("!document.querySelector('video.clip-dark').paused")
+        page.locator(".theme-toggle").click()
+        page.wait_for_function("!document.querySelector('video.clip-light').paused")
+    finally:
+        page.close()
+
+
 def test_no_script_and_print_from_dark(site, tmp_path):
     """Keep navigation usable without scripts and print the dark résumé legibly."""
     browser, base = site

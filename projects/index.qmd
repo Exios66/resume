@@ -34,10 +34,10 @@ An interactive map of all 8,192 TinyStories neurons, with live steering and abla
 
 One question runs through five projects: how do you read and sort business documents accurately, at a cost you can defend? I followed it from raw public data to a deployable service, and each project answers one part of it.
 
-- **The data.** [Mailroom-Corpus-EDA](mailroom-corpus-eda.qmd) builds the 3,302-document corpus the others share, with a record of where every label came from and labels kept out of the text a model reads.
+- **The data.** [Mailroom-Corpus-EDA](mailroom-corpus-eda.qmd) builds the 3,302-document corpus behind Digital-Mailroom, which Mailroom-ML re-splits by document for training, with a record of where every label came from and labels kept out of the text a model reads.
 - **The design.** [Digital-Mailroom](digital-mailroom.qmd), my capstone with American Family Insurance, sends each document to the cheapest step that can handle it and scores the routing by fixed rules.
 - **The model.** [Mailroom-ML](mailroom-ml.qmd) trains a ModernBERT classifier whose calibrated confidence decides which documents can skip the LLM.
-- **The service.** [Mailroom Reloaded](mailroom-reloaded.qmd) rebuilds the design so that code, not a model, owns the control flow. A clean document costs exactly two LLM calls.
+- **The service.** [Mailroom Reloaded](mailroom-reloaded.qmd) rebuilds the design so that code, not a model, owns the control flow. A clean text document costs exactly two LLM calls.
 - **The no-training baseline.** [RVL-CDIP-Classifier](rvl-cdip-classifier.qmd) asks how far a general vision LLM gets on the standard benchmark with only a prompt, and what each page costs.
 
 {{< include ../partials/diagrams/_ecosystem.qmd >}}

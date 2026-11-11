@@ -11,7 +11,7 @@ description: "Portfolio of Jack J. Burleson: document-intelligence pipelines, tr
 [Machine Learning • Data Science • AI Engineering & Safety]{.role}
 
 ::: {.lede}
-I build AI systems that know when they are unsure, from the dataset to the deployed service: document pipelines that send each page to the cheapest model that can handle it, transformers calibrated so their confidence means something, and evaluations that hold up when someone checks.
+I build AI systems that know when they are unsure, from the dataset to the deployed service: document pipelines that route each document to the cheapest step that can handle it, transformers calibrated so their confidence means something, and evaluations that hold up when someone checks.
 :::
 
 ::: {.contact}

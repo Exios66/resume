@@ -46,10 +46,10 @@
     <path class="d-arrow" d="M700 138V204" marker-end="url(#ecosystem-ah)" fill="none" stroke="currentColor"/>
     <text class="d-muted d-edge" x="712" y="176">rebuilt as</text>
     <path class="d-arrow" d="M242 300H286" marker-end="url(#ecosystem-ah)" fill="none" stroke="currentColor"/>
-    <text class="d-muted d-edge" x="265" y="286" text-anchor="middle">trains</text>
+    <text class="d-muted d-edge" x="265" y="272" text-anchor="middle"><tspan x="265">re-split</tspan><tspan x="265" dy="14">to train</tspan></text>
     <path class="d-arrow" d="M512 300H556" marker-end="url(#ecosystem-ah)" fill="none" stroke="currentColor"/>
     <text class="d-muted d-edge" x="535" y="286" text-anchor="middle">feeds</text>
   </svg>
-  <figcaption id="ecosystem-cap">How the five document-intelligence projects connect. Mailroom-Corpus-EDA builds the public-source <code>mailroom-dataset</code>, which supplies the Digital-Mailroom capstone and trains Mailroom-ML. Mailroom-ML's classifier runs as the <code>bert_primary</code> stage of Mailroom Reloaded, a deployable rebuild of the capstone design. The RVL-CDIP prompt study is related work on a public benchmark, with no data flow drawn to the others.</figcaption>
+  <figcaption id="ecosystem-cap">How the five document-intelligence projects connect. Mailroom-Corpus-EDA builds the public-source <code>mailroom-dataset</code>, which supplies the Digital-Mailroom capstone. Mailroom-ML trains on a separate, document-level split of the same 3,302 documents, not on the published corpus itself. Mailroom-ML's classifier runs as the <code>bert_primary</code> stage of Mailroom Reloaded, a deployable rebuild of the capstone design. The RVL-CDIP prompt study is related work on a public benchmark, with no data flow drawn to the others.</figcaption>
 </figure>
 ```

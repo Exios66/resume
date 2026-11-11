@@ -2,7 +2,7 @@
 
 ## Overall assessment: share with noted caveats
 
-The recorded data are complete and reproduce the app's own statistics exactly. The gauge
+The recorded data are complete and agree closely with the app's own statistics (wave counts and heights match; Hm0 differs by 0.01 m and Tp by one spectral bin; see the table). The gauge
 sea carries about 30 % more variance than the requested JONSWAP sea, and neither the
 length of the record nor the randomness of one seed is likely to explain that. The cause is
 not yet confirmed.
@@ -53,10 +53,10 @@ not yet confirmed.
 
 ## Method
 
-Welch periodogram over the full record: Hann window, 1,024 points (102.4 s), 50 % overlap,
+Welch periodogram over the first 13,312 samples (1,331.2 s; the final 408 samples, 40.8 s, do not fill a segment): Hann window, 1,024 points (102.4 s), 50 % overlap,
 25 segments, about 43 equivalent degrees of freedom. The 90 % band uses the χ²
 (Wilson–Hilferty) interval. The target is the JONSWAP form with σ 0.07/0.09, normalised so
-that 4√m0 = 2.5 m. Script: `spectrum_figure.py` in this folder.
+that 4√m0 = 2.5 m. Script: `python3 spectrum_figure.py moderate-sea-container-ship-telemetry.csv [out-dir]` in this folder.
 
 ## Caveats for any page that shows the figure
 

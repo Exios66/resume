@@ -1,11 +1,19 @@
-import sys,numpy as np
-S=sys.argv[1]
-d=np.genfromtxt(S+'/telemetry.csv',delimiter=',',names=True);x=d['gauge1eta'];x=x-x.mean()
+"""Welch spectrum of the Wave Laboratory gauge record against the requested JONSWAP sea.
+
+Usage: python spectrum_figure.py <telemetry.csv> [out-dir]
+The CSV is the app's "Export CSV" file (moderate-sea-container-ship-telemetry.csv).
+Writes spec.svg (self-styled, light), spec-light.html and spec-dark.html to out-dir
+(default: the CSV's folder).
+"""
+import os,sys,numpy as np
+CSV=sys.argv[1];S=sys.argv[2] if len(sys.argv)>2 else os.path.dirname(os.path.abspath(CSV))
+d=np.genfromtxt(CSV,delimiter=',',names=True);x=d['gauge1eta'];x=x-x.mean()
 fs=10;N=1024;w=np.hanning(N);segs=[x[i:i+N]*w for i in range(0,len(x)-N+1,N//2)];K=len(segs)
 P=np.mean([abs(np.fft.rfft(s))**2 for s in segs],0)/(fs*(w**2).sum());P[1:-1]*=2
 f=np.fft.rfftfreq(N,1/fs)
 nu=2*K*0.9/ (1+2*(0.167)**2)  # Welch Hann 50% overlap equivalent dof (approx)
-def chi2q(p,v):  # Wilson-Hilferty
+def chi2q(p,v):
+    """Chi-squared quantile p with v degrees of freedom (Wilson-Hilferty)."""
     from statistics import NormalDist;z=NormalDist().inv_cdf(p);return v*(1-2/(9*v)+z*np.sqrt(2/(9*v)))**3
 lo=nu*P/chi2q(.95,nu);hi=nu*P/chi2q(.05,nu)
 fp=1/9;s=np.where(f<=fp,.07,.09);ff=np.where(f>0,f,1e-9)
@@ -19,7 +27,9 @@ print('K',K,'nu',round(nu,1),'Hm0',round(hm0,3),'ratio m0',round(m0/(2.5/4)**2,3
 W,H=760,440;L,R,T,B=64,24,92,58;pw,ph=W-L-R,H-T-B
 ymax=np.ceil(max(hi.max(),J.max())/5)*5
 X=lambda v:L+(v-0.03)/(0.27)*pw;Y=lambda v:T+ph-(v/ymax)*ph
-def line(xs,ys):return 'M'+' L'.join(f'{X(a):.1f} {Y(b):.1f}' for a,b in zip(xs,ys))
+def line(xs,ys):
+    """SVG path data for a polyline in chart coordinates."""
+    return 'M'+' L'.join(f'{X(a):.1f} {Y(b):.1f}' for a,b in zip(xs,ys))
 band=line(f,hi)+' L'+' L'.join(f'{X(a):.1f} {Y(b):.1f}' for a,b in zip(f[::-1],lo[::-1]))+' Z'
 g=[]
 for yv in np.arange(0,ymax+0.01,5):
@@ -55,4 +65,4 @@ svg text{fill:var(--muted);font-size:12px}.title{fill:var(--ink)!important;font-
 .j{stroke:var(--c2);stroke-width:2;fill:none;stroke-dasharray:6 4}.mdot{fill:var(--c1);stroke:var(--paper);stroke-width:2}'''
 for mode in ('light','dark'):
     open(f'{S}/spec-{mode}.html','w').write(f'<!doctype html><meta charset=utf-8><style>{css}</style><body class="{"dark" if mode=="dark" else ""}">{svg}')
-open(f'{S}/spec.svg','w').write(svg)
+open(f'{S}/spec.svg','w').write(svg.replace('xmlns="http://www.w3.org/2000/svg">',f'xmlns="http://www.w3.org/2000/svg"><style>svg{{font-family:Inter,system-ui,sans-serif}}{css.split("}",1)[1]}</style><rect width="100%" height="100%" fill="#fff"/>',1))
