@@ -82,3 +82,17 @@ git diff --check
 The shared browser exercised slash navigation and focused search at 1280×800 and 375×812 CSS px. Screenshots: search-hover-1280-light.png, search-focus-1280-light.png, search-focus-375-light.png. Recording: search-desktop-mobile.mp4. Video screenshots: video-1280-light.png (1280×900 viewport) and video-375-light.png (375×812 viewport). Mobile PNGs use the browser's 2× display scale. Evidence stays outside docs/. Screenshots were inspected; the recording's page states were inspected. The video contains the existing public source recording's workstation hostname, as already documented on #129; no credentials or private session links were added.
 
 The full suite primarily exercises Chromium, with the repository's targeted Firefox/WebKit checks and the six new video cases in all three engines. Tests cover both themes and multiple widths through the existing suite. AltGr is modeled using a synthetic modifier state; no physical international keyboard or real-device pass was performed. Manual pause is exercised through the browser's media pause API, which dispatches the same pause event as native controls. External forms were not submitted and no external state was tested through site links. Review summaries are not resolvable GitHub threads; their findings were investigated and recorded here. No audit scoring logic was changed.
+
+## Final CodeRabbit follow-up
+
+The first #134 review was cancelled because its base changed during analysis. A fresh run completed with no shortcut defect and a documentation warning: two of the three changed browser tests lacked docstrings. Both tests now document their purpose. This documentation-only change was rebased through #135 and #129 without conflicts; no behavior or generated HTML changed.
+
+On #134 before the relocation, ran:
+
+```sh
+. .autoresearch-tools/env.sh
+RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q tests/test_browser.py -k 'slash or no_script or unavailable_script'
+git diff --check
+```
+
+Result: 4 passed, 55 deselected. The earlier complete 285-test / 634-subtest gate remains the behavior validation; it was not repeated solely for docstrings.
