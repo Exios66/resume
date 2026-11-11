@@ -432,6 +432,53 @@ def test_mobile_report_charts_in_other_engines(site, playwright, engine):
         browser.close()
 
 
+@pytest.mark.parametrize("scheme,stored", [("light", None), ("dark", None), ("light", "dark"), ("dark", "light")])
+def test_recording_matches_the_site_theme(site, scheme, stored):
+    """Only the take that matches the effective theme is shown, plays, and has its own poster."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": 1280, "height": 900}, color_scheme=scheme, reduced_motion="no-preference")
+    try:
+        if stored:
+            page.add_init_script(f"try {{ localStorage.setItem('theme', '{stored}') }} catch (e) {{}}")
+        page.goto(base + "projects/mapreduce-reloaded.html")
+        theme = page.evaluate("document.documentElement.getAttribute('data-theme')")
+        want = stored or scheme
+        if stored:
+            assert theme == stored
+        shown, hidden = page.locator(f"video.clip-{want}"), page.locator(f"video.clip-{'dark' if want == 'light' else 'light'}")
+        expect(shown).to_be_visible()
+        expect(hidden).to_be_hidden()
+        assert shown.get_attribute("poster").endswith(f"mapreduce-status-{want}.png")
+        shown.evaluate("el => el.scrollIntoView({block: 'center'})")
+        page.wait_for_function(f"!document.querySelector('video.clip-{want}').paused")
+        assert hidden.evaluate("el => el.paused")
+    finally:
+        page.close()
+
+
+def test_recording_pause_survives_theme_switch(site):
+    """A reader's pause on one take carries over to the other take after a theme switch."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": 1280, "height": 900}, color_scheme="light", reduced_motion="no-preference")
+    try:
+        page.goto(base + "projects/mapreduce-reloaded.html")
+        light, dark = page.locator("video.clip-light"), page.locator("video.clip-dark")
+        light.evaluate("el => el.scrollIntoView({block: 'center'})")
+        page.wait_for_function("!document.querySelector('video.clip-light').paused")
+        light.evaluate("el => el.pause()")
+        page.locator(".theme-toggle").click()
+        expect(dark).to_be_visible()
+        page.wait_for_timeout(800)
+        assert dark.evaluate("el => el.paused"), "the dark take autoplayed after the reader paused"
+        assert light.evaluate("el => el.paused")
+        dark.evaluate("el => el.play()")
+        page.wait_for_function("!document.querySelector('video.clip-dark').paused")
+        page.locator(".theme-toggle").click()
+        page.wait_for_function("!document.querySelector('video.clip-light').paused")
+    finally:
+        page.close()
+
+
 def test_no_script_and_print_from_dark(site, tmp_path):
     """Keep navigation usable without scripts and print the dark résumé legibly."""
     browser, base = site
@@ -902,7 +949,7 @@ def test_recording_respects_visibility_motion_and_manual_pause(site, playwright,
     page = browser.new_page(viewport={"width": width, "height": 900}, reduced_motion="no-preference")
     try:
         page.goto(base + 'projects/mapreduce-reloaded.html')
-        video = page.locator('video[data-autoplay]')
+        video = page.locator('video.clip-light')
         video.evaluate("el => el.scrollIntoView({block: 'center'})")
         page.wait_for_function("!document.querySelector('video').paused")
         # Less than half visible must pause even though it still intersects.

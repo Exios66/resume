@@ -11,7 +11,7 @@ description: "Portfolio of Jack J. Burleson: document-intelligence pipelines, tr
 [Machine Learning • Data Science • AI Engineering & Safety]{.role}
 
 ::: {.lede}
-I build AI systems from start to finish: multi-agent document pipelines, fine-tuned and calibrated transformers, LLM evaluation harnesses, and behavioral prediction models.
+I build AI systems that know when they are unsure, from the dataset to the deployed service: document pipelines that route each document to the cheapest step that can handle it, transformers calibrated so their confidence means something, and evaluations that hold up when someone checks.
 :::
 
 ::: {.contact}
@@ -29,7 +29,7 @@ I build AI systems from start to finish: multi-agent document pipelines, fine-tu
 
 ## Now
 
-M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (expected Dec 2026). My capstone, **Digital-Mailroom**, is built with industry partner American Family Insurance. It looks for ways to cut the cost of AI inference and improve how documents are read, sorted, and managed.
+I'm finishing an M.S. in Psychology: Data Science in Human Behavior at UW–Madison (expected December 2026). My capstone, **Digital-Mailroom**, is with American Family Insurance and asks a practical question: how do you cut the cost of AI inference while reading documents better, not worse? My part is the engineering: a pipeline that routes each document to the cheapest step that can handle it, and the scoring that shows whether the routing works.
 
 ## Featured Projects
 
@@ -38,14 +38,14 @@ M.S. candidate in Psychology: Data Science in Human Behavior at UW–Madison (ex
 ### [Digital-Mailroom](projects/digital-mailroom.qmd)
 [Capstone · American Family Insurance]{.kicker}
 
-Five Python packages and one LangGraph pipeline that joins legal-document routing, prompt experiments, deterministic scoring, and deployment, in a reproducible Docker environment.
+Five Python packages and one LangGraph pipeline that route legal documents to the cheapest step that can handle them. Prompt experiments are judged by fixed rules against known labels, not by another model, and the whole run repeats in Docker.
 :::
 
 ::: {.card cover="mailroom-ml"}
 ### [Mailroom-ML](projects/mailroom-ml.qmd)
 [Training, evaluation & calibration]{.kicker}
 
-A calibrated ModernBERT classifier with a guarded fast path and an LLM fallback. Includes ONNX CPU serving and a Modal fallback; evaluation coverage is not a production routing rate.
+A ModernBERT classifier that calibrates its own confidence, answers the easy documents itself and passes the rest to an LLM. It serves on CPU through ONNX, with a Modal fallback, and a leak audit caught a label leak in my own training data.
 :::
 
 ::: {.card cover="neuron-atlas"}
@@ -59,7 +59,7 @@ Explore and steer all 8,192 neurons of TinyStories-8M in the browser, with rando
 ### [Wave Laboratory](projects/wave-laboratory.qmd)
 [Side project · simulation & graphics]{.kicker}
 
-A real-time 3D ocean and ship-motion sandbox that runs in the browser, built on spectral wave physics.
+A real-time 3D ocean in the browser, built on spectral wave physics. Set a sea state and watch a container ship pitch and roll through it, with wave gauges and seakeeping statistics alongside.
 :::
 :::
 
@@ -67,7 +67,9 @@ A real-time 3D ocean and ship-motion sandbox that runs in the browser, built on 
 
 ## What I'm interested in
 
-I'm interested in AI systems that know when they are unsure. That means calibrated classifiers, evaluation you can trust, and pipelines that pass hard cases to a stronger model or a person instead of guessing. Outside of that, I like turning physics into interactive software, and I'm interested in how people think, which is what my psychology training is about.
+I came to machine learning through psychology, and it shapes what I work on. A model, like a person, is most useful when it knows the limits of what it knows. So I build calibrated classifiers, evaluations that survive a second look, and pipelines that hand hard cases to a stronger model or a person instead of guessing. Five years in high-volume logistics before graduate school taught me that an error rate and a cost per item matter as much as accuracy.
+
+Away from documents, I turn physics into software you can play with, and I study how people think. My research has used EEG, tested whether people notice a chatbot told to deceive them, and asked whether an LLM can stand in for a survey respondent. So far it cannot beat simple baselines.
 
 ## Explore
 
