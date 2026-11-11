@@ -109,7 +109,7 @@ L 485.309403 22.218844
      </g>
     </g>
     <g id="text_8">
-     <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="282.400312" y="310.478086" transform="rotate(-0 282.400312 310.478086)">Committee size K (majority vote)</text>
+     <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="282.400312" y="310.478086" transform="rotate(-0 282.400312 310.478086)">Votes per image (committee size K)</text>
     </g>
    </g>
    <g id="matplotlib.axis_2">
@@ -285,25 +285,25 @@ z
     </g>
    </g>
    <g id="text_19">
-    <text style="fill: #262626; font: 8.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="79.491222" y="202.299044" transform="rotate(-0 79.491222 202.299044)">0.821</text>
+    <text style="fill: #262626; font: 8.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="79.491222" y="202.299044" transform="rotate(-0 79.491222 202.299044)">82.1%</text>
    </g>
    <g id="text_20">
-    <text style="fill: #262626; font: 8.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="113.309403" y="154.482044" transform="rotate(-0 113.309403 154.482044)">0.836</text>
+    <text style="fill: #262626; font: 8.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="113.309403" y="154.482044" transform="rotate(-0 113.309403 154.482044)">83.6%</text>
    </g>
    <g id="text_21">
-    <text style="fill: #262626; font: 8.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="147.127585" y="128.979644" transform="rotate(-0 147.127585 128.979644)">0.844</text>
+    <text style="fill: #262626; font: 8.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="147.127585" y="128.979644" transform="rotate(-0 147.127585 128.979644)">84.4%</text>
    </g>
    <g id="text_22">
-    <text style="fill: #262626; font: 8.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="180.945767" y="109.852844" transform="rotate(-0 180.945767 109.852844)">0.850</text>
+    <text style="fill: #262626; font: 8.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="180.945767" y="109.852844" transform="rotate(-0 180.945767 109.852844)">85.0%</text>
    </g>
    <g id="text_23">
-    <text style="fill: #262626; font: 8.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="316.218494" y="81.162644" transform="rotate(-0 316.218494 81.162644)">0.859</text>
+    <text style="fill: #262626; font: 8.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="316.218494" y="81.162644" transform="rotate(-0 316.218494 81.162644)">85.9%</text>
    </g>
    <g id="text_24">
-    <text style="fill: #262626; font: 8.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="485.309403" y="68.411444" transform="rotate(-0 485.309403 68.411444)">0.863</text>
+    <text style="fill: #262626; font: 8.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="485.309403" y="68.411444" transform="rotate(-0 485.309403 68.411444)">86.3%</text>
    </g>
    <g id="text_25">
-    <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="282.400312" y="16.218844" transform="rotate(-0 282.400312 16.218844)">Ensemble majority vote: monotone gains, diminishing returns</text>
+    <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="282.400312" y="16.218844" transform="rotate(-0 282.400312 16.218844)">Majority voting raises accuracy, with diminishing returns (simulated)</text>
    </g>
   </g>
  </g>

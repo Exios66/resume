@@ -99,7 +99,7 @@ L 477.902052 22.25625
      </g>
     </g>
     <g id="text_7">
-     <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="274.992961" y="310.515492" transform="rotate(-0 274.992961 310.515492)">Prompt version (qwen3.7-flash, 160-image slice)</text>
+     <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="274.992961" y="310.515492" transform="rotate(-0 274.992961 310.515492)">Prompt version (qwen3.7-flash, 160-image tuning slice)</text>
     </g>
    </g>
    <g id="matplotlib.axis_2">
@@ -236,7 +236,7 @@ z
     <text style="fill: #333333; font: 9px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="477.902052" y="37.814117" transform="rotate(-0 477.902052 37.814117)">99.4%</text>
    </g>
    <g id="text_21">
-    <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="274.992961" y="16.25625" transform="rotate(-0 274.992961 16.25625)">Accuracy on the 160-image tuning slice by prompt version (not held out)</text>
+    <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="274.992961" y="16.25625" transform="rotate(-0 274.992961 16.25625)">Tuning-slice accuracy rose from 80% to 99% across prompt versions</text>
    </g>
   </g>
  </g>

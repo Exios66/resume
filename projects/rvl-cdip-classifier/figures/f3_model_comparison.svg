@@ -94,7 +94,7 @@ L 591.192961 22.372406
      </g>
     </g>
     <g id="text_6">
-     <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="358.692961" y="378.564056" transform="rotate(-0 358.692961 378.564056)">Model (best prompt version on the 160-image slice)</text>
+     <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="358.692961" y="378.564056" transform="rotate(-0 358.692961 378.564056)">Model and prompt version (160-image tuning slice)</text>
     </g>
    </g>
    <g id="matplotlib.axis_2">
@@ -159,7 +159,7 @@ L 665.592961 37.156406
      </g>
     </g>
     <g id="text_13">
-     <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="16.372406" y="177.604406" transform="rotate(-90 16.372406 177.604406)">Exact-match accuracy (%) on the 160-image slice</text>
+     <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="16.372406" y="177.604406" transform="rotate(-90 16.372406 177.604406)">Exact-match accuracy (%)</text>
     </g>
    </g>
    <g id="line2d_12">
@@ -243,10 +243,10 @@ z
     <text style="fill: #222222; font: 700 10px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="591.192961" y="102.017522" transform="rotate(-0 591.192961 102.017522)">70.0%</text>
    </g>
    <g id="text_19">
-    <text style="fill: #8ab17d; font: 9.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: end" x="635.367961" y="90.264761" transform="rotate(-0 635.367961 90.264761)">v1 baseline 80.1%</text>
+    <text style="fill: #8ab17d; font: 9.5px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: end" x="635.367961" y="90.264761" transform="rotate(-0 635.367961 90.264761)">v1 prompt baseline 80.1%</text>
    </g>
    <g id="text_20">
-    <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="358.692961" y="16.372406" transform="rotate(-0 358.692961 16.372406)">Model comparison (best prompt version per model)</text>
+    <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="358.692961" y="16.372406" transform="rotate(-0 358.692961 16.372406)">Best tuning-slice accuracy for each model, with 95% intervals</text>
    </g>
    <g id="LineCollection_1">
     <path d="M 126.192961 50.372867 

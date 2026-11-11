@@ -177,7 +177,7 @@ z
     <text style="fill: #262626; font: 9px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="316.796531" y="65.108282" transform="rotate(-0 316.796531 65.108282)">$0.0534</text>
    </g>
    <g id="text_11">
-    <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="207.575131" y="49.584" transform="rotate(-0 207.575131 49.584)">OpenRouter-reported per-image cost</text>
+    <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="207.575131" y="49.584" transform="rotate(-0 207.575131 49.584)">Billed cost per image</text>
    </g>
   </g>
   <g id="axes_2">
@@ -450,7 +450,7 @@ z
 " clip-path="url(#p72a04aff88)" style="fill: #e9c46a; stroke: #ffffff; stroke-linejoin: miter"/>
    </g>
    <g id="text_21">
-    <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="572.811494" y="49.584" transform="rotate(-0 572.811494 49.584)">Linear scale-up at 800 / 25k / 320k images</text>
+    <text style="fill: #262626; font: 12.6px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="572.811494" y="49.584" transform="rotate(-0 572.811494 49.584)">Projected total for 800, 25,000 and 320,000 images</text>
    </g>
    <g id="legend_1">
     <g id="patch_28">
@@ -505,7 +505,7 @@ z
    </g>
   </g>
   <g id="text_26">
-   <text style="fill: #262626; font: 15.12px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="379.393312" y="18.216338" transform="rotate(-0 379.393312 18.216338)">Cost per image and scale-up projections (derived from OpenRouter metrics)</text>
+   <text style="fill: #262626; font: 15.12px 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle" x="379.393312" y="18.216338" transform="rotate(-0 379.393312 18.216338)">Cost per image and projected cost at scale, from OpenRouter billing</text>
   </g>
  </g>
  <defs>
