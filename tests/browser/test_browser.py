@@ -991,3 +991,91 @@ def test_recording_respects_visibility_motion_and_manual_pause(site, playwright,
         page.wait_for_function("!document.querySelector('video').paused")
     finally:
         browser.close()
+
+
+def test_split_table_code_reads_as_one_token(site):
+    """Long code split at break points keeps no padding gap between its pieces."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": 1280, "height": 900})
+    try:
+        for width in (1280, 375):
+            page.set_viewport_size({"width": width, "height": 900})
+            page.goto(base + "projects/mailroom-ml/report.html")
+            gaps = page.evaluate("""() => [...document.querySelectorAll('td wbr + code')].map(code => {
+                const before = code.previousElementSibling.previousElementSibling.getBoundingClientRect();
+                const box = code.getBoundingClientRect();
+                const style = getComputedStyle(code), previous = getComputedStyle(code.previousElementSibling.previousElementSibling);
+                return {sameLine: Math.abs(before.top - box.top) < 2, gap: box.left - before.right,
+                        pad: parseFloat(style.paddingLeft) + parseFloat(previous.paddingRight)};
+            })""")
+            assert len(gaps) > 20
+            assert all(item["pad"] == 0 for item in gaps)
+            assert all(abs(item["gap"]) < 0.5 for item in gaps if item["sameLine"])
+    finally:
+        page.close()
+
+
+def test_compact_charts_keep_labels_near_body_size_on_desktop(site):
+    """A chart drawn 320 units wide is not scaled until its labels double."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": 1280, "height": 900}, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/mapreduce-reloaded.html")
+        for selector in ("#mr-backup-duration .chart svg", "#mr-backup-uncertainty .chart svg"):
+            sizes = page.locator(selector).evaluate("""svg => {
+                const scale = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width;
+                return [...svg.querySelectorAll('text')].map(text => parseFloat(getComputedStyle(text).fontSize) * scale);
+            }""")
+            assert sizes and 12 <= min(sizes) and max(sizes) <= 20, (selector, sizes)
+    finally:
+        page.close()
+
+
+def test_phone_source_rows_and_copy_button_clear_their_content(site):
+    """Linked source rows keep values off the outline; Copy does not cover code."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/mapreduce-reloaded.html")
+        row = page.locator("#mr-backup-duration table.chart-source tbody tr").first
+        row.focus()
+        expect(row).to_have_class(re.compile(r"\bis-linked\b"))
+        edges = row.evaluate("""tr => {
+            const box = tr.getBoundingClientRect(), range = document.createRange();
+            const ends = [tr.firstElementChild, tr.lastElementChild].map(cell => {
+                range.selectNodeContents(cell); return range.getBoundingClientRect(); });
+            return {left: ends[0].left - box.left, right: box.right - ends[1].right,
+                    position: getComputedStyle(tr.firstElementChild).position};
+        }""")
+        assert edges["left"] >= 5 and edges["right"] >= 5, edges
+        assert edges["position"] == "static"
+        stacked = page.locator("#mr-backup-uncertainty table.chart-source.stack tbody tr").first
+        assert stacked.evaluate("tr => parseFloat(getComputedStyle(tr).paddingRight)") >= 8
+
+        page.goto(base + "projects/mailroom-ml/report.html")
+        blocks = page.locator("div.code-copy-outer-scaffold")
+        assert blocks.count() >= 2
+        for block in blocks.all():
+            clear = block.evaluate("""el => {
+                const button = el.querySelector('.code-copy-button').getBoundingClientRect();
+                const range = document.createRange(); range.selectNodeContents(el.querySelector('code'));
+                return range.getBoundingClientRect().top - button.bottom;
+            }""")
+            assert clear >= 0, clear
+    finally:
+        page.close()
+
+
+def test_dark_theme_plate_is_for_transparent_figures_only(site):
+    """Opaque JPEG screenshots get no white frame in dark mode; other figures keep the plate."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": 1280, "height": 900}, color_scheme="dark")
+    try:
+        page.goto(base + "projects/neuron-atlas.html")
+        expect(page.locator('img.fig[src$=".jpg"]').first).to_have_css("padding", "0px")
+        page.goto(base + "projects/mailroom-ml/report.html")
+        plated = page.locator('img.fig:not([src$=".jpg"])').first
+        expect(plated).to_have_css("padding", "10px")
+        expect(plated).to_have_css("background-color", "rgb(255, 255, 255)")
+    finally:
+        page.close()
