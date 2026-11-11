@@ -11,6 +11,10 @@ House style, so the fourteen read as one set:
 - cards, pages and pills cast a soft offset shade; each motif has one focal element with a glow,
   and that element alone is hot pink (class cv-pop);
 - curves are smooth cubic splines, never visible line segments.
+
+The test for every motif: cover the title. If a reader cannot tell which project the drawing belongs
+to, or the drawing would fit a different project equally well, it fails and must be redrawn from
+something only that project has (check the idea against the project's own case study).
 """
 import math
 import pathlib
@@ -176,8 +180,9 @@ def digital_mailroom():
 
 
 def mailroom_ml():
-    # a calibration curve against the diagonal; above the confidence gate the classifier answers,
-    # below it the document goes to the fallback
+    # a calibration curve against the diagonal and the confidence gate. Past the gate, two different routes:
+    # the fast path, where overlapping token windows vote and the encoder stamps a label tag, and the
+    # dashed fallback to the LLM, drawn as a speech bubble of generated text
     x0, y0, s = 40, 102, 84
     gate = x0 + 0.7 * s
     out = rect("cv-soft", gate, y0 - s, x0 + s - gate, s)
@@ -190,8 +195,27 @@ def mailroom_ml():
     out += path("cv-accent cv-dash", f"M{n(gate)} {y0} v-{s}")
     jx = x0 + s + 28
     out += glow(jx, 60, 26) + path("cv-accent", f"M{x0 + s + 5} 60 H{jx - 8}") + circle("cv-dot cv-pop", jx, 60, 7.5)
-    out += branch(jx + 8, 60, jx + 56, 36) + pill(jx + 58, 23, 74, 26, 0.9, "cv-dot")
-    out += branch(jx + 8, 60, jx + 56, 84, "cv-accent cv-dash") + pill(jx + 58, 71, 74, 26, 0.6, "cv-dotsoft")
+    # fast path: three overlapping windows of one document, then the label they vote for
+    wx = jx + 40
+    out += branch(jx + 8, 60, wx - 2, 33)
+    for k in range(3):
+        out += shaded(wx + k * 9, 22 + k * 3, 24, 18, 3) + path("cv-line", f"M{n(wx + k * 9 + 5)} {n(29 + k * 3)} h14")
+    tx = wx + 52
+    out += path("cv-accent", f"M{n(wx + 45)} 36 H{n(tx - 1)}")
+    tag = f"M{n(tx)} 36 L{n(tx + 8)} 27 H{n(tx + 38)} V45 H{n(tx + 8)} Z"
+    out += path("cv-shade", f"M{n(tx + 3)} 39 L{n(tx + 11)} 30 H{n(tx + 41)} V48 H{n(tx + 11)} Z") + path("cv-page", tag)
+    out += circle("cv-dot", tx + 9, 36, 2) + path("cv-line", f"M{n(tx + 16)} 36 h15")
+    # fallback: a dashed route to the LLM, which answers in words
+    bx, by, bw, bh = wx - 2, 70, tx + 38 - (wx - 2), 26
+    out += branch(jx + 8, 60, bx - 2, by + 11, "cv-accent cv-dash")
+
+    def bubble(x, y):
+        return (f"M{n(x + 7)} {n(y)} H{n(x + bw - 7)} Q{n(x + bw)} {n(y)} {n(x + bw)} {n(y + 7)} V{n(y + bh - 7)} "
+                f"Q{n(x + bw)} {n(y + bh)} {n(x + bw - 7)} {n(y + bh)} H{n(x + 22)} L{n(x + 12)} {n(y + bh + 7)} "
+                f"L{n(x + 13)} {n(y + bh)} H{n(x + 7)} Q{n(x)} {n(y + bh)} {n(x)} {n(y + bh - 7)} V{n(y + 7)} "
+                f"Q{n(x)} {n(y)} {n(x + 7)} {n(y)} Z")
+    out += path("cv-shade", bubble(bx + 3, by + 3)) + path("cv-page", bubble(bx, by))
+    out += path("cv-line", f"M{n(bx + 10)} {by + 9} h{n(bw - 26)} M{n(bx + 10)} {by + 17} h{n(bw - 44)} m6 0 h10")
     return out
 
 
