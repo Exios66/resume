@@ -1,6 +1,6 @@
-"""Opt-in, real Chromium checks of the rendered site; serves it under a subpath.
+"""Opt-in, real-browser checks of the rendered site; serves it under a subpath.
 
-pip install playwright pytest pypdf && playwright install chromium
+pip install playwright pytest pypdf && playwright install chromium firefox webkit
 RUN_BROWSER_TESTS=1 python -m pytest -q tests/test_browser.py
 """
 

@@ -16,9 +16,8 @@ $LUA tests/test_charts.lua
 echo "Node tests"
 node --test tests/theme.test.cjs tests/icons.test.cjs
 
-echo "Python and Chromium tests (Firefox and WebKit are not installed here)"
-# Use preinstalled browsers when this machine has them; otherwise Playwright's default cache.
-if [ -z "${PLAYWRIGHT_BROWSERS_PATH:-}" ] && [ -d /opt/pw-browsers ]; then export PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers; fi
-RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q -x tests -k "not other_engines"
+echo "Python and browser tests (Chromium, Firefox and WebKit)"
+# Honor PLAYWRIGHT_BROWSERS_PATH when set; otherwise use the cache setup verified.
+RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q -x tests
 
 echo "All checks passed."

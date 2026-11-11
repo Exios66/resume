@@ -23,13 +23,17 @@ quarto_archive() {
 # Return success only when the executable reports that exact version.
 quarto_ok() { [ -x "$1" ] && [ "$("$1" --version 2>/dev/null)" = "$QUARTO_VERSION" ]; }
 
-# Test the actual revision required by each client, not the presence of any cache directory.
-node_chromium() { node -e 'require("playwright").chromium.launch().then(b => b.close()).catch(() => process.exit(1))'; }
-python_chromium() {
+# Test the actual revisions required by each client, not the presence of any cache directory.
+node_browsers() {
+  node -e 'const pw=require("playwright");
+Promise.all([pw.chromium.launch(), pw.firefox.launch(), pw.webkit.launch()])
+  .then(bs => Promise.all(bs.map(b => b.close()))).catch(() => process.exit(1))'
+}
+python_browsers() {
   .venv/bin/python -c 'from playwright.sync_api import sync_playwright
 with sync_playwright() as p:
-    browser = p.chromium.launch()
-    browser.close()'
+    for engine in (p.chromium, p.firefox, p.webkit):
+        engine.launch().close()'
 }
 
 main() {
@@ -59,15 +63,15 @@ main() {
     npm install --no-save --no-package-lock "playwright@$playwright_version"
   fi
   [ "$(node -p 'require("playwright/package.json").version')" = "$playwright_version" ]
-  if ! node_chromium >/dev/null 2>&1; then
-    npx --no-install playwright install chromium
+  if ! node_browsers >/dev/null 2>&1; then
+    npx --no-install playwright install chromium firefox webkit
   fi
-  if ! python_chromium >/dev/null 2>&1; then
-    .venv/bin/python -m playwright install chromium
+  if ! python_browsers >/dev/null 2>&1; then
+    .venv/bin/python -m playwright install chromium firefox webkit
   fi
-  node_chromium
-  python_chromium
-  say "Python and Node Playwright $playwright_version, both Chromium launches verified"
+  node_browsers
+  python_browsers
+  say "Python and Node Playwright $playwright_version, all three browser launches verified"
 
   env_quarto="${QUARTO-}"
   quarto="$root/$tools/bin/quarto"
