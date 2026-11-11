@@ -339,6 +339,8 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   .skills dl { grid-template-columns: 1fr; gap: 2px; }
   .skills dd { margin-bottom: 10px; }
   .date { margin-left: 0; flex-basis: 100%; }
+  /* A location or year that wraps to its own line starts at the text edge, not indented. */
+  .head-main .sub, .training .date { margin-left: 0; }
 }
 /* Résumé action buttons: tighter so all three share a row at 375px; if they must wrap they stretch. */
 @media (max-width: 480px) {
@@ -433,11 +435,12 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 }
 :root[data-theme="dark"] .page figure.clip video.clip-light { display: none; }
 :root[data-theme="dark"] .page figure.clip video.clip-dark { display: block; }
-/* Charts have white/transparent backgrounds and dark text: seat them on a light plate in dark mode */
+/* Charts have white/transparent backgrounds and dark text: seat them on a light plate in dark mode.
+   JPEGs are opaque (screenshots and photos), so they need no plate and get no white frame. */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .page img.fig { background: #fff; padding: 10px; }
+  :root:not([data-theme="light"]) .page img.fig:not([src$=".jpg"]) { background: #fff; padding: 10px; }
 }
-:root[data-theme="dark"] .page img.fig { background: #fff; padding: 10px; }
+:root[data-theme="dark"] .page img.fig:not([src$=".jpg"]) { background: #fff; padding: 10px; }
 
 /* Diagrams (inline SVG; colors via currentColor and tokens only) */
 .page figure.diagram { margin: 22px 0; padding: 14px 12px 12px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); overflow-x: auto; }
@@ -478,6 +481,10 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .page td[align="center"], .page th[align="center"] { text-align: center; }
 .page tbody tr:last-child td { border-bottom: 0; }
 .page td code { overflow-wrap: anywhere; }
+/* scripts/filters/tables.lua splits long code at <wbr> break points. The pieces join into one
+   chip, so a path does not read as separate words. */
+.page :is(td, th) wbr + code { padding-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.page :is(td, th) code:has(+ wbr) { padding-right: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; }
 
 /* Timeline (iteration history) */
 .timeline ul { list-style: none; margin: 14px 0 20px; padding: 0 0 0 22px; border-left: 2px solid var(--rule); }
@@ -573,8 +580,8 @@ pre:focus-visible, .page table:focus-visible, div.sourceCode:focus-visible, figu
 
 /* Copy button on code blocks. Quarto draws it with an icon font this site does not load,
    so it gets a text label and the site's own button styling. */
-div.code-copy-outer-scaffold { position: relative; }
-div.code-copy-outer-scaffold pre { padding-right: 76px; }
+div.code-copy-outer-scaffold { position: relative; } /* the pre rules below must outrank div.sourceCode pre.sourceCode */
+div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
 .page .code-copy-button {
   position: absolute; top: 7px; right: 7px; margin: 0;
   min-height: 26px; padding: 3px 10px;
@@ -587,7 +594,9 @@ div.code-copy-outer-scaffold pre { padding-right: 76px; }
 .page .code-copy-button-checked::before { content: "Copied"; }
 .page .code-copy-button:hover, .page .code-copy-button-checked { color: var(--accent); border-color: var(--accent); }
 .page .code-copy-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-@media print { .page .code-copy-button { display: none; } div.code-copy-outer-scaffold pre { padding-right: 14px; } }
+/* On phones a long first line would run under the button, so the button gets its own row. */
+@media (max-width: 720px) { div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 40px; padding-right: 14px; } }
+@media print { .page .code-copy-button { display: none; } div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 12px; padding-right: 14px; } }
 
 /* Prose tables also need the full column at tablet widths. */
 @media (max-width: 800px) {
@@ -985,6 +994,15 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
 .page .chart-readout-hint { margin: 10px 0 0; color: var(--muted); font-size: .75rem; }
 .chart-source tr.is-linked { outline: 2px solid var(--accent); outline-offset: -2px; background: color-mix(in srgb, var(--accent) 8%, var(--paper)); }
 .chart-source tr:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+/* Phones trim the outer cell padding of tables; a source table uses even padding so values
+   clear the linked-row outline, and its row label stays in flow (unless the table scrolls)
+   so the outline and tint cover the whole row. */
+@media (max-width: 720px) {
+  .page table.chart-source:not(.stack) :is(th, td) { padding-inline: 6px; }
+  .page table.chart-source:not(.stack):not([data-scrolls]) :is(th, td):first-child { position: static; }
+  .page table.chart-source:not(.stack):not([data-scrolls]) td:first-child { background: none; }
+}
+@media (max-width: 800px) { .page table.chart-source.stack tr { padding-inline: 10px; } }
 .chart .mark.is-linked .hit { fill: color-mix(in srgb, var(--accent) 8%, transparent); stroke: var(--accent); stroke-width: 1.5; }
 @media (forced-colors: active) {
   .chart-source tr.is-linked { outline-color: Highlight; }
@@ -998,12 +1016,13 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
 }
 
 /* The two-condition duration comparison keeps both bar ends visible on phones. */
-#mr-backup-duration .chart svg { min-width: 300px; max-width: 640px; }
+/* Drawn 320 units wide; capped so desktop labels stay near body size instead of doubling. */
+#mr-backup-duration .chart svg { min-width: 300px; max-width: 400px; }
 #mr-backup-duration .chart text.tick { font-size: 13px; }
 .page #mr-backup-duration figure.chart::after { content: none; }
 
 /* Interval marks retain explicit endpoints and a zero reference in both themes. */
-.chart-interval svg { min-width: 300px; max-width: 640px; }
+.chart-interval svg { min-width: 300px; max-width: 400px; }
 .chart-interval text.tick, .chart-interval text.ref-label { font-size: 13px; }
 .chart .interval-range.c1, .chart .interval-cap.c1 { stroke: var(--chart-1); stroke-width: 2; }
 .chart-interval .ref { stroke-dasharray: 4 4; }
