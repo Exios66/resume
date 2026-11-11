@@ -7,7 +7,7 @@ description: "Selected work in mechanistic interpretability, document intelligen
 
 # Projects {.page-title}
 
-Selected work in mechanistic interpretability, document intelligence, data engineering, distributed systems, model evaluation, behavioral machine learning, LLM agent design, and simulation. Each project has a short case study. Most also have a technical report with the experiment history, metrics, and steps to reproduce the results.
+Most of this work comes back to one idea: a system is only as useful as its honesty about its own errors. It runs through document intelligence, interpretability, data engineering, distributed systems, behavioral machine learning, LLM agent design and simulation. Each project has a short case study. Most also have a technical report with the experiment history, the metrics and the steps to reproduce the results, including the results that did not go my way.
 
 Content review: **6 November 2026**. Test totals and benchmarks belong to the snapshots named on each page; they are not live status counters. Some older reports retain historical results and are labeled where newer releases supersede them.
 
@@ -32,7 +32,13 @@ An interactive map of all 8,192 TinyStories neurons, with live steering and abla
 
 ## Document intelligence {.group-title}
 
-Four connected projects about one question: how do you sort and read business documents accurately, at a cost you can defend?
+One question runs through five projects: how do you read and sort business documents accurately, at a cost you can defend? I followed it from raw public data to a deployable service, and each project answers one part of it.
+
+- **The data.** [Mailroom-Corpus-EDA](mailroom-corpus-eda.qmd) builds the 3,302-document corpus the others share, with a record of where every label came from and labels kept out of the text a model reads.
+- **The design.** [Digital-Mailroom](digital-mailroom.qmd), my capstone with American Family Insurance, sends each document to the cheapest step that can handle it and scores the routing by fixed rules.
+- **The model.** [Mailroom-ML](mailroom-ml.qmd) trains a ModernBERT classifier whose calibrated confidence decides which documents can skip the LLM.
+- **The service.** [Mailroom Reloaded](mailroom-reloaded.qmd) rebuilds the design so that code, not a model, owns the control flow. A clean document costs exactly two LLM calls.
+- **The no-training baseline.** [RVL-CDIP-Classifier](rvl-cdip-classifier.qmd) asks how far a general vision LLM gets on the standard benchmark with only a prompt, and what each page costs.
 
 {{< include ../partials/diagrams/_ecosystem.qmd >}}
 
