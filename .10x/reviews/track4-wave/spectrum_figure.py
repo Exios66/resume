@@ -42,9 +42,9 @@ for per in (20,10,7,5):  # the same axis read as wave period, T = 1/f
     g.append(f'<line class="axis" x1="{X(1/per):.1f}" x2="{X(1/per):.1f}" y1="{T-4}" y2="{T}"/><text class="tick" x="{X(1/per):.1f}" y="{T-9}" text-anchor="middle">{per} s</text>')
 ip=np.argmax(P);jp=np.argmax(J)
 svg=f'''<svg viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-labelledby="t d" xmlns="http://www.w3.org/2000/svg">
-<title id="t">The simulated sea peaks at the requested period but carries {pct}% more energy</title>
+<title id="t">One {len(x)/600:.0f}-minute run peaks at the requested period but carries {pct}% more energy</title>
 <desc id="d">Line chart of wave energy density against frequency at one wave gauge in Wave Laboratory's Moderate sea preset. The measured spectrum, from a {len(x)/10:,.0f}-second record, peaks at {1/f[ip]:.1f} seconds, close to the requested 9.0 seconds, but the area under it is {ratio:.2f} times the requested JONSWAP spectrum: a significant wave height of {hm0:.2f} metres against the 2.50 metres requested.</desc>
-<text class="title" x="{M}" y="30">The simulated sea peaks at the requested period but carries {pct}% more energy</text>
+<text class="title" x="{M}" y="30">One {len(x)/600:.0f}-minute run peaks at the requested period but carries {pct}% more energy</text>
 <text class="sub" x="{M}" y="52">Wave Laboratory, “Moderate sea” preset: wave energy at one gauge, measured against what the preset asks for</text>
 <g class="legend" transform="translate({M} 84)">
 <line class="m" x1="0" x2="22" y1="-4" y2="-4"/><text x="30" y="0">Measured at the gauge · significant wave height {hm0:.2f} m</text>
