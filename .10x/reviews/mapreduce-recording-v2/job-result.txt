@@ -1,0 +1,20 @@
+mr: 32 map tasks (-m 32)
+job-1	SUCCEEDED
+map	32/32
+reduce	4/4
+backups	5
+backups_won	0
+map_host_local	0
+map_zone_local	0
+seconds	67.798
+combine.input.records	129500000
+combine.output.records	10148278
+map.input.bytes	1075197804
+map.input.records	12950000
+map.output.bytes	175061142
+map.output.records	129500000
+reduce.input.records	10148278
+reduce.output.bytes	86853708
+reduce.output.records	3979312
+
+exit 0

@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=e238c3addf">
+<link rel="stylesheet" href="../styles.css?v=85898d7c43">
 <meta property="og:title" content="MapReduce-Reloaded — Jack J. Burleson">
 <meta property="og:description" content="A from-scratch MapReduce rebuild: a Go cluster and Python reference, a 24-item paper mapping, S3 storage, compression, fault injection and a small-scale VM evaluation. In active development.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -171,10 +171,13 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <h3 id="the-status-page-during-a-job">The status page, during a job</h3>
 <figure class="clip">
-<video controls="" loop="" muted="" playsinline="" preload="metadata" data-autoplay="" width="900" height="640" poster="../assets/media/mapreduce-status.png" aria-label="Screen recording of the coordinator's status page during a 1 GiB word count: the map and reduce progress bars of the second job fill to 100 %, and the table of four workers shows the task each one is running.">
-<source src="../assets/media/mapreduce-status.mp4" type="video/mp4">
+<video class="clip-light" controls="" loop="" muted="" playsinline="" preload="metadata" data-autoplay="" width="1600" height="774" poster="../assets/media/mapreduce-status-light.png" aria-label="Screen recording of the coordinator's whole status page during a 1 GiB word count: the job goes from mapping to succeeded as its map and reduce progress bars fill to 100 %, the table of four workers shows the task each one is running, and the lost-workers table stays empty.">
+<source src="../assets/media/mapreduce-status-light.mp4" type="video/mp4">
 </video>
-<figcaption>The coordinator's status page during one whole 1 GiB word count (32 map tasks, 4 reduce tasks, four workers), recorded in the source repository. It is a time-lapse: consecutive frames are 9 seconds of real time apart. The first job had already finished when the recording began.</figcaption>
+<video class="clip-dark" controls="" loop="" muted="" playsinline="" preload="metadata" data-autoplay="" width="1600" height="774" poster="../assets/media/mapreduce-status-dark.png" aria-label="Screen recording of the coordinator's whole status page during a 1 GiB word count: the job goes from mapping to succeeded as its map and reduce progress bars fill to 100 %, the table of four workers shows the task each one is running, and the lost-workers table stays empty.">
+<source src="../assets/media/mapreduce-status-dark.mp4" type="video/mp4">
+</video>
+<figcaption>The coordinator's status page, uncropped, during one whole 1 GiB word count: 32 map tasks and 4 reduce tasks on four workers, from submission to success in 67.8 seconds. It is a time-lapse at about nine times real speed (one frame every 1.5 seconds), recorded on 11 November 2026 from source commit <code>def9c62</code>.</figcaption>
 </figure>
 <h2 id="what-chaos-testing-found">What chaos testing found</h2>
 <p>The chaos test runs word count while, at random moments, workers die, new ones join, workers stall for 50–250 ms and the coordinator restarts from its log. A run passes only if the output files and the counters equal single-machine mode. Each run’s choices come from a seed, so a failure can be replayed.</p>

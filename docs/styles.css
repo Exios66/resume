@@ -424,7 +424,15 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 }
 .page figcaption code { font-size: .9em; } /* keeps code in captions at 12px or more */
 /* Screen recordings: a framed, pausable clip. */
-.page figure.clip video { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 8px; background: #0d1117; }
+.page figure.clip video { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 8px; background: #f4f5f7; }
+/* Each recording has a light and a dark take; show the one that matches the site theme. */
+.page figure.clip video.clip-dark { display: none; background: #0d1117; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .page figure.clip video.clip-light { display: none; }
+  :root:not([data-theme="light"]) .page figure.clip video.clip-dark { display: block; }
+}
+:root[data-theme="dark"] .page figure.clip video.clip-light { display: none; }
+:root[data-theme="dark"] .page figure.clip video.clip-dark { display: block; }
 /* Charts have white/transparent backgrounds and dark text: seat them on a light plate in dark mode */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .page img.fig { background: #fff; padding: 10px; }
