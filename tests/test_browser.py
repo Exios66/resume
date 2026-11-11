@@ -231,6 +231,7 @@ def test_site_search_contents_list_and_pager(site):
 
 
 def test_slash_opens_search_without_hijacking_typing(site):
+    """Verify shortcut focus, modifier handling, typing, and responsive hints."""
     browser, base = site
     page = browser.new_page(viewport={"width": 1280, "height": 900})
     try:
@@ -377,6 +378,7 @@ def test_mobile_report_charts_in_other_engines(site, playwright, engine):
 
 
 def test_no_script_and_print_from_dark(site, tmp_path):
+    """Keep navigation usable without scripts and print the dark résumé legibly."""
     browser, base = site
     context = browser.new_context(java_script_enabled=False, viewport={"width": 375, "height": 812})
     page = context.new_page()
