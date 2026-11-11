@@ -43,7 +43,7 @@ Secondary numbers, reported but not summed: `gz_index` 14,127; `gz_projects_inde
 
 Recorded on 10 November 2026 against the same render as the baseline above. Sizes are gzipped HTML bytes at
 compression level 9; the shared stylesheet and script are measured separately because every page pays for them.
-`tests/test_page_budget.py` checks every built page, not only the example named here, and fails with the page path,
+`tests/python/test_page_budget.py` checks every built page, not only the example named here, and fails with the page path,
 its size and its budget.
 
 | Page type | Heaviest page at baseline | Measured | Budget |

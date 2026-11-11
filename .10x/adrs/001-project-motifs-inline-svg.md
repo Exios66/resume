@@ -11,7 +11,7 @@ layout and no build step beyond Quarto.
 
 ## Decision
 Each project gets a hand-drawn SVG motif in `partials/covers/<slug>.svg`. A card opts in with a `cover` attribute and
-`scripts/site.lua` inlines the SVG, marked decorative, as the first block of the card. Motifs draw with
+`scripts/filters/site.lua` inlines the SVG, marked decorative, as the first block of the card. Motifs draw with
 `currentColor` and shared classes so the stylesheet controls their colour in both themes.
 
 ## Alternatives Considered
@@ -31,4 +31,4 @@ Each project gets a hand-drawn SVG motif in `partials/covers/<slug>.svg`. A card
 - A motif could be read as data. Mitigation: motifs picture the subject, carry no numbers or axes, and are hidden from assistive technology.
 
 ## Dependencies
-- Depends on the `Div` handler in `scripts/site.lua`. Social cards (later) will reuse the same files.
+- Depends on the `Div` handler in `scripts/filters/site.lua`. Social cards (later) will reuse the same files.

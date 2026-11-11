@@ -8,6 +8,10 @@
 - Report the exact commands, results, evidence paths, and what was not checked. Screenshots supplement assertions; they do not prove functionality. If a required tool, permission, or check is unavailable, report the blocker and do not claim that validation passed.
 - Never invent results, screenshots, recordings, or coverage. Do not test external links by submitting forms, sending messages, or otherwise changing external state without permission.
 
+## Repository layout
+
+Site pages stay at the paths that become their URLs (root `*.qmd`, `projects/`, `writing/`). Tooling is grouped by function: `scripts/filters/` (Lua filters), `scripts/build/` (generators and post-render), `scripts/hillclimb/` (audit and KPI), `tests/{lua,node,python,browser}/`, and `partials/{layout,covers,diagrams}/`. `docs/` is generated; never edit it by hand. The full tree and what each folder holds is in `README.md` and `.github/BUILDING.md`.
+
 # Polish hill-climb
 
 To polish, sweep or audit the site's quality, follow `.claude/skills/portfolio-hillclimb/SKILL.md` (any agent can; Claude Code also loads it as a skill and offers the `portfolio-hillclimber` subagent in `.claude/agents/`). It is a measured loop: one small change, `scripts/hillclimb/hc.sh experiment`, screenshots, `hc.sh checks`, then keep or revert, logged in `autoresearch.jsonl`. The audit (`autoresearch.audit.cjs`) and checks are fixed within a segment; never change them to rescue a result.
