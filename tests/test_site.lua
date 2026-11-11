@@ -434,3 +434,27 @@ assert(add_cover({ attributes = {}, classes = {}, content = {} }) == nil, "cards
 assert(not pcall(add_cover, { attributes = { cover = "no-such-project" }, classes = {}, content = {} }))
 assert(not pcall(add_cover, { attributes = { cover = "../secret" }, classes = {}, content = {} }))
 print("icon decoration ok")
+
+-- Per-project schema.org data: one-level case studies get it; the index and nested pages do not.
+quarto = { doc = { input_file = "projects/digital-mailroom.qmd" }, project = { directory = "" } }
+local schema_doc = { blocks = {}, meta = { description = 'A "capstone" & <script>',
+  image = "https://example.test/card.png" } }
+local schema_footer = Pandoc(schema_doc).blocks[2].text
+local schema_json = schema_footer:match('<script type="application/ld%+json">(.-)</script>')
+assert(schema_json, "project schema must be present")
+assert(schema_json:find('"@context":"https://schema.org"', 1, true))
+assert(schema_json:find('"@type":"CreativeWork"', 1, true))
+assert(schema_json:find('"name":"Digital-Mailroom"', 1, true))
+assert(schema_json:find('"url":"https://exios66.github.io/resume/projects/digital-mailroom.html"', 1, true))
+assert(schema_json:find('"description":"A \\"capstone\\" & \\u003cscript>"', 1, true), schema_json)
+assert(schema_json:find('"image":"https://example.test/card.png"', 1, true))
+assert(schema_json:find('"author":{"@type":"Person","name":"Jack J. Burleson"', 1, true))
+assert(schema_json:find('"isPartOf":{"@type":"WebSite","name":"Jack J. Burleson"', 1, true))
+
+quarto = { doc = { input_file = "index.qmd" }, project = { directory = "" } }
+local root_footer = Pandoc({ blocks = {}, meta = {} }).blocks[2].text
+assert(not root_footer:find('"@type":"CreativeWork"', 1, true), "root pages keep only the site Person schema")
+quarto = { doc = { input_file = "projects/digital-mailroom/report.qmd" }, project = { directory = "" } }
+local report_footer = Pandoc({ blocks = {}, meta = {} }).blocks[2].text
+assert(not report_footer:find('"@type":"CreativeWork"', 1, true), "nested pages keep only the site Person schema")
+print("project schema ok")
