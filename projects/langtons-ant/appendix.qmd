@@ -1,6 +1,6 @@
 ---
 pagetitle: "Langton's Ant: appendix — Jack J. Burleson"
-description: "Supporting notes for the Langton's Ant case study: the full 20-machine preset gallery, rule notations and the determinism check."
+description: "Supporting notes for the Langton's Ant case study: the full 20-machine preset gallery, rule notations, the five colony scenarios and the determinism checks."
 ---
 
 ::: {.page}
@@ -12,7 +12,7 @@ description: "Supporting notes for the Langton's Ant case study: the full 20-mac
 
 # Langton's Ant: appendix {.page-title}
 
-[Preset gallery · rule notations · determinism]{.kicker}
+[Preset gallery · rule notations · colony scenarios · determinism]{.kicker}
 
 Supporting material for the [Langton's Ant case study](../langtons-ant.qmd). The machines and their milestones come from the cited literature and the GollyGang rule table repository; they are not my results.
 
@@ -51,17 +51,32 @@ Supporting material for the [Langton's Ant case study](../langtons-ant.qmd). The
 
 Turn codes are 0 (halt), 1, 2, 4 and 8, or absolute headings `N` `E` `S` `W`. Color 0 turns right, matching the GollyGang convention.
 
-## Determinism check
+## The five colony scenarios
+
+Each scenario builds the same map for every seed; the seed drives only the ants. A colony link (`#m=colony&sc=…&x=…`) restores the scenario and the seed, not walls or food painted during a run.
+
+| Scenario | Grid (cells) | Colonies × ants | What it shows |
+| --- | --- | --- | --- |
+| Foraging trails | 240 × 150 | 1 × 160 | Three food patches at different distances; the nearest is stripped first, then the trail re-routes |
+| Double bridge | 200 × 130 | 1 × 150 | Deneubourg's 1990 experiment: a short and a long branch to the food, and the colony converges on the short one without any ant comparing them |
+| Two rival colonies | 240 × 150 | 2 × 130 | One rich patch between two nests; fights leave alarm pheromone, which draws soldiers |
+| Four-way war | 260 × 170 | 4 × 100 | Corner nests in a walled arena; territories form along trail networks, and colonies that lose their income starve |
+| Maze | 170 × 110 | 1 × 180 | Food at the far end of a serpentine maze; once found, the trail is the colony's memory of the route |
+
+## Determinism checks
 
 From a blank grid, 11,000 steps of the classic ant hash to the committed value `6219b3fb` (FNV-1a). The same test passes on the Linux re-run, so it does not depend on the machine.
+
+The colony tests check that a scenario and seed replay identically and that another seed differs, that ants forage and deliver food, that ants stay in bounds and out of walls in every scenario, and that rival colonies fight and raise soldiers. The colony simulation uses floating-point trigonometry, so these replays hold within one JavaScript engine, not across engines.
 
 ## Reproduce
 
 ```sh
 npm ci
-npm test
+npm test            # 108 unit tests in 11 files
+npm run test:e2e    # builds the app, then 8 Playwright checks in Chromium
 ```
 
-The benchmark is gated: `RUN_BENCH=1 npx vitest run tests/bench.test.ts`.
+The benchmark is gated: `RUN_BENCH=1 npx vitest run tests/bench.test.ts`. On 11 November 2026, at commit `726a29a`, all 108 unit tests passed. The full browser run passed 7 of 8 the first time: the start-view check failed once on a cold start. It passed when run alone and in a second full run, which passed 8 of 8.
 
 :::

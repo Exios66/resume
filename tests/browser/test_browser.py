@@ -865,9 +865,10 @@ def test_mapreduce_duration_keeps_condition_and_source_context(site, width, them
         expect(panel.locator(".chart-readout")).to_contain_text("11.24")
         expect(panel.locator(".chart-readout")).to_contain_text("Runs")
         citation = panel.locator('a[role="doc-noteref"]')
+        note = citation.get_attribute("href")
         citation.click()
-        expect(page.locator("#fn1")).to_contain_text("4dd1ca4")
-        assert page.locator('#fn1 a[href*="4dd1ca4045b2b9f49a63a8f6e757b20b6fb32387"]').count() == 2
+        expect(page.locator(note)).to_contain_text("E2 evaluation")
+        assert page.locator(f'{note} a[href*="def9c62846e8c560b9be6c72b76f1cf325582059"]').count() == 2
     finally:
         page.close()
 
