@@ -38,7 +38,7 @@ I'm finishing an M.S. in Psychology: Data Science in Human Behavior at UW–Madi
 ### [Digital-Mailroom](projects/digital-mailroom.qmd)
 [Capstone · American Family Insurance]{.kicker}
 
-One LangGraph pipeline, split into five Python packages, that routes legal documents to the cheapest step that can handle them. Prompt experiments are judged by fixed rules against known labels, not by another model, and the whole run repeats in Docker.
+Five Python packages and one LangGraph pipeline that route legal documents to the cheapest step that can handle them. Prompt experiments are judged by fixed rules against known labels, not by another model, and the whole run repeats in Docker.
 :::
 
 ::: {.card cover="mailroom-ml"}
