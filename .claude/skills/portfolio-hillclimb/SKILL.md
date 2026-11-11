@@ -16,6 +16,7 @@ For experience work, read `.10x/metrics.md` too and run `.venv/bin/python script
 after rendering. The current ledger hardcodes `polish_defects` and the benchmark does not append the
 experience KPI. A segment name does not change the primary metric. Do not claim experience-scored keeps
 until a separately reviewed tooling change implements them with a new baseline (tracked in #126).
+Its "How to raise each metric" section names the source of each gap and the change that closes it.
 
 `AGENTS.md` applies throughout: `docs/` is generated (render, never hand-edit), run the real-browser
 suite, review screenshots for visual changes, and report exact commands, results and what was not checked.
