@@ -72,7 +72,7 @@ The irregular cluster is the first ten thousand or so steps. The road is the hig
 
 The repository's README reports how fast the engine steps in Node. Those numbers come from one laptop. The same benchmark re-run on a different machine shows how much they depend on it.
 
-::: {.chart kind="strip" title="Steps per second: README laptop against three re-runs (millions)" label="1,000,000 steps per run, mean of 5" from="README: Apple M2, macOS, Node 22.14.0" to="Re-runs: shared 4-core Linux container, Node 22.22.0" from-mode="first" to-mode="all" from-name="README (Apple M2 laptop)" to-name="Re-runs (shared Linux container)" unit="M"}
+::: {.chart kind="strip" title="Engine speed in Node, million steps per second: README figure against three re-runs" label="1,000,000 steps per run, mean of 5" from="README: Apple M2, macOS, Node 22.14.0" to="Re-runs: shared 4-core Linux container, Node 22.22.0" from-mode="first" to-mode="all" from-name="README (Apple M2 laptop)" to-name="Re-runs (shared Linux container)" unit="M"}
 | 1,000,000 steps per run, mean of 5 | README: Apple M2, macOS, Node 22.14.0 | Re-runs: shared 4-core Linux container, Node 22.22.0 |
 | --- | --- | --- |
 | Classic `RL` ant, one ant | 19.65 million steps per second | 4.28, 10.63 and 13.18 million in three re-runs |

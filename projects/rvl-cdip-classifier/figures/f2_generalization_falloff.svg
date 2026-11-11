@@ -211,7 +211,7 @@ z
     <text style="font-size: 9px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle; fill: #333333" x="481.456138" y="219.918431" transform="rotate(-0 481.456138 219.918431)">82.6%</text>
    </g>
    <g id="text_18">
-    <text style="font-size: 12.6px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle; fill: #262626" x="278.547047" y="16.774031" transform="rotate(-0 278.547047 16.774031)">v11.8 transfer to larger, noisier slices</text>
+    <text style="font-size: 12.6px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', 'Bitstream Vera Sans', sans-serif; text-anchor: middle; fill: #262626" x="278.547047" y="16.774031" transform="rotate(-0 278.547047 16.774031)">Prompt v11.8 accuracy falls on larger, noisier slices</text>
    </g>
   </g>
  </g>
