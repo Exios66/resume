@@ -11,3 +11,11 @@ Verification:
 - Chromium screenshots in this directory show the three tags and Research at desktop/phone widths. Inspected for layout and publication privacy.
 
 No real devices, screen readers, or full secondary-engine page matrix checked in this change. Prior CodeAnt duplicate-page/title findings were fixed by 861ef38; the present renders and browser checks verify the corrected pages.
+
+## Page-budget fix
+
+The new MapReduce course tag pushed the case-study page 2 compressed bytes over
+its 19,000-byte transfer budget. The kicker now reads "In active development ·
+distributed systems · Go + Python" and the caveat ends "not rerun here."; the
+page is 18,997 compressed bytes. `tests/python/test_page_budget.py` and
+`tests/python/test_mapreduce_reloaded.py` pass.
