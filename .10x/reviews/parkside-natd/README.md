@@ -15,9 +15,10 @@ research context:
 - `projects/natd.qmd`: a short "Related assessment tools" section before
   "Methods and tools".
 
-The copy describes each tool from its published page. It does not claim either
-instrument was used in the nine-participant pilot; the owner can add that
-provenance if it applies.
+The copy describes each tool from its published page. Owner confirmation (12
+November 2026): both tools were used in the study as utilized materials; the
+wording now says so, and no further claim is made about which measure produced
+which result.
 
 ## Verification
 
