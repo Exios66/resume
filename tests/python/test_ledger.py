@@ -68,8 +68,20 @@ class LedgerSession(unittest.TestCase):
         with self.assertRaises(SystemExit) as missing:
             ledger.cmd_log("keep", "no scored metric")
         self.assertIn("run.log has no METRIC experience_gaps", str(missing.exception))
-        self.assertEqual(self.records(), [self.records()[0], self.records()[1]],
-                         "failed logs must not append a run record")
+        self.assertEqual(len(self.records()), 2, "failed logs must not append a run record")
+
+    def test_checks_failed_and_crash_log_without_gate_or_metric_requirements(self):
+        self.out(ledger.cmd_segment, "experience", "--metric", "experience_gaps", "--gate", "polish_defects=0")
+        self.write_run_log(polish_defects=2, experience_gaps=19)
+        self.out(ledger.cmd_log, "checks_failed", "gate breach recorded for the verdict")
+        failed = self.records()[-1]
+        self.assertEqual((failed["metric"], failed["status"]), (19, "checks_failed"))
+        self.assertEqual(failed["metrics"]["polish_defects"], 2)
+        ledger.RUN_LOG.unlink()
+        self.out(ledger.cmd_log, "crash", "benchmark died before metrics")
+        crash = self.records()[-1]
+        self.assertIsNone(crash["metric"])
+        self.assertEqual(crash["metrics"], {})
 
     def test_segment_option_and_status_use_the_segment_metric(self):
         with self.assertRaises(SystemExit) as bad:

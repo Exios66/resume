@@ -7,7 +7,9 @@
                                            start an experience-scored segment: the named metric is scored,
                                            and every gate metric must be at or better than its limit
   ledger.py log <status> "<desc>" [asi]    append the run whose metrics are in run.log; status is keep, discard,
-                                           crash or checks_failed; asi is a JSON object of notes that survive reverts
+                                           crash or checks_failed; asi is a JSON object of notes that survive reverts.
+                                           keep/discard require the scored metric, gates apply to keep only, and
+                                           crash/checks_failed record whatever run.log does contain
   ledger.py pause "<note>"                 mark the session paused (still resumable)
   ledger.py table                          print every run as a Markdown table
   ledger.py next                           print the number the next logged run will get
@@ -98,18 +100,27 @@ def cmd_log(status, description, asi="{}"):
     if segment is None:
         sys.exit('no config header: run  ledger.py segment "<name>"  first')
     scored = primary(rows)
-    metrics = metrics_from_run_log(scored)
-    for gate, limit in sorted((current_config(rows) or {}).get("gates", {}).items()):
-        if gate not in metrics:
-            sys.exit(f"run.log has no METRIC {gate} for the segment's gate; the benchmark must print it")
-        if metrics[gate] > limit:
-            sys.exit(f"gate failed: {gate}={metrics[gate]} > {limit}; fix it, or log the run as checks_failed")
+    if status in ("keep", "discard"):
+        metrics = metrics_from_run_log(scored)
+        if status == "keep":
+            for gate, limit in sorted((current_config(rows) or {}).get("gates", {}).items()):
+                if gate not in metrics:
+                    sys.exit(f"run.log has no METRIC {gate} for the segment's gate; the benchmark must print it")
+                if metrics[gate] > limit:
+                    sys.exit(f"gate failed: {gate}={metrics[gate]} > {limit}; fix it, or log the run as checks_failed")
+    else:
+        # A crash or checks_failed run may have no usable benchmark output; record
+        # whatever metrics run.log does contain and let the verdict logic react.
+        metrics = {}
+        if RUN_LOG.exists():
+            metrics = {k: float(v) if "." in v else int(v) for k, v in
+                       re.findall(r"^METRIC (\w+)=([-\d.]+)$", RUN_LOG.read_text(encoding="utf-8"), re.M)}
     commit = head_commit()
     previous = [r["metric"] for r in runs(rows, segment)]
     record = {
         "run": max([r["run"] for r in runs(rows)] or [-1]) + 1,
         "commit": commit,
-        "metric": metrics.pop(scored),
+        "metric": metrics.pop(scored, None),
         "metrics": metrics,
         "status": status,
         "description": description,

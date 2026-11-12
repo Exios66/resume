@@ -27,7 +27,7 @@ Evidence from review follow-up is under `.10x/reviews/pr-review-followup/`; diag
 - #124 has the diagram regression and #115 recording contribution; chart conversions, new chart kinds and other visualisations remain. Existing chart restyles require the owner's draft review as specified in #124.
 - #125 structured data, transfer budgets and secondary-engine setup/tests are implemented. Broader content, forced-colour coverage and owner phone/tablet checks remain; close only the shipped subtasks.
 - #122 video behavior now follows live reduced motion, visibility and manual pause. This does not complete the roadmap's motion scale, transitions, motif/chart animation or print/forced-colour matrix.
-- #126 is at experience_gaps=19 on main (124 before #148). Ledger PRIMARY is hardcoded to polish_defects and the benchmark does not append KPI output. Changing a segment label does not solve this. Plan a separate tested tooling change before experience-scored loops.
+- #126 is at experience_gaps=19 on main (124 before #148). Its experience-scored ledger/benchmark tooling is shipped in this PR: the segment config names the scored metric, `autoresearch.sh` prints both metric sets, and a `polish_defects=0` gate is enforced on keeps. Start the experience segment and baseline before experience-scored keeps.
 - #130 and #137 were completed by #138; #136 was completed by #142. The issue closures cite their evidence.
 
 ## Verification and shipping
