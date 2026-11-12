@@ -17,6 +17,7 @@ Roughly 95% of the program's coursework is data science and data engineering, pa
 - The [Psychometric Digital Twin](projects/psychometric-digital-twin.qmd) study (PSYCH 755, Summer 2026) compares seven classical machine learning models against LLM personas predicting survey respondents' own communication-apprehension scores, with errors checked by demographic group.
 - The [AI Terrarium Digital Twin](https://github.com/Exios66/ai_terrarium_digital_twin-jjb-v2) (Spring 2026, private code) is a Python library that turns structured survey responses into section- and subsection-level persona prompts for LLM evaluation, with batch inference on vLLM, Transformers, and the Claude API and token-cost estimation.
 - [MapReduce-Reloaded](projects/mapreduce-reloaded.qmd) (CS 544 Honors, Fall 2026, in active development) is a from-scratch Go rebuild of Google's MapReduce with a Python reference implementation, a shared gRPC contract, object storage, compression, fault tolerance, and a small-scale VM evaluation.
+- Awarded the **Excellence in Data Science Scholarship** through the Graduate School (Fall 2026), providing significant additional funding and resources for this research.
 
 ## Cognitive Neuroscience Lab, UW–Parkside
 

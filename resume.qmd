@@ -43,6 +43,7 @@ UW–Madison M.S. candidate in Psychology: Data Science in Human Behavior (expec
 - Graduate program in which roughly 95% of coursework is data science and data engineering — building on an undergraduate foundation in neuroscience research, experimental design, and statistical analysis.
 - Advanced training in machine learning (neural networks, regularized and ensemble models, transformer fine-tuning and LLM evaluation), statistical modeling, and large-scale data systems (Spark, gRPC services, HDFS, Parquet, SQL, Docker).
 - Industry capstone with American Family Insurance (see Projects).
+- Excellence in Data Science Scholarship, awarded through the Graduate School in Fall 2026, providing significant additional funding and resources for this research.
 :::
 
 ::: {.entry}
