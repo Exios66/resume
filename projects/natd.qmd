@@ -22,7 +22,7 @@ A pilot study from the Cognitive Neuroscience Lab at UW–Parkside, advised by D
 :::
 
 ::: {.caveat}
-**Pilot study.** Physiological, EEG and eye-tracking recordings are withheld until they are authenticated; this page covers the helpful-versus-deceitful results.
+**Pilot stage.** This pilot precedes a much more extensive study that also records eye-tracking, EEG and physiological signals; those recordings are withheld until they are authenticated. This page covers the helpful-versus-deceitful results.
 :::
 
 ## At a glance
@@ -84,9 +84,9 @@ Replicate with more participants and balanced persona assignment, randomize pers
 
 The technical report has the literature review, the full method, every table, the cluster analysis and the references with how far each was verified.
 
-## Assessment materials used in the study
+## Study materials
 
-The pilot used two published assessment tools as materials: [Dark Triad Assessments](https://exios66.github.io/dark-triad-assessments/), a set of personality inventories (SDT3, the Dirty Dozen, SDT4, MACH IV, HEXACO and OCEAN), and the [Knowledge Assessment Quiz](https://exios66.github.io/Intro-Knowledge-Quiz/), a 15-question quiz across geography, chemistry, history, literature, astronomy, psychology and more.
+I built the interfaces that administered the study's intake demographics questions. The [Dark Triad Assessments](https://exios66.github.io/dark-triad-assessments/) (personality inventories including SDT3, the Dirty Dozen, SDT4, MACH IV, HEXACO and OCEAN) were utilized study materials, and the [Knowledge Assessment Quiz](https://exios66.github.io/Intro-Knowledge-Quiz/) — a 15-question knowledge survey across geography, chemistry, history, literature, astronomy, psychology and more — was one of the knowledge assessments administered across the study.
 
 ## Methods and tools
 

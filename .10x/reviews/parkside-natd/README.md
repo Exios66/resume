@@ -20,6 +20,14 @@ November 2026): both tools were used in the study as utilized materials; the
 wording now says so, and no further claim is made about which measure produced
 which result.
 
+Scope clarification (12 November 2026, owner): the published pilot precedes a
+much more extensive study that also records eye-tracking, EEG and
+physiological signals; the owner built the intake demographics interfaces,
+and the knowledge surveys were one of the knowledge assessments administered
+across the study. The case-study caveat and both pages now say so. The
+withheld-recordings guardrails (no unauthenticated results, banned terms and
+headings) are unchanged.
+
 ## Verification
 
 - Both destinations fetched: titles and descriptions match the copy.
