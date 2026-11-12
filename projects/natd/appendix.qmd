@@ -38,7 +38,7 @@ Issue [#80](https://github.com/Exios66/resume/issues/80) records the unresolved 
 - The linked repository does not contain the per-session exam CSVs behind the published numbers.
 - The design document describes a larger five-condition study with a control condition, while the pilot used five named personas.
 - Persona profiles exist in several versions, and the site does not pin one.
-- The relationship between the nine-person pilot and the larger design is not documented in the repository.
+- The owner confirms the nine-person pilot precedes a much more extensive study that also records eye-tracking, EEG and physiological signals; the repository does not yet document that larger design's protocol or analysis plan.
 
 Until those are resolved, the exam figures on the case study should be read as pilot observations, not as a reproducible analysis.
 
