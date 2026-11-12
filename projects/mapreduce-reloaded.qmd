@@ -15,6 +15,8 @@ description: "A from-scratch MapReduce rebuild: a Go cluster and Python referenc
 
 [In active development · big data & distributed systems · Go & Python]{.kicker}
 
+[UW–Madison · CS 544 Honors · Fall 2026]{.tag}
+
 A from-scratch rebuild of Google's MapReduce, as described by Dean and Ghemawat in [*MapReduce: Simplified Data Processing on Large Clusters*](https://research.google.com/archive/mapreduce-osdi04.pdf) (OSDI 2004). Go is the main implementation. Python is a second implementation of the shared contract and of single-machine mode, so the two can be checked against each other byte for byte.
 
 ::: {.actions}
