@@ -264,6 +264,57 @@ def seat_footnote_pages():
             page.write_text(fixed, encoding="utf-8")
 
 
+RASTER_FIGURE = re.compile(r'(?<!title="Open full size">)<img src="([^"]+\.(?:jpe?g|png))" class="fig img-fluid"[^>]*>')
+
+
+def link_raster_figures(text):
+    """Wrap each screenshot or raster figure in a link to its full-size file.
+
+    A desktop-app screenshot shown a phone-column wide is too small to read. The
+    link opens the image itself, where a reader can zoom. Vector figures stay as
+    they are: they are sharp at any size.
+    """
+    return RASTER_FIGURE.sub(
+        lambda m: f'<a class="fig-zoom" href="{m.group(1)}" title="Open full size">{m.group(0)}</a>', text)
+
+
+def link_raster_figure_pages():
+    """Apply link_raster_figures to every rendered page."""
+    for page in DOCS.rglob("*.html"):
+        text = page.read_text(encoding="utf-8")
+        fixed = link_raster_figures(text)
+        if fixed != text:
+            page.write_text(fixed, encoding="utf-8")
+
+
+SPRITE = re.compile(r'(<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">)(.*?)(</svg>)', re.S)
+SYMBOL = re.compile(r'<symbol id="([\w-]+)".*?</symbol>', re.S)
+
+
+def prune_sprite(text):
+    """Keep only the icons a page uses in its inline sprite.
+
+    site.lua writes the whole icon set into every page; a page uses a few of them.
+    Unused symbols are pure weight, so each page keeps the ones it references.
+    """
+    match = SPRITE.search(text)
+    if not match:
+        return text
+    rest = text[:match.start()] + text[match.end():]
+    used = set(re.findall(r'href="#([\w-]+)"', rest))
+    kept = SYMBOL.sub(lambda symbol: symbol.group(0) if symbol.group(1) in used else "", match.group(2))
+    return text[:match.start(2)] + kept + text[match.end(2):]
+
+
+def prune_sprite_pages():
+    """Apply prune_sprite to every rendered page."""
+    for page in DOCS.rglob("*.html"):
+        text = page.read_text(encoding="utf-8")
+        fixed = prune_sprite(text)
+        if fixed != text:
+            page.write_text(fixed, encoding="utf-8")
+
+
 def main():
     """Prepare docs for GitHub Pages, remove the search index, and publish the PDF."""
     DOCS.mkdir(exist_ok=True)
@@ -272,6 +323,8 @@ def main():
     dedupe_titles()
     harden_diagram_pages()
     seat_footnote_pages()
+    link_raster_figure_pages()
+    prune_sprite_pages()
     cache_bust_pages()
     build_search_index()
     publish_pdf()

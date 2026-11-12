@@ -50,12 +50,16 @@ its size and its budget.
 | --- | --- | ---: | ---: |
 | Home | `index.html` | 14,127 | 16,000 |
 | Projects index | `projects/index.html` | 23,702 | 26,000 |
-| Case study | `projects/mapreduce-reloaded.html` | 16,028 | 19,000 |
+| Case study | `projects/mapreduce-reloaded.html` | 19,433 | 20,000 |
 | Technical report | `projects/natd/report.html` | 19,345 | 22,000 |
 | Appendix | `projects/mailroom-ml/appendix.html` | 11,018 | 13,000 |
 | Other page | `resume.html` | 12,099 | 15,000 |
 | Shared stylesheet | `styles.css` | 14,935 | 20,000 |
 | Shared script | `assets/js/site.js` | 5,683 | 9,000 |
+
+The case-study budget was raised from 19,000 on 12 November 2026. The update to its heaviest page (#142) had
+brought it to 18,988 bytes. Phone-width chart drawings then added 1,407 bytes, and pruning unused icons from each page's
+sprite saved 948, for 19,433. The other budgets are unchanged; every page type got lighter from the sprite pruning.
 
 Page budgets leave roughly 10–24 percent headroom over their baselines; shared CSS and JavaScript budgets allow roughly 34 and 58 percent, respectively. Raising one is a deliberate decision that belongs in
 the pull request, with the reason and the new measurement.

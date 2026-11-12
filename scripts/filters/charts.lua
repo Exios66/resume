@@ -136,7 +136,12 @@ local function esc(s)
   return (tostring(s):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"))
 end
 
-local function num(x) return (string.format("%.1f", x):gsub("%.0$", "")) end
+-- Coordinates keep one decimal; the phone drawing (NARROW, above) is shown at about
+-- one pixel per unit, so it rounds to whole units.
+local function num(x)
+  if NARROW.stack > 0 then return string.format("%d", math.floor(x + 0.5)) end
+  return (string.format("%.1f", x):gsub("%.0$", ""))
+end
 
 --- Split a label into at most two lines of max_chars, at spaces.
 -- @param text string Label.
