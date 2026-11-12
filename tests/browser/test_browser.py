@@ -422,6 +422,8 @@ def test_mobile_report_charts_in_other_engines(site, playwright, engine):
         for chart in charts.all():
             image = chart.locator("img")
             image.scroll_into_view_if_needed()
+            page.wait_for_function("img => img.complete && img.naturalWidth > 0",
+                                   arg=image.element_handle())
             assert image.evaluate("img => img.decode().then(() => img.naturalWidth > 0)")
             assert chart.evaluate("el => el.scrollWidth > el.clientWidth")
             chart.focus()

@@ -550,8 +550,10 @@ end
 
 -- Reserve each local image's real aspect ratio before it downloads. Read source
 -- bytes only: external images must never cause network requests during a build.
-function prepare_content_image(image, first)
-  image.attributes.loading = first and "eager" or "lazy"
+-- Only a lead image above the first section heading loads eagerly; figures that
+-- begin below the fold stay lazy even when they are the page's first image.
+function prepare_content_image(image, eager)
+  image.attributes.loading = eager and "eager" or "lazy"
   image.attributes.decoding = "async"
   local src = image.src
   if src:match("^[%w+.-]+:") or src:match("^//") then return image end
@@ -586,12 +588,25 @@ end
 -- @param doc Pandoc Document whose blocks will be modified in place.
 -- @return Pandoc The modified document.
 function Pandoc(doc)
-  if doc.walk then
-    local count = 0
-    doc = doc:walk({ Image = function(image)
-      count = count + 1
-      return prepare_content_image(image, count == 1)
+  local images = 0
+  local lead = true
+
+  local function process(block)
+    if block.t == "Header" and block.level >= 2 then lead = false end
+    if block.t == "Div" then
+      for i, child in ipairs(block.content) do
+        block.content[i] = process(child)
+      end
+      return block
+    end
+    return pandoc.walk_block(block, { Image = function(image)
+      images = images + 1
+      return prepare_content_image(image, images == 1 and lead)
     end })
+  end
+
+  for i, block in ipairs(doc.blocks) do
+    doc.blocks[i] = process(block)
   end
   if doc.walk then doc = doc:walk(DECORATE) end
   local path = page_path()

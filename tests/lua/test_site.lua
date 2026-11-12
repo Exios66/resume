@@ -9,6 +9,17 @@ pandoc = {
   RawBlock = function(format, text)
     return { format = format, text = text }
   end,
+  walk_block = function(block, filter)
+    local function walk(value)
+      if type(value) ~= "table" then return value end
+      if value.src then return filter.Image(value) end
+      for key, child in pairs(value) do
+        if type(child) == "table" then value[key] = walk(child) end
+      end
+      return value
+    end
+    return walk(block)
+  end,
   RawInline = function(format, text)
     return { tag = "RawInline", format = format, text = text }
   end,
@@ -490,14 +501,28 @@ for _, src in ipairs({"https://example.invalid/a.jpg", "//example.invalid/a.jpg"
   assert(remote.attributes.width == nil)
 end
 io.open = open
--- Each document has its own first image, including consecutive render inputs.
-for _ = 1, 2 do
-  local images = {study_image(), study_image()}
-  local doc = {blocks = {}, meta = {}, walk = function(self, visitor)
-    if visitor.Image then for i, img in ipairs(images) do images[i] = visitor.Image(img) end end
-    return self
-  end}
-  Pandoc(doc)
-  assert(images[1].attributes.loading == "eager" and images[2].attributes.loading == "lazy")
+-- A lead image loads eagerly; later images and below-heading first images stay lazy.
+local function paragraph_with_image()
+  return {t = "Para", content = {study_image()}}
 end
+for _ = 1, 2 do
+  local doc = {blocks = {paragraph_with_image(), paragraph_with_image()}, meta = {}}
+  Pandoc(doc)
+  assert(doc.blocks[2].content[1].attributes.loading == "eager")
+  assert(doc.blocks[3].content[1].attributes.loading == "lazy")
+end
+local below_heading = {blocks = {
+  {t = "Header", level = 2, content = {}},
+  paragraph_with_image(),
+}, meta = {}}
+Pandoc(below_heading)
+assert(below_heading.blocks[3].content[1].attributes.loading == "lazy",
+  "A first image below the first section heading must stay lazy")
+local nested = {blocks = {{t = "Div", content = {
+  {t = "Header", level = 2, content = {}},
+  paragraph_with_image(),
+}}}, meta = {}}
+Pandoc(nested)
+assert(nested.blocks[2].content[2].content[1].attributes.loading == "lazy",
+  "A Div-wrapped first image below the first section heading must stay lazy")
 print("content image sizing and loading ok")

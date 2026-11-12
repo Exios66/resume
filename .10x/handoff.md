@@ -4,7 +4,7 @@ Read `AGENTS.md`, `.github/BUILDING.md`, `scripts/hillclimb/README.md`, this fil
 
 ## Current pending work (2026-11-12)
 
-This branch prepares #119; it is not shipped. See `.10x/reviews/issue119/` for actual evidence and exact check results. It moves existing Wave Laboratory and Neuron Atlas captures above the opening content and sizes local content images from their headers in `site.lua`, with first-image eager loading and later lazy loading. Built-branch `experience_gaps=19`; this does not mean #126 is complete.
+This branch prepares #119; it is not shipped. See `.10x/reviews/issue119/` for actual evidence and exact check results. It moves existing Wave Laboratory and Neuron Atlas captures above the opening content and sizes local content images from their headers in `site.lua`, with lead-image eager loading above the first section heading and lazy loading elsewhere. Built-branch `experience_gaps=19`; this does not mean #126 is complete.
 
 #146 and #147 are independent pending PRs based on main. #146 holds scholarship/course-tag/private-research wording (AI Terrarium and Alignment-Gym stay on Research only). #147 links the hosted RVL-CDIP study. Do not lose their changes when integrating generated output; re-render sources after merges.
 

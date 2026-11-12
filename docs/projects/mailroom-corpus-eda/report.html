@@ -391,7 +391,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>A document goes to the test set when the MD5 of its filename modulo 10 is zero. That gives 2,979 train and 323 test rows, stable across rebuilds. Random state is fixed at 42, rows are sorted before export, and a rebuild of the JSONL and parquet files is byte-identical. The interactive Plotly figures are the one exception, because each embeds a random identifier, so the committed files are treated as canonical.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/test-share-per-stratum.jpg" class="fig" loading="eager" decoding="async" alt="Horizontal bars of test-set share for each of the 55 strata with a dashed line at 10%. Ten strata at the top have no test documents, four more are drawn in red well short of the line, and the rest run from about 6% to 24%." width="1100" height="989"></p>
+<p><img src="figures/test-share-per-stratum.jpg" class="fig" loading="lazy" decoding="async" alt="Horizontal bars of test-set share for each of the 55 strata with a dashed line at 10%. Ten strata at the top have no test documents, four more are drawn in red well short of the line, and the rest run from about 6% to 24%." width="1100" height="989"></p>
 <figcaption>Test share for each of the 55 strata, against the 10% the split rule aims for.</figcaption>
 </figure>
 </div>
