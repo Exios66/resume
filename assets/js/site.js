@@ -292,6 +292,9 @@
           if (box.tagName !== "TABLE") { box.removeAttribute("role"); box.removeAttribute("aria-label"); }
         }
       });
+      // Tells the stylesheet the fit of each table is known, so it can release the
+      // sticky label column of a table that fits. Without scripts the column stays put.
+      doc.documentElement.setAttribute("data-measured", "");
     }
     update();
     window.addEventListener("load", update); // web fonts can change widths

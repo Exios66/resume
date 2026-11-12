@@ -1139,3 +1139,81 @@ def test_dark_theme_plate_is_for_transparent_figures_only(site):
         expect(plated).to_have_css("background-color", "rgb(255, 255, 255)")
     finally:
         page.close()
+    # Without scripts nothing has measured the tables, so a phone source table keeps
+    # its sticky label column in case it scrolls.
+    context = browser.new_context(viewport={"width": 320, "height": 800}, java_script_enabled=False)
+    page = context.new_page()
+    try:
+        page.goto(base + "projects/natd.html")
+        cell = page.locator("table.chart-source:not(.stack) tbody td:first-child").first
+        if cell.count():
+            expect(cell).to_have_css("position", "sticky")
+    finally:
+        context.close()
+
+
+@pytest.mark.parametrize("width", [320, 360, 375, 414, 600])
+def test_phone_header_takes_two_rows(site, width):
+    """Title with Search and the theme toggle, then one row of section links."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 800})
+    try:
+        page.goto(base + "projects/index.html")
+        layout = page.evaluate("""() => {
+            const box = el => el.getBoundingClientRect();
+            const title = document.querySelector('.site-title');
+            const text = document.createRange(); text.selectNodeContents(title);
+            const items = [...document.querySelectorAll('.nav-list li')]
+                .filter(li => li.offsetWidth && getComputedStyle(li).visibility !== 'hidden');
+            const control = li => li.querySelector('a, button');
+            return {
+                tops: [...new Set(items.map(li => Math.round(box(control(li)).top + box(control(li)).height / 2)))].length,
+                header: box(document.querySelector('.site-header')).height,
+                titleRight: text.getBoundingClientRect().right,
+                searchLeft: box(document.querySelector('.nav-link[data-search-shortcut]')).left,
+                right: Math.max(...items.map(li => box(li).right)),
+                small: items.map(li => box(control(li))).filter(b => b.height < 44 || b.width < 40).length,
+                labels: items.map(li => li.textContent.trim().split(/\\s+/)[0]),
+                overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+            };
+        }""")
+        assert layout["tops"] == 2, layout
+        assert layout["header"] <= 96, layout
+        assert layout["titleRight"] + 4 <= layout["searchLeft"], layout
+        assert layout["right"] <= width - 15, layout
+        assert layout["small"] == 0 and layout["overflow"] <= 0, layout
+        assert layout["labels"][:6] == ["About", "Projects", "Research", "Writing", "Résumé", "Search"], layout
+        expect(page.locator(".site-title")).to_have_attribute("href", re.compile(r"index\.html$"))
+    finally:
+        page.close()
+
+
+def test_screenshots_open_full_size_and_say_so_on_phones(site):
+    browser, base = site
+    for width, hint in ((375, True), (1280, False)):
+        page = browser.new_page(viewport={"width": width, "height": 800})
+        try:
+            page.goto(base + "projects/wave-laboratory.html")
+            link = page.locator("a.fig-zoom").first
+            src = link.locator("img").get_attribute("src")
+            assert link.get_attribute("href") == src and src.endswith(".jpg")
+            content = link.evaluate("el => getComputedStyle(el, '::after').content")
+            assert ("full size" in content) == hint, content
+            response = page.request.get(base + "projects/" + src)
+            assert response.ok and response.headers["content-type"].startswith("image/")
+            expect(page.locator('a.fig-zoom img[src$=".svg"]')).to_have_count(0)
+        finally:
+            page.close()
+
+
+def test_wave_report_writes_subscripts_as_subscripts(site):
+    browser, base = site
+    page = browser.new_page(viewport={"width": 375, "height": 800})
+    try:
+        page.goto(base + "projects/wave-laboratory/report.html")
+        text = page.locator("main").inner_text()
+        for raw in ("H_s", "K_d", "ω_p"):
+            assert raw not in text, raw
+        assert page.locator("main sub", has_text=re.compile(r"^[spd]$")).count() >= 10
+    finally:
+        page.close()

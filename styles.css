@@ -326,14 +326,27 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   .page { margin: 0; padding: 36px 20px 28px; border-radius: 0; box-shadow: none; }
   .site-header { padding: 0 16px; }
   .site-nav { justify-content: flex-start; row-gap: 0; column-gap: 4px; }
-  /* Phone header: the title sits on its own line; links keep their 44 px touch
-     height but lose horizontal padding, so the theme toggle rides the last link
-     row instead of taking one of its own. */
+  /* Phone header, two rows: the title with Search and the theme toggle at its right,
+     then the five section links. The title is the home link, so "Home" is dropped
+     here. Links keep their 44 px touch height. */
+  .site-nav { position: relative; }
   .site-title { flex-basis: 100%; display: flex; align-items: center; min-height: 44px; }
-  .nav-list { flex: 1 1 auto; }
+  .nav-list { flex: 1 1 auto; flex-wrap: nowrap; justify-content: flex-start; gap: 0 2px; }
+  .nav-list li:first-child { position: absolute; top: 0; left: 0; visibility: hidden; }
+  .nav-list li:nth-last-child(-n+2) { position: absolute; top: 0; right: 0; }
+  .nav-list li:nth-last-child(2) { right: 48px; }
+  .nav-list:has(> li:last-child[hidden]) li:nth-last-child(2) { right: 0; }
   .nav-link { padding: 6px 8px; font-size: .84rem; }
   .nav-link .key-hint { display: none; }
   .theme-toggle { margin-left: 0; flex: 0 0 auto; }
+  @media (max-width: 390px) {
+    .nav-list { justify-content: space-between; gap: 0; }
+  }
+  @media (max-width: 365px) {
+    /* The narrowest phones: tighter links and title so both rows still fit. */
+    .nav-link { padding: 6px 4px; font-size: .8rem; }
+    .site-title { letter-spacing: .04em; gap: .4em; font-size: 1rem; }
+  }
   .site-footer { padding: 0 16px; }
   .site-header + main .page { margin-top: 12px; }
   .skills dl { grid-template-columns: 1fr; gap: 2px; }
@@ -420,6 +433,14 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .page .quarto-figure { margin: 22px 0; }
 .page .quarto-figure figure { margin: 0; }
 .page img { max-width: 100%; height: auto; }
+/* Screenshots and other raster figures link to their full-size file (post-render.py).
+   On phones, where a desktop screenshot is too small to read, the link says so. */
+.page a.fig-zoom { display: block; color: var(--muted); text-decoration: none; cursor: zoom-in; }
+.page a.fig-zoom:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+@media (max-width: 720px) {
+  .page a.fig-zoom::after { content: "Tap to open full size"; display: block; margin-top: 6px; font-size: .78rem; text-align: center; }
+}
+@media print { .page a.fig-zoom::after { content: none; } }
 .page img.fig, .page figure img { display: block; width: 100%; max-width: 100%; height: auto; margin: 0 auto; border-radius: 8px; }
 .page figcaption, .page .figure-caption {
   margin-top: 8px; font-size: .84rem; line-height: 1.45; color: var(--muted); text-align: left;
@@ -436,11 +457,11 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 :root[data-theme="dark"] .page figure.clip video.clip-light { display: none; }
 :root[data-theme="dark"] .page figure.clip video.clip-dark { display: block; }
 /* Charts have white/transparent backgrounds and dark text: seat them on a light plate in dark mode.
-   JPEGs are opaque (screenshots and photos), so they need no plate and get no white frame. */
+   Only SVG figures are transparent; JPEG and PNG screenshots are opaque and get no white frame. */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .page img.fig:not([src$=".jpg"]) { background: #fff; padding: 10px; }
+  :root:not([data-theme="light"]) .page img.fig[src$=".svg"] { background: #fff; padding: 10px; }
 }
-:root[data-theme="dark"] .page img.fig:not([src$=".jpg"]) { background: #fff; padding: 10px; }
+:root[data-theme="dark"] .page img.fig[src$=".svg"] { background: #fff; padding: 10px; }
 
 /* Diagrams (inline SVG; colors via currentColor and tokens only) */
 .page figure.diagram { margin: 22px 0; padding: 14px 12px 12px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); overflow-x: auto; }
@@ -1002,8 +1023,8 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
    so the outline and tint cover the whole row. */
 @media (max-width: 720px) {
   .page table.chart-source:not(.stack) :is(th, td) { padding-inline: 6px; }
-  .page table.chart-source:not(.stack):not([data-scrolls]) :is(th, td):first-child { position: static; }
-  .page table.chart-source:not(.stack):not([data-scrolls]) td:first-child { background: none; }
+  :root[data-measured] .page table.chart-source:not(.stack):not([data-scrolls]) :is(th, td):first-child { position: static; }
+  :root[data-measured] .page table.chart-source:not(.stack):not([data-scrolls]) td:first-child { background: none; }
 }
 @media (max-width: 800px) { .page table.chart-source.stack tr { padding-inline: 10px; } }
 .chart .mark.is-linked .hit { fill: color-mix(in srgb, var(--accent) 8%, transparent); stroke: var(--accent); stroke-width: 1.5; }
