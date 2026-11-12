@@ -15,6 +15,8 @@ description: "Capstone with an industry partner: one LangGraph pipeline for docu
 
 [DSHB capstone project · American Family Insurance (industry partner)]{.kicker}
 
+[UW–Madison · Capstone · February 2026 – present]{.tag}
+
 ## At a glance
 
 ::: {.stats}

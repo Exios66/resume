@@ -13,16 +13,18 @@ description: "A from-scratch MapReduce rebuild: a Go cluster and Python referenc
 
 # MapReduce-Reloaded {.page-title}
 
-[In active development · big data & distributed systems · Go & Python]{.kicker}
+[In active development · distributed systems · Go & Python]{.kicker}
 
-A from-scratch rebuild of Google's MapReduce, as described by Dean and Ghemawat in [*MapReduce: Simplified Data Processing on Large Clusters*](https://research.google.com/archive/mapreduce-osdi04.pdf) (OSDI 2004). Go is the main implementation. Python is a second implementation of the shared contract and of single-machine mode, so the two can be checked against each other byte for byte.
+[UW–Madison · CS 544 Honors · Fall 2026]{.tag}
+
+A from-scratch rebuild of Google's MapReduce, as described by Dean and Ghemawat in [*MapReduce: Simplified Data Processing on Large Clusters*](https://research.google.com/archive/mapreduce-osdi04.pdf) (OSDI 2004). Go is the main implementation; Python implements the same contract and single-machine mode for byte-for-byte checks.
 
 ::: {.actions}
 [View the code](https://github.com/Exios66/MapReduce-Reloaded){.btn .primary}
 :::
 
 ::: {.caveat}
-**Work in progress.** Reviewed on 11 November 2026 against [revision def9c62](https://github.com/Exios66/MapReduce-Reloaded/tree/def9c62846e8c560b9be6c72b76f1cf325582059). Object storage, compression, benchmarks, the demo script and the final report are now built. Python workers and full cross-language interoperability remain stretch work. The evaluation below is reported by the source repository, not rerun for this page.
+**Work in progress.** Reviewed on 11 November 2026 against [revision def9c62](https://github.com/Exios66/MapReduce-Reloaded/tree/def9c62846e8c560b9be6c72b76f1cf325582059). Object storage, compression, benchmarks, the demo script and the final report are now built. Python workers and full cross-language interoperability remain stretch work. The evaluation below is reported by the source repository, not rerun here.
 :::
 
 ## At a glance

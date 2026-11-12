@@ -15,8 +15,13 @@ Roughly 95% of the program's coursework is data science and data engineering, pa
 
 - The [Digital-Mailroom](projects/digital-mailroom.qmd) capstone with American Family Insurance (February 2026 – present) routes each document in a stream to the cheapest step that can handle it: five Python packages and one LangGraph pipeline for routing, prompt experiments, deterministic scoring, and deployment, built on a dataset assembled from public sources.
 - The [Psychometric Digital Twin](projects/psychometric-digital-twin.qmd) study (PSYCH 755, Summer 2026) compares seven classical machine learning models against LLM personas predicting survey respondents' own communication-apprehension scores, with errors checked by demographic group.
-- The [AI Terrarium Digital Twin](https://github.com/Exios66/ai_terrarium_digital_twin-jjb-v2) (Spring 2026, private code) is a Python library that turns structured survey responses into section- and subsection-level persona prompts for LLM evaluation, with batch inference on vLLM, Transformers, and the Claude API and token-cost estimation.
+- The **AI Terrarium Digital Twin** (Spring 2026) is a Python library that turns structured survey responses into section- and subsection-level persona prompts for LLM evaluation, with batch inference on vLLM, Transformers, and the Claude API and token-cost estimation. Built in a proseminar course in collaboration with Dr. Tim Rodgers, as a continuation of his earlier research involving similar research questions. Private repository; additional information available on request.
 - [MapReduce-Reloaded](projects/mapreduce-reloaded.qmd) (CS 544 Honors, Fall 2026, in active development) is a from-scratch Go rebuild of Google's MapReduce with a Python reference implementation, a shared gRPC contract, object storage, compression, fault tolerance, and a small-scale VM evaluation.
+- Awarded the **Excellence in Data Science Scholarship** through the Graduate School (Fall 2026).
+
+## Independent AI-safety research
+
+- **Alignment-Gym** evaluates whether an AI assistant in a simulated law-firm office exploits private information when facing replacement, or instead accepts replacement, declines to exploit it, or uses legitimate channels. Private repository; additional information available on request.
 
 ## Cognitive Neuroscience Lab, UW–Parkside
 
