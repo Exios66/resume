@@ -28,6 +28,7 @@ Roughly 95% of the program's coursework is data science and data engineering, pa
 [Undergraduate Researcher · Jun 2024 – Aug 2025 · Advisor: Dr. Melissa Gregg]{.kicker}
 
 - Designed and pilot-tested a study of perceptions of chatbot truth, deception, and user cognitive workload. See the [case study and technical report](projects/natd.qmd) on *The Neural Architecture of Truth and Deception*.
+    - Related assessment tools: [Dark Triad Assessments](https://exios66.github.io/dark-triad-assessments/) (personality inventories) and the [Knowledge Assessment Quiz](https://exios66.github.io/Intro-Knowledge-Quiz/) (a 15-question quiz across subjects).
 - Ran EEG systems and analyzed neural time-series data to measure brain activity, adding signal-processing and statistical analysis to existing lab research on sleep quality and cognitive load.
 - Presented findings at the 2025 Midwestern Psychological Association conference in Chicago and at Research in the Rotunda.
 

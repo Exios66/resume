@@ -84,6 +84,11 @@ Replicate with more participants and balanced persona assignment, randomize pers
 
 The technical report has the literature review, the full method, every table, the cluster analysis and the references with how far each was verified.
 
+## Related assessment tools
+
+- [Dark Triad Assessments](https://exios66.github.io/dark-triad-assessments/) — personality inventories including SDT3, the Dirty Dozen, SDT4, MACH IV, HEXACO and OCEAN.
+- [Knowledge Assessment Quiz](https://exios66.github.io/Intro-Knowledge-Quiz/) — a 15-question quiz across geography, chemistry, history, literature, astronomy, psychology and more.
+
 ## Methods and tools
 
 [Truth-Default Theory]{.tag} [Chatbot personas]{.tag} [Pilot study]{.tag}
