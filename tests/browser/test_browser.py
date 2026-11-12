@@ -585,14 +585,74 @@ def test_charts_dark_theme_and_no_script(site):
         context.close()
 
 
-def test_charts_scroll_on_phone(site):
+def test_charts_fit_a_phone_and_scroll_only_without_scripts(site):
+    browser, base = site
+    for width in (320, 375):
+        page = browser.new_page(viewport={"width": width, "height": 812}, reduced_motion="reduce")
+        try:
+            for path in CHART_PAGES:
+                page.goto(base + path)
+                for body in page.locator(".chart-body").all():
+                    # Every chart is drawn for the phone: nothing to scroll, text at 12px or more.
+                    assert body.locator("svg").count() == 1, path
+                    if width == 320 and body.evaluate("el => !!el.closest('.chart-interval')"):
+                        continue  # the one-row interval plot keeps its 300px floor and scrolls at 320
+                    assert body.evaluate("el => el.scrollWidth <= el.clientWidth + 1"), f"{path} at {width}"
+                    if not body.evaluate("el => !!el.closest('.chart-interval')"):
+                        assert "scrollable" not in body.get_attribute("aria-label"), path
+                    small = body.evaluate("""el => [...el.querySelectorAll('svg text')].filter(t =>
+                        t.getBoundingClientRect().height && parseFloat(getComputedStyle(t).fontSize)
+                          * (t.ownerSVGElement.getBoundingClientRect().width / t.ownerSVGElement.viewBox.baseVal.width) < 12)
+                        .map(t => t.textContent)""")
+                    assert small == [], f"{path} at {width}: chart text under 12px: {small}"
+                    crowded = body.evaluate("""el => {
+                        const boxes = [...el.querySelectorAll('svg text')].map(t => [t.textContent, t.getBoundingClientRect()]);
+                        const hits = [];
+                        for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
+                            const a = boxes[i][1], b = boxes[j][1];
+                            const w = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+                            const h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+                            if (w > 1 && h > 6) hits.push(boxes[i][0] + ' / ' + boxes[j][0]);
+                        }
+                        return hits;
+                    }""")
+                    assert crowded == [], f"{path} at {width}: chart labels collide: {crowded}"
+                assert page.locator("figure.chart").first.evaluate(
+                    "el => getComputedStyle(el, '::after').content") in ("none", "normal"), path
+        finally:
+            page.close()
+    # Widening the window brings the wide drawing back, with its marks still wired up.
+    page = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/natd.html")
+        assert page.locator(".chart-body svg").first.evaluate("el => el.viewBox.baseVal.width") == 256
+        page.set_viewport_size({"width": 1280, "height": 800})
+        page.wait_for_function("document.querySelector('.chart-body svg').viewBox.baseVal.width === 640")
+        page.locator("figure.chart g.mark").first.focus()
+        expect(page.locator(".chart-tooltip")).to_be_visible()
+        expect(page.locator("figure.chart g.mark.is-linked")).to_have_count(1)
+    finally:
+        page.close()
+    # Without scripts the wide drawing stays, scrolls, and says so.
+    context = browser.new_context(viewport={"width": 375, "height": 812}, java_script_enabled=False)
+    page = context.new_page()
+    try:
+        page.goto(base + "projects/natd.html")
+        body = page.locator(".chart-body").first
+        assert body.evaluate("el => el.scrollWidth > el.clientWidth")
+        assert "Scroll sideways" in page.locator("figure.chart").first.evaluate("el => getComputedStyle(el, '::after').content")
+    finally:
+        context.close()
+
+
+def test_chart_text_stays_inside_its_drawing_on_phone(site):
     browser, base = site
     page = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
     try:
         for path in CHART_PAGES:
             page.goto(base + path)
             for body in page.locator(".chart-body").all():
-                compact = body.evaluate("el => el.querySelector('svg').viewBox.baseVal.width === 320")
+                compact = body.evaluate("el => el.querySelector('svg').viewBox.baseVal.width <= 320")
                 if compact:
                     assert body.evaluate("el => el.scrollWidth <= el.clientWidth + 1"), path
                 else:

@@ -909,6 +909,9 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 .chart-legend .key.c1s { background: var(--chart-1-soft); }
 .chart-body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .chart svg { display: block; width: 100%; min-width: 640px; height: auto; overflow: visible; font-family: var(--sans); font-size: 13px; }
+/* The phone drawing (swapped in by site.js) fits its column and never needs the scroll hint. */
+.chart svg.chart-narrow { min-width: 0; max-width: 460px; }
+.page figure.chart.is-narrow::after { content: none; }
 .chart text { fill: var(--muted); }
 .chart text.cat { fill: var(--ink); }
 .chart text.val { fill: var(--ink); font-weight: 600; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
@@ -1018,6 +1021,7 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
 /* The two-condition duration comparison keeps both bar ends visible on phones. */
 /* Drawn 320 units wide; capped so desktop labels stay near body size instead of doubling. */
 #mr-backup-duration .chart svg { min-width: 300px; max-width: 400px; }
+#mr-backup-duration .chart svg.chart-narrow { min-width: 0; }
 #mr-backup-duration .chart text.tick { font-size: 13px; }
 .page #mr-backup-duration figure.chart::after { content: none; }
 
