@@ -205,7 +205,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Group means differ by employment. Full-time (n = 148) is 13.32, part-time (n = 31) is 16.16 and other (n = 62) is 16.95. Mean group CA also falls with public-transit use, from 17.38 for riders who never use transit (n = 50) to 12.84 for those riding eight or more days a month (n = 55).</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/ca-by-employment.jpg" class="fig img-fluid" style="width:100.0%" alt="Grouped bar chart of mean group and interpersonal PRCA scores for full-time, part-time and other employment. Full-time is lowest at 13.32 and 12.99. Part-time is 16.16 and 16.10. Other is highest at 16.95 and 16.56."></p>
+<p><img src="figures/ca-by-employment.jpg" class="fig" loading="lazy" decoding="async" alt="Grouped bar chart of mean group and interpersonal PRCA scores for full-time, part-time and other employment. Full-time is lowest at 13.32 and 12.99. Part-time is 16.16 and 16.10. Other is highest at 16.95 and 16.56." width="1600" height="989"></p>
 <figcaption>Mean PRCA scores by employment status in the analysed cohort.</figcaption>
 </figure>
 </div>
@@ -314,7 +314,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Linear models were the strongest floor. Boosting did not win, which fits a small sample with few features. The best transit-tier band accuracy for group CA was 0.481, and R-squared peaked at only about 0.13 to 0.15 at transit for the best models. The classical models explain a small share of individual differences. The interpersonal table is in the repository; its best transit MAE is 4.25 (Elastic Net).</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/ml-baseline-mae-group.jpg" class="fig img-fluid" style="width:100.0%" alt="Line chart of mean absolute error by tier for seven models. Ridge, Elastic Net and the neural net sit lowest, near 4.9 at demos and about 4.5 to 4.6 at transit. The random forest, highlighted, falls from about 5.7 to 4.7. k-NN is highest throughout, ending near 5.2."></p>
+<p><img src="figures/ml-baseline-mae-group.jpg" class="fig" loading="lazy" decoding="async" alt="Line chart of mean absolute error by tier for seven models. Ridge, Elastic Net and the neural net sit lowest, near 4.9 at demos and about 4.5 to 4.6 at transit. The random forest, highlighted, falls from about 5.7 to 4.7. k-NN is highest throughout, ending near 5.2." width="1600" height="924"></p>
 <figcaption>Group-score MAE across the seven classical models by tier.</figcaption>
 </figure>
 </div>
@@ -437,7 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/mae-rf-vs-llm.jpg" class="fig img-fluid" style="width:100.0%" alt="Grouped bar chart of mean absolute error by tier. The random forest falls from about 5.5 at demos to about 4.5 at transit. The LLM persona agent stays between about 5.0 and 5.5 and is higher than the forest at employment, geo and transit."></p>
+<p><img src="figures/mae-rf-vs-llm.jpg" class="fig" loading="lazy" decoding="async" alt="Grouped bar chart of mean absolute error by tier. The random forest falls from about 5.5 at demos to about 4.5 at transit. The LLM persona agent stays between about 5.0 and 5.5 and is higher than the forest at employment, geo and transit." width="1343" height="751"></p>
 <figcaption>Mean error by tier for the random forest and for DeepSeek version 2, averaging both subscales.</figcaption>
 </figure>
 </div>
@@ -484,7 +484,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>DeepSeek version 2 made no group-CA predictions in the high band (0 of 240). The forest made 12, and only 25% of them were truly high. Both did best on the low band. DeepSeek’s scores stayed close to the cohort mean, which keeps the MAE reasonable and leaves the ranking near chance.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/band-discrimination-auc.jpg" class="fig img-fluid" style="width:100.0%" alt="Two line charts, for group and interpersonal CA, of low-versus-high ROC-AUC across four tiers. The random forest rises from about 0.5 at demos to about 0.72 and 0.74 at transit. DeepSeek version 2 stays between about 0.42 and 0.61, near the 0.5 chance line."></p>
+<p><img src="figures/band-discrimination-auc.jpg" class="fig" loading="lazy" decoding="async" alt="Two line charts, for group and interpersonal CA, of low-versus-high ROC-AUC across four tiers. The random forest rises from about 0.5 at demos to about 0.72 and 0.74 at transit. DeepSeek version 2 stays between about 0.42 and 0.61, near the 0.5 chance line." width="1600" height="712"></p>
 <figcaption>Low-versus-high AUC by tier for the random forest and DeepSeek version 2.</figcaption>
 </figure>
 </div>
@@ -492,7 +492,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In a forest predicting true group CA at the transit tier, mean absolute SHAP values were highest for ride-share days (Q28, 1.93), then employment (0.83), public-transit days (0.58), latitude (0.57), longitude (0.54) and age (0.53). I also fit a surrogate forest to DeepSeek’s outputs (R-squared 0.74). Its top features were latitude (0.27), age (0.21), longitude (0.21) and Q28 (0.19), with magnitudes about seven times smaller. The persona leaned on place and age, while the real signal was in ride-share use and employment. Permutation importance on the full cohort agrees that Q28 comes first (1.518), but ranks age second.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/shap-ml-vs-llm.jpg" class="fig img-fluid" style="width:100.0%" alt="Paired horizontal bars of mean absolute SHAP value for ten features. For the forest predicting true scores, Q28 is longest at about 1.9, then employment status at about 0.8. For the surrogate of the LLM's outputs, all bars are short, with latitude, age and longitude longest at about 0.2 to 0.3."></p>
+<p><img src="figures/shap-ml-vs-llm.jpg" class="fig" loading="lazy" decoding="async" alt="Paired horizontal bars of mean absolute SHAP value for ten features. For the forest predicting true scores, Q28 is longest at about 1.9, then employment status at about 0.8. For the surrogate of the LLM's outputs, all bars are short, with latitude, age and longitude longest at about 0.2 to 0.3." width="1418" height="911"></p>
 <figcaption>Mean SHAP values at the transit tier for a forest predicting true scores and for a surrogate fit to DeepSeek’s outputs.</figcaption>
 </figure>
 </div>

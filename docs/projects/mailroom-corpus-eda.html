@@ -159,14 +159,14 @@ ul.task-list li input[type="checkbox"] {
 <h2 id="results">Results</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="mailroom-corpus-eda/figures/doc-types-and-subclasses.jpg" class="fig img-fluid" style="width:100.0%" alt="Two horizontal bar charts over the five document classes. Left: documents per class, with insurance claims at 1,100, correspondence at 1,000, contracts at 600, corporate records at 450 and merger agreements at 152. Right: distinct subclasses per class, with contracts at 26, corporate records at 10, correspondence at 8, insurance claims at 6 and merger agreements at 5."></p>
+<p><img src="mailroom-corpus-eda/figures/doc-types-and-subclasses.jpg" class="fig" loading="lazy" decoding="async" alt="Two horizontal bar charts over the five document classes. Left: documents per class, with insurance claims at 1,100, correspondence at 1,000, contracts at 600, corporate records at 450 and merger agreements at 152. Right: distinct subclasses per class, with contracts at 26, corporate records at 10, correspondence at 8, insurance claims at 6 and merger agreements at 5." width="1400" height="501"></p>
 <figcaption>Documents per class on the left; distinct subclasses per class on the right.</figcaption>
 </figure>
 </div>
 <p>The corpus is imbalanced, and the audit says so plainly. The largest class is 7.2 times the smallest. At the level of the 55 strata the ratio is 557, because one merger-agreement stratum has a single document. The split rule puts a document in the test set when the md5 of its filename modulo 10 is zero, which is reproducible but not stratified. Ten strata end up with no test documents.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="mailroom-corpus-eda/figures/test-share-per-stratum.jpg" class="fig img-fluid" style="width:100.0%" alt="Horizontal bars of test-set share for each of the 55 strata with a dashed line at 10%. Ten strata at the top have no test documents, four more, drawn in red, fall well short of it, and the rest run from about 6% to 24%."></p>
+<p><img src="mailroom-corpus-eda/figures/test-share-per-stratum.jpg" class="fig" loading="lazy" decoding="async" alt="Horizontal bars of test-set share for each of the 55 strata with a dashed line at 10%. Ten strata at the top have no test documents, four more, drawn in red, fall well short of it, and the rest run from about 6% to 24%." width="1100" height="989"></p>
 <figcaption>Test share for each of the 55 strata, against the 10% the split rule aims for.</figcaption>
 </figure>
 </div>

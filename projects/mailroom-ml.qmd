@@ -98,7 +98,7 @@ These saved Arm B charts illustrate the earlier error analysis, not the current 
 
 ![Which type each test-split document was routed to, from the earlier 3-epoch Arm B run.](mailroom-ml/figures/confusion.svg){.fig fig-alt="Confusion matrix of document type for the 323 test-split documents. Insurance claims and merger agreements are classified 100% correctly. Contracts are 88% correct with most errors going to corporate records. Corporate records are 89% correct. Correspondence is 95% correct." width="100%"}
 
-![Subclass accuracy against how much each head collapses onto a single answer, from the earlier 3-epoch Arm B run.](mailroom-ml/figures/subclass_collapse.svg){.fig fig-alt="Bar chart for each document type showing subclass accuracy next to a collapse signal: the share of predictions landing on one subclass. A 0.75 accuracy gate line is drawn. Contract subclass accuracy is 0.04 and corporate record 0.45, both far below the gate, while insurance claim is 0.99." width="100%"}
+![Subclass accuracy against how much each head collapses onto a single answer, from the earlier 3-epoch Arm B run.](mailroom-ml/figures/subclass_collapse.svg){.fig fig-alt="Grouped bar chart for five document types. Grey bars show subclass accuracy; orange bars show the share of predictions landing on one subclass, with a dashed collapse gate at 0.75. Contract has 0.04 accuracy and 0.57 collapse share; corporate record 0.45 and 0.38; correspondence 0.44 and 0.79; insurance claim 0.99 and 0.30; merger agreement 0.53 and 0.94. The orange bar for correspondence and merger agreement crosses the gate." width="100%"}
 
 The full numbers, the calibration plots and the iteration history are in the [technical report](mailroom-ml/report.qmd).
 
