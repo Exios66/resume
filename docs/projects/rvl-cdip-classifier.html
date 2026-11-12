@@ -157,14 +157,14 @@ ul.task-list li input[type="checkbox"] {
 <p>On the 160-image slice, accuracy climbed from 80.1% at v1 to 99.4% at v11.8. That is a tuning-slice number. I read the misses on that slice and wrote rules for them, so it overstates what the prompt can do on pages it has not seen.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="rvl-cdip-classifier/figures/f1_accuracy_arc.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart of exact-match accuracy on the 160-image tuning slice for prompt versions v1, v4, v7, v10, v11 and v11.8, rising from 80.1 percent to 99.4 percent."></p>
+<p><img src="rvl-cdip-classifier/figures/f1_accuracy_arc.svg" class="fig" loading="eager" decoding="async" alt="Line chart of exact-match accuracy on the 160-image tuning slice for prompt versions v1, v4, v7, v10, v11 and v11.8, rising from 80.1 percent to 99.4 percent." width="673" height="427"></p>
 <figcaption>Accuracy of qwen3.7-flash on the 160-image tuning slice across prompt versions, rising from 80.1% at v1 to 99.4% at v11.8.</figcaption>
 </figure>
 </div>
 <p>The honest headline comes from larger slices. The same v11.8 prompt scored 82.6% on a balanced 1,120-image slice. That slice is a seeded, class-balanced sample of 70 images per class from the Hugging Face mirror of RVL-CDIP, which holds 100 per class across its three splits. The 800-image slice is the mirror’s train split (50 per class), so the two slices share at least 20 images per class, 320 in all, and the 83.1% and 82.6% results are not independent. I did not verify whether the 1,120-image slice shares images with the 160-image tuning slice. Across slice sizes it scored 87.2% at 320 images, 89.1% at 476 scored images, and 83.1% at 800. On that 800-image slice, the untuned v0 prompt scored 66.1%, so the prompt work is worth about 17 points on that slice. I did not check whether the 800-image slice shares images with the 160-image tuning slice either.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="rvl-cdip-classifier/figures/f2_generalization_falloff.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart of v11.8 exact-match accuracy against slice size, falling from 99.4 percent at 160 images to 87.2, 89.1, 83.1 and 82.6 percent at 320, 480, 800 and 1,120 images."></p>
+<p><img src="rvl-cdip-classifier/figures/f2_generalization_falloff.svg" class="fig" loading="lazy" decoding="async" alt="Line chart of v11.8 exact-match accuracy against slice size, falling from 99.4 percent at 160 images to 87.2, 89.1, 83.1 and 82.6 percent at 320, 480, 800 and 1,120 images." width="678" height="430"></p>
 <figcaption>v11.8 accuracy by slice size: 99.4% on the 160-image tuning slice, then 87.2%, 89.1%, 83.1% and 82.6% on larger slices. The 800- and 1,120-image slices overlap.</figcaption>
 </figure>
 </div>
@@ -254,13 +254,13 @@ ul.task-list li input[type="checkbox"] {
 <p>I also mined the reasoning traces for the words that appear when the model stops checking early. The prompt works through up to 14 checks in order, and the typical trace stops at check 9.4. Words such as “minutes”, “routing” and “variance” show up in traces that stop early and are wrong far more often than the 17.1% baseline error rate. Each appears in only 10 or 11 traces, so these are leads to test and not findings.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="rvl-cdip-classifier/figures/f9_hasty_stop.svg" class="fig img-fluid" style="width:100.0%" alt="Horizontal bar chart of the ten words with the highest hasty-score, from minutes at 1.89 down to survey at 0.71, with routing, variance, products, addresses, introduction, process, meeting and food between them."></p>
+<p><img src="rvl-cdip-classifier/figures/f9_hasty_stop.svg" class="fig" loading="lazy" decoding="async" alt="Horizontal bar chart of the ten words with the highest hasty-score, from minutes at 1.89 down to survey at 0.71, with routing, variance, products, addresses, introduction, process, meeting and food between them." width="706" height="427"></p>
 <figcaption>Ten words associated with the model stopping earlier and erring more, scored by how much earlier it stops and how much the error rate rises, against a 17.1% baseline error.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="rvl-cdip-classifier/figures/f8_routing.svg" class="fig img-fluid" style="width:100.0%" alt="Chart of simulated accuracy and cost factor against the fraction of images escalated to a stronger model, with accuracy peaking at 91.9 percent and cost reaching 2 times at 50 percent."></p>
+<p><img src="rvl-cdip-classifier/figures/f8_routing.svg" class="fig" loading="lazy" decoding="async" alt="Chart of simulated accuracy and cost factor against the fraction of images escalated to a stronger model, with accuracy peaking at 91.9 percent and cost reaching 2 times at 50 percent." width="966" height="442"></p>
 <figcaption>Simulated confidence-gated escalation: accuracy peaks at 91.9% at a 40% escalation fraction and 1.8 times the cost.</figcaption>
 </figure>
 </div>

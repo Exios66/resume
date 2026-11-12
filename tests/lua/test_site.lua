@@ -1,6 +1,11 @@
 -- Run from the repository root: lua tests/lua/test_site.lua
 -- Minimal Pandoc/Quarto doubles exercise the real filter without rendering pages.
+local native_image = pandoc and pandoc.image
 pandoc = {
+  image = native_image or { size = function(bytes)
+    assert(bytes:sub(1, 2) == string.char(255, 216), "Expected JPEG fixture bytes")
+    return {width = 2880, height = 1800}
+  end },
   RawBlock = function(format, text)
     return { format = format, text = text }
   end,
@@ -461,3 +466,38 @@ quarto = { doc = { input_file = "projects/digital-mailroom/report.qmd" }, projec
 local report_footer = Pandoc({ blocks = {}, meta = {} }).blocks[2].text
 assert(not report_footer:find('"@type":"CreativeWork"', 1, true), "nested pages keep only the site Person schema")
 print("project schema ok")
+
+-- Real image headers under Quarto's bundled Lua, without browser/network access.
+quarto = { doc = { input_file = "projects/neuron-atlas.qmd" }, project = { directory = "." } }
+local function study_image()
+  return {src = "neuron-atlas/figures/steering-studio.jpg", attributes = {width = "100%"}}
+end
+local first_image = prepare_content_image(study_image(), true)
+assert(first_image.attributes.loading == "eager")
+assert(first_image.attributes.decoding == "async")
+assert(first_image.attributes.width == "2880" and first_image.attributes.height == "1800")
+local later_image = prepare_content_image(study_image(), false)
+assert(later_image.attributes.loading == "lazy")
+assert(later_image.attributes.decoding == "async")
+assert(later_image.attributes.height == "1800")
+local missing_ok = pcall(prepare_content_image, {src = "missing.jpg", attributes = {}}, true)
+assert(not missing_ok, "Missing local image must stop the build")
+local open = io.open
+io.open = function() error("External images must not access files or the network") end
+for _, src in ipairs({"https://example.invalid/a.jpg", "//example.invalid/a.jpg", "data:image/png;base64,AAAA"}) do
+  local remote = prepare_content_image({src = src, attributes = {}}, false)
+  assert(remote.attributes.loading == "lazy")
+  assert(remote.attributes.width == nil)
+end
+io.open = open
+-- Each document has its own first image, including consecutive render inputs.
+for _ = 1, 2 do
+  local images = {study_image(), study_image()}
+  local doc = {blocks = {}, meta = {}, walk = function(self, visitor)
+    if visitor.Image then for i, img in ipairs(images) do images[i] = visitor.Image(img) end end
+    return self
+  end}
+  Pandoc(doc)
+  assert(images[1].attributes.loading == "eager" and images[2].attributes.loading == "lazy")
+end
+print("content image sizing and loading ok")

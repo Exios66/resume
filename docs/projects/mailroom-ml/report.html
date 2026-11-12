@@ -445,7 +445,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="chart-scroll" tabindex="0" role="region" aria-label="Confusion matrix; scroll sideways to see the full chart">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/confusion.svg" class="fig img-fluid" style="width:100.0%" alt="Confusion matrix for the 323 test-split documents. Insurance claims and merger agreements are all correct. Contracts 88% correct, mostly misrouted to corporate record. Corporate records 89% correct. Correspondence 95% correct."></p>
+<p><img src="figures/confusion.svg" class="fig" loading="eager" decoding="async" alt="Confusion matrix for the 323 test-split documents. Insurance claims and merger agreements are all correct. Contracts 88% correct, mostly misrouted to corporate record. Corporate records 89% correct. Correspondence 95% correct." width="760" height="596"></p>
 <figcaption>Which type each test-split document was routed to, from the earlier 3-epoch Arm B run.</figcaption>
 </figure>
 </div>
@@ -453,7 +453,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="chart-scroll" tabindex="0" role="region" aria-label="Recall by document type; scroll sideways to see the full chart">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/doc_type_recall.svg" class="fig img-fluid" style="width:100.0%" alt="Grouped bars of recall per document type for three runs. Contract recall is 0.83, 0.68 and 0.88; corporate record 0.57, 0.81 and 0.89; correspondence 0.95, 0.88 and 0.95; insurance claim and merger agreement near 1.0 throughout."></p>
+<p><img src="figures/doc_type_recall.svg" class="fig" loading="lazy" decoding="async" alt="Grouped bars of recall per document type for three runs. Contract recall is 0.83, 0.68 and 0.88; corporate record 0.57, 0.81 and 0.89; correspondence 0.95, 0.88 and 0.95; insurance claim and merger agreement near 1.0 throughout." width="760" height="360"></p>
 <figcaption>Recall per document type for Run 3, Arm A and Arm B, from the earlier 3-epoch Arm B run and its predecessors.</figcaption>
 </figure>
 </div>
@@ -461,7 +461,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="chart-scroll" tabindex="0" role="region" aria-label="Calibration error by head; scroll sideways to see the full chart">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/head_ece.svg" class="fig img-fluid" style="width:100.0%" alt="Bar chart of expected calibration error per head with a line at 0.05. Document type 0.020, contract 0.033, corporate record 0.071, insurance claim 0.003, merger agreement 0.108 and correspondence 0.138; correspondence, corporate record and merger agreement sit above the line."></p>
+<p><img src="figures/head_ece.svg" class="fig" loading="lazy" decoding="async" alt="Bar chart of expected calibration error per head with a line at 0.05. Document type 0.020, contract 0.033, corporate record 0.071, insurance claim 0.003, merger agreement 0.108 and correspondence 0.138; correspondence, corporate record and merger agreement sit above the line." width="760" height="360"></p>
 <figcaption>Calibration error for each head, from the earlier 3-epoch Arm B run.</figcaption>
 </figure>
 </div>
@@ -469,7 +469,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="chart-scroll" tabindex="0" role="region" aria-label="Accuracy and coverage by confidence; scroll sideways to see the full chart">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/selective_risk.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart over confidence thresholds from 0.60 to 0.90 showing accuracy of accepted windows rising and coverage falling, with a Wilson lower bound. The pick at 0.90 accepts 87% of windows at 99.4% accuracy."></p>
+<p><img src="figures/selective_risk.svg" class="fig" loading="lazy" decoding="async" alt="Line chart over confidence thresholds from 0.60 to 0.90 showing accuracy of accepted windows rising and coverage falling, with a Wilson lower bound. The pick at 0.90 accepts 87% of windows at 99.4% accuracy." width="760" height="340"></p>
 <figcaption>Accuracy of accepted windows against share accepted as the confidence cutoff changes, from the earlier 3-epoch Arm B run.</figcaption>
 </figure>
 </div>
@@ -477,7 +477,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="chart-scroll" tabindex="0" role="region" aria-label="Accuracy by window count; scroll sideways to see the full chart">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/accuracy_by_windows.svg" class="fig img-fluid" style="width:100.0%" alt="Bar chart of document-type accuracy by window count: 94.9% for single-window documents (274), 92.0% for 2 to 3 windows (25), 100% for 4 to 8 (9) and 100% for 9 or more (15)."></p>
+<p><img src="figures/accuracy_by_windows.svg" class="fig" loading="lazy" decoding="async" alt="Bar chart of document-type accuracy by window count: 94.9% for single-window documents (274), 92.0% for 2 to 3 windows (25), 100% for 4 to 8 (9) and 100% for 9 or more (15)." width="760" height="360"></p>
 <figcaption>Document-type accuracy by number of 8k-token windows, from the earlier 3-epoch Arm B run.</figcaption>
 </figure>
 </div>
@@ -485,7 +485,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="chart-scroll" tabindex="0" role="region" aria-label="Subclass accuracy and collapse; scroll sideways to see the full chart">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/subclass_collapse.svg" class="fig img-fluid" style="width:100.0%" alt="Bar chart per document type with subclass accuracy and the share of predictions on one subclass, plus a 0.75 gate line. Contract subclass accuracy is 0.04 and corporate record 0.45; insurance claim is 0.99."></p>
+<p><img src="figures/subclass_collapse.svg" class="fig" loading="lazy" decoding="async" alt="Bar chart per document type with subclass accuracy and the share of predictions on one subclass, plus a 0.75 gate line. Contract subclass accuracy is 0.04 and corporate record 0.45; insurance claim is 0.99." width="760" height="376"></p>
 <figcaption>Subclass accuracy and the collapse signal for each head, from the earlier 3-epoch Arm B run.</figcaption>
 </figure>
 </div>

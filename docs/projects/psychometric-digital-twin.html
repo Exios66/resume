@@ -157,7 +157,7 @@ ul.task-list li input[type="checkbox"] {
 <p>The classical floor is low but not far below a constant guess. Ridge reaches 4.49 points of group error at the transit tier. The pooled LLM errors run from 5.02 (DeepSeek, second prompt version) to 6.02 (Llama 3.3 70B). By my own calculation from the cohort table, always predicting the cohort mean gives 4.93, so the LLM personas did not beat that.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="psychometric-digital-twin/figures/mae-rf-vs-llm.jpg" class="fig img-fluid" style="width:100.0%" alt="Grouped bar chart of mean absolute error in score points, averaged across both subscales, for four tiers: demos, employment, geo and transit. The random forest falls from about 5.5 at demos to about 4.5 at transit. The LLM persona agent stays near 5.0 to 5.5 across all four tiers and is higher than the forest at every tier except demos."></p>
+<p><img src="psychometric-digital-twin/figures/mae-rf-vs-llm.jpg" class="fig" loading="eager" decoding="async" alt="Grouped bar chart of mean absolute error in score points, averaged across both subscales, for four tiers: demos, employment, geo and transit. The random forest falls from about 5.5 at demos to about 4.5 at transit. The LLM persona agent stays near 5.0 to 5.5 across all four tiers and is higher than the forest at every tier except demos." width="1343" height="751"></p>
 <figcaption>Mean error by tier for a random forest and for the best LLM persona run (DeepSeek version 2), averaged across both subscales.</figcaption>
 </figure>
 </div>
@@ -165,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
 <p>The feature results explain part of it. In the forest, ride-share days (Q28) was the strongest feature by far. In a surrogate model fit to the LLM’s outputs, latitude and age came first.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="psychometric-digital-twin/figures/shap-ml-vs-llm.jpg" class="fig img-fluid" style="width:100.0%" alt="Horizontal paired bars of mean absolute SHAP value for ten features. For the random forest predicting true scores, Q28 ride-share days is by far the longest bar at about 1.9, followed by employment status. For the LLM output surrogate, bars are much shorter, with latitude, age and longitude the longest at about 0.2 to 0.3."></p>
+<p><img src="psychometric-digital-twin/figures/shap-ml-vs-llm.jpg" class="fig" loading="lazy" decoding="async" alt="Horizontal paired bars of mean absolute SHAP value for ten features. For the random forest predicting true scores, Q28 ride-share days is by far the longest bar at about 1.9, followed by employment status. For the LLM output surrogate, bars are much shorter, with latitude, age and longitude the longest at about 0.2 to 0.3." width="1418" height="911"></p>
 <figcaption>What drives predictions at the transit tier: a random forest predicting true scores, and a surrogate fit to the LLM’s outputs.</figcaption>
 </figure>
 </div>

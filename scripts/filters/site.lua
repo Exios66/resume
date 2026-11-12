@@ -548,11 +548,51 @@ local function project_schema(path, doc)
   return '<script type="application/ld+json">' .. table.concat(parts) .. "</script>"
 end
 
+-- Reserve each local image's real aspect ratio before it downloads. Read source
+-- bytes only: external images must never cause network requests during a build.
+function prepare_content_image(image, first)
+  image.attributes.loading = first and "eager" or "lazy"
+  image.attributes.decoding = "async"
+  local src = image.src
+  if src:match("^[%w+.-]+:") or src:match("^//") then return image end
+  src = src:gsub("[?#].*$", ""):gsub("%%(%x%x)", function(hex)
+    return string.char(tonumber(hex, 16))
+  end)
+  local input = quarto.doc.input_file or ""
+  local root = quarto.project.directory or "."
+  local file
+  if src:sub(1, 1) == "/" then
+    file = root .. src
+  else
+    local directory = input:match("^(.*)/[^/]*$") or "."
+    file = directory .. "/" .. src
+  end
+  local handle, reason = io.open(file, "rb")
+  if not handle then error("Cannot read content image " .. file .. ": " .. tostring(reason)) end
+  local bytes = handle:read("*a")
+  handle:close()
+  local ok, size = pcall(pandoc.image.size, bytes)
+  if not ok or not size or not size.width or not size.height
+      or size.width <= 0 or size.height <= 0 then
+    error("Cannot determine intrinsic size of content image " .. file)
+  end
+  image.attributes.width = tostring(math.floor(size.width + 0.5))
+  image.attributes.height = tostring(math.floor(size.height + 0.5))
+  return image
+end
+
 --- Wrap the document in the site header, main landmark, and footer.
 -- Navigation links are relative to the page; the current section gets aria-current.
 -- @param doc Pandoc Document whose blocks will be modified in place.
 -- @return Pandoc The modified document.
 function Pandoc(doc)
+  if doc.walk then
+    local count = 0
+    doc = doc:walk({ Image = function(image)
+      count = count + 1
+      return prepare_content_image(image, count == 1)
+    end })
+  end
   if doc.walk then doc = doc:walk(DECORATE) end
   local path = page_path()
   local _, depth = path:gsub("/", "")

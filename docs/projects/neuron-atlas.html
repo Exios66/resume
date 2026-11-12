@@ -124,6 +124,12 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <h1 class="page-title" id="neuron-atlas">Neuron Atlas</h1>
 <p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">Mechanistic interpretability</span><span class="seg"> <span class="sep">·</span> interactive visualization &amp; evaluation</span></span></span></span></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="neuron-atlas/figures/steering-studio.jpg" class="fig" loading="eager" decoding="async" alt="Neuron Atlas in a dark theme: a Three.js map of stacked model layers beside the inspector for layer 4 neuron 803. Its steering tab has a story prompt, a push-strength slider and random-direction controls. The inspector ranks this neuron first of 8,192 on the recorded theme score." width="2880" height="1800"></p>
+<figcaption>The TinyStories atlas and steering inspector for layer 4, neuron 803.</figcaption>
+</figure>
+</div>
 <p>Push one neuron and watch the story change. Neuron Atlas maps a small language model’s feed-forward neurons, lets you intervene in its computation, and compares the effect with random pushes of the same size. The goal is not just an interesting picture: it is a finding someone else can inspect and replay.</p>
 <div class="actions">
 <p><a href="https://exios66.github.io/LLM_Viz/" class="btn primary">Open Neuron Atlas</a> <a href="https://github.com/Exios66/LLM_Viz" class="btn">View the code</a></p>
@@ -150,12 +156,6 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Recorded model studies.</strong> Qwen3.5-0.8B (86,016 neurons) and a Qwen2.5-0.5B bad-medical-advice fine-tune (116,736 neurons) can be explored as recorded data. These models do not run live in the browser.</li>
 <li><strong>Verification and failure handling.</strong> The repository checks the TypeScript runtime against PyTorch and includes browser tests for navigation, replay, accessibility, phone layouts, blocked storage and failed downloads. These are upstream checks, not a claim that I reran their full suite for this portfolio page.</li>
 </ul>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img src="neuron-atlas/figures/steering-studio.jpg" class="fig img-fluid" style="width:100.0%" alt="Neuron Atlas in a dark theme: a Three.js map of stacked model layers beside the inspector for layer 4 neuron 803. Its steering tab has a story prompt, a push-strength slider and random-direction controls. The inspector ranks this neuron first of 8,192 on the recorded theme score."></p>
-<figcaption>The TinyStories atlas and steering inspector for layer 4, neuron 803.</figcaption>
-</figure>
-</div>
 <h2 id="what-the-controls-changed">What the controls changed</h2>
 <p>The original sweep’s naive repeated-word test found a theme in 75% of neurons and 78% of random directions. Only 41 of 8,192 neurons (about 0.5%) outscored every control in their own layer. A compelling story alone is not evidence of a distinctive neuron.</p>
 <p>For example, <a href="https://exios66.github.io/LLM_Viz/#/findings/run-and-hide">L4 N803, “Run and hide”⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>, changes a sunny scene into a threat followed by flight. That is a useful description of the recorded text, not proof that the neuron represents a single human concept. The later robustness study reports that 21 of the original 41 still beat 95% of fresh random directions on 12 unseen prompts with sampling.</p>

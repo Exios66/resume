@@ -1079,3 +1079,45 @@ def test_dark_theme_plate_is_for_transparent_figures_only(site):
         expect(plated).to_have_css("background-color", "rgb(255, 255, 255)")
     finally:
         page.close()
+
+
+@pytest.mark.parametrize("slug", ["wave-laboratory", "neuron-atlas"])
+@pytest.mark.parametrize("width", [375, 768, 1280])
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_lead_capture_reserves_space_before_image_download(site, slug, width, theme):
+    """Delay actual image responses and compare geometry before/after decoding."""
+    browser, base = site
+    context = browser.new_context(viewport={"width": width, "height": 900},
+                                  color_scheme=theme, reduced_motion="reduce")
+    page = context.new_page()
+    blocked = []
+    pattern = "**/figures/**"
+    def hold(route):
+        blocked.append(route)
+    page.route(pattern, hold)
+    try:
+        page.goto(base + f"projects/{slug}.html", wait_until="domcontentloaded")
+        page.evaluate("document.fonts.ready")
+        lead = page.locator("main img").first
+        expect(lead).to_have_attribute("loading", "eager")
+        assert lead.evaluate("img => img.naturalWidth") == 0
+        measure = """img => {
+          const box = img.getBoundingClientRect();
+          const next = img.closest('.quarto-figure').nextElementSibling.getBoundingClientRect();
+          return {width: box.width, height: box.height, nextTop: next.top};
+        }"""
+        before = lead.evaluate(measure)
+        assert before["width"] > 200 and before["height"] > 100
+        assert blocked, "Image download must actually be delayed"
+        for route in blocked:
+            route.continue_()
+        page.unroute(pattern, hold)
+        lead.evaluate("img => img.decode()")
+        page.wait_for_timeout(100)
+        after = lead.evaluate(measure)
+        for key in before:
+            assert abs(before[key] - after[key]) < 1, (slug, width, theme, before, after)
+        assert lead.evaluate("img => Math.abs(img.width / img.height - img.naturalWidth / img.naturalHeight) < 0.01")
+        assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    finally:
+        context.close()

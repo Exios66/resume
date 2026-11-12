@@ -306,50 +306,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 id="figures">Figures</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/f1_accuracy_arc.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart of exact-match accuracy for prompt versions v1, v4, v7, v10, v11 and v11.8 on the 160-image tuning slice, from 80.1 to 99.4 percent."></p>
+<p><img src="figures/f1_accuracy_arc.svg" class="fig" loading="eager" decoding="async" alt="Line chart of exact-match accuracy for prompt versions v1, v4, v7, v10, v11 and v11.8 on the 160-image tuning slice, from 80.1 to 99.4 percent." width="673" height="427"></p>
 <figcaption>Accuracy by prompt version on the 160-image tuning slice (not held out). It rises from 80.1% at v1 to 99.4% at v11.8.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/f2_generalization_falloff.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart of v11.8 accuracy against slice size, from 99.4 percent at 160 images down to 82.6 percent at 1,120 images."></p>
+<p><img src="figures/f2_generalization_falloff.svg" class="fig" loading="lazy" decoding="async" alt="Line chart of v11.8 accuracy against slice size, from 99.4 percent at 160 images down to 82.6 percent at 1,120 images." width="678" height="430"></p>
 <figcaption>v11.8 accuracy by slice size. The 160-image point is the tuning slice; the 1,120-image point is 82.6%. The 800- and 1,120-image slices overlap.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/f3_model_comparison.svg" class="fig img-fluid" style="width:100.0%" alt="Bar chart with error bars of accuracy on the 160-image slice: qwen3.7-flash 98.7 percent, qwen3.5-35b-a3b 98.7, gemini-2.5-flash-lite 86.9, gemini-2.5-flash 74.4 and kimi-k3 70.0, with a dashed line at the 80.1 percent v1 baseline."></p>
+<p><img src="figures/f3_model_comparison.svg" class="fig" loading="lazy" decoding="async" alt="Bar chart with error bars of accuracy on the 160-image slice: qwen3.7-flash 98.7 percent, qwen3.5-35b-a3b 98.7, gemini-2.5-flash-lite 86.9, gemini-2.5-flash 74.4 and kimi-k3 70.0, with a dashed line at the 80.1 percent v1 baseline." width="897" height="517"></p>
 <figcaption>Best accuracy per model on the 160-image tuning slice with 95% intervals. The top qwen3.7-flash bar (98.7%, 157/159) is a temperature 0.3 rerun of v11.8, not the 99.4% run at temperature 0.1.</figcaption>
 </figure>
 </div>
 <p>The 98.7% in the third figure and the 99.4% in the first come from two separate runs of the same prompt on the same slice: temperature 0.3 with 159 scored rows (157 correct), and temperature 0.1 with 158 scored rows (157 correct). The gap is one row that failed to return usable content, so the two are consistent.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/f4_confusion_heatmap.svg" class="fig img-fluid" style="width:100.0%" alt="Heatmap of expected against predicted class for the 16 classes, with nearly every cell on the diagonal at 100 percent and only a few cells at 10 percent off it."></p>
+<p><img src="figures/f4_confusion_heatmap.svg" class="fig" loading="lazy" decoding="async" alt="Heatmap of expected against predicted class for the 16 classes, with nearly every cell on the diagonal at 100 percent and only a few cells at 10 percent off it." width="940" height="845"></p>
 <figcaption>Row-normalized confusion matrix for qwen3.7-flash with v11.8 on the 160-image tuning slice. This is the temperature 0.3 rerun (157/159, 98.7%), so almost all mass sits on the diagonal.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/f5_per_class_accuracy.svg" class="fig img-fluid" style="width:100.0%" alt="Horizontal bar chart of per-class accuracy sorted from budget at 67.1 percent to resume at 95.7 percent, with a dashed line at the 82.6 percent overall accuracy."></p>
+<p><img src="figures/f5_per_class_accuracy.svg" class="fig" loading="lazy" decoding="async" alt="Horizontal bar chart of per-class accuracy sorted from budget at 67.1 percent to resume at 95.7 percent, with a dashed line at the 82.6 percent overall accuracy." width="858" height="486"></p>
 <figcaption>Per-class accuracy on the 1,120-image run, overall 82.6%. Budget, letter, presentation and scientific report are lowest.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/f6_cost_projections.svg" class="fig img-fluid" style="width:100.0%" alt="Two log-scale bar charts: per-image cost for four models from about 0.003 to 0.053 dollars, and projected total cost at 800, 25,000 and 320,000 images."></p>
+<p><img src="figures/f6_cost_projections.svg" class="fig" loading="lazy" decoding="async" alt="Two log-scale bar charts: per-image cost for four models from about 0.003 to 0.053 dollars, and projected total cost at 800, 25,000 and 320,000 images." width="976" height="515"></p>
 <figcaption>Billed cost per image (left) and linear projection to 800, 25,000 and 320,000 images (right), from single-image runs of four other models.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/f7_ensemble_vs_k.svg" class="fig img-fluid" style="width:100.0%" alt="Line chart of simulated accuracy rising from 82.1 percent with one voter to 86.3 percent with 25 voters, flattening after about K equals 7."></p>
+<p><img src="figures/f7_ensemble_vs_k.svg" class="fig" loading="lazy" decoding="async" alt="Line chart of simulated accuracy rising from 82.1 percent with one voter to 86.3 percent with 25 voters, flattening after about K equals 7." width="683" height="427"></p>
 <figcaption>Simulated majority-vote accuracy against committee size K, from 0.821 at K=1 to 0.863 at K=25, over the pooled corpus.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/f8_routing.svg" class="fig img-fluid" style="width:100.0%" alt="Chart of simulated accuracy and cost factor against the fraction of images escalated to a stronger model, with accuracy peaking at 91.9 percent and cost reaching 2 times at 50 percent."></p>
+<p><img src="figures/f8_routing.svg" class="fig" loading="lazy" decoding="async" alt="Chart of simulated accuracy and cost factor against the fraction of images escalated to a stronger model, with accuracy peaking at 91.9 percent and cost reaching 2 times at 50 percent." width="966" height="442"></p>
 <figcaption>Simulated confidence-gated escalation: accuracy peaks at 91.9% at a 40% escalation fraction and 1.8 times the cost.</figcaption>
 </figure>
 </div>
@@ -370,7 +370,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/f9_hasty_stop.svg" class="fig img-fluid" style="width:100.0%" alt="Horizontal bar chart of the ten words with the highest hasty-score, from minutes at 1.89 down to survey at 0.71, with routing, variance, products, addresses, introduction, process, meeting and food between them."></p>
+<p><img src="figures/f9_hasty_stop.svg" class="fig" loading="lazy" decoding="async" alt="Horizontal bar chart of the ten words with the highest hasty-score, from minutes at 1.89 down to survey at 0.71, with routing, variance, products, addresses, introduction, process, meeting and food between them." width="706" height="427"></p>
 <figcaption>Ten words associated with the model stopping earlier and erring more, scored by how much earlier it stops and how much the error rate rises, against a 17.1% baseline error.</figcaption>
 </figure>
 </div>

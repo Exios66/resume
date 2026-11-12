@@ -2,6 +2,14 @@
 
 Read `AGENTS.md`, `.github/BUILDING.md`, `scripts/hillclimb/README.md`, this file, `.10x/status.md`, and the live issue before editing. Run `bash scripts/setup-agent.sh` once per worktree and source `.autoresearch-tools/env.sh` in every render/audit shell. Doctor must end with `All tools present.`
 
+## Current pending work (2026-11-12)
+
+This branch prepares #119; it is not shipped. See `.10x/reviews/issue119/` for actual evidence and exact check results. It moves existing Wave Laboratory and Neuron Atlas captures above the opening content and sizes local content images from their headers in `site.lua`, with first-image eager loading and later lazy loading. Built-branch `experience_gaps=19`; this does not mean #126 is complete.
+
+#146 and #147 are independent pending PRs based on main. #146 holds scholarship/course-tag/private-research wording (AI Terrarium and Alignment-Gym stay on Research only). #147 links the hosted RVL-CDIP study. Do not lose their changes when integrating generated output; re-render sources after merges.
+
+The older batch notes below describe historical contributions. #138–#142 and #145 have since merged; #130, #136 and #137 are closed with evidence. #114 remains open for the pending content in #146. #144 is another open PR with phone chart/header and full-size raster-link changes; this branch does not duplicate those features.
+
 ## Implemented batch
 
 #131 adds project JSON-LD; #132 enforces transfer budgets; #133 aligns three-engine setup and verification caches; #134 adds slash search with progressive shortcut metadata; #135 groups supporting files and fixes diagram label collisions; #129 adds the MapReduce status recording and preserves motion preferences/manual pauses. The batch merges in that order with merge commits. Use GitHub for actual merge state rather than assuming an open historical PR has shipped.
@@ -13,14 +21,14 @@ Evidence from review follow-up is under `.10x/reviews/pr-review-followup/`; diag
 ## Remaining work and boundaries
 
 - The approved design remains `.10x/specs/2026-11-10-portfolio-experience-v2-design.md`. Owner priority is Track 1 first. #118 retains motif redraw/signoff work; diagram collision repair does not complete that visual review.
-- #119 still needs real lead screenshots, image dimensions/lazy loading and layout-shift checks. #120 still needs project-specific social cards and owner review; set matching image-alt when adding image front matter.
+- #119 is implemented on this unmerged branch, with real lead screenshots, intrinsic dimensions/lazy loading and delayed-image geometry checks. #120 still needs project-specific social cards and owner review; set matching image-alt when adding image front matter.
 - #121 display titles and remaining layout decisions need the owner. Do not invent replacements or project results.
 - #123 slash shortcut is implemented, but the phone header, full active section rail, category/filter work and motif-bearing project pager are not completed by this batch. Existing report/appendix TOCs and plain project pager links should not be rebuilt blindly.
 - #124 has the diagram regression and #115 recording contribution; chart conversions, new chart kinds and other visualisations remain. Existing chart restyles require the owner's draft review as specified in #124.
 - #125 structured data, transfer budgets and secondary-engine setup/tests are implemented. Broader content, forced-colour coverage and owner phone/tablet checks remain; close only the shipped subtasks.
 - #122 video behavior now follows live reduced motion, visibility and manual pause. This does not complete the roadmap's motion scale, transitions, motif/chart animation or print/forced-colour matrix.
-- #126 remains at experience_gaps=125. Ledger PRIMARY is hardcoded to polish_defects and the benchmark does not append KPI output. Changing a segment label does not solve this. Plan a separate tested tooling change before experience-scored loops.
-- #130 (landing prose) and #136 (Langton's Ant update) were not started in this batch.
+- #126 is at experience_gaps=19 on this unmerged #119 branch (124 on its main base). Ledger PRIMARY is hardcoded to polish_defects and the benchmark does not append KPI output. Changing a segment label does not solve this. Plan a separate tested tooling change before experience-scored loops.
+- #130 and #137 were completed by #138; #136 was completed by #142. The issue closures cite their evidence.
 
 ## Verification and shipping
 
