@@ -34,19 +34,19 @@ This is a simulation tool. It has been checked against analytic and textbook res
 
 | Model | Role | Key parameters and notes |
 | --- | --- | --- |
-| JONSWAP | Developing wind sea | α, peak frequency ω_p, peak enhancement γ (3.3 used for focused groups), σ = 0.07 below and 0.09 above the peak; normalised so 4√m₀ = H_s |
-| Pierson–Moskowitz | Fully developed sea | JONSWAP with γ = 1, normalised to H_s |
-| Bretschneider | Two-parameter sea | Same family as above, normalised to H_s |
-| TMA | Finite-depth correction | Kitaigorodskii depth factor, applied when depth is under 1000 m; H_s re-normalised |
-| Hasselmann et al. (1973) | Fetch-limited wind sea | Growth with fetch, capped at the fully developed limit, H_s ≈ 0.209 U²/g |
+| JONSWAP | Developing wind sea | α, peak frequency ω~p~, peak enhancement γ (3.3 used for focused groups), σ = 0.07 below and 0.09 above the peak; normalised so 4√m₀ = H~s~ |
+| Pierson–Moskowitz | Fully developed sea | JONSWAP with γ = 1, normalised to H~s~ |
+| Bretschneider | Two-parameter sea | Same family as above, normalised to H~s~ |
+| TMA | Finite-depth correction | Kitaigorodskii depth factor, applied when depth is under 1000 m; H~s~ re-normalised |
+| Hasselmann et al. (1973) | Fetch-limited wind sea | Growth with fetch, capped at the fully developed limit, H~s~ ≈ 0.209 U²/g |
 | Regular (Airy) | Single analytic wave | η = a cos θ; a second-order Stokes harmonic is added when choppiness is above zero |
-| NewWave (Tromans et al. 1991) | Focused rogue group | 40 linear components between 0.6 ω_p and 3 ω_p, phased so crests coincide at a chosen place and time |
+| NewWave (Tromans et al. 1991) | Focused rogue group | 40 linear components between 0.6 ω~p~ and 3 ω~p~, phased so crests coincide at a chosen place and time |
 
 Directional spreading is one of cos-2s, Mitsuyasu (frequency dependent) or Donelan–Banner sech², each normalised so the integral over direction is 1. A uniform surface current Doppler-shifts the whole sea.
 
 **Surface synthesis.** The surface is a sum of four periodic cascades with sizes 1024, 256, 64 and 16 m. The first three are evaluated by the CPU physics on 128 by 128 grids; the fourth runs to the grid limit and is visual only. Initial amplitudes h₀(k) are made once on the CPU from a counter-based hash of the system seed, cascade and wavenumber index, so every grid resolution sees the same sea. Horizontal choppy displacement uses a choppiness factor, and the Jacobian of the displacement flags folding: J below zero marks a breaking crest, which drives foam.
 
-**Rogue waves.** A focused wave adds to the background sea, so the crest at the focus sits above it by the chosen crest amplitude. The inspector compares the equivalent steepness with the Miche limit, 0.142 tanh(kh). The note records Draupner as 18.5 m over 11.9 m, a crest-to-H_s ratio of 1.55, in a typical recorded range of 1.2 to 1.6.
+**Rogue waves.** A focused wave adds to the background sea, so the crest at the focus sits above it by the chosen crest amplitude. The inspector compares the equivalent steepness with the Miche limit, 0.142 tanh(kh). The note records Draupner as 18.5 m over 11.9 m, a crest-to-H~s~ ratio of 1.55, in a typical recorded range of 1.2 to 1.6.
 
 **Ships.** Hull forces come from integrating pressure over the instantaneous wetted hull, as hydrostatics plus Froude–Krylov, sampled on up to 280 water columns. Added mass uses strip theory with Lewis-form sections and a three-dimensional end reduction. Radiation damping is tuned to 15 per cent of critical in heave and pitch, and roll damping follows an Ikeda-type decomposition. Wind acts through frontal and lateral areas with drag coefficients of 0.7 and 0.9. Square sails, flooding through watertight compartments with free-surface loss of stability, and an elastic catenary anchor line are modelled; each has its own section in the physics note.
 
@@ -54,7 +54,7 @@ Directional spreading is one of cos-2s, Mitsuyasu (frequency dependent) or Donel
 
 **Instruments.** Welch's method gives spectra from Hann-windowed segments with 50 per cent overlap, scaled so the integrated density equals the signal variance. Zero-up-crossing statistics follow IAHR and PIANC conventions. Motion-sickness incidence follows O'Hanlon and McCauley (1974).
 
-**Underwater optics.** Jerlov water types give diffuse attenuation coefficients K_d for red, green and blue. They drive rendering only, not the physics. Light is attenuated as c·e^(−K_d·d) plus in-scattered colour, and from below the surface shows the rippled sky inside Snell's window (48.6°) and a mirror outside it.
+**Underwater optics.** Jerlov water types give diffuse attenuation coefficients K~d~ for red, green and blue. They drive rendering only, not the physics. Light is attenuated as c·e^−K~d~·d^ plus in-scattered colour, and from below the surface shows the rippled sky inside Snell's window (48.6°) and a mirror outside it.
 
 ### Architecture
 
