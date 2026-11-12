@@ -40,3 +40,13 @@ def test_long_code_keeps_one_anchor_and_preserves_classes_and_data():
     assert [attrs.get('id') for attrs, _ in fragments] == ['code-ref', None, None]
     assert all(attrs.get('class') == 'token' and attrs.get('data-source') == 'sample'
                for attrs, _ in fragments)
+
+
+def test_code_with_spaces_is_not_split_at_flag_separators():
+    """A command's spaces are already break points; fragmenting flags can clip cells."""
+    source = '| Item | Value |\n| --- | --- |\n| Flags | `--subset test --sample 0` |\n'
+    result = subprocess.run([os.environ.get('QUARTO', 'quarto'), 'pandoc',
+                             '--from=markdown', '--to=html', '--lua-filter=scripts/filters/tables.lua'],
+                            cwd=ROOT, input=source, capture_output=True, text=True, check=True)
+    fragments = CodeFragments(result.stdout).fragments
+    assert [text for _, text in fragments] == ['--subset test --sample 0']

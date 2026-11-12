@@ -67,3 +67,10 @@ def test_appendix_numbers_sitemap_and_no_images():
     locations = [n.text for n in ET.parse(checks.DOCS / "sitemap.xml").findall("{*}url/{*}loc")]
     for slug in ALL:
         assert locations.count(f"{SITE}projects/{slug}/appendix.html") == 1
+
+
+def test_mailroom_ml_appendix_separates_script_from_flags():
+    """Keep the long script path and its flags in separate settings rows."""
+    _, parser = page("mailroom-ml")
+    text = " ".join("".join(data for data, _ in parser.text_fragments).split())
+    assert "Reported by training/eval/eval_modernbert.py Flags --subset test --sample 0" in text
