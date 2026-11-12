@@ -3,14 +3,21 @@
 
   ledger.py status                         segment, best, streak and a verdict for the next step
   ledger.py segment "<name>"               start a new segment (a changed audit or target); writes a config header
+  ledger.py segment "<name>" --metric experience_gaps --gate polish_defects=0
+                                           start an experience-scored segment: the named metric is scored,
+                                           and every gate metric must be at or better than its limit
   ledger.py log <status> "<desc>" [asi]    append the run whose metrics are in run.log; status is keep, discard,
-                                           crash or checks_failed; asi is a JSON object of notes that survive reverts
+                                           crash or checks_failed; asi is a JSON object of notes that survive reverts.
+                                           keep/discard require the scored metric, gates apply to keep only, and
+                                           crash/checks_failed record whatever run.log does contain
   ledger.py pause "<note>"                 mark the session paused (still resumable)
   ledger.py table                          print every run as a Markdown table
   ledger.py next                           print the number the next logged run will get
   ledger.py best                           print the best kept metric in the current segment
 
 The log is append-only. Run numbers climb across segments; counts and streaks use the current segment only.
+Each segment's config names its scored metric (`metricName`); `polish_defects` is the default for
+segments started without `--metric`.
 """
 
 import json
@@ -25,7 +32,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 LOG = ROOT / "autoresearch.jsonl"
 RUN_LOG = ROOT / "run.log"
-PRIMARY = "polish_defects"
+DEFAULT_PRIMARY = "polish_defects"
 STATUSES = ("keep", "discard", "crash", "checks_failed")
 
 
@@ -40,9 +47,20 @@ def append(record):
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
-def current_segment(rows):
+def current_config(rows):
     configs = [r for r in rows if r.get("type") == "config"]
-    return configs[-1].get("segment", len(configs) - 1) if configs else None
+    return configs[-1] if configs else None
+
+
+def current_segment(rows):
+    config = current_config(rows)
+    return config.get("segment", 0) if config else None
+
+
+def primary(rows):
+    """The metric the current segment scores; the segment config owns the name."""
+    config = current_config(rows)
+    return (config or {}).get("metricName", DEFAULT_PRIMARY)
 
 
 def runs(rows, segment=None):
@@ -50,12 +68,12 @@ def runs(rows, segment=None):
     return out if segment is None else [r for r in out if r.get("segment") == segment]
 
 
-def metrics_from_run_log():
+def metrics_from_run_log(scored):
     if not RUN_LOG.exists():
         sys.exit("run.log not found: run the benchmark first (scripts/hillclimb/hc.sh experiment ...)")
     found = dict(re.findall(r"^METRIC (\w+)=([-\d.]+)$", RUN_LOG.read_text(encoding="utf-8"), re.M))
-    if PRIMARY not in found:
-        sys.exit(f"run.log has no METRIC {PRIMARY}; the benchmark failed. Log it as crash only after reading run.log.")
+    if scored not in found:
+        sys.exit(f"run.log has no METRIC {scored}; the benchmark failed. Log it as crash only after reading run.log.")
     return {k: float(v) if "." in v else int(v) for k, v in found.items()}
 
 
@@ -68,6 +86,12 @@ def confidence(values):
     return round(abs(values[0] - min(values)) / mad, 2)
 
 
+def head_commit():
+    out = subprocess.run(["git", "rev-parse", "--short=7", "HEAD"], cwd=ROOT,
+                         capture_output=True, text=True)
+    return out.stdout.strip() if out.returncode == 0 else "unknown"
+
+
 def cmd_log(status, description, asi="{}"):
     if status not in STATUSES:
         sys.exit(f"status must be one of {', '.join(STATUSES)}")
@@ -75,14 +99,28 @@ def cmd_log(status, description, asi="{}"):
     segment = current_segment(rows)
     if segment is None:
         sys.exit('no config header: run  ledger.py segment "<name>"  first')
-    metrics = metrics_from_run_log()
-    commit = subprocess.run(["git", "rev-parse", "--short=7", "HEAD"], cwd=ROOT,
-                            capture_output=True, text=True, check=True).stdout.strip()
+    scored = primary(rows)
+    if status in ("keep", "discard"):
+        metrics = metrics_from_run_log(scored)
+        if status == "keep":
+            for gate, limit in sorted((current_config(rows) or {}).get("gates", {}).items()):
+                if gate not in metrics:
+                    sys.exit(f"run.log has no METRIC {gate} for the segment's gate; the benchmark must print it")
+                if metrics[gate] > limit:
+                    sys.exit(f"gate failed: {gate}={metrics[gate]} > {limit}; fix it, or log the run as checks_failed")
+    else:
+        # A crash or checks_failed run may have no usable benchmark output; record
+        # whatever metrics run.log does contain and let the verdict logic react.
+        metrics = {}
+        if RUN_LOG.exists():
+            metrics = {k: float(v) if "." in v else int(v) for k, v in
+                       re.findall(r"^METRIC (\w+)=([-\d.]+)$", RUN_LOG.read_text(encoding="utf-8"), re.M)}
+    commit = head_commit()
     previous = [r["metric"] for r in runs(rows, segment)]
     record = {
         "run": max([r["run"] for r in runs(rows)] or [-1]) + 1,
         "commit": commit,
-        "metric": metrics.pop(PRIMARY),
+        "metric": metrics.pop(scored, None),
         "metrics": metrics,
         "status": status,
         "description": description,
@@ -92,17 +130,33 @@ def cmd_log(status, description, asi="{}"):
     }
     record["confidence"] = confidence(previous + [record["metric"]])
     append(record)
-    print(f"logged run {record['run']} ({status}) {PRIMARY}={record['metric']} segment={segment}")
+    print(f"logged run {record['run']} ({status}) {scored}={record['metric']} segment={segment}")
 
 
-def cmd_segment(name):
+def cmd_segment(name, *options):
+    metric, gates = DEFAULT_PRIMARY, {}
+    index = 0
+    while index < len(options):
+        if options[index] == "--metric" and index + 1 < len(options):
+            metric = options[index + 1]
+            index += 2
+        elif options[index] == "--gate" and index + 1 < len(options):
+            key, _, value = options[index + 1].partition("=")
+            gates[key] = float(value) if "." in value else int(value)
+            index += 2
+        else:
+            sys.exit(f"unknown segment option {options[index]!r}; use --metric <name> or --gate <name>=<limit>")
     rows = records()
     segment = current_segment(rows)
     segment = 0 if segment is None else segment + 1
-    append({"type": "config", "name": name, "metricName": PRIMARY, "metricUnit": "points",
-            "bestDirection": "lower", "segment": segment})
+    config = {"type": "config", "name": name, "metricName": metric, "metricUnit": "points",
+              "bestDirection": "lower", "segment": segment}
+    if gates:
+        config["gates"] = gates
+    append(config)
     append({"type": "status", "state": "running", "timestamp": int(time.time())})
-    print(f"segment {segment}: {name}. Run the baseline next and log it as keep.")
+    gates_note = f"; gates {gates}" if gates else ""
+    print(f"segment {segment}: {name}, scoring {metric}{gates_note}. Run the baseline next and log it as keep.")
 
 
 def cmd_pause(note):
@@ -147,7 +201,7 @@ def cmd_status():
 
 
 def cmd_table():
-    print("| # | Seg | Description | " + PRIMARY + " | Status |\n|---|---|---|---|---|")
+    print("| # | Seg | Description | metric | Status |\n|---|---|---|---|---|")
     for r in runs(records()):
         print(f"| {r['run']} | {r.get('segment')} | {r['description']} | {r['metric']} | {r['status']} |")
 

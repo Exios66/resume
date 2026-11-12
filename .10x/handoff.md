@@ -8,7 +8,7 @@ Read `AGENTS.md`, `.github/BUILDING.md`, `scripts/hillclimb/README.md`, this fil
 
 #146, #147 and #148 merged to main on 2026-11-12 (merge commits `21ecacc`, `d743cb8`, `2b11221`). The private-research wording, RVL-CDIP hosted-study links and lead-capture/image-loading behavior are all in main; keep them when re-rendering.
 
-Next priority: #120 social cards, #121 display titles/layout, #118 motif signoff, residual #122–#125 tasks, #126 ledger/benchmark support, and #153 ELIZA-Terminal refinement for Parkside inclusion. The older batch notes below describe historical contributions. #138–#142 and #145–#148 have since merged; #130, #136, #137 and #119 are closed with evidence. #114 is closed after its remaining content shipped in #146. #144 is another open PR with phone chart/header and full-size raster-link changes; shipped #148 does not duplicate those features.
+Next priority: #120 social cards, #121 display titles/layout, #118 motif signoff, residual #122–#125 tasks, #126 milestones (its experience-scored ledger/benchmark tooling is shipped; start the experience segment and baseline before experience-scored keeps), and #153 ELIZA-Terminal refinement for Parkside inclusion. The older batch notes below describe historical contributions. #138–#142 and #145–#148 have since merged; #130, #136, #137 and #119 are closed with evidence. #114 is closed after its remaining content shipped in #146. #144 is another open PR with phone chart/header and full-size raster-link changes; shipped #148 does not duplicate those features.
 
 ## Implemented batch
 
@@ -27,7 +27,7 @@ Evidence from review follow-up is under `.10x/reviews/pr-review-followup/`; diag
 - #124 has the diagram regression and #115 recording contribution; chart conversions, new chart kinds and other visualisations remain. Existing chart restyles require the owner's draft review as specified in #124.
 - #125 structured data, transfer budgets and secondary-engine setup/tests are implemented. Broader content, forced-colour coverage and owner phone/tablet checks remain; close only the shipped subtasks.
 - #122 video behavior now follows live reduced motion, visibility and manual pause. This does not complete the roadmap's motion scale, transitions, motif/chart animation or print/forced-colour matrix.
-- #126 is at experience_gaps=19 on main (124 before #148). Ledger PRIMARY is hardcoded to polish_defects and the benchmark does not append KPI output. Changing a segment label does not solve this. Plan a separate tested tooling change before experience-scored loops.
+- #126 is at experience_gaps=19 on main (124 before #148). Its experience-scored ledger/benchmark tooling is shipped in this PR: the segment config names the scored metric, `autoresearch.sh` prints both metric sets, and a `polish_defects=0` gate is enforced on keeps. Start the experience segment and baseline before experience-scored keeps.
 - #130 and #137 were completed by #138; #136 was completed by #142. The issue closures cite their evidence.
 
 ## Verification and shipping

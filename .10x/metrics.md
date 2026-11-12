@@ -77,11 +77,11 @@ Do not turn a judged indicator into a number by guessing. Record who judged it a
 2. Keep a change only if all gates hold and either `experience_gaps` falls or a judged indicator improves with evidence.
 3. Design work that moves no number is allowed (rule 8 of the design spec). Log it as a judged change with screenshots.
 4. Do not game a metric: no hidden images to satisfy a count, no fake sizes, no title changes without the owner's wording.
-5. Report `experience_gaps` separately after each render. The current `ledger.py` hardcodes `polish_defects`, and `autoresearch.sh` does not append KPI output. Do not change a segment name/config and claim the loop scores experience. Experience-scored logging needs a separately reviewed tooling change and new baseline (#126); meanwhile retain ordinary scoped PR evidence and honest polish records.
+5. Report `experience_gaps` after each render. Since the experience-scored tooling landed (#126), `autoresearch.sh` also prints the KPI metrics and the ledger can score `experience_gaps` directly: start such a segment with `hc.sh segment "<name>" --metric experience_gaps --gate polish_defects=0`. Never edit the audit, the checks or `kpi.py` to rescue a result.
 
 ## How to raise each metric
 
-Measured on `main` at d11a820 (11 November 2026): `experience_gaps` = **125**, unchanged since the baseline.
+Measured on `main` at d11a820 (11 November 2026): `experience_gaps` = **125**, unchanged since the baseline. After #148 (12 November 2026) it is **19**: image sizing and lazy loading are done, and the remaining 19 gaps are the 14 shared social cards (#120) and 5 repository-style display titles (#121).
 The levers below are ordered by gaps closed per pull request. Re-run `kpi.py` before starting; these counts drift.
 
 ### 1. `images_without_size` (61) and `later_images_not_lazy` (45): one filter change, up to 106 gaps
@@ -142,12 +142,12 @@ The levers below are ordered by gaps closed per pull request. Re-run `kpi.py` be
 
 ## Making the loop score experience (#126)
 
-The ledger still scores only `polish_defects`. To let a hill-climb keep a change because `experience_gaps` fell:
+Landed 2026-11-12 in the experience-ledger tooling PR:
 
-1. Take the primary metric name from the segment config in `scripts/hillclimb/ledger.py`. Do not hard-code it.
-2. Have `autoresearch.sh` (or `hc.sh experiment`) run `kpi.py` after the polish audit and print both sets of `METRIC` lines.
-3. Start a new segment with `experience_gaps` as primary, `polish_defects` = 0 as a gate, and a baseline measured on the same commit.
-4. Do this in its own pull request, with tests for the ledger change, before any experiment uses it.
+1. The primary metric name comes from the segment config; `polish_defects` is only the default (`scripts/hillclimb/ledger.py`).
+2. `autoresearch.sh` runs `kpi.py` after the polish audit and prints both sets of `METRIC` lines.
+3. Start the segment with `hc.sh segment "<name>" --metric experience_gaps --gate polish_defects=0`, then log the baseline on the same commit with `hc.sh baseline`. A run whose gate fails cannot be logged as keep.
+4. Regression tests live in `tests/python/test_ledger.py`.
 
 ## Success points
 
