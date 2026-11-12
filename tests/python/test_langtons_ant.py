@@ -4,6 +4,7 @@ Run from the repository root: python3 -m pytest -q tests/python/test_langtons_an
 These checks read committed pages and assets; no render or network is needed beyond a built docs/.
 """
 
+from pathlib import Path
 import re
 import unittest
 from urllib.parse import unquote, urlsplit
@@ -59,12 +60,20 @@ class LangtonsAntTests(unittest.TestCase):
         heading = self.one(index, "h2", id="side-projects-interests")
         uses = [attrs for tag, attrs in index.children(heading) if tag == "use"]
         self.assertEqual([checks.attr(attrs, "href") for attrs in uses], ["#i-waves"])
+        # The icon set lives in site.lua; each built page's sprite keeps only the icons
+        # that page uses (post-render.py), so the set is counted at its source.
+        source = (Path(__file__).resolve().parents[2] / "scripts/filters/site.lua").read_text(encoding="utf-8")
+        block = source[source.index("local ICONS = {"):]
+        icon_set = re.findall(r'^  \{ "([\w-]+)"', block[:block.index("\n}\n")], re.M)
+        # 21 since the résumé contact line gained a globe icon for the portfolio address.
+        self.assertEqual(len(icon_set), 21, "The icon set must keep exactly the existing 21 icons")
+        self.assertNotIn("ant", icon_set)
         _, parser = self.read_page()
         symbols = [checks.attr(attrs, "id") for tag, attrs, _ in parser.elements if tag == "symbol"]
-        # 21 since the résumé contact line gained a globe icon for the portfolio address.
-        self.assertEqual(len(symbols), 21, "The sprite must keep exactly the existing 21 symbols")
-        self.assertNotIn("i-ant", symbols)
         self.assertEqual(len(symbols), len(set(symbols)))
+        self.assertLessEqual(set(symbols), {"i-" + name for name in icon_set})
+        used = {checks.attr(attrs, "href") for tag, attrs, _ in parser.elements if tag == "use"}
+        self.assertEqual({"#" + symbol for symbol in symbols}, used, "every used icon resolves and no unused icon ships")
         for tag, attrs, _ in parser.elements:
             if tag == "svg" and "icon" in checks.classes(attrs):
                 self.assertEqual(checks.attr(attrs, "width"), "1em")

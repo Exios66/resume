@@ -14,6 +14,19 @@ pandoc = {
 }
 dofile("scripts/filters/charts.lua")
 
+-- Wide charts carry a second drawing for phones in a <template>. The existing
+-- assertions describe the wide drawing; the phone drawings are checked at the end.
+local PHONE = {}
+do
+  local render = CHARTS.render
+  CHARTS.render = function(spec, rows)
+    local html = render(spec, rows)
+    local phone = html:match('<template class="chart%-narrow">(.-)</template>')
+    if phone then PHONE[#PHONE + 1] = { kind = spec.kind, wide = html:gsub('<template.-</template>', ''), svg = phone } end
+    return (html:gsub('<template.-</template>', ''))
+  end
+end
+
 local function show(v)
   if type(v) == "number" then return string.format("%.10g", v) end
   if type(v) ~= "table" then return tostring(v) end
@@ -290,5 +303,27 @@ for _, bounds in ipairs({ { min = "0", max = "0" }, { max = "0" } }) do
 end
 
 fails("integer width", { kind = "bars", label = "Job", value = "Speedup", ["plot-width"] = "320.5" }, MAPRED)
+
+-- Phone drawings: same marks and source rows as the wide drawing, on a 256-unit grid,
+-- with no overlapping hit areas and no row label left in a side gutter.
+assert(#PHONE >= 5, "wide charts carry a phone drawing")
+for _, chart in ipairs(PHONE) do
+  assert(chart.svg:find('viewBox="0 0 256 ', 1, true), chart.kind .. ": phone drawing is 256 units wide")
+  assert_eq(count(chart.svg, '<g class="mark"'), count(chart.wide, '<g class="mark"'), chart.kind .. ": phone marks")
+  local rows_wide, rows_phone = {}, {}
+  for row in chart.wide:gmatch('data%-source%-row="(%d+)"') do rows_wide[#rows_wide + 1] = row end
+  for row in chart.svg:gmatch('data%-source%-row="(%d+)"') do rows_phone[#rows_phone + 1] = row end
+  assert_eq(rows_phone, rows_wide, chart.kind .. ": phone source rows")
+  for x in chart.svg:gmatch('<text class="cat" x="([%d%.%-]+)"') do
+    assert_eq(tonumber(x), 0, chart.kind .. ": phone row label starts at the left edge")
+  end
+  local s = spans(chart.svg)
+  for i = 1, #s do for j = i + 1, #s do
+    local A, B = s[i], s[j]
+    assert(A[1] >= -0.01 and A[3] <= 256.01, chart.kind .. ": phone hit area inside the drawing")
+    local overlap = math.min(A[3], B[3]) - math.max(A[1], B[1]) > 0.11 and math.min(A[4], B[4]) - math.max(A[2], B[2]) > 0.11
+    assert(not overlap, chart.kind .. ": phone hit areas " .. i .. " and " .. j .. " overlap")
+  end end
+end
 
 print("chart unit tests passed")

@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=ba16ab71a5">
+<link rel="stylesheet" href="../../styles.css?v=544baee724">
 <meta property="og:title" content="Wave Laboratory: technical report — Jack J. Burleson">
 <meta property="og:description" content="Wave spectra and ship-dynamics models, architecture, validation suite, test counts, limitations and plan-versus-shipped notes for Wave Laboratory.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -186,27 +186,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd" role="row">
 <td role="cell" data-label="Model">JONSWAP</td>
 <td role="cell" data-label="Role">Developing wind sea</td>
-<td role="cell" data-label="Key parameters and notes">α, peak frequency ω_p, peak enhancement γ (3.3 used for focused groups), σ = 0.07 below and 0.09 above the peak; normalised so 4√m₀ = H_s</td>
+<td role="cell" data-label="Key parameters and notes">α, peak frequency ω<sub>p</sub>, peak enhancement γ (3.3 used for focused groups), σ = 0.07 below and 0.09 above the peak; normalised so 4√m₀ = H<sub>s</sub></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Model">Pierson–Moskowitz</td>
 <td role="cell" data-label="Role">Fully developed sea</td>
-<td role="cell" data-label="Key parameters and notes">JONSWAP with γ = 1, normalised to H_s</td>
+<td role="cell" data-label="Key parameters and notes">JONSWAP with γ = 1, normalised to H<sub>s</sub></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Model">Bretschneider</td>
 <td role="cell" data-label="Role">Two-parameter sea</td>
-<td role="cell" data-label="Key parameters and notes">Same family as above, normalised to H_s</td>
+<td role="cell" data-label="Key parameters and notes">Same family as above, normalised to H<sub>s</sub></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Model">TMA</td>
 <td role="cell" data-label="Role">Finite-depth correction</td>
-<td role="cell" data-label="Key parameters and notes">Kitaigorodskii depth factor, applied when depth is under 1000 m; H_s re-normalised</td>
+<td role="cell" data-label="Key parameters and notes">Kitaigorodskii depth factor, applied when depth is under 1000 m; H<sub>s</sub> re-normalised</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Model">Hasselmann et al.&nbsp;(1973)</td>
 <td role="cell" data-label="Role">Fetch-limited wind sea</td>
-<td role="cell" data-label="Key parameters and notes">Growth with fetch, capped at the fully developed limit, H_s ≈ 0.209 U²/g</td>
+<td role="cell" data-label="Key parameters and notes">Growth with fetch, capped at the fully developed limit, H<sub>s</sub> ≈ 0.209 U²/g</td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Model">Regular (Airy)</td>
@@ -216,17 +216,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd" role="row">
 <td role="cell" data-label="Model">NewWave (Tromans et al.&nbsp;1991)</td>
 <td role="cell" data-label="Role">Focused rogue group</td>
-<td role="cell" data-label="Key parameters and notes">40 linear components between 0.6 ω_p and 3 ω_p, phased so crests coincide at a chosen place and time</td>
+<td role="cell" data-label="Key parameters and notes">40 linear components between 0.6 ω<sub>p</sub> and 3 ω<sub>p</sub>, phased so crests coincide at a chosen place and time</td>
 </tr>
 </tbody>
 </table>
 <p>Directional spreading is one of cos-2s, Mitsuyasu (frequency dependent) or Donelan–Banner sech², each normalised so the integral over direction is 1. A uniform surface current Doppler-shifts the whole sea.</p>
 <p><strong>Surface synthesis.</strong> The surface is a sum of four periodic cascades with sizes 1024, 256, 64 and 16 m. The first three are evaluated by the CPU physics on 128 by 128 grids; the fourth runs to the grid limit and is visual only. Initial amplitudes h₀(k) are made once on the CPU from a counter-based hash of the system seed, cascade and wavenumber index, so every grid resolution sees the same sea. Horizontal choppy displacement uses a choppiness factor, and the Jacobian of the displacement flags folding: J below zero marks a breaking crest, which drives foam.</p>
-<p><strong>Rogue waves.</strong> A focused wave adds to the background sea, so the crest at the focus sits above it by the chosen crest amplitude. The inspector compares the equivalent steepness with the Miche limit, 0.142 tanh(kh). The note records Draupner as 18.5 m over 11.9 m, a crest-to-H_s ratio of 1.55, in a typical recorded range of 1.2 to 1.6.</p>
+<p><strong>Rogue waves.</strong> A focused wave adds to the background sea, so the crest at the focus sits above it by the chosen crest amplitude. The inspector compares the equivalent steepness with the Miche limit, 0.142 tanh(kh). The note records Draupner as 18.5 m over 11.9 m, a crest-to-H<sub>s</sub> ratio of 1.55, in a typical recorded range of 1.2 to 1.6.</p>
 <p><strong>Ships.</strong> Hull forces come from integrating pressure over the instantaneous wetted hull, as hydrostatics plus Froude–Krylov, sampled on up to 280 water columns. Added mass uses strip theory with Lewis-form sections and a three-dimensional end reduction. Radiation damping is tuned to 15 per cent of critical in heave and pitch, and roll damping follows an Ikeda-type decomposition. Wind acts through frontal and lateral areas with drag coefficients of 0.7 and 0.9. Square sails, flooding through watertight compartments with free-surface loss of stability, and an elastic catenary anchor line are modelled; each has its own section in the physics note.</p>
 <p><strong>Weather.</strong> Gusts come from 24 Fourier modes drawn from a von Kármán spectrum, carried downwind as frozen turbulence. Whitecap coverage follows Monahan and O’Muircheartaigh (1980), visibility follows Koschmieder’s law with a rain term, and lightning is visual only.</p>
 <p><strong>Instruments.</strong> Welch’s method gives spectra from Hann-windowed segments with 50 per cent overlap, scaled so the integrated density equals the signal variance. Zero-up-crossing statistics follow IAHR and PIANC conventions. Motion-sickness incidence follows O’Hanlon and McCauley (1974).</p>
-<p><strong>Underwater optics.</strong> Jerlov water types give diffuse attenuation coefficients K_d for red, green and blue. They drive rendering only, not the physics. Light is attenuated as c·e^(−K_d·d) plus in-scattered colour, and from below the surface shows the rippled sky inside Snell’s window (48.6°) and a mirror outside it.</p>
+<p><strong>Underwater optics.</strong> Jerlov water types give diffuse attenuation coefficients K<sub>d</sub> for red, green and blue. They drive rendering only, not the physics. Light is attenuated as c·e<sup>−K<sub>d</sub>·d</sup> plus in-scattered colour, and from below the surface shows the rippled sky inside Snell’s window (48.6°) and a mirror outside it.</p>
 <h3 id="architecture">Architecture</h3>
 <p>The main thread runs the React UI, a Zustand store and the renderer. A Web Worker runs the simulation: the CPU ocean field, the vessels and a fixed-rate recorder. <code>SimClient</code> keeps one request in flight. Edits go through a Zod-validated store, which also keeps undo history and bumps a revision that reloads the worker.</p>
 <table class="caption-top stack" role="table" data-prose-rows="true">
@@ -383,55 +383,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The <code>overview-light</code>, <code>overview-dark</code> and <code>rogue-wave</code> captures below were made for this portfolio and predate the 9–24 October 2026 render and scenery merges. They show the interface at that point, not the current deployed build.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/overview-light.jpg" class="fig img-fluid" style="width:100.0%" alt="The app in light theme: a container ship with a white wake on a blue-green sea, scene list on the left, sea-state panel on the right and playback controls below."></p>
+<p><a class="fig-zoom" href="figures/overview-light.jpg" title="Open full size"><img src="figures/overview-light.jpg" class="fig img-fluid" style="width:100.0%" alt="The app in light theme: a container ship with a white wake on a blue-green sea, scene list on the left, sea-state panel on the right and playback controls below."></a></p>
 <figcaption>Light theme overview with a moderate sea and a container ship.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/overview-dark.jpg" class="fig img-fluid" style="width:100.0%" alt="The app in dark theme in a hurricane. Rain streaks across a grey sea, a dark hull is faintly visible, and the sea-state panel reports an 11.23 m significant height and sea state 8."></p>
+<p><a class="fig-zoom" href="figures/overview-dark.jpg" title="Open full size"><img src="figures/overview-dark.jpg" class="fig img-fluid" style="width:100.0%" alt="The app in dark theme in a hurricane. Rain streaks across a grey sea, a dark hull is faintly visible, and the sea-state panel reports an 11.23 m significant height and sea state 8."></a></p>
 <figcaption>Dark theme hurricane preset with a tanker and a carrier.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/rogue-wave.jpg" class="fig img-fluid" style="width:100.0%" alt="Dark theme view following a container ship through a rough sea. The side panel explains a 12 m focused crest in an 8 m significant-height sea peaking at 75 seconds."></p>
+<p><a class="fig-zoom" href="figures/rogue-wave.jpg" title="Open full size"><img src="figures/rogue-wave.jpg" class="fig img-fluid" style="width:100.0%" alt="Dark theme view following a container ship through a rough sea. The side panel explains a 12 m focused crest in an 8 m significant-height sea peaking at 75 seconds."></a></p>
 <figcaption>Rogue wave preset following a container ship.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/underwater-snells-window.jpg" class="fig img-fluid" style="width:100.0%" alt="A view from underwater: a smooth wash of blue light with no hull or seabed in frame, a depth badge reading 4.0 m and a round chart panel at lower right."></p>
+<p><a class="fig-zoom" href="figures/underwater-snells-window.jpg" title="Open full size"><img src="figures/underwater-snells-window.jpg" class="fig img-fluid" style="width:100.0%" alt="A view from underwater: a smooth wash of blue light with no hull or seabed in frame, a depth badge reading 4.0 m and a round chart panel at lower right."></a></p>
 <figcaption>Underwater camera looking up at 4.0 m.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/underwater-hull.jpg" class="fig img-fluid" style="width:100.0%" alt="A dark green hull runs diagonally across the lower left under a bright rippled surface with foam patches."></p>
+<p><a class="fig-zoom" href="figures/underwater-hull.jpg" title="Open full size"><img src="figures/underwater-hull.jpg" class="fig img-fluid" style="width:100.0%" alt="A dark green hull runs diagonally across the lower left under a bright rippled surface with foam patches."></a></p>
 <figcaption>Underwater view of a hull at 6.1 m.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/underwater-oceanic-i.jpg" class="fig img-fluid" style="width:100.0%" alt="A dark hull edge cuts diagonally across the lower left. Above it the underside of the sea surface shows pale blue light with dark foam patches against deep blue water."></p>
+<p><a class="fig-zoom" href="figures/underwater-oceanic-i.jpg" title="Open full size"><img src="figures/underwater-oceanic-i.jpg" class="fig img-fluid" style="width:100.0%" alt="A dark hull edge cuts diagonally across the lower left. Above it the underside of the sea surface shows pale blue light with dark foam patches against deep blue water."></a></p>
 <figcaption>Clear oceanic water at 3.9 m.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/underwater-coastal-9.jpg" class="fig img-fluid" style="width:100.0%" alt="An entirely dark green underwater view with faint lighter and darker patches and a chart panel at lower right."></p>
+<p><a class="fig-zoom" href="figures/underwater-coastal-9.jpg" title="Open full size"><img src="figures/underwater-coastal-9.jpg" class="fig img-fluid" style="width:100.0%" alt="An entirely dark green underwater view with faint lighter and darker patches and a chart panel at lower right."></a></p>
 <figcaption>Turbid coastal water, Jerlov type 9, at 3.7 m.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/hdr-bloom-on.jpg" class="fig img-fluid" style="width:100.0%" alt="A container ship on a sunset sea with a large glowing sun and glare spreading over the ship and water."></p>
+<p><a class="fig-zoom" href="figures/hdr-bloom-on.jpg" title="Open full size"><img src="figures/hdr-bloom-on.jpg" class="fig img-fluid" style="width:100.0%" alt="A container ship on a sunset sea with a large glowing sun and glare spreading over the ship and water."></a></p>
 <figcaption>HDR bloom on.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img src="figures/hdr-bloom-off.jpg" class="fig img-fluid" style="width:100.0%" alt="The same sunset view with a smaller, crisper sun and no glow across the ship."></p>
+<p><a class="fig-zoom" href="figures/hdr-bloom-off.jpg" title="Open full size"><img src="figures/hdr-bloom-off.jpg" class="fig img-fluid" style="width:100.0%" alt="The same sunset view with a smaller, crisper sun and no glow across the ship."></a></p>
 <figcaption>HDR bloom off.</figcaption>
 </figure>
 </div>
@@ -472,8 +472,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="../../assets/js/site.js?v=d94317f82b" defer=""></script>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-github" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></symbol><symbol id="i-linkedin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></symbol><symbol id="i-mail" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></symbol><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-download" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></symbol><symbol id="i-map-pin" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol><symbol id="i-layers" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></symbol><symbol id="i-brain" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M19.938 10.5a4 4 0 0 1 .585.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M19.967 17.484A4 4 0 0 1 18 18"></path></symbol><symbol id="i-scale" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></symbol><symbol id="i-waves" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></symbol><symbol id="i-database" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></symbol><symbol id="i-globe" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></symbol><symbol id="i-clock" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol></svg>
+<script src="../../assets/js/site.js?v=2b0caf8edd" defer=""></script>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol></svg>
 
 <script>
   // Theme toggle: shown only once this script runs; switches to the opposite of what is currently shown and remembers the choice.

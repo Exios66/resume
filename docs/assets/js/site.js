@@ -25,6 +25,44 @@
     }
   } catch (e) {}
 
+  // Charts wider than a phone ship a second, narrow drawing in a <template>. Below
+  // the breakpoint it replaces the wide drawing, so the plot fits without sideways
+  // scrolling. Both drawings are wired up once; only one is in the document at a time.
+  var chartLayouts = [];
+  function chartMarks(figure) {
+    var found = Array.from(figure.querySelectorAll('.mark'));
+    chartLayouts.forEach(function (layout) {
+      if (layout.figure !== figure) return;
+      [layout.wide, layout.narrow].forEach(function (svg) {
+        if (!svg.isConnected) found = found.concat(Array.from(svg.querySelectorAll('.mark')));
+      });
+    });
+    return found;
+  }
+  (function () {
+    var phone;
+    try { phone = window.matchMedia('(max-width: 600px)'); } catch (e) { return; }
+    doc.querySelectorAll('figure.chart').forEach(function (figure) {
+      var holder = figure.querySelector('template.chart-narrow');
+      var body = figure.querySelector('.chart-body');
+      var wide = body && body.querySelector('svg');
+      var narrow = holder && holder.content && holder.content.querySelector('svg');
+      if (!wide || !narrow) return;
+      chartLayouts.push({ figure: figure, body: body, wide: wide, narrow: doc.importNode(narrow, true) });
+    });
+    function apply() {
+      chartLayouts.forEach(function (layout) {
+        var next = phone.matches ? layout.narrow : layout.wide;
+        if (!next.isConnected) layout.body.replaceChildren(next);
+        layout.figure.classList.toggle('is-narrow', phone.matches);
+        layout.body.setAttribute('aria-label', layout.body.getAttribute('aria-label').replace(/, scrollable$/, '') + (phone.matches ? '' : ', scrollable'));
+      });
+    }
+    apply();
+    if (phone.addEventListener) phone.addEventListener('change', apply);
+    else if (phone.addListener) phone.addListener(apply);
+  })();
+
   // Coordinated views share a row index emitted by the chart's table renderer.
   // Readout text comes from the authored table, including unplotted context.
   (function () {
@@ -33,7 +71,7 @@
       var table = link && doc.getElementById(link.hash.slice(1));
       if (!table) return;
       var rows = Array.from(table.querySelectorAll('tbody tr'));
-      var marks = Array.from(figure.querySelectorAll('.mark'));
+      var marks = chartMarks(figure);
       if (!rows.length || !marks.length || marks.some(function (mark) {
         var index = Number(mark.getAttribute('data-source-row'));
         return !Number.isInteger(index) || index < 1 || index > rows.length;
@@ -90,7 +128,8 @@
   // Charts: one shared tooltip for hover and keyboard focus. Every value it shows is
   // also in the table under the chart, so it only ever adds convenience.
   (function () {
-    var marks = doc.querySelectorAll(".chart .mark");
+    var marks = [];
+    doc.querySelectorAll("figure.chart").forEach(function (figure) { marks = marks.concat(chartMarks(figure)); });
     if (!marks.length) return;
     var tip = doc.createElement("div");
     var value = doc.createElement("strong");
@@ -253,6 +292,9 @@
           if (box.tagName !== "TABLE") { box.removeAttribute("role"); box.removeAttribute("aria-label"); }
         }
       });
+      // Tells the stylesheet the fit of each table is known, so it can release the
+      // sticky label column of a table that fits. Without scripts the column stays put.
+      doc.documentElement.setAttribute("data-measured", "");
     }
     update();
     window.addEventListener("load", update); // web fonts can change widths

@@ -585,14 +585,74 @@ def test_charts_dark_theme_and_no_script(site):
         context.close()
 
 
-def test_charts_scroll_on_phone(site):
+def test_charts_fit_a_phone_and_scroll_only_without_scripts(site):
+    browser, base = site
+    for width in (320, 375):
+        page = browser.new_page(viewport={"width": width, "height": 812}, reduced_motion="reduce")
+        try:
+            for path in CHART_PAGES:
+                page.goto(base + path)
+                for body in page.locator(".chart-body").all():
+                    # Every chart is drawn for the phone: nothing to scroll, text at 12px or more.
+                    assert body.locator("svg").count() == 1, path
+                    if width == 320 and body.evaluate("el => !!el.closest('.chart-interval')"):
+                        continue  # the one-row interval plot keeps its 300px floor and scrolls at 320
+                    assert body.evaluate("el => el.scrollWidth <= el.clientWidth + 1"), f"{path} at {width}"
+                    if not body.evaluate("el => !!el.closest('.chart-interval')"):
+                        assert "scrollable" not in body.get_attribute("aria-label"), path
+                    small = body.evaluate("""el => [...el.querySelectorAll('svg text')].filter(t =>
+                        t.getBoundingClientRect().height && parseFloat(getComputedStyle(t).fontSize)
+                          * (t.ownerSVGElement.getBoundingClientRect().width / t.ownerSVGElement.viewBox.baseVal.width) < 12)
+                        .map(t => t.textContent)""")
+                    assert small == [], f"{path} at {width}: chart text under 12px: {small}"
+                    crowded = body.evaluate("""el => {
+                        const boxes = [...el.querySelectorAll('svg text')].map(t => [t.textContent, t.getBoundingClientRect()]);
+                        const hits = [];
+                        for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
+                            const a = boxes[i][1], b = boxes[j][1];
+                            const w = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+                            const h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+                            if (w > 1 && h > 6) hits.push(boxes[i][0] + ' / ' + boxes[j][0]);
+                        }
+                        return hits;
+                    }""")
+                    assert crowded == [], f"{path} at {width}: chart labels collide: {crowded}"
+                assert page.locator("figure.chart").first.evaluate(
+                    "el => getComputedStyle(el, '::after').content") in ("none", "normal"), path
+        finally:
+            page.close()
+    # Widening the window brings the wide drawing back, with its marks still wired up.
+    page = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
+    try:
+        page.goto(base + "projects/natd.html")
+        assert page.locator(".chart-body svg").first.evaluate("el => el.viewBox.baseVal.width") == 256
+        page.set_viewport_size({"width": 1280, "height": 800})
+        page.wait_for_function("document.querySelector('.chart-body svg').viewBox.baseVal.width === 640")
+        page.locator("figure.chart g.mark").first.focus()
+        expect(page.locator(".chart-tooltip")).to_be_visible()
+        expect(page.locator("figure.chart g.mark.is-linked")).to_have_count(1)
+    finally:
+        page.close()
+    # Without scripts the wide drawing stays, scrolls, and says so.
+    context = browser.new_context(viewport={"width": 375, "height": 812}, java_script_enabled=False)
+    page = context.new_page()
+    try:
+        page.goto(base + "projects/natd.html")
+        body = page.locator(".chart-body").first
+        assert body.evaluate("el => el.scrollWidth > el.clientWidth")
+        assert "Scroll sideways" in page.locator("figure.chart").first.evaluate("el => getComputedStyle(el, '::after').content")
+    finally:
+        context.close()
+
+
+def test_chart_text_stays_inside_its_drawing_on_phone(site):
     browser, base = site
     page = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
     try:
         for path in CHART_PAGES:
             page.goto(base + path)
             for body in page.locator(".chart-body").all():
-                compact = body.evaluate("el => el.querySelector('svg').viewBox.baseVal.width === 320")
+                compact = body.evaluate("el => el.querySelector('svg').viewBox.baseVal.width <= 320")
                 if compact:
                     assert body.evaluate("el => el.scrollWidth <= el.clientWidth + 1"), path
                 else:
@@ -1077,5 +1137,83 @@ def test_dark_theme_plate_is_for_transparent_figures_only(site):
         plated = page.locator('img.fig:not([src$=".jpg"])').first
         expect(plated).to_have_css("padding", "10px")
         expect(plated).to_have_css("background-color", "rgb(255, 255, 255)")
+    finally:
+        page.close()
+    # Without scripts nothing has measured the tables, so a phone source table keeps
+    # its sticky label column in case it scrolls.
+    context = browser.new_context(viewport={"width": 320, "height": 800}, java_script_enabled=False)
+    page = context.new_page()
+    try:
+        page.goto(base + "projects/natd.html")
+        cell = page.locator("table.chart-source:not(.stack) tbody td:first-child").first
+        if cell.count():
+            expect(cell).to_have_css("position", "sticky")
+    finally:
+        context.close()
+
+
+@pytest.mark.parametrize("width", [320, 360, 375, 414, 600])
+def test_phone_header_takes_two_rows(site, width):
+    """Title with Search and the theme toggle, then one row of section links."""
+    browser, base = site
+    page = browser.new_page(viewport={"width": width, "height": 800})
+    try:
+        page.goto(base + "projects/index.html")
+        layout = page.evaluate("""() => {
+            const box = el => el.getBoundingClientRect();
+            const title = document.querySelector('.site-title');
+            const text = document.createRange(); text.selectNodeContents(title);
+            const items = [...document.querySelectorAll('.nav-list li')]
+                .filter(li => li.offsetWidth && getComputedStyle(li).visibility !== 'hidden');
+            const control = li => li.querySelector('a, button');
+            return {
+                tops: [...new Set(items.map(li => Math.round(box(control(li)).top + box(control(li)).height / 2)))].length,
+                header: box(document.querySelector('.site-header')).height,
+                titleRight: text.getBoundingClientRect().right,
+                searchLeft: box(document.querySelector('.nav-link[data-search-shortcut]')).left,
+                right: Math.max(...items.map(li => box(li).right)),
+                small: items.map(li => box(control(li))).filter(b => b.height < 44 || b.width < 40).length,
+                labels: items.map(li => li.textContent.trim().split(/\\s+/)[0]),
+                overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+            };
+        }""")
+        assert layout["tops"] == 2, layout
+        assert layout["header"] <= 96, layout
+        assert layout["titleRight"] + 4 <= layout["searchLeft"], layout
+        assert layout["right"] <= width - 15, layout
+        assert layout["small"] == 0 and layout["overflow"] <= 0, layout
+        assert layout["labels"][:6] == ["About", "Projects", "Research", "Writing", "Résumé", "Search"], layout
+        expect(page.locator(".site-title")).to_have_attribute("href", re.compile(r"index\.html$"))
+    finally:
+        page.close()
+
+
+def test_screenshots_open_full_size_and_say_so_on_phones(site):
+    browser, base = site
+    for width, hint in ((375, True), (1280, False)):
+        page = browser.new_page(viewport={"width": width, "height": 800})
+        try:
+            page.goto(base + "projects/wave-laboratory.html")
+            link = page.locator("a.fig-zoom").first
+            src = link.locator("img").get_attribute("src")
+            assert link.get_attribute("href") == src and src.endswith(".jpg")
+            content = link.evaluate("el => getComputedStyle(el, '::after').content")
+            assert ("full size" in content) == hint, content
+            response = page.request.get(base + "projects/" + src)
+            assert response.ok and response.headers["content-type"].startswith("image/")
+            expect(page.locator('a.fig-zoom img[src$=".svg"]')).to_have_count(0)
+        finally:
+            page.close()
+
+
+def test_wave_report_writes_subscripts_as_subscripts(site):
+    browser, base = site
+    page = browser.new_page(viewport={"width": 375, "height": 800})
+    try:
+        page.goto(base + "projects/wave-laboratory/report.html")
+        text = page.locator("main").inner_text()
+        for raw in ("H_s", "K_d", "ω_p"):
+            assert raw not in text, raw
+        assert page.locator("main sub", has_text=re.compile(r"^[spd]$")).count() >= 10
     finally:
         page.close()

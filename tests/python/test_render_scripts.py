@@ -75,6 +75,29 @@ class PostRenderTests(unittest.TestCase):
         plain = '<body><main id="main"></main><footer class="site-footer"></footer></body>'
         self.assertEqual(POST["seat_footnotes"](plain), plain)
 
+    def test_raster_figures_link_to_their_full_size_file_once(self):
+        link = POST["link_raster_figures"]
+        shot = '<p><img src="figures/app.jpg" class="fig img-fluid" style="width:100.0%" alt="The app."></p>'
+        linked = link(shot)
+        self.assertEqual(linked, '<p><a class="fig-zoom" href="figures/app.jpg" title="Open full size">'
+                         '<img src="figures/app.jpg" class="fig img-fluid" style="width:100.0%" alt="The app."></a></p>')
+        self.assertEqual(link(linked), linked)
+        vector = '<p><img src="figures/plot.svg" class="fig img-fluid" alt="A plot."></p>'
+        self.assertEqual(link(vector), vector)
+        self.assertIn('href="a/b.png"', link('<img src="a/b.png" class="fig img-fluid" alt="">'))
+
+    def test_sprite_keeps_only_the_icons_a_page_uses(self):
+        prune = POST["prune_sprite"]
+        page = ('<a><svg class="icon"><use href="#i-mail"></use></svg></a>'
+                '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">'
+                '<symbol id="i-mail" viewBox="0 0 24 24"><path d="M1"/></symbol>'
+                '<symbol id="i-moon" viewBox="0 0 24 24"><path d="M2"/></symbol></svg>')
+        pruned = prune(page)
+        self.assertIn('<symbol id="i-mail"', pruned)
+        self.assertNotIn('i-moon', pruned)
+        self.assertEqual(prune(pruned), pruned)
+        self.assertEqual(prune("<p>No sprite.</p>"), "<p>No sprite.</p>")
+
     def test_committed_pdf_is_published_byte_for_byte(self):
         self.output.parent.mkdir(parents=True)
         self.output.write_bytes(b"stale copy")

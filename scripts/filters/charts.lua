@@ -119,11 +119,29 @@ local BAR = 20         -- bar thickness (dataviz cap is 24)
 local R = 5            -- dot radius (8px minimum diameter)
 local LABEL_ROOM = 64  -- plot inset that keeps a value label left of the data clear of row labels
 
+-- A chart is drawn twice: the wide layout above, and a 256-unit layout for phones
+-- in which each row label sits on its own line above its marks, so the whole plot
+-- fits a phone without sideways scrolling. NARROW.stack is that label line's height.
+local NARROW_W = 256
+local NARROW = { stack = 0 }
+
+--- Room a value label needs beside a mark, from the longest formatted value.
+local function label_room(list, unit, signed)
+  local longest = 0
+  for _, v in ipairs(list) do longest = math.max(longest, utf8.len(M.fmt(v, unit, signed))) end
+  return longest * 7.5 + 14
+end
+
 local function esc(s)
   return (tostring(s):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"))
 end
 
-local function num(x) return (string.format("%.1f", x):gsub("%.0$", "")) end
+-- Coordinates keep one decimal; the phone drawing (NARROW, above) is shown at about
+-- one pixel per unit, so it rounds to whole units.
+local function num(x)
+  if NARROW.stack > 0 then return string.format("%d", math.floor(x + 0.5)) end
+  return (string.format("%.1f", x):gsub("%.0$", ""))
+end
 
 --- Split a label into at most two lines of max_chars, at spaces.
 -- @param text string Label.
@@ -196,7 +214,11 @@ end
 --- Return SVG text for a row label, right-aligned in the gutter and centered on cy.
 -- Labels wrap to at most two lines. The gutter defaults to GUTTER when omitted;
 -- cy and gutter are in SVG viewBox units.
-local function row_label(label, cy, gutter)
+local function row_label(label, cy, gutter, y)
+  if NARROW.stack > 0 then
+    -- Phone layout: one line above the marks, starting at the left edge.
+    return text("cat", 0, y + 13, "start", M.wrap_label(label, 36)[1] .. (utf8.len(label) > 36 and "…" or ""))
+  end
   gutter = gutter or GUTTER
   local lines = M.wrap_label(label, 26)
   if #lines == 1 then return text("cat", gutter - 12, cy + 4.5, "end", lines[1]) end
@@ -206,9 +228,15 @@ end
 -- Vertical gridlines and tick labels for a horizontal value axis.
 local function x_axis(ticks, sx, top, bottom, unit)
   local out = {}
-  for _, t in ipairs(ticks) do
+  -- The phone layout labels every other gridline when there are more than four,
+  -- keeping zero labelled when the axis has one.
+  local every, anchor = (NARROW.stack > 0 and #ticks > 4) and 2 or 1, 1
+  for i, t in ipairs(ticks) do if t == 0 then anchor = i end end
+  for i, t in ipairs(ticks) do
     out[#out + 1] = line("grid", sx(t), top, sx(t), bottom, PAINT.grid)
-    out[#out + 1] = text("tick", sx(t), bottom + 18, "middle", M.fmt(t, unit))
+    if (i - anchor) % every == 0 then
+      out[#out + 1] = text("tick", sx(t), bottom + 18, "middle", M.fmt(t, unit))
+    end
   end
   return table.concat(out)
 end
@@ -266,7 +294,9 @@ local DRAW = {}
 -- Raises an error for missing columns or numeric values, more than two series,
 -- or a positive minimum. Other errors from invalid attributes propagate.
 function DRAW.bars(spec, rows)
-  local width = tonumber(spec["plot-width"]) or W
+  local stack = NARROW.stack
+  local width = stack > 0 and NARROW_W or tonumber(spec["plot-width"]) or W
+  local band = BAND + stack
   column(spec, rows, spec.label); column(spec, rows, spec.value)
   local vals = values(spec, rows, spec.value)
   local color_of, legend = series_colors(spec, rows)
@@ -275,17 +305,22 @@ function DRAW.bars(spec, rows)
   end
   local lo, hi, ticks = domain(spec, vals, true)
   local top = spec.ref and 26 or 10
-  local bottom = top + #rows * BAND
+  local bottom = top + #rows * band
   -- Short category names should not spend 190px on an empty label gutter.
   -- Keep the wider default for long labels; give short ones room without pushing
   -- the zero line and every positive bar off the initial phone viewport.
   local longest = 0
   for _, row in ipairs(rows) do longest = math.max(longest, utf8.len(row[spec.label])) end
   local gutter = math.min(GUTTER, math.max(100, longest * 9 + 32))
+  local signed = spec.signed == "true"
   local sx = linear(lo, hi, gutter + (lo < 0 and LABEL_ROOM or 0), width - RIGHT)
+  if stack > 0 then
+    local room = label_room(vals, spec.unit, signed)
+    gutter = 14
+    sx = linear(lo, hi, lo < 0 and room or gutter, width - room)
+  end
   local out = { x_axis(ticks, sx, top, bottom, spec.unit) }
   if lo < 0 then out[#out + 1] = line("zero", sx(0), top, sx(0), bottom, PAINT.muted) end
-  local signed = spec.signed == "true"
   if spec.ref then
     -- Draw the reference line in segments, leaving a gap at any row whose value
     -- label it would cross (the label's halo is too thin to hide a line).
@@ -296,7 +331,7 @@ function DRAW.bars(spec, rows)
       local vx = sx(v)
       local l0, l1 = v >= 0 and vx + 6 or vx - 6 - width, v >= 0 and vx + 6 + width or vx - 6
       if rx >= l0 - 3 and rx <= l1 + 3 then
-        local y = top + (i - 1) * BAND
+        local y = top + (i - 1) * band + stack
         if y + 8 > y0 then out[#out + 1] = line("ref", rx, y0, rx, y + 8, PAINT.muted) end
         y0 = y + BAND - 8
       end
@@ -305,15 +340,16 @@ function DRAW.bars(spec, rows)
     out[#out + 1] = text("ref-label", rx, top - 12, "end", spec["ref-label"] or M.fmt(tonumber(spec.ref), spec.unit))
   end
   for i, row in ipairs(rows) do
-    local y = top + (i - 1) * BAND
+    local y = top + (i - 1) * band
+    local by = y + stack
     local v, color = vals[i], color_of(row)
     local label = row[spec.label] .. (spec.series and (" · " .. row[spec.series]) or "")
     local value_text = M.fmt(v, spec.unit, signed)
     local vx = sx(v)
-    local tip = v >= 0 and text("val", vx + 6, y + BAND / 2 + 4.5, "start", value_text)
-      or text("val", vx - 6, y + BAND / 2 + 4.5, "end", value_text)
-    out[#out + 1] = mark(value_text, label, hit(0, y, width, BAND) .. row_label(row[spec.label], y + BAND / 2, gutter)
-      .. bar_path(color, sx(math.max(lo, 0)), vx, y + (BAND - BAR) / 2) .. tip, i)
+    local tip = v >= 0 and text("val", vx + 6, by + BAND / 2 + 4.5, "start", value_text)
+      or text("val", vx - 6, by + BAND / 2 + 4.5, "end", value_text)
+    out[#out + 1] = mark(value_text, label, hit(0, y, width, band) .. row_label(row[spec.label], by + BAND / 2, gutter, y)
+      .. bar_path(color, sx(math.max(lo, 0)), vx, by + (BAND - BAR) / 2) .. tip, i)
   end
   return out, bottom + 28, legend, function(i) return i end
 end
@@ -324,15 +360,21 @@ function DRAW.dumbbell(spec, rows)
   local all = {}
   for i = 1, #rows do all[#all + 1] = a[i]; all[#all + 1] = b[i] end
   local lo, hi, ticks = domain(spec, all, false)
-  local top, bottom = 10, 10 + #rows * BAND
+  local stack, width = NARROW.stack, NARROW.stack > 0 and NARROW_W or W
+  local band = BAND + stack
+  local top, bottom = 10, 10 + #rows * band
   local sx = linear(lo, hi, GUTTER + LABEL_ROOM, W - RIGHT)
+  if stack > 0 then
+    local room = label_room(b, spec.unit)
+    sx = linear(lo, hi, room, width - room)
+  end
   local out = { x_axis(ticks, sx, top, bottom, spec.unit) }
   for i, row in ipairs(rows) do
-    local y = top + (i - 1) * BAND
-    local cy = y + BAND / 2
+    local y = top + (i - 1) * band
+    local cy = y + stack + BAND / 2
     local fx, tx = sx(a[i]), sx(b[i])
     out[#out + 1] = mark(M.fmt(a[i], spec.unit) .. " → " .. M.fmt(b[i], spec.unit), row[spec.label],
-      hit(0, y, W, BAND) .. row_label(row[spec.label], cy)
+      hit(0, y, width, band) .. row_label(row[spec.label], cy, nil, y)
       .. line("link", fx, cy, tx, cy, PAINT.muted) .. dot("c1s", fx, cy) .. dot("c1", tx, cy)
       .. (tx >= fx and text("val", tx + 10, cy + 4.5, "start", M.fmt(b[i], spec.unit))
         or text("val", tx - 10, cy + 4.5, "end", M.fmt(b[i], spec.unit))), i)
@@ -344,11 +386,15 @@ function DRAW.step(spec, rows)
   column(spec, rows, spec.label); column(spec, rows, spec.value)
   local xs, ys = values(spec, rows, spec.label), values(spec, rows, spec.value)
   local lo, hi, ticks = domain(spec, ys, false)
-  local left, top, bottom = 56, 30, 230
+  local narrow = NARROW.stack > 0
+  -- The phone layout drops the plot a line so the last value label clears the axis note.
+  local left, top, bottom = narrow and 44 or 56, narrow and 48 or 30, narrow and 248 or 230
+  local W = narrow and NARROW_W or W
+  local RIGHT = narrow and 34 or RIGHT
   local l2 = function(v) return math.log(v, 2) end
-  local sx = linear(l2(xs[1]), l2(xs[#xs]), left + 24, W - RIGHT)
+  local sx = linear(l2(xs[1]), l2(xs[#xs]), left + (narrow and 14 or 24), W - RIGHT)
   local sy = linear(lo, hi, bottom, top)
-  local out = { text("axis-note", left - 44, 14, "start",
+  local out = { text("axis-note", narrow and 0 or left - 44, 14, "start",
     (spec["axis-label"] or spec.value) .. " (axis starts at " .. M.fmt(lo, spec.unit) .. ")") }
   for _, t in ipairs(ticks) do
     out[#out + 1] = line("grid", left, sy(t), W - RIGHT + 16, sy(t), PAINT.grid)
@@ -381,11 +427,12 @@ function DRAW.strip(spec, rows)
   column(spec, rows, spec.label); column(spec, rows, spec.from); column(spec, rows, spec.to)
   local a = values(spec, rows, spec.from, spec["from-mode"])
   local b = values(spec, rows, spec.to, spec["to-mode"])
-  local out, PANEL = {}, 72
+  local stack = NARROW.stack
+  local out, PANEL = {}, 72 + stack
   local from_name, to_name = spec["from-name"] or spec.from, spec["to-name"] or spec.to
   for i, row in ipairs(rows) do
     local y = 8 + (i - 1) * PANEL
-    local cy = y + 18
+    local cy = y + stack + 18
     local list, from_count = {}, 0
     for _, v in ipairs(type(a[i]) == "table" and a[i] or { a[i] }) do list[#list + 1] = v; from_count = from_count + 1 end
     for _, v in ipairs(type(b[i]) == "table" and b[i] or { b[i] }) do list[#list + 1] = v end
@@ -393,7 +440,8 @@ function DRAW.strip(spec, rows)
     for _, v in ipairs(list) do maxv = math.max(maxv, v) end
     local ticks = M.nice_ticks(0, maxv, 4)
     local sx = linear(0, ticks[#ticks], GUTTER, W - RIGHT)
-    local panel = { row_label(row[spec.label], cy), x_axis(ticks, sx, y + 2, y + 34, nil) }
+    if stack > 0 then sx = linear(0, ticks[#ticks], 14, NARROW_W - 24) end
+    local panel = { row_label(row[spec.label], cy, nil, y), x_axis(ticks, sx, cy - 16, cy + 16, nil) }
     -- Hit areas are 24px wide but stop at the midpoint with the nearest other
     -- point, so close values never steal each other's tooltip.
     local xs = {}
@@ -508,6 +556,18 @@ function M.render(spec, rows)
     fail(spec, "plot-width requires bars and an integer width from 320 to 640")
   end
   local body, height, legend = draw(spec, rows)
+  -- Charts wider than a phone get a second drawing in the phone layout.
+  local narrow_svg = ""
+  if width > NARROW_W and spec.kind ~= "interval" then
+    NARROW.stack = 18
+    local ok, narrow_body, narrow_height = pcall(draw, spec, rows)
+    NARROW.stack = 0
+    if not ok then error(narrow_body, 0) end
+    -- It ships in a <template>; site.js swaps it in at phone widths, so only one
+    -- drawing is ever in the document and the wide one remains without scripts.
+    narrow_svg = string.format('<template class="chart-narrow"><svg class="chart-narrow" viewBox="0 0 %d %s" width="%d" height="%s" role="group" aria-label="%s">%s</svg>',
+      NARROW_W, num(narrow_height), NARROW_W, num(narrow_height), esc(summary(spec, rows)), table.concat(narrow_body)) .. "</template>"
+  end
   local keys = { "c1", "c2" }
   if spec.kind == "dumbbell" then keys = { "c1s", "c1" } end
   local legend_html = ""
@@ -523,9 +583,10 @@ function M.render(spec, rows)
     .. '" aria-label="View exact values for ' .. esc(spec.title or "Chart") .. '">View exact values</a></p>') or ""
   return string.format('<figure class="chart chart-%s"><figcaption class="chart-title"%s>%s</figcaption>%s'
     .. '<div class="chart-body" tabindex="0" role="group" aria-label="%s">'
-    .. '<svg viewBox="0 0 %d %s" width="%d" height="%s" role="group" aria-label="%s">%s</svg></div>%s</figure>',
-    spec.kind, title_attr, esc(spec.title or ""), legend_html, esc((spec.title or "Chart") .. ", scrollable"),
-    width, num(height), width, num(height), esc(summary(spec, rows)), table.concat(body), tools)
+    .. '<svg viewBox="0 0 %d %s" width="%d" height="%s" role="group" aria-label="%s">%s</svg></div>%s%s</figure>',
+    spec.kind, title_attr, esc(spec.title or ""), legend_html,
+    esc((spec.title or "Chart") .. ", scrollable"),
+    width, num(height), width, num(height), esc(summary(spec, rows)), table.concat(body), narrow_svg, tools)
 end
 
 -- ------------------------------------------------------------------- filter
