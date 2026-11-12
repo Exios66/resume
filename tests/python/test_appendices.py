@@ -72,5 +72,14 @@ def test_appendix_numbers_sitemap_and_no_images():
 def test_mailroom_ml_appendix_separates_script_from_flags():
     """Keep the long script path and its flags in separate settings rows."""
     _, parser = page("mailroom-ml")
-    text = " ".join("".join(data for data, _ in parser.text_fragments).split())
-    assert "Reported by training/eval/eval_modernbert.py Flags --subset test --sample 0" in text
+    cells = [(attrs, ancestors) for tag, attrs, ancestors in parser.elements if tag == "td"]
+
+    def row(label):
+        matches = [(attrs, ancestors) for attrs, ancestors in cells if parser.text(attrs) == label]
+        assert len(matches) == 1, (label, len(matches))
+        _, ancestors = matches[0]
+        row_attrs = next(attrs for tag, attrs in reversed(ancestors) if tag == "tr")
+        return [parser.text(attrs) for tag, attrs in parser.children(row_attrs) if tag == "td"]
+
+    assert row("Reported by") == ["Reported by", "training/eval/eval_modernbert.py"]
+    assert row("Flags") == ["Flags", "--subset test --sample 0"]
