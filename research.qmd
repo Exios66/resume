@@ -7,6 +7,17 @@ description: "Cognitive neuroscience research on chatbot truth, deception, and c
 
 # Research {.page-title}
 
+## Graduate research at UW–Madison
+
+[M.S. in Psychology: Data Science in Human Behavior · August 2025 – expected December 2026 · GPA 3.85]{.kicker}
+
+Roughly 95% of the program's coursework is data science and data engineering, pairing behavioral-science training with the computer science toolchain: statistical modeling; machine learning with transformer fine-tuning and LLM evaluation; and large-scale data systems with Spark, SQL, Parquet, Docker, and gRPC services.
+
+- The [Digital-Mailroom](projects/digital-mailroom.qmd) capstone with American Family Insurance (February 2026 – present) routes each document in a stream to the cheapest step that can handle it: five Python packages and one LangGraph pipeline for routing, prompt experiments, deterministic scoring, and deployment, built on a dataset assembled from public sources.
+- The [Psychometric Digital Twin](projects/psychometric-digital-twin.qmd) study (PSYCH 755, Summer 2026) compares seven classical machine learning models against LLM personas predicting survey respondents' own communication-apprehension scores, with errors checked by demographic group.
+- The [AI Terrarium Digital Twin](https://github.com/Exios66/ai_terrarium_digital_twin-jjb-v2) (Spring 2026, private code) is a Python library that turns structured survey responses into section- and subsection-level persona prompts for LLM evaluation, with batch inference on vLLM, Transformers, and the Claude API and token-cost estimation.
+- [MapReduce-Reloaded](projects/mapreduce-reloaded.qmd) (CS 544 Honors, Fall 2026, in active development) is a from-scratch Go rebuild of Google's MapReduce with a Python reference implementation, a shared gRPC contract, object storage, compression, fault tolerance, and a small-scale VM evaluation.
+
 ## Cognitive Neuroscience Lab, UW–Parkside
 
 [Undergraduate Researcher · Jun 2024 – Aug 2025 · Advisor: Dr. Melissa Gregg]{.kicker}
@@ -14,13 +25,6 @@ description: "Cognitive neuroscience research on chatbot truth, deception, and c
 - Designed and pilot-tested a study of perceptions of chatbot truth, deception, and user cognitive workload. See the [case study and technical report](projects/natd.qmd) on *The Neural Architecture of Truth and Deception*.
 - Ran EEG systems and analyzed neural time-series data to measure brain activity, adding signal-processing and statistical analysis to existing lab research on sleep quality and cognitive load.
 - Presented findings at the 2025 Midwestern Psychological Association conference in Chicago and at Research in the Rotunda.
-
-## Graduate research at UW–Madison
-
-[M.S. in Psychology: Data Science in Human Behavior · expected Dec 2026]{.kicker}
-
-- The [Psychometric Digital Twin](projects/psychometric-digital-twin.qmd) study compares machine learning models and LLM personas on behavioral prediction.
-- The [Digital-Mailroom](projects/digital-mailroom.qmd) capstone applies applied-AI methods to document processing with an industry partner.
 
 ## Research training
 
