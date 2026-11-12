@@ -8,7 +8,7 @@ Read `AGENTS.md`, `.github/BUILDING.md`, `scripts/hillclimb/README.md`, this fil
 
 #146, #147 and #148 merged to main on 2026-11-12 (merge commits `21ecacc`, `d743cb8`, `2b11221`). The private-research wording, RVL-CDIP hosted-study links and lead-capture/image-loading behavior are all in main; keep them when re-rendering.
 
-Next priority: #120 social cards, #121 display titles/layout, #118 motif signoff, residual #122–#125 tasks, and #126 ledger/benchmark support. The older batch notes below describe historical contributions. #138–#142 and #145–#148 have since merged; #130, #136, #137 and #119 are closed with evidence. #114 is closed after its remaining content shipped in #146. #144 is another open PR with phone chart/header and full-size raster-link changes; this branch does not duplicate those features.
+Next priority: #120 social cards, #121 display titles/layout, #118 motif signoff, residual #122–#125 tasks, and #126 ledger/benchmark support. The older batch notes below describe historical contributions. #138–#142 and #145–#148 have since merged; #130, #136, #137 and #119 are closed with evidence. #114 is closed after its remaining content shipped in #146. #144 is another open PR with phone chart/header and full-size raster-link changes; shipped #148 does not duplicate those features.
 
 ## Implemented batch
 
@@ -21,13 +21,13 @@ Evidence from review follow-up is under `.10x/reviews/pr-review-followup/`; diag
 ## Remaining work and boundaries
 
 - The approved design remains `.10x/specs/2026-11-10-portfolio-experience-v2-design.md`. Owner priority is Track 1 first. #118 retains motif redraw/signoff work; diagram collision repair does not complete that visual review.
-- #119 is implemented on this unmerged branch, with real lead screenshots, intrinsic dimensions/lazy loading and delayed-image geometry checks. #120 still needs project-specific social cards and owner review; set matching image-alt when adding image front matter.
+- #119 shipped in #148, with real lead screenshots, intrinsic dimensions/lazy loading and delayed-image geometry checks. #120 still needs project-specific social cards and owner review; set matching image-alt when adding image front matter.
 - #121 display titles and remaining layout decisions need the owner. Do not invent replacements or project results.
 - #123 slash shortcut is implemented, but the phone header, full active section rail, category/filter work and motif-bearing project pager are not completed by this batch. Existing report/appendix TOCs and plain project pager links should not be rebuilt blindly.
 - #124 has the diagram regression and #115 recording contribution; chart conversions, new chart kinds and other visualisations remain. Existing chart restyles require the owner's draft review as specified in #124.
 - #125 structured data, transfer budgets and secondary-engine setup/tests are implemented. Broader content, forced-colour coverage and owner phone/tablet checks remain; close only the shipped subtasks.
 - #122 video behavior now follows live reduced motion, visibility and manual pause. This does not complete the roadmap's motion scale, transitions, motif/chart animation or print/forced-colour matrix.
-- #126 is at experience_gaps=19 on this unmerged #119 branch (124 on its main base). Ledger PRIMARY is hardcoded to polish_defects and the benchmark does not append KPI output. Changing a segment label does not solve this. Plan a separate tested tooling change before experience-scored loops.
+- #126 is at experience_gaps=19 on main (124 before #148). Ledger PRIMARY is hardcoded to polish_defects and the benchmark does not append KPI output. Changing a segment label does not solve this. Plan a separate tested tooling change before experience-scored loops.
 - #130 and #137 were completed by #138; #136 was completed by #142. The issue closures cite their evidence.
 
 ## Verification and shipping
