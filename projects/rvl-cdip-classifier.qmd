@@ -8,7 +8,7 @@ description: "A prompt-engineering study that sorts scanned documents into the 1
 [← All projects](index.qmd){.back}
 
 ::: {.project-nav}
-[Case study](rvl-cdip-classifier.qmd){aria-current="page"} [Technical report](rvl-cdip-classifier/report.qmd) [Appendix](rvl-cdip-classifier/appendix.qmd) [Code](https://github.com/Exios66/RVL-CDIP-Classifier)
+[Case study](rvl-cdip-classifier.qmd){aria-current="page"} [Technical report](rvl-cdip-classifier/report.qmd) [Appendix](rvl-cdip-classifier/appendix.qmd) [Code](https://github.com/Exios66/RVL-CDIP-Classifier) [Live site](https://019fd440-9bbf-1a22-cf30-a36183d9c7d4.share.connect.posit.cloud/)
 :::
 
 # RVL-CDIP-Classifier {.page-title}
@@ -33,6 +33,8 @@ description: "A prompt-engineering study that sorts scanned documents into the 1
 :::
 
 The 29-version registry includes subversions such as `v11.8` and `v17.2`; “v0 to v19” names the endpoints, not 20 consecutive integer-only entries.
+
+This study preceded and sparked the [Digital-Mailroom capstone](digital-mailroom.qmd). The [hosted research site](https://019fd440-9bbf-1a22-cf30-a36183d9c7d4.share.connect.posit.cloud/) brings together the manuscript, methods, experiment logs and interactive tools.
 
 ## The problem
 
@@ -111,7 +113,7 @@ I also mined the reasoning traces for the words that appear when the model stops
 
 The repository ships the tooling I used to look at the data and to watch the runs, and a Quarto site that pulls the results together. The site renders offline with no model spend.
 
-- **[The Quarto documentation site](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website)** has the manuscript, methods, results and experiment logs, the prompt changelog, cost analysis, short research memos, notebooks and a misclassification appendix.
+- **[The Quarto documentation source](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website)** has the manuscript, methods, results and experiment logs, the prompt changelog, cost analysis, short research memos, notebooks and a misclassification appendix.
 - **[Monte Carlo pages](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/montecarlo)** are ten pages covering the analyses behind this section, and the **[raw reports](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/reports/monte_carlo)** hold the tables, including voting, routing, prompt ablation, the failure model, exemplar mining and the word analysis.
 - **[Interactive pages](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/website/interactive)** include a cost calculator and an experiment explorer.
 - **[Data exploration scripts](https://github.com/Exios66/RVL-CDIP-Classifier/tree/main/scripts/eda)** profile the dataset: class balance, image dimensions, file sizes, color modes and sample grids.

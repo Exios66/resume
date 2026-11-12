@@ -38,6 +38,12 @@ UUID_PATTERN = re.compile(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0
                           re.IGNORECASE)
 FORBIDDEN_TEXT = ("connect.posit.cloud", "braintrust.dev/app")
 FORBIDDEN_UPPERCASE = ("AMFAM",)
+# Owner-approved public study, verified through the source repo's homepage and
+# an unauthenticated browser visit. Keep the exception to this exact root URL;
+# other Posit deployments, UUIDs, suffixes and query strings remain forbidden.
+PUBLIC_STUDY_URL = "https://019fd440-9bbf-1a22-cf30-a36183d9c7d4.share.connect.posit.cloud/"
+PUBLIC_STUDY_PATTERN = re.compile(
+    r"(?<![A-Za-z0-9:/?=&._-])" + re.escape(PUBLIC_STUDY_URL) + r"(?=[\s\"'<>]|$)")
 
 
 class PageParser(HTMLParser):
@@ -223,6 +229,7 @@ class RenderedSiteTests(unittest.TestCase):
         for page in site_files(suffixes=TEXT_SUFFIXES, include_libs=False):
             source = page.read_text(encoding="utf-8")
             for form, text in scan_variants(source).items():
+                text = PUBLIC_STUDY_PATTERN.sub(lambda match: " " * len(match.group()), text)
                 found = []
                 for match in EMAIL_PATTERN.finditer(text):
                     address = match.group(0).lower()

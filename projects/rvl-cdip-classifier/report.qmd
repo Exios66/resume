@@ -7,12 +7,14 @@ description: "Method, iteration history, results and limits of a prompt-only, ze
 
 
 ::: {.project-nav}
-[Case study](../rvl-cdip-classifier.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/RVL-CDIP-Classifier)
+[Case study](../rvl-cdip-classifier.qmd) [Technical report](report.qmd){aria-current="page"} [Appendix](appendix.qmd) [Code](https://github.com/Exios66/RVL-CDIP-Classifier) [Live site](https://019fd440-9bbf-1a22-cf30-a36183d9c7d4.share.connect.posit.cloud/)
 :::
 
 # RVL-CDIP-Classifier: technical report {.page-title}
 
 [Zero-shot document classification · prompt engineering · cost and robustness analysis]{.kicker}
+
+This study preceded and sparked the [Digital-Mailroom capstone](../digital-mailroom.qmd). The [hosted research site](https://019fd440-9bbf-1a22-cf30-a36183d9c7d4.share.connect.posit.cloud/) brings together the manuscript, methods, experiment logs and interactive tools.
 
 ## Summary
 
