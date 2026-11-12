@@ -7,6 +7,13 @@ description: "Cognitive neuroscience research on chatbot truth, deception, and c
 
 # Research {.page-title}
 
+## Graduate research at UW–Madison
+
+[M.S. in Psychology: Data Science in Human Behavior · expected Dec 2026]{.kicker}
+
+- The [Psychometric Digital Twin](projects/psychometric-digital-twin.qmd) study compares machine learning models and LLM personas on behavioral prediction.
+- The [Digital-Mailroom](projects/digital-mailroom.qmd) capstone applies applied-AI methods to document processing with an industry partner.
+
 ## Cognitive Neuroscience Lab, UW–Parkside
 
 [Undergraduate Researcher · Jun 2024 – Aug 2025 · Advisor: Dr. Melissa Gregg]{.kicker}
@@ -14,13 +21,6 @@ description: "Cognitive neuroscience research on chatbot truth, deception, and c
 - Designed and pilot-tested a study of perceptions of chatbot truth, deception, and user cognitive workload. See the [case study and technical report](projects/natd.qmd) on *The Neural Architecture of Truth and Deception*.
 - Ran EEG systems and analyzed neural time-series data to measure brain activity, adding signal-processing and statistical analysis to existing lab research on sleep quality and cognitive load.
 - Presented findings at the 2025 Midwestern Psychological Association conference in Chicago and at Research in the Rotunda.
-
-## Graduate research at UW–Madison
-
-[M.S. in Psychology: Data Science in Human Behavior · expected Dec 2026]{.kicker}
-
-- The [Psychometric Digital Twin](projects/psychometric-digital-twin.qmd) study compares machine learning models and LLM personas on behavioral prediction.
-- The [Digital-Mailroom](projects/digital-mailroom.qmd) capstone applies applied-AI methods to document processing with an industry partner.
 
 ## Research training
 
