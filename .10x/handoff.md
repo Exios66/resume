@@ -8,7 +8,7 @@ Read `AGENTS.md`, `.github/BUILDING.md`, `scripts/hillclimb/README.md`, this fil
 
 #146, #147 and #148 merged to main on 2026-11-12 (merge commits `21ecacc`, `d743cb8`, `2b11221`). The private-research wording, RVL-CDIP hosted-study links and lead-capture/image-loading behavior are all in main; keep them when re-rendering.
 
-Next priority: #120 social cards, #121 display titles/layout, #118 motif signoff, residual #122–#125 tasks, #126 ledger/benchmark support, and #153 ELIZA-Terminal refinement for Parkside inclusion. The older batch notes below describe historical contributions. #138–#142 and #145–#148 have since merged; #130, #136, #137 and #119 are closed with evidence. #114 is closed after its remaining content shipped in #146. #144 is another open PR with phone chart/header and full-size raster-link changes; shipped #148 does not duplicate those features.
+Next priority: #120 social cards, #121 display titles/layout, #118 motif signoff, residual #122–#125 tasks, #126 milestones (its experience-scored ledger/benchmark tooling is shipped; start the experience segment and baseline before experience-scored keeps), and #153 ELIZA-Terminal refinement for Parkside inclusion. The older batch notes below describe historical contributions. #138–#142 and #145–#148 have since merged; #130, #136, #137 and #119 are closed with evidence. #114 is closed after its remaining content shipped in #146. #144 is another open PR with phone chart/header and full-size raster-link changes; shipped #148 does not duplicate those features.
 
 ## Implemented batch
 

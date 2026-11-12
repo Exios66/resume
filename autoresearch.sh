@@ -20,3 +20,6 @@ rm -f render.err
 
 AXE_PATH="$TOOLS/node_modules/axe-core/axe.min.js" node autoresearch.audit.cjs 2>audit.details.json
 echo "METRIC render_s=$render_s"
+# Experience KPIs read the same rendered docs/, so one benchmark prints both metric
+# sets and the ledger can score experience_gaps against a polish_defects gate.
+python3 scripts/hillclimb/kpi.py
