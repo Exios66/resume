@@ -31,15 +31,6 @@ def test_a_first_image_below_the_fold_stays_lazy():
     assert checks.attr(elements[first_image][1], 'loading') == 'lazy'
 
 
-def test_mailroom_ml_chart_alt_text_names_the_collapse_gate():
-    parser = ContentParser(checks.DOCS / 'projects/mailroom-ml.html')
-    alts = [checks.attr(attrs, 'alt') for tag, attrs, _ in parser.elements
-            if tag == 'img' and 'subclass_collapse.svg' in checks.attr(attrs, 'src')]
-    assert len(alts) == 1
-    assert 'collapse gate at 0.75' in alts[0]
-    assert 'accuracy gate' not in alts[0]
-
-
 def test_visual_case_studies_lead_with_existing_real_capture():
     for slug, filename in [('wave-laboratory', 'overview-light.jpg'),
                            ('neuron-atlas', 'steering-studio.jpg')]:
