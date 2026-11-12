@@ -20,7 +20,7 @@ All render/audit commands sourced `.autoresearch-tools/env.sh`.
 - `"$QUARTO" pandoc lua tests/lua/test_site.lua`: passed, including local dimensions, lead/below-heading loading, per-document reset, missing-image failure and external-image no-I/O behavior.
 - `.venv/bin/python -m pytest -q tests/python/test_image_loading.py`: 3 passed; checks every published content image, both lead positions, the below-fold first image, and the Mailroom-ML collapse-gate alt text.
 - `RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q tests/browser/test_browser.py -k lead_capture`: 12 passed, 75 deselected. Actual image responses are held until geometry is measured, then released and decoded. At 375/768/1280 in both themes, neither image dimensions nor the following element's position changes by a CSS pixel. Both lead images match their natural aspect ratio and the pages do not overflow horizontally.
-- `bash autoresearch.checks.sh`: All checks passed. Both Lua suites; 28 Node tests; 310 Python/browser tests and 686 subtests, 111.38 s. No cases skipped or deselected in this full run. Most assertions use Chromium; Firefox/WebKit cases target charts and recording behavior.
+- `bash autoresearch.checks.sh`: All checks passed. Both Lua suites; 28 Node tests; 311 Python/browser tests and 691 subtests, 114.96 s. No cases skipped or deselected in this full run. Most assertions use Chromium; Firefox/WebKit cases target charts and recording behavior.
 - `.venv/bin/python scripts/hillclimb/kpi.py`: experience_gaps 124 on main → 19 here; images_without_size=0, later_images_not_lazy=0, pages_over_budget=0. Remaining gaps: 14 project social cards and 5 repository-style display titles. This does not close #126.
 - Source and published résumé PDFs checked with pypdf: both exactly two pages.
 - `git diff --check`: clean.
@@ -49,3 +49,7 @@ No real phones/tablets, screen readers, live deployment, or full Firefox/WebKit 
   it called `img.decode()` before the image request had started. The test now
   waits for `complete` and a non-zero `naturalWidth` before decoding; both
   engine cases pass.
+
+## Integration with merged main
+
+After merging main (`21ecacc` for #146 and `d743cb8` for #147), a full render kept the Research page's private-repository wording, the RVL-CDIP hosted-study links, and the MapReduce page at 18,997 compressed bytes. The full gate above was rerun on the merged branch; the KPI remains `experience_gaps=19`, `images_without_size=0`, `later_images_not_lazy=0`, `pages_over_budget=0`.

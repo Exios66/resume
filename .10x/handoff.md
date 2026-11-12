@@ -6,9 +6,9 @@ Read `AGENTS.md`, `.github/BUILDING.md`, `scripts/hillclimb/README.md`, this fil
 
 This branch prepares #119; it is not shipped. See `.10x/reviews/issue119/` for actual evidence and exact check results. It moves existing Wave Laboratory and Neuron Atlas captures above the opening content and sizes local content images from their headers in `site.lua`, with lead-image eager loading above the first section heading and lazy loading elsewhere. Built-branch `experience_gaps=19`; this does not mean #126 is complete.
 
-#146 and #147 are independent pending PRs based on main. #146 holds scholarship/course-tag/private-research wording (AI Terrarium and Alignment-Gym stay on Research only). #147 links the hosted RVL-CDIP study. Do not lose their changes when integrating generated output; re-render sources after merges.
+#146 and #147 merged to main on 2026-11-12 (merge commits `21ecacc` and `d743cb8`). This branch is rebased on that main; keep the private-research wording and RVL-CDIP hosted-study links when re-rendering.
 
-The older batch notes below describe historical contributions. #138–#142 and #145 have since merged; #130, #136 and #137 are closed with evidence. #114 remains open for the pending content in #146. #144 is another open PR with phone chart/header and full-size raster-link changes; this branch does not duplicate those features.
+The older batch notes below describe historical contributions. #138–#142 and #145–#147 have since merged; #130, #136 and #137 are closed with evidence. #114 is closed after its remaining content shipped in #146. #144 is another open PR with phone chart/header and full-size raster-link changes; this branch does not duplicate those features.
 
 ## Implemented batch
 

@@ -219,6 +219,19 @@ class ValidatorTests(TemporarySiteTestCase):
         self.write("site_libs/vendor.svg", "author@example.net")
         self.run_check("test_no_forbidden_strings")
 
+    def test_forbidden_scan_accepts_only_the_approved_public_study_url(self):
+        url = checks.PUBLIC_STUDY_URL
+        self.page.write_text(f'<a href="{url}">Hosted study</a>', encoding="utf-8")
+        self.run_check("test_no_forbidden_strings")
+        for value in (url + '?private=1', url + 'other.html',
+                      url.replace('019fd440', '119fd440'),
+                      'https://private.example/' + url,
+                      '019fd440-9bbf-1a22-cf30-a36183d9c7d4'):
+            with self.subTest(value=value):
+                self.page.write_text(f'<a href="{value}">Other</a>', encoding="utf-8")
+                with self.assertRaisesRegex(AssertionError, "forbidden strings in rendered site"):
+                    self.run_check("test_no_forbidden_strings")
+
     def test_forbidden_scan_rejects_raw_encoded_and_tag_split_sensitive_text(self):
         for text in ('author@example.net', 'author&#64;example.net', 'author%40example.net',
                      'author@<b>example</b>.net', '12345678-1234-ABCD-9876-1234567890AB',
