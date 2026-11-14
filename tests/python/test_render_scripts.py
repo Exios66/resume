@@ -85,6 +85,11 @@ class PostRenderTests(unittest.TestCase):
         vector = '<p><img src="figures/plot.svg" class="fig img-fluid" alt="A plot."></p>'
         self.assertEqual(link(vector), vector)
         self.assertIn('href="a/b.png"', link('<img src="a/b.png" class="fig img-fluid" alt="">'))
+        # Attribute order and the class list vary with Quarto and the site filters.
+        lead = '<img src="f/lead.jpg" class="fig" loading="eager" decoding="async" alt="x" width="1200" height="750">'
+        self.assertEqual(link(lead), '<a class="fig-zoom" href="f/lead.jpg" title="Open full size">' + lead + '</a>')
+        self.assertIn('href="f/c.jpg"', link('<img class="fig" alt="" src="f/c.jpg">'))
+        self.assertEqual(link('<img src="f/x.jpg" class="figure-img" alt="">'), '<img src="f/x.jpg" class="figure-img" alt="">')
 
     def test_sprite_keeps_only_the_icons_a_page_uses(self):
         prune = POST["prune_sprite"]

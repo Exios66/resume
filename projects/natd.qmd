@@ -22,7 +22,7 @@ A pilot study from the Cognitive Neuroscience Lab at UW–Parkside, advised by D
 :::
 
 ::: {.caveat}
-**Pilot study.** Physiological, EEG and eye-tracking recordings are withheld until they are authenticated; this page covers the helpful-versus-deceitful results.
+**Pilot stage.** This pilot precedes a much more extensive study that also records eye-tracking, EEG and physiological signals; those recordings are withheld until they are authenticated. This page covers the helpful-versus-deceitful results.
 :::
 
 ## At a glance
@@ -83,6 +83,10 @@ Helpful sessions also started 18 points lower (33.6% against 52.0%), so part of 
 Replicate with more participants and balanced persona assignment, randomize persona order, and record item-level exam data and how false each persona's output was, then fit mixed-effects models with participant random intercepts.
 
 The technical report has the literature review, the full method, every table, the cluster analysis and the references with how far each was verified.
+
+## Study materials
+
+I built the interfaces that administered the study's intake demographics questions. The [Dark Triad Assessments](https://exios66.github.io/dark-triad-assessments/) (personality inventories including SDT3, the Dirty Dozen, SDT4, MACH IV, HEXACO and OCEAN) were utilized study materials, and the [Knowledge Assessment Quiz](https://exios66.github.io/Intro-Knowledge-Quiz/) — a 15-question knowledge survey across geography, chemistry, history, literature, astronomy, psychology and more — was one of the knowledge assessments administered across the study.
 
 ## Methods and tools
 

@@ -548,11 +548,66 @@ local function project_schema(path, doc)
   return '<script type="application/ld+json">' .. table.concat(parts) .. "</script>"
 end
 
+-- Reserve each local image's real aspect ratio before it downloads. Read source
+-- bytes only: external images must never cause network requests during a build.
+-- Only a lead image above the first section heading loads eagerly; figures that
+-- begin below the fold stay lazy even when they are the page's first image.
+function prepare_content_image(image, eager)
+  image.attributes.loading = eager and "eager" or "lazy"
+  image.attributes.decoding = "async"
+  local src = image.src
+  if src:match("^[%w+.-]+:") or src:match("^//") then return image end
+  src = src:gsub("[?#].*$", ""):gsub("%%(%x%x)", function(hex)
+    return string.char(tonumber(hex, 16))
+  end)
+  local input = quarto.doc.input_file or ""
+  local root = quarto.project.directory or "."
+  local file
+  if src:sub(1, 1) == "/" then
+    file = root .. src
+  else
+    local directory = input:match("^(.*)/[^/]*$") or "."
+    file = directory .. "/" .. src
+  end
+  local handle, reason = io.open(file, "rb")
+  if not handle then error("Cannot read content image " .. file .. ": " .. tostring(reason)) end
+  local bytes = handle:read("*a")
+  handle:close()
+  local ok, size = pcall(pandoc.image.size, bytes)
+  if not ok or not size or not size.width or not size.height
+      or size.width <= 0 or size.height <= 0 then
+    error("Cannot determine intrinsic size of content image " .. file)
+  end
+  image.attributes.width = tostring(math.floor(size.width + 0.5))
+  image.attributes.height = tostring(math.floor(size.height + 0.5))
+  return image
+end
+
 --- Wrap the document in the site header, main landmark, and footer.
 -- Navigation links are relative to the page; the current section gets aria-current.
 -- @param doc Pandoc Document whose blocks will be modified in place.
 -- @return Pandoc The modified document.
 function Pandoc(doc)
+  local images = 0
+  local lead = true
+
+  local function process(block)
+    if block.t == "Header" and block.level >= 2 then lead = false end
+    if block.t == "Div" then
+      for i, child in ipairs(block.content) do
+        block.content[i] = process(child)
+      end
+      return block
+    end
+    return pandoc.walk_block(block, { Image = function(image)
+      images = images + 1
+      return prepare_content_image(image, images == 1 and lead)
+    end })
+  end
+
+  for i, block in ipairs(doc.blocks) do
+    doc.blocks[i] = process(block)
+  end
   if doc.walk then doc = doc:walk(DECORATE) end
   local path = page_path()
   local _, depth = path:gsub("/", "")

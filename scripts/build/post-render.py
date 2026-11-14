@@ -264,7 +264,7 @@ def seat_footnote_pages():
             page.write_text(fixed, encoding="utf-8")
 
 
-RASTER_FIGURE = re.compile(r'(?<!title="Open full size">)<img src="([^"]+\.(?:jpe?g|png))" class="fig img-fluid"[^>]*>')
+RASTER_FIGURE = re.compile(r'(?<!title="Open full size">)<img\b(?=[^>]*\bclass="(?:[^"]*\s)?fig(?:\s[^"]*)?")[^>]*\bsrc="([^"]+\.(?:jpe?g|png))"[^>]*>')
 
 
 def link_raster_figures(text):

@@ -15,6 +15,8 @@ description: "A real-time 3D ocean-wave and ship-motion sandbox that runs in the
 
 [Side project · simulation & graphics]{.kicker}
 
+![The lab with its default moderate sea: a container ship under way, with scene tree, sea-state readout and instrument dock.](wave-laboratory/figures/overview-light.jpg){.fig fig-alt="The Wave Laboratory app in its light theme. A container ship leaves a white wake on a blue-green sea in the central 3D view, with a round chart overlay. A scene list is on the left, a sea-state panel with significant wave height, wind and depth is on the right, and playback controls and chart tabs run along the bottom." width="100%"}
+
 ::: {.actions}
 [Launch the lab](https://exios66.github.io/wave-laboratory/){.btn .primary}
 :::
@@ -59,8 +61,6 @@ Ships float by pressure integration: for each moment, the simulation sums the wa
 - **Phones and accessibility.** A phone layout with panel switching and touch targets of at least 44 px, except the camera controls drawn on top of the 3D view, which stay shorter so they do not cover the sea (the stylesheet sets them to 32 px). It also has light and dark themes, keyboard operation and WCAG 2.2 AA contrast. Accessibility is checked with axe in the browser tests on desktop and phone-sized viewports.
 
 ## Results
-
-![The lab with its default moderate sea: a container ship under way, with scene tree, sea-state readout and instrument dock.](wave-laboratory/figures/overview-light.jpg){.fig fig-alt="The Wave Laboratory app in its light theme. A container ship leaves a white wake on a blue-green sea in the central 3D view, with a round chart overlay. A scene list is on the left, a sea-state panel with significant wave height, wind and depth is on the right, and playback controls and chart tabs run along the bottom." width="100%"}
 
 ![The rogue-wave preset: a container ship in a storm sea, with a focused NewWave crest due at a gauge 380 m ahead.](wave-laboratory/figures/rogue-wave.jpg){.fig fig-alt="The app in its dark theme following a container ship through a rough blue sea with white wake and rain. The sea-state panel explains a focused wave group with a 12 m crest in an 8 m significant-height sea, peaking at t = 75 seconds." width="100%"}
 

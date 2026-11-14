@@ -15,6 +15,8 @@ description: "A browser-based language-model neuron explorer: live TinyStories s
 
 [Mechanistic interpretability · interactive visualization & evaluation]{.kicker}
 
+![The TinyStories atlas and steering inspector for layer 4, neuron 803.](neuron-atlas/figures/steering-studio.jpg){.fig fig-alt="Neuron Atlas in a dark theme: a Three.js map of stacked model layers beside the inspector for layer 4 neuron 803. Its steering tab has a story prompt, a push-strength slider and random-direction controls. The inspector ranks this neuron first of 8,192 on the recorded theme score." width="100%"}
+
 Push one neuron and watch the story change. Neuron Atlas maps a small language model's feed-forward neurons, lets you intervene in its computation, and compares the effect with random pushes of the same size. The goal is not just an interesting picture: it is a finding someone else can inspect and replay.
 
 ::: {.actions}
@@ -46,8 +48,6 @@ The steering-first method builds on [neuron-explorer](https://github.com/lyramak
 - **An offline measurement pipeline.** Python builds the atlas, calibrates push strengths by layer, sweeps every TinyStories neuron and scores the text against matched random-direction controls. The browser replays recorded examples with the same prompt and push.
 - **Recorded model studies.** Qwen3.5-0.8B (86,016 neurons) and a Qwen2.5-0.5B bad-medical-advice fine-tune (116,736 neurons) can be explored as recorded data. These models do not run live in the browser.
 - **Verification and failure handling.** The repository checks the TypeScript runtime against PyTorch and includes browser tests for navigation, replay, accessibility, phone layouts, blocked storage and failed downloads. These are upstream checks, not a claim that I reran their full suite for this portfolio page.
-
-![The TinyStories atlas and steering inspector for layer 4, neuron 803.](neuron-atlas/figures/steering-studio.jpg){.fig fig-alt="Neuron Atlas in a dark theme: a Three.js map of stacked model layers beside the inspector for layer 4 neuron 803. Its steering tab has a story prompt, a push-strength slider and random-direction controls. The inspector ranks this neuron first of 8,192 on the recorded theme score." width="100%"}
 
 ## What the controls changed
 

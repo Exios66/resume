@@ -13,7 +13,9 @@
 #   hc.sh log <status> "<what>" ['<asi>']     append the run to autoresearch.jsonl (keep is refused without evidence)
 #   hc.sh discard                             revert the last experiment commit (log it first)
 #   hc.sh findings [file]                     list every scored finding on the current docs/ (no render)
-#   hc.sh segment "<name>"                    start a new segment after changing the audit
+#   hc.sh segment "<name>" [--metric name --gate name=limit]
+#                                             start a new segment; --metric scores that metric, --gate refuses
+#                                             keeps that exceed the limit (for example polish_defects=0)
 #   hc.sh snapshot                            copy session files and evidence records into .autoresearch/ to commit
 #   hc.sh restore                             copy .autoresearch/ back to the living files (fresh clone)
 #
@@ -193,7 +195,7 @@ case "${1:-}" in
       { echo "AUDIT FAILED (see audit.details.json)"; exit 1; }
     cut -f4 "$out" | sort | uniq -c | sort -rn
     echo "every finding (width, theme, page, kind, where): $out" ;;
-  segment) ledger segment "$2" ;;
+  segment) shift; ledger segment "$@" ;;
   snapshot)
     mkdir -p "$SNAP/evidence"
     for pair in autoresearch.md:session-notes.md autoresearch.ideas.md:ideas-backlog.md autoresearch.jsonl:session-log.jsonl; do

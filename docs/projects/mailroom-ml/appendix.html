@@ -127,10 +127,6 @@ ul.task-list li input[type="checkbox"] {
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#evaluation-protocol">Evaluation protocol</a></li><li><a href="#headline-metrics">Headline metrics</a></li><li><a href="#release-gates">Release gates</a></li><li><a href="#per-head-results">Per-head results</a></li><li><a href="#cohorts-and-selective-risk">Cohorts and selective risk</a></li><li><a href="#test-split-composition">Test-split composition</a></li><li><a href="#sources">Sources</a></li><li><a href="#scope">Scope</a></li></ul></nav>
 <h2 id="evaluation-protocol">Evaluation protocol</h2>
 <table class="caption-top stack" role="table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
 <thead>
 <tr class="header" role="row">
 <th role="columnheader">Setting</th>
@@ -160,7 +156,11 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Setting">Reported by</td>
-<td role="cell" data-label="Value"><code>training/</code><wbr><code>eval/</code><wbr><code>eval_</code><wbr><code>modernbert.</code><wbr><code>py</code>, <code>--</code><wbr><code>subset test --</code><wbr><code>sample 0</code></td>
+<td role="cell" data-label="Value"><code>training/</code><wbr><code>eval/</code><wbr><code>eval_</code><wbr><code>modernbert.</code><wbr><code>py</code></td>
+</tr>
+<tr class="odd" role="row">
+<td role="cell" data-label="Setting">Flags</td>
+<td role="cell" data-label="Value"><code>--subset test --sample 0</code></td>
 </tr>
 </tbody>
 </table>

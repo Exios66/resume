@@ -25,7 +25,8 @@ These tables support the [Mailroom-ML case study](../mailroom-ml.qmd). Every num
 | Documents | 323 held-out test documents |
 | Windows | 541 (8,192 tokens, 512-token overlap) |
 | Seed | 42 |
-| Reported by | `training/eval/eval_modernbert.py`, `--subset test --sample 0` |
+| Reported by | `training/eval/eval_modernbert.py` |
+| Flags | `--subset test --sample 0` |
 
 Training configuration for this arm: 6 epochs, batch 8 with gradient accumulation 4, learning rate 2e-5, subclass-head learning rate 1e-3, document-type loss weight 0.5, logit adjustment 0.5, label smoothing 0.05, warmup fraction 0.06.
 

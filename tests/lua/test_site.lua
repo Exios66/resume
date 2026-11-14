@@ -1,8 +1,24 @@
 -- Run from the repository root: lua tests/lua/test_site.lua
 -- Minimal Pandoc/Quarto doubles exercise the real filter without rendering pages.
+local native_image = pandoc and pandoc.image
 pandoc = {
+  image = native_image or { size = function(bytes)
+    assert(bytes:sub(1, 2) == string.char(255, 216), "Expected JPEG fixture bytes")
+    return {width = 2880, height = 1800}
+  end },
   RawBlock = function(format, text)
     return { format = format, text = text }
+  end,
+  walk_block = function(block, filter)
+    local function walk(value)
+      if type(value) ~= "table" then return value end
+      if value.src then return filter.Image(value) end
+      for key, child in pairs(value) do
+        if type(child) == "table" then value[key] = walk(child) end
+      end
+      return value
+    end
+    return walk(block)
   end,
   RawInline = function(format, text)
     return { tag = "RawInline", format = format, text = text }
@@ -461,3 +477,52 @@ quarto = { doc = { input_file = "projects/digital-mailroom/report.qmd" }, projec
 local report_footer = Pandoc({ blocks = {}, meta = {} }).blocks[2].text
 assert(not report_footer:find('"@type":"CreativeWork"', 1, true), "nested pages keep only the site Person schema")
 print("project schema ok")
+
+-- Real image headers under Quarto's bundled Lua, without browser/network access.
+quarto = { doc = { input_file = "projects/neuron-atlas.qmd" }, project = { directory = "." } }
+local function study_image()
+  return {src = "neuron-atlas/figures/steering-studio.jpg", attributes = {width = "100%"}}
+end
+local first_image = prepare_content_image(study_image(), true)
+assert(first_image.attributes.loading == "eager")
+assert(first_image.attributes.decoding == "async")
+assert(first_image.attributes.width == "2880" and first_image.attributes.height == "1800")
+local later_image = prepare_content_image(study_image(), false)
+assert(later_image.attributes.loading == "lazy")
+assert(later_image.attributes.decoding == "async")
+assert(later_image.attributes.height == "1800")
+local missing_ok = pcall(prepare_content_image, {src = "missing.jpg", attributes = {}}, true)
+assert(not missing_ok, "Missing local image must stop the build")
+local open = io.open
+io.open = function() error("External images must not access files or the network") end
+for _, src in ipairs({"https://example.invalid/a.jpg", "//example.invalid/a.jpg", "data:image/png;base64,AAAA"}) do
+  local remote = prepare_content_image({src = src, attributes = {}}, false)
+  assert(remote.attributes.loading == "lazy")
+  assert(remote.attributes.width == nil)
+end
+io.open = open
+-- A lead image loads eagerly; later images and below-heading first images stay lazy.
+local function paragraph_with_image()
+  return {t = "Para", content = {study_image()}}
+end
+for _ = 1, 2 do
+  local doc = {blocks = {paragraph_with_image(), paragraph_with_image()}, meta = {}}
+  Pandoc(doc)
+  assert(doc.blocks[2].content[1].attributes.loading == "eager")
+  assert(doc.blocks[3].content[1].attributes.loading == "lazy")
+end
+local below_heading = {blocks = {
+  {t = "Header", level = 2, content = {}},
+  paragraph_with_image(),
+}, meta = {}}
+Pandoc(below_heading)
+assert(below_heading.blocks[3].content[1].attributes.loading == "lazy",
+  "A first image below the first section heading must stay lazy")
+local nested = {blocks = {{t = "Div", content = {
+  {t = "Header", level = 2, content = {}},
+  paragraph_with_image(),
+}}}, meta = {}}
+Pandoc(nested)
+assert(nested.blocks[2].content[2].content[1].attributes.loading == "lazy",
+  "A Div-wrapped first image below the first section heading must stay lazy")
+print("content image sizing and loading ok")

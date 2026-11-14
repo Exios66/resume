@@ -24,6 +24,10 @@ local function split_long_code(contents)
     Code = function(code)
       local text, attr = code.text, code.attr
       if #text < 14 then return nil end
+      -- Whitespace already gives the line breaker opportunities. Splitting a
+      -- command at flag separators can leave a fragment ending in a preserved
+      -- space, which overflows narrow table cells.
+      if text:find("%s") then return nil end
       -- Collect positions just after separators, skipping runs so each break
       -- lands on the end of the longest separator run.
       local parts = {}
