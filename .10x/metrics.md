@@ -18,47 +18,58 @@ bash autoresearch.checks.sh               # correctness gate: must end with "All
 | --- | --- | --- |
 | Correctness | `bash autoresearch.checks.sh` | All checks passed |
 | Polish audit | `scripts/hillclimb/hc.sh findings` | `polish_defects` stays at 0, or the new finding is a recorded design choice |
-| Page weight | `kpi.py` | `pages_over_budget` = 0 (home HTML ≤ 16,000 gzip bytes; projects index ≤ 26,000) |
+| Page weight | `kpi.py` | `pages_over_budget` = 0 for **every** built page type (see budgets below), not only home and projects index |
 
 Never edit the audit, the checks or `kpi.py` to rescue a result. Change them only in a separate pull request that says why.
+Page budgets and classification live in `scripts/hillclimb/page_budgets.py` so `kpi.py` and
+`tests/python/test_page_budget.py` stay aligned.
 
 ## Primary metric for the experience loop: `experience_gaps` (lower is better, target 0)
 
 It is the sum of the counts below. Baseline measured on `main` after pull request #116, 10 November 2026: **125**.
+After #148 (image sizing/lazy): **19**. After the 19 November 2026 KPI expansion (full-site page budgets plus
+chart-title and figure-alt guards), the sum is still **19**: the new guards read 0 on the current render, and
+`pages_over_budget` still counts over-budget pages across every type (currently 0).
 
-| Part | Baseline | Target | Closed by |
-| --- | --- | --- | --- |
-| `cards_without_cover` | 0 | 0 | done (#116); guards against regressions |
-| `repo_style_titles` (card titles that are hyphenated repository names) | 5 | 0 | #121; needs the owner's titles first |
-| `projects_without_own_social_card` | 14 | 0 | #120 |
-| `projects_without_structured_data` | 0 | 0 | guard |
-| `images_without_size` (no `width` and `height`) | 61 | 0 | #119 |
-| `later_images_not_lazy` (not the first image on a page, and not `loading="lazy"`) | 45 | 0 | #119 |
-| `pages_over_budget` | 0 | 0 | gate |
+| Part | Baseline | Now (19 Nov 2026) | Target | Closed by |
+| --- | --- | ---: | --- | --- |
+| `cards_without_cover` | 0 | 0 | 0 | done (#116); guards against regressions |
+| `repo_style_titles` (card titles that are hyphenated repository names) | 5 | 5 | 0 | #121; needs the owner's titles first |
+| `projects_without_own_social_card` | 14 | 14 | 0 | #120 |
+| `projects_without_structured_data` | 0 | 0 | 0 | guard |
+| `images_without_size` (no `width` and `height`) | 61 | 0 | 0 | #119 |
+| `later_images_not_lazy` (not the first image on a page, and not `loading="lazy"`) | 45 | 0 | 0 | #119 |
+| `pages_over_budget` | 0 | 0 | 0 | gate; every page type in `page_budgets.py` |
+| `charts_without_title` | — | 0 | 0 | guard (#139); `figure.chart` missing/empty `figcaption.chart-title` |
+| `figures_without_alt` | — | 0 | 0 | guard; empty `alt`, or `alt` that only repeats the figcaption |
 
-Secondary numbers, reported but not summed: `gz_index` 14,127; `gz_projects_index` 23,702; `gz_styles_css` 14,935;
-`gz_site_js` 5,683 (gzip bytes). Watch them for sudden growth. Soft limits: CSS 20,000; JavaScript 9,000.
+Secondary numbers, reported but not summed (gzip bytes of the heaviest page of each type, plus shared assets):
+`gz_home` 14,816; `gz_projects_index` 24,670; `gz_case_study` 18,989; `gz_technical_report` 19,388;
+`gz_appendix` 11,699; `gz_other_page` 12,181; `gz_styles_css` 15,653; `gz_site_js` 6,643.
+Soft limits: CSS 20,000; JavaScript 9,000. `kpi.py` prints an `INFO heaviest_…` line naming the page behind each
+`gz_*` size.
 
 ## Page transfer budgets
 
-Recorded on 10 November 2026 against the same render as the baseline above. Sizes are gzipped HTML bytes at
-compression level 9; the shared stylesheet and script are measured separately because every page pays for them.
-`tests/python/test_page_budget.py` checks every built page, not only the example named here, and fails with the page path,
-its size and its budget.
+Refreshed 19 November 2026 against the current built site. Sizes are gzipped HTML bytes at compression level 9;
+the shared stylesheet and script are measured separately because every page pays for them.
+`tests/python/test_page_budget.py` and `kpi.py` both import `scripts/hillclimb/page_budgets.py`, so a new project
+page or a heavier case study moves both the gate and `pages_over_budget` together.
 
-| Page type | Heaviest page at baseline | Measured | Budget |
-| --- | --- | ---: | ---: |
-| Home | `index.html` | 14,127 | 16,000 |
-| Projects index | `projects/index.html` | 23,702 | 26,000 |
-| Case study | `projects/mapreduce-reloaded.html` | 16,028 | 19,000 |
-| Technical report | `projects/natd/report.html` | 19,345 | 22,000 |
-| Appendix | `projects/mailroom-ml/appendix.html` | 11,018 | 13,000 |
-| Other page | `resume.html` | 12,099 | 15,000 |
-| Shared stylesheet | `styles.css` | 14,935 | 20,000 |
-| Shared script | `assets/js/site.js` | 5,683 | 9,000 |
+| Page type | Heaviest page now | Measured | Budget | Headroom |
+| --- | --- | ---: | ---: | ---: |
+| Home | `index.html` | 14,816 | 16,000 | 7% |
+| Projects index | `projects/index.html` | 24,670 | 26,000 | 5% |
+| Case study | `projects/mapreduce-reloaded.html` | 18,989 | 19,000 | under 1% |
+| Technical report | `projects/natd/report.html` | 19,388 | 22,000 | 12% |
+| Appendix | `projects/langtons-ant/appendix.html` | 11,699 | 13,000 | 10% |
+| Other page | `resume.html` | 12,181 | 15,000 | 19% |
+| Shared stylesheet | `styles.css` | 15,653 | 20,000 | 22% |
+| Shared script | `assets/js/site.js` | 6,643 | 9,000 | 26% |
 
-Page budgets leave roughly 10–24 percent headroom over their baselines; shared CSS and JavaScript budgets allow roughly 34 and 58 percent, respectively. Raising one is a deliberate decision that belongs in
-the pull request, with the reason and the new measurement.
+The case-study budget is the tightest: MapReduce sits 11 bytes under 19,000. Raising a budget is a deliberate
+decision that belongs in the pull request, with the reason and the new measurement. Do not trim meaningful
+content only to pass the gate.
 
 ## Judged indicators (a person or a reviewing agent scores these; a script cannot)
 
@@ -81,28 +92,11 @@ Do not turn a judged indicator into a number by guessing. Record who judged it a
 
 ## How to raise each metric
 
-Measured on `main` at d11a820 (11 November 2026): `experience_gaps` = **125**, unchanged since the baseline. After #148 (12 November 2026) it is **19**: image sizing and lazy loading are done, and the remaining 19 gaps are the 14 shared social cards (#120) and 5 repository-style display titles (#121).
-The levers below are ordered by gaps closed per pull request. Re-run `kpi.py` before starting; these counts drift.
+Measured on this branch after the 19 November 2026 KPI expansion: `experience_gaps` = **19**. The remaining gaps
+are the 14 shared social cards (#120) and 5 repository-style display titles (#121). Chart-title and figure-alt
+guards are at 0; keep them there. Re-run `kpi.py` before starting; these counts drift as the portfolio grows.
 
-### 1. `images_without_size` (61) and `later_images_not_lazy` (45): one filter change, up to 106 gaps
-
-- **Where they come from.** All 61 unsized images are project figures written as
-  `![…](figures/x.jpg){.fig fig-alt="…" width="100%"}` (39 JPEG, 21 SVG, 1 PNG). Quarto turns `width="100%"` into
-  `style="width:100.0%"`, so no `width`/`height` attributes reach the HTML. Check the count with
-  `grep -rn 'width="100%"' projects --include=*.qmd | wc -l`. It should match `images_without_size`.
-- **Heaviest pages:** `projects/rvl-cdip-classifier/report.html` (9 images), `projects/wave-laboratory/report.html` (9),
-  `projects/wave-laboratory.html` (6), `projects/mailroom-ml/report.html` (6),
-  `projects/psychometric-digital-twin/report.html` (5).
-- **Lever (#119):** add an `Image` handler to `scripts/filters/site.lua`. It reads each file's intrinsic size: the JPEG
-  SOF marker, the PNG IHDR chunk, or the SVG `viewBox`/`width`/`height`. It replaces the percentage width with
-  `width` and `height` attributes, and sets `loading="lazy" decoding="async"` on every image after the first in `<main>`.
-  `styles.css` already forces `width: 100%; height: auto` on `.page img.fig`, so the attributes reserve the aspect
-  ratio without changing the layout. Check that claim with before and after screenshots at 375 and 1280 px.
-- **Do not game it.** The sizes must be the file's real pixels or viewBox, never constants. Keep the first figure of each
-  page eager, because it is often the largest paint. Add a Lua test in `tests/lua/test_site.lua` for each format, and
-  a case for a missing or unreadable file, which must leave the image unchanged rather than fail the render.
-
-### 2. `projects_without_own_social_card` (14): one card per project
+### 1. `projects_without_own_social_card` (14): one card per project
 
 - **Where they come from.** Every project page inherits the site-wide `open-graph.image` in `_quarto.yml`
   (`assets/og-image.png`). `kpi.py` counts a project as covered only when its slug appears in its own `og:image` URL.
@@ -113,32 +107,33 @@ The levers below are ordered by gaps closed per pull request. Re-run `kpi.py` be
   `http(s)` images and falls back to the site-wide image for a relative path, so a relative value would leave the
   JSON-LD on the generic card. Script the generator so that a new project gets a card from the same command. Check one page's `og:image` and `twitter:image` in the built HTML.
 
-### 3. `repo_style_titles` (5): owner decision first
+### 2. `repo_style_titles` (5): owner decision first
 
 - The five cards are Digital-Mailroom, Mailroom-ML, RVL-CDIP-Classifier, Mailroom-Corpus-EDA and MapReduce-Reloaded.
 - **Lever (#121):** ask the owner for the display titles. Do not write them yourself (rule 4 below). Once given, change
   only the card and page titles and keep the repository names in links and code.
 
-### Headroom to protect while doing the above
+### 3. Page-weight headroom (gate, not a gap count until a page crosses)
 
-| Number | 10 Nov | 11 Nov | Limit | Note |
+| Number | 10 Nov | 19 Nov | Limit | Note |
 | --- | ---: | ---: | ---: | --- |
-| `gz_projects_index` | 23,702 | 24,520 | 26,000 | 94% used; the tightest budget. A new card or longer card text can break it |
-| `gz_index` | 14,127 | 14,815 | 16,000 | 93% used |
-| `gz_site_js` | 5,683 | 6,643 | 9,000 | Up 17% in a day; check that new script code earns its weight |
-| `gz_styles_css` | 14,935 | 15,152 | 20,000 | |
+| `gz_projects_index` | 23,702 | 24,670 | 26,000 | 95% used; a new card or longer card text can break it |
+| `gz_case_study` | 16,028 | 18,989 | 19,000 | MapReduce is 11 bytes under; any append needs a trim or a budget raise |
+| `gz_home` | 14,127 | 14,816 | 16,000 | 93% used |
+| `gz_site_js` | 5,683 | 6,643 | 9,000 | Watch phone-chart and motion additions |
+| `gz_styles_css` | 14,935 | 15,653 | 20,000 | |
 
 ## Metrics worth adding next
 
-`experience_gaps` does not yet measure these. Each needs a separate, reviewed change to `kpi.py`
-(or a test), a fresh baseline recorded here, and a target. Never add one in the same pull request that improves it.
+`experience_gaps` already includes chart-title and figure-alt guards and full-site page budgets. Each new candidate
+needs a separate, reviewed change to `kpi.py` (or a test), a fresh baseline recorded here, and a target. Never add
+one in the same pull request that improves it.
 
 | Candidate | Why | How to count |
 | --- | --- | --- |
-| `charts_without_title` | #139 gave every chart a title; a guard keeps it that way | In built HTML, `figure.chart` elements whose `figcaption.chart-title` is missing or empty (the source `title` attribute becomes that caption), plus hand-drawn figure SVGs with no visible title |
-| `figures_without_alt` | Alt text is part of the experience, and the polish audit checks presence, not substance | `<img>` in `<main>` with an empty `alt` or one that repeats the caption |
 | `layout_shift` | `images_without_size` is a proxy; this measures the effect | Playwright `PerformanceObserver('layout-shift')` on the five heaviest pages at 375 px; report the worst page |
 | `largest_paint_ms` | Real speed, not only bytes | Playwright LCP on the home and projects index pages, median of 3 runs; report it, do not gate on it, because CI timing is noisy |
+| `wip_pages_without_status` | Portfolio expansion adds WIP tracks; stale claims confuse visitors | Project pages whose front matter or body marks WIP but lack a visible status callout the audit already expects |
 
 ## Making the loop score experience (#126)
 
