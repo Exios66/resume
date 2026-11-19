@@ -144,6 +144,9 @@ class PortfolioAdditionTests(unittest.TestCase):
         self.assertIn("In active development", parser.text(kickers[0]))
         caveat = self.one(parser, "div", **{"class": "caveat"})
         self.assertIn("Work in progress", parser.text(caveat))
+        self.assertIn("23 October 2026", parser.text(caveat))
+        self.assertIn("30 October 2026 recount", parser.text(caveat))
+        self.assertNotIn("counts describe the code on 23 October", parser.text(caveat))
         self.assertIn("no real historical day is published yet", parser.text(caveat))
         caveat_links = [checks.attr(attrs, "href") for tag, attrs in parser.children(caveat) if tag == "a"]
         self.assertEqual(caveat_links, [

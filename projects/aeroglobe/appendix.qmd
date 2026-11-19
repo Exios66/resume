@@ -47,7 +47,7 @@ A full global day needs about 10 GB of disk and roughly 6 GB of RAM at build tim
 
 ## Snapshot counts
 
-The case study lists 395 passing tests in 42 files, about 5,800 lines of TypeScript, and a clean lint, type-check and production build. Those are the 23 October 2026 figures; they are not a current passing-test total.
+The 23 October 2026 notes recorded 395 passing tests in 42 files and about 5,800 lines of TypeScript, with a clean lint, type-check and production build. The case study later recounts 282 test declarations in 43 files and 8,090 lines of TypeScript on 30 October 2026. Neither figure is a current passing-test total.
 
 ## Reproduce
 

@@ -94,6 +94,8 @@ class MapReduceReloadedTests(unittest.TestCase):
         self.assertIn("11 November 2026", parser.text(caveat))
         self.assertIn("6d93f33", parser.text(caveat))
         self.assertIn("3.7×", parser.text(caveat))
+        self.assertIn("3a907de", parser.text(caveat))
+        self.assertNotIn("8f0ddb9", parser.text(caveat))
         self.assertIn("WIP", parser.text(self.one(parser, "div", **{"class": "page"})))
         self.one(parser, "h2", id="what-is-planned")
         self.assertFalse(any(tag == "img" for tag, _, _ in parser.elements), "No unverified screenshot")

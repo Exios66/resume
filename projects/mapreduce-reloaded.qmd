@@ -24,7 +24,7 @@ A from-scratch rebuild of Google's MapReduce, as described by Dean and Ghemawat 
 :::
 
 ::: {.caveat}
-**Work in progress.** Reviewed on 11 November 2026 against [revision def9c62](https://github.com/Exios66/MapReduce-Reloaded/tree/def9c62846e8c560b9be6c72b76f1cf325582059). Object storage, compression, benchmarks, the demo script and the final report are now built. Python workers remain stretch work. The README on main `6d93f33` reports a later word-count speedup of 3.7× at `8f0ddb9`; the charts below stay the 11 November snapshot.
+**Work in progress.** Reviewed on 11 November 2026 against [revision def9c62](https://github.com/Exios66/MapReduce-Reloaded/tree/def9c62846e8c560b9be6c72b76f1cf325582059). Object storage, compression, benchmarks, the demo script and the final report are now built. Python workers remain stretch work. The README on main `6d93f33` reports E0's word-count speedup of 3.7× at `3a907de`; the charts stay the 11 November snapshot.
 :::
 
 ## At a glance
