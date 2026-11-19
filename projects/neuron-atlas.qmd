@@ -1,6 +1,8 @@
 ---
 pagetitle: "Neuron Atlas — Jack J. Burleson"
 description: "A browser-based language-model neuron explorer: live TinyStories steering, random-direction controls, and recorded Qwen studies, with reproducible findings and explicit limits."
+image: https://exios66.github.io/resume/assets/og/neuron-atlas.png
+image-alt: "Neuron Atlas project motif"
 ---
 
 ::: {.page}

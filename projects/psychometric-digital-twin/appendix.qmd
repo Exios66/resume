@@ -1,6 +1,8 @@
 ---
 pagetitle: "Psychometric Digital Twin: appendix — Jack J. Burleson"
 description: "Supporting notes for the Psychometric Digital Twin: cohort, model roster, tier definitions and the evaluation metrics."
+image: https://exios66.github.io/resume/assets/og/psychometric-digital-twin.png
+image-alt: "Psychometric Digital Twin project motif"
 ---
 
 ::: {.page}

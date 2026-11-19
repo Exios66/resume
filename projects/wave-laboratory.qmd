@@ -1,6 +1,8 @@
 ---
 pagetitle: "Wave Laboratory — Jack J. Burleson"
 description: "A real-time 3D ocean-wave and ship-motion sandbox that runs in the browser, built on published wave spectra and checked against analytic results."
+image: https://exios66.github.io/resume/assets/og/wave-laboratory.png
+image-alt: "Wave Laboratory project motif"
 ---
 
 ::: {.page}

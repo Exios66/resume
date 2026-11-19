@@ -1,6 +1,8 @@
 ---
 pagetitle: "The Mandalay Bay: appendix — Jack J. Burleson"
 description: "Supporting notes for The Mandalay Bay: game inventory, save format and the RNG/return disclosure."
+image: https://exios66.github.io/resume/assets/og/degen-llms.png
+image-alt: "The Mandalay Bay project motif"
 ---
 
 ::: {.page}

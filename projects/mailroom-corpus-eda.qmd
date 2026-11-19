@@ -1,6 +1,8 @@
 ---
 pagetitle: "Mailroom-Corpus-EDA — Jack J. Burleson"
 description: "The data engineering behind the mailroom dataset: 3,302 documents assembled from public sources, with identity, provenance, label separation and an audit pipeline that checks every number it publishes."
+image: https://exios66.github.io/resume/assets/og/mailroom-corpus-eda.png
+image-alt: "Mailroom-Corpus-EDA project motif"
 ---
 
 ::: {.page}

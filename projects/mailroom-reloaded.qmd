@@ -1,6 +1,8 @@
 ---
 pagetitle: "Mailroom Reloaded — Jack J. Burleson"
 description: "A compressed, deployment-ready Digital Mailroom on CrewAI Flows: a deterministic driver, a ModernBERT fast path, a durable audit trail, and consoles that replay every run."
+image: https://exios66.github.io/resume/assets/og/mailroom-reloaded.png
+image-alt: "Mailroom Reloaded project motif"
 ---
 
 ::: {.page}

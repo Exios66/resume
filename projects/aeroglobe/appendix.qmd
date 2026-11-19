@@ -1,6 +1,8 @@
 ---
 pagetitle: "AeroGlobe: appendix — Jack J. Burleson"
 description: "Supporting notes for the AeroGlobe case study: pipeline stages, data sources and licences, snapshot counts and the built-versus-planned checklist."
+image: https://exios66.github.io/resume/assets/og/aeroglobe.png
+image-alt: "AeroGlobe project motif"
 ---
 
 ::: {.page}
