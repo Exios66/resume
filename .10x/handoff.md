@@ -10,6 +10,8 @@ The MapReduce case study stays under its 19,000-byte gzip budget by only a few b
 
 Résumé employment was not edited. The résumé regression forbids returning `Jan 2026 – Present` and `Avis Budget Group`. #71 stays open until the owner chooses the wording and the regression is updated with it.
 
+`.github/BUILDING.md` no longer claims invisible HTML TODOs in the sources; those comments are gone and open gaps stay on the issues.
+
 Next priority is unchanged: #120 social cards, #121 owner titles, #118 motif signoff, residual #122–#125, and #153. `experience_gaps` is still 19. Start an experience segment before experience-scored keeps.
 
 ## Current state (2026-11-12)
