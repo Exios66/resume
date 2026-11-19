@@ -53,7 +53,19 @@
     function apply() {
       chartLayouts.forEach(function (layout) {
         var next = phone.matches ? layout.narrow : layout.wide;
-        if (!next.isConnected) layout.body.replaceChildren(next);
+        if (!next.isConnected) {
+          var focusedRow = null;
+          var active = doc.activeElement;
+          if (active && layout.body.contains(active)) {
+            var mark = active.closest && active.closest('.mark');
+            if (mark) focusedRow = mark.getAttribute('data-source-row');
+          }
+          layout.body.replaceChildren(next);
+          if (focusedRow) {
+            var match = next.querySelector('.mark[data-source-row="' + focusedRow + '"]');
+            if (match && match.focus) match.focus({ preventScroll: true });
+          }
+        }
         layout.figure.classList.toggle('is-narrow', phone.matches);
         layout.body.setAttribute('aria-label', layout.body.getAttribute('aria-label').replace(/, scrollable$/, '') + (phone.matches ? '' : ', scrollable'));
       });

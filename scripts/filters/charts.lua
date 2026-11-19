@@ -132,6 +132,13 @@ local function label_room(list, unit, signed)
   return longest * 7.5 + 14
 end
 
+--- Keep the plot interval increasing when value labels claim too much width.
+local function scale_ends(width, left, right)
+  if right > left then return left, right end
+  local margin = math.max(14, math.floor(width * 0.15))
+  return margin, width - margin
+end
+
 local function esc(s)
   return (tostring(s):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"))
 end
@@ -317,7 +324,8 @@ function DRAW.bars(spec, rows)
   if stack > 0 then
     local room = label_room(vals, spec.unit, signed)
     gutter = 14
-    sx = linear(lo, hi, lo < 0 and room or gutter, width - room)
+    local left, right = scale_ends(width, lo < 0 and room or gutter, width - room)
+    sx = linear(lo, hi, left, right)
   end
   local out = { x_axis(ticks, sx, top, bottom, spec.unit) }
   if lo < 0 then out[#out + 1] = line("zero", sx(0), top, sx(0), bottom, PAINT.muted) end
@@ -366,7 +374,8 @@ function DRAW.dumbbell(spec, rows)
   local sx = linear(lo, hi, GUTTER + LABEL_ROOM, W - RIGHT)
   if stack > 0 then
     local room = label_room(b, spec.unit)
-    sx = linear(lo, hi, room, width - room)
+    local left, right = scale_ends(width, room, width - room)
+    sx = linear(lo, hi, left, right)
   end
   local out = { x_axis(ticks, sx, top, bottom, spec.unit) }
   for i, row in ipairs(rows) do

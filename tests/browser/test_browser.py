@@ -624,13 +624,21 @@ def test_charts_fit_a_phone_and_scroll_only_without_scripts(site):
         finally:
             page.close()
     # Widening the window brings the wide drawing back, with its marks still wired up.
+    # Focus on a mark must survive the switch so keyboard users keep their place.
     page = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
     try:
         page.goto(base + "projects/natd.html")
         assert page.locator(".chart-body svg").first.evaluate("el => el.viewBox.baseVal.width") == 256
+        mark = page.locator("figure.chart g.mark").first
+        mark.focus()
+        row = mark.get_attribute("data-source-row")
         page.set_viewport_size({"width": 1280, "height": 800})
         page.wait_for_function("document.querySelector('.chart-body svg').viewBox.baseVal.width === 640")
-        page.locator("figure.chart g.mark").first.focus()
+        focused = page.locator("figure.chart g.mark:focus")
+        expect(focused).to_have_count(1)
+        assert focused.get_attribute("data-source-row") == row
+        # Bring the restored mark into view; place() hides the tooltip while it is off-screen.
+        focused.evaluate("el => el.scrollIntoView({block: 'center'})")
         expect(page.locator(".chart-tooltip")).to_be_visible()
         expect(page.locator("figure.chart g.mark.is-linked")).to_have_count(1)
     finally:

@@ -318,12 +318,37 @@ for _, chart in ipairs(PHONE) do
     assert_eq(tonumber(x), 0, chart.kind .. ": phone row label starts at the left edge")
   end
   local s = spans(chart.svg)
-  for i = 1, #s do for j = i + 1, #s do
-    local A, B = s[i], s[j]
+  for i = 1, #s do
+    local A = s[i]
     assert(A[1] >= -0.01 and A[3] <= 256.01, chart.kind .. ": phone hit area inside the drawing")
-    local overlap = math.min(A[3], B[3]) - math.max(A[1], B[1]) > 0.11 and math.min(A[4], B[4]) - math.max(A[2], B[2]) > 0.11
-    assert(not overlap, chart.kind .. ": phone hit areas " .. i .. " and " .. j .. " overlap")
-  end end
+    for j = i + 1, #s do
+      local B = s[j]
+      local overlap = math.min(A[3], B[3]) - math.max(A[1], B[1]) > 0.11 and math.min(A[4], B[4]) - math.max(A[2], B[2]) > 0.11
+      assert(not overlap, chart.kind .. ": phone hit areas " .. i .. " and " .. j .. " overlap")
+    end
+  end
+end
+
+-- Long signed labels must not reverse the phone plot scale (left edge past right).
+do
+  local before = #PHONE
+  CHARTS.render(
+    { kind = "bars", label = "Job", value = "Speedup", unit = "pts", signed = "true" },
+    { { Job = "A", Speedup = "-0.123456789" }, { Job = "B", Speedup = "0.987654321" } })
+  assert(#PHONE == before + 1, "signed bars still ship a phone drawing")
+  local phone = PHONE[#PHONE].svg
+  local zero = tonumber(phone:match('<line class="zero" x1="([%d%.%-]+)"'))
+  assert(zero and zero > 0 and zero < 256, "signed phone zero stays inside the drawing")
+  -- Each mark's value label x must sit on the same side of zero as its tip value.
+  for tip, chunk in phone:gmatch('data%-tip%-value="([^"]+)"([^>]*>.-)</g>') do
+    local x = tonumber(chunk:match('<text class="val" x="([%d%.%-]+)"'))
+    assert(x, "signed phone mark keeps a value label")
+    if tip:find("+", 1, true) == 1 then
+      assert(x > zero, "signed phone positive tip stays to the right of zero")
+    else
+      assert(x < zero, "signed phone negative tip stays to the left of zero")
+    end
+  end
 end
 
 print("chart unit tests passed")
