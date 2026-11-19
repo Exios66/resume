@@ -146,12 +146,16 @@ class PortfolioAdditionTests(unittest.TestCase):
         self.assertIn("Work in progress", parser.text(caveat))
         self.assertIn("no real historical day is published yet", parser.text(caveat))
         caveat_links = [checks.attr(attrs, "href") for tag, attrs in parser.children(caveat) if tag == "a"]
-        self.assertEqual(caveat_links, ["https://github.com/Exios66/aeroglobe/blob/935bd07515b6fd857f0ff449618c6f244fb49353/README.md",
-                                       "https://exios66.github.io/aeroglobe/"])
+        self.assertEqual(caveat_links, [
+            "https://github.com/Exios66/aeroglobe/blob/a011ff7b46c0/README.md",
+            "https://github.com/Exios66/aeroglobe/blob/935bd07515b6fd857f0ff449618c6f244fb49353/README.md",
+            "https://exios66.github.io/aeroglobe/"])
         planned = self.one(parser, "h2", id="what-is-planned")
         self.assertEqual(parser.text(planned), "What is planned")
         body = self.one(parser, "div", **{"class": "page"})
-        self.assertIn("None of these is built yet", parser.text(body))
+        self.assertIn("in-browser logbook", parser.text(body))
+        self.assertIn("WIP", parser.text(body))
+        self.assertNotIn("None of these is built yet", parser.text(body))
         self.assertFalse(any(tag == "img" for tag, _, _ in parser.elements), "No unverified screenshot")
         self.assertFalse((checks.DOCS / "projects/aeroglobe/report.html").exists(), "AeroGlobe is a case study only")
         actions = self.one(parser, "div", **{"class": "actions"})
@@ -161,6 +165,7 @@ class PortfolioAdditionTests(unittest.TestCase):
         _, index = self.read_page("projects/index.html")
         card = self.one(index, "section", id="aeroglobe")
         self.assertIn("In active development", index.text(card))
+        self.assertIn("WIP", index.text(card))
         self.assertIn("planned", index.text(card))
 
     def test_architecture_diagrams_publish_the_shared_partial_without_geometry_loss(self):

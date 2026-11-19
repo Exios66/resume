@@ -15,7 +15,7 @@ description: "A from-scratch MapReduce rebuild: a Go cluster and Python referenc
 
 [In active development · distributed systems · Go & Python]{.kicker}
 
-[UW–Madison · CS 544 Honors · Fall 2026]{.tag}
+[WIP]{.tag} [UW–Madison · CS 544 Honors · Fall 2026]{.tag}
 
 A from-scratch rebuild of Google's MapReduce, as described by Dean and Ghemawat in [*MapReduce: Simplified Data Processing on Large Clusters*](https://research.google.com/archive/mapreduce-osdi04.pdf) (OSDI 2004). Go is the main implementation; Python implements the same contract and single-machine mode for byte-for-byte checks.
 
@@ -24,7 +24,7 @@ A from-scratch rebuild of Google's MapReduce, as described by Dean and Ghemawat 
 :::
 
 ::: {.caveat}
-**Work in progress.** Reviewed on 11 November 2026 against [revision def9c62](https://github.com/Exios66/MapReduce-Reloaded/tree/def9c62846e8c560b9be6c72b76f1cf325582059). Object storage, compression, benchmarks, the demo script and the final report are now built. Python workers and full cross-language interoperability remain stretch work. The evaluation below is reported by the source repository, not rerun here.
+**Work in progress.** Reviewed on 11 November 2026 against [revision def9c62](https://github.com/Exios66/MapReduce-Reloaded/tree/def9c62846e8c560b9be6c72b76f1cf325582059). Object storage, compression, benchmarks, the demo script and the final report are now built. Python workers remain stretch work. The README on main `6d93f33` reports a later word-count speedup of 3.7× at `8f0ddb9`; the charts below stay the 11 November snapshot.
 :::
 
 ## At a glance
@@ -37,7 +37,7 @@ A from-scratch rebuild of Google's MapReduce, as described by Dean and Ghemawat 
 [4]{.stat-value} [one-CPU worker containers on the course VM, not four independent machines]{.stat-label}
 :::
 ::: {.stat}
-[3.8×]{.stat-value} [reported word-count speedup from one to four workers on 1 GiB inputs]{.stat-label}
+[3.8×]{.stat-value} [reported word-count speedup from one to four workers on 1 GiB inputs, 11 November snapshot]{.stat-label}
 :::
 :::
 
@@ -57,7 +57,7 @@ The diagram shows the core task and shuffle path only. It does not attempt to dr
 
 **One contract, two languages.** Go and Python share a gRPC and protobuf message contract, a documented on-disk record format with a checksum on every block, and a fixed FNV-1a partition hash implemented in both languages. Language-specific hash behavior is not the contract: shared test vectors and golden files hold both implementations to the same bytes for uncompressed jobs.
 
-**Small, reviewable steps.** One issue and one pull request per change, 199 merged by 10 November 2026, and 22 design records. Branch protection holds `main` until six CircleCI checks pass, and CodeRabbit and CodeAnt review every pull request; several real bugs were found in review, not by the tests.
+**Small, reviewable steps.** One pull request per change: 199 merged by 10 November 2026, plus 22 design records. Six CircleCI checks gate `main`.
 
 ## What I built
 
@@ -192,7 +192,7 @@ The [final report](https://github.com/Exios66/MapReduce-Reloaded/blob/def9c62846
 
 ## What is planned
 
-Python workers and a complete Go/Python interoperability matrix, coordinator high availability, skew handling and Parquet input remain stretch goals. LATE-style speculation is built as an opt-in mode, but its E7 evaluation has not been run; there is no measured claim that it is faster.
+Python workers, full Go/Python interoperability, coordinator high availability, skew handling and Parquet input remain stretch goals. The README at `6d93f33` reports E7 at `8f0ddb9`: backups or LATE cut a mixed-speed sort by about 32% (25.2 s to about 17 s), and the times overlap. This page does not chart that run.
 
 ## What I'm learning
 

@@ -37,6 +37,8 @@ The lab needs a browser with WebGL 2. It runs on desktop and on phones.
 :::
 :::
 
+The repository README at [261979b](https://github.com/Exios66/wave-laboratory/tree/261979b33a1e) (14 November 2026) reports 632 passing tests and an 11-hull library. That passing total is the README's claim, not a suite I re-ran, and it is not a replacement for the October grep count above. Version 0.1.0 is the live demo. The plan's Stokes, cnoidal, Boussinesq and scripting phases are still not built.
+
 ## The problem
 
 I have always liked how much of the sea can be written as a short recipe. A real ocean is not one wave. It is thousands of simple waves of different lengths and directions added together, and oceanographers describe how much energy each one carries with a curve called a spectrum. Ships respond to that sum, not to any single wave.
