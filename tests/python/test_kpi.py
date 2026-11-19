@@ -5,6 +5,8 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "scripts" / "hillclimb"))
+import kpi as kpi_mod  # noqa: E402
 
 REQUIRED = (
     "experience_gaps",
@@ -26,6 +28,19 @@ REQUIRED = (
     "gz_styles_css",
     "gz_site_js",
 )
+
+
+def test_alt_attr_ignores_data_alt_and_requires_real_alt():
+    assert kpi_mod.ALT_ATTR.search('<img data-alt="cover">') is None
+    assert kpi_mod.ALT_ATTR.search('<img alt="cover">').group(1) == "cover"
+    assert kpi_mod.figures_without_alt('<main><img data-alt="cover"></main>') == 1
+    assert kpi_mod.figures_without_alt('<main><img alt="cover"></main>') == 0
+    assert (
+        kpi_mod.figures_without_alt(
+            '<main><figure><img alt="Same"><figcaption>Same</figcaption></figure></main>'
+        )
+        == 1
+    )
 
 
 def test_kpi_reports_the_primary_metric_and_no_missing_covers():

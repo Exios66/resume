@@ -25,7 +25,8 @@ CHART_TITLE = re.compile(
     r'<figcaption[^>]*class="[^"]*\bchart-title\b[^"]*"[^>]*>(.*?)</figcaption>', re.S
 )
 IMG_TAG = re.compile(r"<img\b[^>]*>")
-ALT_ATTR = re.compile(r'\balt="([^"]*)"')
+# Require a real `alt` attribute; `\balt` also matches inside `data-alt`.
+ALT_ATTR = re.compile(r'(?<![\w-])alt="([^"]*)"')
 FIGCAPTION = re.compile(r"<figcaption\b[^>]*>(.*?)</figcaption>", re.S)
 FIGURE = re.compile(r"<figure\b[^>]*>(.*?)</figure>", re.S)
 
