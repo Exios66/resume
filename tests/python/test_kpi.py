@@ -41,6 +41,20 @@ def test_alt_attr_ignores_data_alt_and_requires_real_alt():
         )
         == 1
     )
+    assert (
+        kpi_mod.figures_without_alt(
+            '<main><figure><img alt="A &quot;B&quot;">'
+            '<figcaption>A "B"</figcaption></figure></main>'
+        )
+        == 1
+    )
+    assert (
+        kpi_mod.figures_without_alt(
+            '<main><figure><img alt="Different">'
+            '<figcaption>A "B"</figcaption></figure></main>'
+        )
+        == 0
+    )
 
 
 def test_kpi_reports_the_primary_metric_and_no_missing_covers():

@@ -8,6 +8,7 @@ portfolio experience v2 roadmap. Targets and rules are in .10x/metrics.md.
 It reads files only. It starts no browser and changes nothing.
 """
 import gzip
+import html as html_lib
 import pathlib
 import re
 import sys
@@ -47,6 +48,11 @@ def strip_tags(html):
     return re.sub(r"<[^>]+>", "", html).strip()
 
 
+def decode_text(value):
+    """Normalize HTML text for comparison (character references and whitespace)."""
+    return html_lib.unescape(value).strip()
+
+
 def charts_without_title(html):
     missing = 0
     for match in CHART_FIGURE.finditer(html):
@@ -61,17 +67,17 @@ def figures_without_alt(html):
     missing = 0
     for figure in FIGURE.finditer(html):
         block = figure.group(0)
-        captions = [strip_tags(c) for c in FIGCAPTION.findall(block)]
+        captions = [decode_text(strip_tags(c)) for c in FIGCAPTION.findall(block)]
         captions = [c for c in captions if c]
         for tag in IMG_TAG.findall(block):
             alt_match = ALT_ATTR.search(tag)
-            alt = alt_match.group(1).strip() if alt_match else ""
+            alt = decode_text(alt_match.group(1)) if alt_match else ""
             if not alt or any(alt == caption for caption in captions):
                 missing += 1
     stripped = FIGURE.sub("", html)
     for tag in IMG_TAG.findall(stripped):
         alt_match = ALT_ATTR.search(tag)
-        alt = alt_match.group(1).strip() if alt_match else ""
+        alt = decode_text(alt_match.group(1)) if alt_match else ""
         if not alt:
             missing += 1
     return missing
