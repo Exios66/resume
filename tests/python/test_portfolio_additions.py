@@ -165,6 +165,15 @@ class PortfolioAdditionTests(unittest.TestCase):
         action_links = [checks.attr(attrs, "href") for tag, attrs in parser.children(actions) if tag == "a"]
         self.assertEqual(action_links, ["https://exios66.github.io/aeroglobe/", "https://github.com/Exios66/aeroglobe"],
                          "Issue #51: the live site comes first, then the code")
+        _, appendix = self.read_page("projects/aeroglobe/appendix.html")
+        appendix_text = appendix.text(self.one(appendix, "div", **{"class": "page"}))
+        self.assertIn("Route-pair search", appendix_text)
+        self.assertIn("Aircraft history panel", appendix_text)
+        self.assertIn("Time-zone overlay", appendix_text)
+        self.assertIn("In-browser personal logbook", appendix_text)
+        self.assertIn("A published real historical day", appendix_text)
+        self.assertNotIn("Inferred routes and a time-zone overlay", appendix_text)
+        self.assertNotIn("Per-aircraft history and a browser logbook", appendix_text)
         _, index = self.read_page("projects/index.html")
         card = self.one(index, "section", id="aeroglobe")
         self.assertIn("In active development", index.text(card))

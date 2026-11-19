@@ -158,8 +158,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <h1 class="page-title" id="aeroglobe-appendix">AeroGlobe: appendix</h1>
 <p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">Static data pipeline</span><span class="seg"> <span class="sep">·</span> snapshot notes</span></span></span></span></p>
-<p>These notes support the <a href="../../projects/aeroglobe.html">AeroGlobe case study</a> and describe the 23 October 2026 snapshot. They are a scope record, not a live status page.</p>
-<nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#pipeline-stages">Pipeline stages</a></li><li><a href="#data-sources">Data sources</a></li><li><a href="#built-versus-planned-at-the-snapshot">Built versus planned at the snapshot</a></li><li><a href="#snapshot-counts">Snapshot counts</a></li><li><a href="#reproduce">Reproduce</a></li></ul></nav>
+<p>These notes support the <a href="../../projects/aeroglobe.html">AeroGlobe case study</a>. Pipeline stages and data sources describe the 23 October 2026 snapshot. The built-versus-planned checklist was checked again on 19 November 2026 against the <a href="https://github.com/Exios66/aeroglobe/blob/a011ff7b46c0/README.md">README at a011ff7⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>. They are a scope record, not a live status page.</p>
+<nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#pipeline-stages">Pipeline stages</a></li><li><a href="#data-sources">Data sources</a></li><li><a href="#built-versus-planned">Built versus planned</a></li><li><a href="#snapshot-counts">Snapshot counts</a></li><li><a href="#reproduce">Reproduce</a></li></ul></nav>
 <h2 id="pipeline-stages">Pipeline stages</h2>
 <table class="caption-top stack" role="table">
 <colgroup>
@@ -230,38 +230,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>A full global day needs about 10 GB of disk and roughly 6 GB of RAM at build time.</p>
-<h2 id="built-versus-planned-at-the-snapshot">Built versus planned at the snapshot</h2>
-<table class="caption-top stack" role="table" data-prose-rows="true">
+<h2 id="built-versus-planned">Built versus planned</h2>
+<table class="caption-top">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead>
-<tr class="header" role="row">
-<th role="columnheader">Built</th>
-<th role="columnheader">Planned, not built</th>
+<tr class="header">
+<th>Built (README at a011ff7; not re-run here)</th>
+<th>Planned, not claimed by that README</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd" role="row">
-<td role="cell" data-label="Built">Globe client with search, filters and flight cards</td>
-<td role="cell" data-label="Planned, not built">A published real historical day</td>
+<tr class="odd">
+<td>Globe client with search, filters and flight cards</td>
+<td>A published real historical day on the live site</td>
 </tr>
-<tr class="even" role="row">
-<td role="cell" data-label="Built">Playback, track replay and trails</td>
-<td role="cell" data-label="Planned, not built">Off-main-thread decoding and a transport bar</td>
+<tr class="even">
+<td>Playback, track replay and trails</td>
+<td>Off-main-thread decoding and a transport bar</td>
 </tr>
-<tr class="odd" role="row">
-<td role="cell" data-label="Built">Static pipeline, catalog and hourly chunks</td>
-<td role="cell" data-label="Planned, not built">Inferred routes and a time-zone overlay</td>
+<tr class="odd">
+<td>Static pipeline, catalog and hourly chunks</td>
+<td>Inferred routes between airports</td>
 </tr>
-<tr class="even" role="row">
-<td role="cell" data-label="Built">OpenSky snapshot and fixture commands</td>
-<td role="cell" data-label="Planned, not built">Per-aircraft history and a browser logbook</td>
+<tr class="even">
+<td>OpenSky snapshot and fixture commands</td>
+<td>—</td>
 </tr>
-<tr class="odd" role="row">
-<td role="cell" data-label="Built">Reference airport, airline and time-zone tables</td>
-<td class="num" role="cell" data-label="Planned, not built">—</td>
+<tr class="odd">
+<td>Reference airport, airline and time-zone tables</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>Route-pair search over the loaded day’s index</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>Aircraft history panel</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>Time-zone overlay</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>In-browser personal logbook</td>
+<td>—</td>
 </tr>
 </tbody>
 </table>

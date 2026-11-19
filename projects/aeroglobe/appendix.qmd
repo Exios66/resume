@@ -14,7 +14,7 @@ description: "Supporting notes for the AeroGlobe case study: pipeline stages, da
 
 [Static data pipeline · snapshot notes]{.kicker}
 
-These notes support the [AeroGlobe case study](../aeroglobe.qmd) and describe the 23 October 2026 snapshot. They are a scope record, not a live status page.
+These notes support the [AeroGlobe case study](../aeroglobe.qmd). Pipeline stages and data sources describe the 23 October 2026 snapshot. The built-versus-planned checklist was checked again on 19 November 2026 against the [README at a011ff7](https://github.com/Exios66/aeroglobe/blob/a011ff7b46c0/README.md). They are a scope record, not a live status page.
 
 ## Pipeline stages
 
@@ -35,15 +35,19 @@ These notes support the [AeroGlobe case study](../aeroglobe.qmd) and describe th
 
 A full global day needs about 10 GB of disk and roughly 6 GB of RAM at build time.
 
-## Built versus planned at the snapshot
+## Built versus planned
 
-| Built | Planned, not built |
+| Built (README at a011ff7; not re-run here) | Planned, not claimed by that README |
 | --- | --- |
-| Globe client with search, filters and flight cards | A published real historical day |
+| Globe client with search, filters and flight cards | A published real historical day on the live site |
 | Playback, track replay and trails | Off-main-thread decoding and a transport bar |
-| Static pipeline, catalog and hourly chunks | Inferred routes and a time-zone overlay |
-| OpenSky snapshot and fixture commands | Per-aircraft history and a browser logbook |
+| Static pipeline, catalog and hourly chunks | Inferred routes between airports |
+| OpenSky snapshot and fixture commands | — |
 | Reference airport, airline and time-zone tables | — |
+| Route-pair search over the loaded day's index | — |
+| Aircraft history panel | — |
+| Time-zone overlay | — |
+| In-browser personal logbook | — |
 
 ## Snapshot counts
 
