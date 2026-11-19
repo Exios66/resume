@@ -2,9 +2,10 @@
 
 Budgets are gzipped HTML bytes, measured with the same compression level as
 scripts/hillclimb/kpi.py. The shared stylesheet and script have their own
-budgets because every page pays for them. Each budget leaves roughly 15 percent
-headroom over the heaviest page of its type, so ordinary editing does not fail
-the check but a new figure or a large script does.
+budgets because every page pays for them. Headroom varies by type (see
+.10x/metrics.md): ordinary edits usually stay under budget, but the projects
+index and MapReduce case study are tight enough that a new figure or longer
+paragraph can fail the check.
 
 Budgets and classification live in scripts/hillclimb/page_budgets.py so the
 experience KPI and this gate cannot drift. Recorded baselines are in
