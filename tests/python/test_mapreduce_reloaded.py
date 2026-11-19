@@ -4,6 +4,7 @@ Run from the repository root: python3 -m pytest -q tests/python/test_mapreduce_r
 These checks read committed pages and assets; no render or network is needed beyond a built docs/.
 """
 
+from pathlib import Path
 import re
 import unittest
 import xml.etree.ElementTree as ET
@@ -57,9 +58,17 @@ class MapReduceReloadedTests(unittest.TestCase):
         heading, _ = self.group_cards(index)
         uses = [attrs for tag, attrs in index.children(heading) if tag == "use"]
         self.assertEqual([checks.attr(attrs, "href") for attrs in uses], ["#i-layers"])
-        symbols = [checks.attr(attrs, "id") for tag, attrs, _ in index.elements if tag == "symbol"]
+        # The icon set lives in site.lua; each built page's sprite keeps only the icons
+        # that page uses (post-render.py), so the set is counted at its source.
+        source = (Path(__file__).resolve().parents[2] / "scripts/filters/site.lua").read_text(encoding="utf-8")
+        block = source[source.index("local ICONS = {"):]
+        icon_set = re.findall(r'^  \{ "([\w-]+)"', block[:block.index("\n}\n")], re.M)
         # 21 since the résumé contact line gained a globe icon for the portfolio address.
-        self.assertEqual(len(symbols), 21, "The sprite must keep exactly the existing 21 symbols")
+        self.assertEqual(len(icon_set), 21, "The icon set must keep exactly the existing 21 icons")
+        symbols = {checks.attr(attrs, "id") for tag, attrs, _ in index.elements if tag == "symbol"}
+        used = {checks.attr(attrs, "href") for tag, attrs, _ in index.elements if tag == "use"}
+        self.assertEqual({"#" + symbol for symbol in symbols}, used, "every used icon resolves and no unused icon ships")
+        self.assertIn("i-layers", symbols)
         for tag, attrs, _ in self.read_page()[1].elements:
             if tag == "svg" and "icon" in checks.classes(attrs):
                 self.assertEqual(checks.attr(attrs, "width"), "1em")

@@ -18,7 +18,9 @@ DOCS = pathlib.Path(__file__).resolve().parents[2] / "docs"
 PAGE_TYPES = {
     "home": (14127, 16000),
     "projects index": (23702, 26000),
-    "case study": (16028, 19000),
+    # Raised on 12 November 2026: #142 grew the heaviest case study to 18,988, and its
+    # phone chart drawings add 1,407 bytes less 948 from pruning unused sprite icons.
+    "case study": (19433, 20000),
     "technical report": (19345, 22000),
     "appendix": (11018, 13000),
     "other page": (12099, 15000),
