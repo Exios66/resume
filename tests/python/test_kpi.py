@@ -6,11 +6,45 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 
+REQUIRED = (
+    "experience_gaps",
+    "cards_without_cover",
+    "repo_style_titles",
+    "projects_without_own_social_card",
+    "projects_without_structured_data",
+    "images_without_size",
+    "later_images_not_lazy",
+    "pages_over_budget",
+    "charts_without_title",
+    "figures_without_alt",
+    "gz_home",
+    "gz_projects_index",
+    "gz_case_study",
+    "gz_technical_report",
+    "gz_appendix",
+    "gz_other_page",
+    "gz_styles_css",
+    "gz_site_js",
+)
+
 
 def test_kpi_reports_the_primary_metric_and_no_missing_covers():
-    out = subprocess.run([sys.executable, str(ROOT / "scripts/hillclimb/kpi.py")],
-                         capture_output=True, text=True, check=True).stdout
+    out = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/hillclimb/kpi.py")],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
     metrics = dict(re.findall(r"METRIC (\w+)=(\d+)", out))
     assert out.startswith("METRIC experience_gaps=")
+    for name in REQUIRED:
+        assert name in metrics, f"missing METRIC {name}"
     assert metrics["cards_without_cover"] == "0"
     assert metrics["pages_over_budget"] == "0"
+    assert metrics["charts_without_title"] == "0"
+    assert metrics["figures_without_alt"] == "0"
+    assert int(metrics["experience_gaps"]) == sum(
+        int(metrics[k])
+        for k in REQUIRED
+        if k != "experience_gaps" and not k.startswith("gz_")
+    )
