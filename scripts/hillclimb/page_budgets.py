@@ -10,9 +10,9 @@ decision; record the reason and the new measurement in .10x/metrics.md.
 PAGE_TYPES = {
     "home": (14816, 16000),
     "projects index": (24670, 26000),
-    "case study": (18989, 19000),
-    "technical report": (19388, 22000),
-    "appendix": (11699, 13000),
+    "case study": (18981, 19000),
+    "technical report": (19401, 22000),
+    "appendix": (11716, 13000),
     "other page": (12181, 15000),
 }
 SHARED = {
