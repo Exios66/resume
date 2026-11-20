@@ -1081,15 +1081,39 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
   }
 }
 
-/* Windows high contrast: drop the gradient text so the name stays visible. */
+/* Windows high contrast: drop decorative washes so content stays readable. */
 @media (forced-colors: active) {
   .hero .name { background: none; -webkit-text-fill-color: currentColor; }
-  body::before, .hero::before, .hero::after, .page::before, .card::before, .stat::before { display: none; }
+  body::before,
+  .hero::before, .hero::after, .hero .role::before,
+  .page::before, .card::before, .stat::before,
+  .site-title::before, h2::before, .btn::after, .site-footer::before,
+  .nav-link[aria-current="page"]::before,
+  .project-nav a[aria-current="page"]::before,
+  .card-cover::after,
+  .read-progress { display: none !important; }
+  .timeline ul { background: none; border-left: 2px solid CanvasText; }
+  .card, .explore a.explore-card, .stat, .caveat {
+    background: Canvas; border-color: CanvasText; box-shadow: none;
+  }
+  .project-nav a[aria-current="page"],
+  .nav-link[aria-current="page"] {
+    background: Highlight; color: HighlightText; box-shadow: none; forced-color-adjust: none;
+  }
+  html.js-motion .rv,
+  html.js-motion.page-pending .page,
+  html.js-motion .page.is-entered {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
 }
 
 @media print {
   body::before, .page::before, .hero::before, .hero::after, .hero .role::before,
-  .card::before, .stat::before, .site-title::before, h2::before, .btn::after { display: none !important; }
+  .card::before, .stat::before, .site-title::before, h2::before, .btn::after,
+  .site-footer::before,
+  .nav-link[aria-current="page"]::before,
+  .project-nav a[aria-current="page"]::before,
+  .card-cover::after { display: none !important; }
   .hero .name { background: none; -webkit-text-fill-color: currentColor; color: #111; }
   .hero .role { padding-top: 0; }
   .page { padding-top: 0; }
