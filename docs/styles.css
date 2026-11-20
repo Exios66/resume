@@ -1305,10 +1305,39 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
   .cards-wide > .card.has-cover:only-child > .card-cover svg { height: auto; aspect-ratio: 8 / 3; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .card-cover svg { transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
+  .card-cover { position: relative; }
+  .card-cover svg {
+    transition: transform var(--motion-slow) var(--motion-ease);
+  }
   .card:is(:hover, :focus-within) .card-cover svg { transform: scale(1.04); }
+  /* Soft sheen across the motif on hover; reduced-motion skips both scale and sheen. */
+  .card-cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(
+      110deg,
+      transparent 35%,
+      color-mix(in srgb, var(--paper) 55%, transparent) 50%,
+      transparent 65%
+    );
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  .card:is(:hover, :focus-within) .card-cover::after {
+    opacity: 1;
+    transform: translateX(120%);
+    transition:
+      transform calc(var(--motion-slow) + 80ms) var(--motion-ease),
+      opacity var(--motion-fast) var(--motion-ease);
+  }
 }
-@media (forced-colors: active) { .card-cover, .card-cover .cv-pop { color: CanvasText; background: none; } }
+@media (forced-colors: active) {
+  .card-cover, .card-cover .cv-pop { color: CanvasText; background: none; }
+  .card-cover::after { content: none; }
+}
 @media print { .card-cover { display: none; } }
 
 /* ---------- Hot pink ----------
