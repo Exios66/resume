@@ -891,8 +891,24 @@ body::before {
   background: linear-gradient(90deg, transparent, var(--accent), var(--pop), transparent);
 }
 .chip { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent); }
-a.chip { transition: box-shadow .15s, transform .15s; }
-a.chip:hover { filter: none; box-shadow: inset 0 0 0 1px var(--accent); }
+/* Link chips (contact + search suggestions): Explore-like border lift, no glow. */
+a.chip {
+  transition:
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease),
+    transform var(--motion-fast) var(--motion-ease);
+}
+a.chip:hover,
+a.chip:focus-visible {
+  filter: none;
+  text-decoration: none;
+  background: color-mix(in srgb, var(--accent) 10%, var(--paper));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, var(--rule));
+}
+a.chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 /* Buttons: the primary carries the gradient and a soft glow. */
 .btn { position: relative; overflow: hidden; transition: background .15s, color .15s, box-shadow .2s, transform .2s; }
@@ -1051,6 +1067,8 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 }
 @media (prefers-reduced-motion: no-preference) {
   .explore a.explore-card:hover { transform: translateY(-1px); }
+  a.chip:hover,
+  a.chip:focus-visible { transform: translateY(-1px); }
   /* Explore entrance reuses .rv; a slightly longer stagger reads as one section arriving. */
   html.js-motion .explore a.explore-card.rv {
     transition-delay: calc(var(--rv-i, 0) * 70ms);
