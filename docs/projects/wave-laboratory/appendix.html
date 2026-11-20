@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=309da07a02">
+<link rel="stylesheet" href="../../styles.css?v=00f55e02f4">
 <meta property="og:title" content="Wave Laboratory: appendix — Jack J. Burleson">
 <meta property="og:description" content="Supporting notes for Wave Laboratory: the wave models, validation scope and what the lab does not model.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/wave-laboratory.png">
@@ -294,6 +294,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       label(toggle);
       toggle.addEventListener("click", function () {
         var next = current() === "dark" ? "light" : "dark";
+        var reduce = false;
+        try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+        if (!reduce) {
+          root.classList.add("theme-switching");
+          window.setTimeout(function () { root.classList.remove("theme-switching"); }, 320);
+        }
         root.setAttribute("data-theme", next);
         try { localStorage.setItem("theme", next); } catch (e) {}
         label(toggle);

@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="styles.css?v=309da07a02">
+<link rel="stylesheet" href="styles.css?v=00f55e02f4">
 <meta property="og:title" content="Jack J. Burleson — Machine Learning · Data Science · AI Engineering &amp; Safety">
 <meta property="og:description" content="Portfolio of Jack J. Burleson: document-intelligence pipelines, transformer fine-tuning, LLM evaluation, and behavioral machine learning.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -167,12 +167,12 @@ Jack J. Burleson
 <p>I came to machine learning through psychology, and it shapes what I work on. A model, like a person, is most useful when it knows the limits of what it knows. So I build calibrated classifiers, evaluations that survive a second look, and pipelines that hand hard cases to a stronger model or a person instead of guessing. Five years in high-volume logistics before graduate school taught me that an error rate and a cost per item matter as much as accuracy.</p>
 <p>Away from documents, I turn physics into software you can play with, and I study how people think. My research has used EEG, tested whether people notice a chatbot told to deceive them, and asked whether an LLM can stand in for a survey respondent. So far it cannot beat simple baselines.</p>
 <h2 id="explore">Explore</h2>
-<ul>
-<li><a href="./about.html"><strong>About</strong></a>: background, skills, and education</li>
-<li><a href="./research.html"><strong>Research</strong></a>: cognitive neuroscience and EEG work</li>
-<li><a href="./writing/index.html"><strong>Writing</strong></a>: essays by my Hermes agent on subjects close to my own interests</li>
-<li><a href="./resume.html"><strong>Résumé</strong></a>: two pages, with a PDF download</li>
-</ul>
+<div class="explore">
+<p><a href="./about.html" class="explore-card"><strong>About</strong> background, skills, and education</a></p>
+<p><a href="./research.html" class="explore-card"><strong>Research</strong> cognitive neuroscience and EEG work</a></p>
+<p><a href="./writing/index.html" class="explore-card"><strong>Writing</strong> essays by my Hermes agent on subjects close to my own interests</a></p>
+<p><a href="./resume.html" class="explore-card"><strong>Résumé</strong> two pages, with a PDF download</a></p>
+</div>
 </div>
 
 </main>
@@ -211,6 +211,12 @@ Jack J. Burleson
       label(toggle);
       toggle.addEventListener("click", function () {
         var next = current() === "dark" ? "light" : "dark";
+        var reduce = false;
+        try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+        if (!reduce) {
+          root.classList.add("theme-switching");
+          window.setTimeout(function () { root.classList.remove("theme-switching"); }, 320);
+        }
         root.setAttribute("data-theme", next);
         try { localStorage.setItem("theme", next); } catch (e) {}
         label(toggle);

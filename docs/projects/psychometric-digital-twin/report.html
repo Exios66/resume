@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=309da07a02">
+<link rel="stylesheet" href="../../styles.css?v=00f55e02f4">
 <meta property="og:title" content="Psychometric Digital Twin: technical report — Jack J. Burleson">
 <meta property="og:description" content="Technical report on a PSYCH 755 study of LLM personas against classical ML for predicting PRCA communication apprehension: data, models, per-tier results, bias slices, secondary studies, reproduction and limits.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/psychometric-digital-twin.png">
@@ -665,6 +665,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       label(toggle);
       toggle.addEventListener("click", function () {
         var next = current() === "dark" ? "light" : "dark";
+        var reduce = false;
+        try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+        if (!reduce) {
+          root.classList.add("theme-switching");
+          window.setTimeout(function () { root.classList.remove("theme-switching"); }, 320);
+        }
         root.setAttribute("data-theme", next);
         try { localStorage.setItem("theme", next); } catch (e) {}
         label(toggle);
