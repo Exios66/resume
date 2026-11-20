@@ -1027,11 +1027,14 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 }
 
 /* Explore: four destination tiles instead of a plain list (Track 1 layout correction). */
+/* Heading→first-tile was 22px (h2 14 + explore 8) vs a 12px grid gap; match the rhythm.
+   Zero the h2 bottom margin so it does not collapse under the explore top margin. */
+h2:has(+ .explore) { margin-bottom: 0; }
 .explore {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  margin: 8px 0 4px;
+  margin: 12px 0 4px;
 }
 .explore > p { margin: 0; }
 .explore a.explore-card {
