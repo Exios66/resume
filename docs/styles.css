@@ -417,6 +417,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .project-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
 .project-nav p { display: contents; }
 .project-nav a {
+  position: relative; z-index: 0;
   display: inline-flex; align-items: center; gap: .5em; min-height: 44px; padding: 0 14px;
   font-size: .88rem; font-weight: 600; color: var(--accent);
   border: 1.5px solid var(--rule); border-radius: 999px;
@@ -945,8 +946,14 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
   background: linear-gradient(180deg, var(--accent), var(--accent-2));
 }
 
-/* Project tabs, timeline, tables and code pick up the same gradient. */
-.project-nav a[aria-current="page"] { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; box-shadow: 0 6px 18px -10px var(--glow); }
+/* Project tabs match the header soft active pill (readable mid-slide; no glow fill). */
+.project-nav a[aria-current="page"] {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.project-nav a[aria-current="page"]:hover { filter: none; background: var(--accent-soft); }
 .timeline ul { border-left: 0; background: linear-gradient(180deg, var(--accent), var(--accent-2) 45%, var(--rule)) 0 0 / 2px 100% no-repeat; }
 .timeline li::before { box-shadow: 0 0 0 4px var(--accent-soft); }
 .page thead th { border-bottom: 2px solid var(--accent); border-image: linear-gradient(90deg, var(--accent), var(--accent-2)) 1; }
@@ -979,6 +986,24 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
   .btn.primary:hover::after { transform: translateX(120%); transition: transform .7s var(--motion-ease); }
   .theme-toggle { transition: color var(--motion-fast), border-color var(--motion-fast), transform var(--motion-med) var(--motion-ease); }
   .theme-toggle:hover { transform: rotate(-18deg); }
+
+  /* Project-nav active pill: same scaleX slide as the header nav indicator. */
+  .project-nav a[aria-current="page"] {
+    background: transparent;
+    box-shadow: none;
+  }
+  .project-nav a[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--accent-soft);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+    transform-origin: left center;
+    animation: nav-indicator-slide var(--motion-med) var(--motion-ease) both;
+    pointer-events: none;
+  }
 }
 
 /* Explore: four destination tiles instead of a plain list (Track 1 layout correction). */
