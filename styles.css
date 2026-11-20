@@ -932,6 +932,11 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 }
 .card :is(h2, h3) { border-image: none; }
 .card :is(h2, h3)::before { content: none; }
+/* Wrapped headings parked the node on line 1, so line 2 started under it.
+   1.35em is the old inline marker (0.1em + 0.5em + 0.75em); single lines stay put. */
+h2:not(.group-title) { position: relative; padding-left: 1.35em; }
+h2:not(.group-title)::before { position: absolute; left: .1em; top: .35em; margin: 0; }
+.card :is(h2, h3) { position: static; padding-left: 0; }
 
 /* Cards: gradient edge, a top signal line that draws in, and a light that follows the pointer. */
 .card {
@@ -1099,6 +1104,7 @@ h2:has(+ .explore) { margin-bottom: 0; }
   .project-nav a[aria-current="page"]::before,
   .card-cover::after,
   .read-progress { display: none !important; }
+  h2:not(.group-title) { padding-left: 0; }
   .timeline ul { background: none; border-left: 2px solid CanvasText; }
   .card, .explore a.explore-card, .stat, .caveat {
     background: Canvas; border-color: CanvasText; box-shadow: none;
@@ -1125,6 +1131,7 @@ h2:has(+ .explore) { margin-bottom: 0; }
   .hero .role { padding-top: 0; }
   .page { padding-top: 0; }
   h2, .page thead th { border-image: none; }
+  h2:not(.group-title) { padding-left: 0; }
   .card { background: #fff; border-color: #ccc; }
   .stat { background: none; }
   .timeline ul { background: none; border-left: 2px solid #ccc; }
