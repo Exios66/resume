@@ -794,7 +794,12 @@ div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
   html.theme-switching body,
   html.theme-switching .page,
   html.theme-switching .site-header,
-  html.theme-switching .card {
+  html.theme-switching .card,
+  html.theme-switching .explore-card,
+  html.theme-switching .stat,
+  html.theme-switching .page-toc,
+  html.theme-switching .chip,
+  html.theme-switching .tag {
     transition:
       background-color var(--motion-theme) ease,
       color var(--motion-theme) ease,
