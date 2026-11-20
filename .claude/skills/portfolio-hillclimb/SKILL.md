@@ -13,10 +13,11 @@ builds on the existing design. Routine feature fixes, review responses and docum
 normal focused verification; they do not require fabricated experiment scores.
 
 For experience work, read `.10x/metrics.md` too and run `.venv/bin/python scripts/hillclimb/kpi.py`
-after rendering. The current ledger hardcodes `polish_defects` and the benchmark does not append the
-experience KPI. A segment name does not change the primary metric. Do not claim experience-scored keeps
-until a separately reviewed tooling change implements them with a new baseline (tracked in #126).
-Its "How to raise each metric" section names the source of each gap and the change that closes it.
+after rendering. Quality levels (L0–L4) and keep rules for a flat `experience_gaps` live there and
+**govern** equal-score craft keeps; this skill’s decision rules defer to that file when they conflict.
+Start an experience segment with `hc.sh segment "<name>" --metric experience_gaps --gate polish_defects=0`
+(tooling shipped under #126). Its "How to raise each metric" section names the source of each gap and
+the change that closes it.
 
 `AGENTS.md` applies throughout: `docs/` is generated (render, never hand-edit), run the real-browser
 suite, review screenshots for visual changes, and report exact commands, results and what was not checked.
@@ -109,8 +110,12 @@ ask whether to continue. Every step names its command and what you must see befo
 | 10 | Publish | `git push -u origin <branch>` | Every few keeps. |
 
 **Decision rules.**
-- Keep only if the score is lower, checks pass, the screenshots look right, and nothing nearby got worse.
-- Equal or higher score, failed checks, or a worse look: log it with the reason in the ASI, then `hc.sh discard`.
+- Keep only if checks pass, the screenshots look right, nothing nearby got worse, **and** either the
+  scored metric improves **or** `.10x/metrics.md` allows an equal-score keep (judged indicator,
+  residual roadmap task, or regression hardening while gates hold). At L1 complete / L2 active, a
+  flat `experience_gaps` is expected; do not discard a good craft keep only because the number is flat.
+- Higher score, failed checks, or a worse look: log it with the reason in the ASI, then `hc.sh discard`.
+  Equal score with no judged/roadmap/hardening justification: discard the same way.
 - A side effect you can fix inside the same idea (bigger labels made the pager wrap): fix it,
   `git commit --amend`, re-run steps 4–7, then decide once.
 - ASI is a JSON object that survives reverts: `hypothesis`, `result`, `next_action_hint`, plus anything specific.
@@ -144,7 +149,10 @@ never claim checks, browsers or devices you did not run.
   visitor cannot see, misses a real defect, or scores an artefact), log the affected run honestly, fix the
   audit in its own commit, `hc.sh segment "<why>"`, re-run the baseline, then reapply the experiment.
   Never change the audit to rescue a single experiment's score.
-- The ledger cannot automatically justify a keep at an equal polish score from an experience KPI or a judged indicator. Record those separately as ordinary scoped work with checks and evidence under the roadmap rules, or implement support in a separate tooling change/new segment. Never pretend a lower polish score or edit a run record to make it pass.
+- Equal-score keeps that `.10x/metrics.md` allows (L2 craft / judged indicators while `experience_gaps`
+  is owner-blocked) stay **in** this loop: same evidence contract, ASI that names the judged improvement,
+  ledger metric may stay flat. Do not pretend a lower score, edit a run record, or move the work outside
+  the loop to dodge the equal-score rule. Unjustified equal or higher scores are still discards.
 - Do not weaken or delete a test. Update one only when it pins exactly the text or markup you changed on
   purpose (for example, a test matching `class="kicker"` exactly once a filter adds a class).
 - Project facts and numbers must match their source repositories. Do not invent results.
