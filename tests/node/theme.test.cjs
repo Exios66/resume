@@ -50,6 +50,21 @@ function environment({ saved = null, dark = false, storageFails = false,
   const print = element();
   const writes = [];
   let printCalls = 0;
+  let nextTimer = 1;
+  const timers = new Map();
+  function setTimeout(callback) {
+    const id = nextTimer++;
+    timers.set(id, callback);
+    return id;
+  }
+  function clearTimeout(id) {
+    timers.delete(id);
+  }
+  function flushTimers() {
+    const pending = [...timers.entries()];
+    timers.clear();
+    for (const [, callback] of pending) callback();
+  }
   const context = vm.createContext({
     document: {
       documentElement: root,
@@ -76,15 +91,16 @@ function environment({ saved = null, dark = false, storageFails = false,
         assert.equal(query, '(prefers-color-scheme: dark)');
         return { matches: dark };
       },
-      // Theme cross-fade schedules a class removal; tests need the timer to exist.
-      setTimeout(callback) { return callback(); },
+      setTimeout,
+      clearTimeout,
       print() { printCalls += 1; },
     },
   });
-  // Inline scripts call setTimeout without a window qualifier in some engines;
-  // expose the same stub at the context root for the theme-switching cleanup.
-  context.setTimeout = context.window.setTimeout;
-  return { root, toggle, print, writes, context, printCalls: () => printCalls };
+  // Inline scripts may call timers without a window qualifier.
+  context.setTimeout = setTimeout;
+  context.clearTimeout = clearTimeout;
+  return { root, toggle, print, writes, context, printCalls: () => printCalls, flushTimers,
+    pendingTimers: () => timers.size };
 }
 
 function assertTheme(ui, theme) {
@@ -186,6 +202,43 @@ for (const reduced of [false, true]) {
     assert.equal(ui.root.classList.contains('js-motion'), !reduced);
   });
 }
+
+test('theme click adds theme-switching then clears it after the queued cleanup', () => {
+  const ui = environment({ saved: 'light', reduced: false });
+  vm.runInContext(bootstrap, ui.context);
+  vm.runInContext(controls, ui.context);
+  ui.toggle.click();
+  assert.equal(ui.root.classList.contains('theme-switching'), true);
+  assert.equal(ui.pendingTimers(), 1);
+  assertTheme(ui, 'dark');
+  ui.flushTimers();
+  assert.equal(ui.root.classList.contains('theme-switching'), false);
+  assert.equal(ui.pendingTimers(), 0);
+});
+
+test('reduced-motion theme click does not add theme-switching', () => {
+  const ui = environment({ saved: 'light', reduced: true });
+  vm.runInContext(bootstrap, ui.context);
+  vm.runInContext(controls, ui.context);
+  ui.toggle.click();
+  assert.equal(ui.root.classList.contains('theme-switching'), false);
+  assert.equal(ui.pendingTimers(), 0);
+  assertTheme(ui, 'dark');
+});
+
+test('a second theme click cancels the prior cleanup timer', () => {
+  const ui = environment({ saved: 'light', reduced: false });
+  vm.runInContext(bootstrap, ui.context);
+  vm.runInContext(controls, ui.context);
+  ui.toggle.click();
+  assert.equal(ui.pendingTimers(), 1);
+  ui.toggle.click();
+  assert.equal(ui.root.classList.contains('theme-switching'), true);
+  assert.equal(ui.pendingTimers(), 1);
+  assertTheme(ui, 'light');
+  ui.flushTimers();
+  assert.equal(ui.root.classList.contains('theme-switching'), false);
+});
 
 test('a failing media query does not stop the saved theme or the toggle', () => {
   const ui = environment({ saved: 'dark' });

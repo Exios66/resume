@@ -658,6 +658,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       if (sun && moon) { sun.hidden = !dark; moon.hidden = dark; }
     }
     var toggle = document.querySelector(".theme-toggle");
+    var themeCleanup = null;
     if (toggle) {
       // Its list item is rendered hidden so there is no dead control (or stray bullet) without JavaScript; shown once it can work.
       if (toggle.parentNode) toggle.parentNode.hidden = false;
@@ -669,7 +670,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
         if (!reduce) {
           root.classList.add("theme-switching");
-          window.setTimeout(function () { root.classList.remove("theme-switching"); }, 320);
+          // Cancel any prior cleanup so a rapid second click keeps the full cross-fade.
+          if (themeCleanup !== null) window.clearTimeout(themeCleanup);
+          themeCleanup = window.setTimeout(function () {
+            themeCleanup = null;
+            root.classList.remove("theme-switching");
+          }, 320);
         }
         root.setAttribute("data-theme", next);
         try { localStorage.setItem("theme", next); } catch (e) {}
