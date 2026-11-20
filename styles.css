@@ -364,10 +364,12 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   /* A location or year that wraps to its own line starts at the text edge, not indented. */
   .head-main .sub, .training .date { margin-left: 0; }
 }
-/* Résumé action buttons: tighter so all three share a row at 375px; if they must wrap they stretch. */
+/* Phone hero CTAs: primary alone on the first row, secondary pair below — avoids one
+   cramped edge-to-edge trio at 375px while keeping 44px targets. */
 @media (max-width: 480px) {
-  .actions { gap: 8px; }
-  .actions .btn { flex: 1 1 auto; padding-inline: 12px; }
+  .actions { gap: 10px; }
+  .actions .btn { flex: 1 1 calc(50% - 5px); padding-inline: 14px; }
+  .actions .btn.primary { flex: 1 1 100%; }
 }
 
 /* ---------- Print ---------- */

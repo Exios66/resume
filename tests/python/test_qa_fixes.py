@@ -107,9 +107,12 @@ class SmallCssFixTests(unittest.TestCase):
         published = (DOCS / "styles.css").read_text(encoding="utf-8")
         self.assertEqual(published, CSS)
 
-    def test_resume_action_buttons_tighten_on_phones(self):
+    def test_resume_action_buttons_stack_primary_on_phones(self):
+        # At 375px a single edge-to-edge trio felt cramped; primary takes the first
+        # row and the two secondary buttons share the second.
         phone = block(CSS, "@media (max-width: 480px)")
-        self.assertIn(".actions .btn { flex: 1 1 auto;", phone)
+        self.assertIn(".actions .btn { flex: 1 1 calc(50% - 5px);", phone)
+        self.assertIn(".actions .btn.primary { flex: 1 1 100%; }", phone)
 
     def test_icons_stay_sized_by_em(self):
         self.assertRegex(CSS, r"\.icon \{ width: 1em; height: 1em;")
