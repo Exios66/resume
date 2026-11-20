@@ -964,6 +964,10 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 }
 @media (prefers-reduced-motion: no-preference) {
   .explore a.explore-card:hover { transform: translateY(-1px); }
+  /* Explore entrance reuses .rv; a slightly longer stagger reads as one section arriving. */
+  html.js-motion .explore a.explore-card.rv {
+    transition-delay: calc(var(--rv-i, 0) * 70ms);
+  }
 }
 @media print {
   .explore { display: block; }
