@@ -36,3 +36,4 @@ findings.tsv
 checks.ok
 findings.best.tsv
 .hillclimb-evidence/
+.worktrees/

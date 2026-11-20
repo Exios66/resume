@@ -1,6 +1,8 @@
 ---
 pagetitle: "MORNINGSTAR: appendix — Jack J. Burleson"
 description: "Supporting scope notes for MORNINGSTAR: the self-reported deliberation counts, the case-ID schema, and what the system has not measured."
+image: https://exios66.github.io/resume/assets/og/llm-personas.png
+image-alt: "MORNINGSTAR project motif"
 ---
 
 ::: {.page}

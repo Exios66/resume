@@ -1,6 +1,8 @@
 ---
 pagetitle: "Digital-Mailroom: appendix — Jack J. Burleson"
 description: "Supporting notes for the Digital-Mailroom case study: the public corpus sources and the partner-data boundary."
+image: https://exios66.github.io/resume/assets/og/digital-mailroom.png
+image-alt: "Digital-Mailroom project motif"
 ---
 
 ::: {.page}

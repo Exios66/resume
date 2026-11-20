@@ -1,6 +1,8 @@
 ---
 pagetitle: "Mailroom-Corpus-EDA: technical report — Jack J. Burleson"
 description: "Sources and licences, identity and provenance design, label separation, split rule, intent hydration, audit pipeline, revision history, test results and limitations for the mailroom dataset and its audit repository."
+image: https://exios66.github.io/resume/assets/og/mailroom-corpus-eda.png
+image-alt: "Mailroom-Corpus-EDA project motif"
 ---
 
 ::: {.page}
@@ -22,7 +24,7 @@ For the versioned corpus reference and source-license context, see [Cite the dat
 
 ## Summary
 
-Mailroom-Corpus-EDA is the audit and publishing repository for the mailroom dataset, a corpus of 3,302 legal and insurance documents in five classes and 55 strata. The repository downloads the published dataset, checks its structure and provenance, measures its composition, draws 30 static and 18 interactive figures, audits correspondence intent coverage, and holds the helpers that build and publish new revisions to the Hugging Face Hub. This report describes the Hub tag `v9.2`. The current published revision is `v9.3`, released in November 2026: it adds corporate presence-layer labels over the same 3,302 documents and routes merger agreements to their own specialist. A `v9.4` revision is staged and not yet published.
+Mailroom-Corpus-EDA is the audit and publishing repository for the mailroom dataset, a corpus of 3,302 legal and insurance documents in five classes and 55 strata. The repository downloads the published dataset, checks its structure and provenance, measures its composition, draws 30 static and 18 interactive figures, audits correspondence intent coverage, and holds the helpers that build and publish new revisions to the Hugging Face Hub. This report describes the Hub tag `v9.2`. The analysis repository README at [aed84818](https://github.com/Exios66/Mailroom-Corpus-EDA/tree/aed84818ac8a), checked 19 November 2026, still pins its loader to `v9.2`. The revision table below records a later label-only `v9.3`; that row was not re-checked against the Hub for this update. A `v9.4` revision is not in the table or in that README, so it is not described as staged here.
 
 It is an evaluation and ingress-simulation corpus for the mailroom projects. It is not a training set, and the report says where that matters.
 
@@ -161,7 +163,7 @@ After the v9.1 change moved the MAUD count to the ground-truth side, the integri
 
 ## Tests
 
-I ran the test suite in a fresh environment, with the latest versions of the dependencies and not the pinned ones. That older run had 200 tests, of which 185 passed, 14 skipped and 1 failed. The current revision declares 594 `def test_` functions in 26 files; that is a count, not a passing run. The 14 skipped tests need the full dataset snapshot, which `run_all.py --phases P0` downloads. The 14 skipped tests need the full dataset snapshot, which `run_all.py --phases P0` downloads. The failure is a contract test that reads a taxonomy file from a sibling checkout of another repository, which my environment did not have.
+I ran the test suite in a fresh environment, with the latest versions of the dependencies and not the pinned ones. That older run had 200 tests, of which 185 passed, 14 skipped and 1 failed. The current revision declares 594 `def test_` functions in 26 files; that is a count, not a passing run. The 14 skipped tests need the full dataset snapshot, which `run_all.py --phases P0` downloads. The failure is a contract test that reads a taxonomy file from a sibling checkout of another repository, which my environment did not have.
 
 ## Limitations
 

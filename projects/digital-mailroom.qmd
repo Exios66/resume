@@ -1,6 +1,8 @@
 ---
 pagetitle: "Digital-Mailroom — Jack J. Burleson"
 description: "Capstone with an industry partner: one LangGraph pipeline for document routing, prompt experiments, deterministic scoring and reproducible deployment, built and tested on a dataset I assembled from public sources."
+image: https://exios66.github.io/resume/assets/og/digital-mailroom.png
+image-alt: "Digital-Mailroom project motif"
 ---
 
 ::: {.page}

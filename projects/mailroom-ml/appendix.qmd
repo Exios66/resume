@@ -1,6 +1,8 @@
 ---
 pagetitle: "Mailroom-ML: appendix — Jack J. Burleson"
 description: "Supporting tables for the Mailroom-ML M9c release: evaluation protocol, release gates, per-head results, cohorts and selective-risk checks."
+image: https://exios66.github.io/resume/assets/og/mailroom-ml.png
+image-alt: "Mailroom-ML project motif"
 ---
 
 ::: {.page}

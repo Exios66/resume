@@ -1,6 +1,8 @@
 ---
 pagetitle: "Neuron Atlas — Jack J. Burleson"
 description: "A browser-based language-model neuron explorer: live TinyStories steering, random-direction controls, and recorded Qwen studies, with reproducible findings and explicit limits."
+image: https://exios66.github.io/resume/assets/og/neuron-atlas.png
+image-alt: "Neuron Atlas project motif"
 ---
 
 ::: {.page}
@@ -63,7 +65,7 @@ For example, [L4 N803, “Run and hide”](https://exios66.github.io/LLM_Viz/#/f
 
 The upstream runtime verification reports exact replay of all 16 curated neuron cards, but only 47 of 48 sampled sweep rollouts: near-tied float32 logits can change greedy decoding. The model, corpus and code also have separate license terms.
 
-This page was reviewed on **6 November 2026**, against [source revision a580008](https://github.com/Exios66/LLM_Viz/tree/a58000861b424280158cea728cf7b29edaf385d1). The project linked in issue #89 began on the [neuron-atlas branch](https://github.com/Exios66/LLM_Viz/tree/neuron-atlas); the published project now includes the recorded-model studies too. The [research reports](https://github.com/Exios66/LLM_Viz/tree/a58000861b424280158cea728cf7b29edaf385d1/docs/research) and the live site's [Method page](https://exios66.github.io/LLM_Viz/#/method) contain the methods, findings and limitations.
+This page was reviewed on **6 November 2026**, against [source revision a580008](https://github.com/Exios66/LLM_Viz/tree/a58000861b424280158cea728cf7b29edaf385d1). The project linked in issue #89 began on the [neuron-atlas branch](https://github.com/Exios66/LLM_Viz/tree/neuron-atlas); the published project now includes the recorded-model studies too. The [research reports](https://github.com/Exios66/LLM_Viz/tree/a58000861b424280158cea728cf7b29edaf385d1/docs/research) and the live site's [Method page](https://exios66.github.io/LLM_Viz/#/method) contain the methods, findings and limitations. `main` later moved to [7d15c18](https://github.com/Exios66/LLM_Viz/tree/7d15c18a5bd8) (7 November 2026), a region-key sweep. The findings on this page stay the 6 November review.
 
 ## What I learned
 
