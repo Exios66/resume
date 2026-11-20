@@ -1023,6 +1023,47 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 .chart .mark .hit { fill: transparent; }
 .chart .mark:is(:hover, :focus-visible) .hit { fill: color-mix(in srgb, var(--accent) 8%, transparent); }
 .chart .mark:focus-visible .hit { stroke: var(--accent); stroke-width: 1.5; }
+
+/* Chart draw-in (Track 2): marks reveal when the figure enters view. Needs
+   html.js-motion (head) plus .is-drawn (site.js). No-JS and reduced-motion keep
+   every mark visible. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js-motion figure.chart:not(.is-drawn) .mark :is(.bar, .dot, .link, text.val) {
+    opacity: 0;
+  }
+  html.js-motion figure.chart:not(.is-drawn) .mark .bar {
+    transform: scaleY(0.08);
+    transform-box: fill-box;
+    transform-origin: center bottom;
+  }
+  html.js-motion figure.chart:not(.is-drawn) .mark .dot {
+    transform: scale(0.4);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  html.js-motion figure.chart.is-drawn .mark :is(.bar, .dot, .link, text.val) {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--motion-slow) var(--motion-ease),
+      transform var(--motion-slow) var(--motion-ease);
+    transition-delay: calc(var(--mark-i, 0) * 45ms);
+  }
+}
+@media print {
+  html.js-motion figure.chart .mark :is(.bar, .dot, .link, text.val) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+@media (forced-colors: active) {
+  html.js-motion figure.chart .mark :is(.bar, .dot, .link, text.val) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
 .chart-body:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 .chart-tooltip {
   position: fixed; z-index: 50; max-width: 260px; padding: 6px 10px; pointer-events: none;

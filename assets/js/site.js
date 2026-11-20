@@ -436,6 +436,32 @@
     });
   })();
 
+  // Charts: draw marks in once when the figure enters the viewport. Without
+  // IntersectionObserver (or with reduced motion, already returned above) the
+  // marks stay fully visible — the CSS only hides them under html.js-motion.
+  if ("IntersectionObserver" in window) {
+    (function () {
+      var charts = doc.querySelectorAll("figure.chart");
+      if (!charts.length) return;
+      var chartObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var figure = entry.target;
+          chartObserver.unobserve(figure);
+          var marks = figure.querySelectorAll(".mark");
+          Array.prototype.forEach.call(marks, function (mark, index) {
+            mark.style.setProperty("--mark-i", String(Math.min(index, 8)));
+          });
+          figure.classList.add("is-drawn");
+        });
+      }, { threshold: 0.18, rootMargin: "0px 0px -6% 0px" });
+      Array.prototype.forEach.call(charts, function (figure) { chartObserver.observe(figure); });
+      window.addEventListener("beforeprint", function () {
+        Array.prototype.forEach.call(charts, function (figure) { figure.classList.add("is-drawn"); });
+      });
+    })();
+  }
+
   // Project cards below the fold fade in as they arrive. Skipped on a deep link,
   // a reload or back/forward navigation, where the browser restores a scroll
   // position and revealing would make visible content flash.
