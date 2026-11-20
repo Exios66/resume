@@ -27,15 +27,15 @@ Page budgets and classification live in `scripts/hillclimb/page_budgets.py` so `
 ## Primary metric for the experience loop: `experience_gaps` (lower is better, target 0)
 
 It is the sum of the counts below. Baseline measured on `main` after pull request #116, 10 November 2026: **125**.
-After #148 (image sizing/lazy): **19**. After the 19 November 2026 KPI expansion (full-site page budgets plus
-chart-title and figure-alt guards), the sum is still **19**: the new guards read 0 on the current render, and
-`pages_over_budget` still counts over-budget pages across every type (currently 0).
+After #148 (image sizing/lazy): **19**. After hill-climb run 73 (per-project social cards, 19 November 2026 evening):
+**5**. The 19 November KPI expansion (full-site page budgets plus chart-title and figure-alt guards) still reads
+those new parts as 0; `pages_over_budget` counts every page type (currently 0).
 
-| Part | Baseline | Now (19 Nov 2026) | Target | Closed by |
+| Part | Baseline | Now (19 Nov 2026 evening) | Target | Closed by |
 | --- | --- | ---: | --- | --- |
 | `cards_without_cover` | 0 | 0 | 0 | done (#116); guards against regressions |
 | `repo_style_titles` (card titles that are hyphenated repository names) | 5 | 5 | 0 | #121; needs the owner's titles first |
-| `projects_without_own_social_card` | 14 | 14 | 0 | #120 |
+| `projects_without_own_social_card` | 14 | 0 | 0 | #120; generator + front matter in run 73 (`e128dee`); owner visual signoff still open |
 | `projects_without_structured_data` | 0 | 0 | 0 | guard |
 | `images_without_size` (no `width` and `height`) | 61 | 0 | 0 | #119 |
 | `later_images_not_lazy` (not the first image on a page, and not `loading="lazy"`) | 45 | 0 | 0 | #119 |
@@ -60,9 +60,9 @@ page or a heavier case study moves both the gate and `pages_over_budget` togethe
 | --- | --- | ---: | ---: | ---: |
 | Home | `index.html` | 14,816 | 16,000 | 7% |
 | Projects index | `projects/index.html` | 24,670 | 26,000 | 5% |
-| Case study | `projects/mapreduce-reloaded.html` | 18,989 | 19,000 | under 1% |
-| Technical report | `projects/natd/report.html` | 19,388 | 22,000 | 12% |
-| Appendix | `projects/langtons-ant/appendix.html` | 11,699 | 13,000 | 10% |
+| Case study | `projects/mapreduce-reloaded.html` | 18,981 | 19,000 | under 1% |
+| Technical report | `projects/natd/report.html` | 19,401 | 22,000 | 12% |
+| Appendix | `projects/langtons-ant/appendix.html` | 11,716 | 13,000 | 10% |
 | Other page | `resume.html` | 12,181 | 15,000 | 19% |
 | Shared stylesheet | `styles.css` | 15,653 | 20,000 | 22% |
 | Shared script | `assets/js/site.js` | 6,643 | 9,000 | 26% |
@@ -92,36 +92,30 @@ Do not turn a judged indicator into a number by guessing. Record who judged it a
 
 ## How to raise each metric
 
-Measured on this branch after the 19 November 2026 KPI expansion: `experience_gaps` = **19**. The remaining gaps
-are the 14 shared social cards (#120) and 5 repository-style display titles (#121). Chart-title and figure-alt
-guards are at 0; keep them there. Re-run `kpi.py` before starting; these counts drift as the portfolio grows.
+Measured after run 73 + the 19 November 2026 KPI expansion: `experience_gaps` = **5**. The remaining gaps are
+repository-style display titles (#121). Chart-title and figure-alt guards are at 0; keep them there. Re-run
+`kpi.py` before starting; these counts drift as the portfolio grows.
 
-### 1. `projects_without_own_social_card` (14): one card per project
-
-- **Where they come from.** Every project page inherits the site-wide `open-graph.image` in `_quarto.yml`
-  (`assets/og-image.png`). `kpi.py` counts a project as covered only when its slug appears in its own `og:image` URL.
-- **Lever (#120):** make a 1200 × 630 PNG per project from the project's existing cover motif in `partials/covers/`.
-  Use the real title and no invented imagery. Name it after the slug, for example
-  `assets/social/wave-laboratory.png`, and set `image:` in that project's front matter to the absolute URL
-  (`https://exios66.github.io/resume/assets/social/wave-laboratory.png`). `project_schema` in `site.lua` accepts only
-  `http(s)` images and falls back to the site-wide image for a relative path, so a relative value would leave the
-  JSON-LD on the generic card. Script the generator so that a new project gets a card from the same command. Check one page's `og:image` and `twitter:image` in the built HTML.
-
-### 2. `repo_style_titles` (5): owner decision first
+### 1. `repo_style_titles` (5): owner decision first
 
 - The five cards are Digital-Mailroom, Mailroom-ML, RVL-CDIP-Classifier, Mailroom-Corpus-EDA and MapReduce-Reloaded.
 - **Lever (#121):** ask the owner for the display titles. Do not write them yourself (rule 4 below). Once given, change
   only the card and page titles and keep the repository names in links and code.
 
-### 3. Page-weight headroom (gate, not a gap count until a page crosses)
+### 2. Page-weight headroom (gate, not a gap count until a page crosses)
 
-| Number | 10 Nov | 19 Nov | Limit | Note |
+| Number | 10 Nov | 19 Nov evening | Limit | Note |
 | --- | ---: | ---: | ---: | --- |
 | `gz_projects_index` | 23,702 | 24,670 | 26,000 | 95% used; a new card or longer card text can break it |
-| `gz_case_study` | 16,028 | 18,989 | 19,000 | MapReduce is 11 bytes under; any append needs a trim or a budget raise |
+| `gz_case_study` | 16,028 | 18,981 | 19,000 | MapReduce is 19 bytes under after the social-card description trim |
 | `gz_home` | 14,127 | 14,816 | 16,000 | 93% used |
 | `gz_site_js` | 5,683 | 6,643 | 9,000 | Watch phone-chart and motion additions |
 | `gz_styles_css` | 14,935 | 15,653 | 20,000 | |
+
+### 3. `#120` social cards (measured closed; owner signoff open)
+
+- Run 73 wrote `assets/og/<slug>.png` from cover motifs via `scripts/build/make-og.py` and set absolute `image:` URLs.
+- `projects_without_own_social_card=0`. Keep regenerating after #118 motif redraws; owner contact-sheet signoff remains.
 
 ## Metrics worth adding next
 
