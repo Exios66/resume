@@ -2,19 +2,21 @@
 
 Read `AGENTS.md`, `.github/BUILDING.md`, `scripts/hillclimb/README.md`, this file, `.10x/status.md`, and the live issue before editing. Run `bash scripts/setup-agent.sh` once per worktree and source `.autoresearch-tools/env.sh` in every render/audit shell. Doctor must end with `All tools present.`
 
-## Current state (2026-11-19)
+## Current state (2026-11-20)
+
+Quality levels live in `.10x/metrics.md`. **L1 (measured Track 1) is held** at `experience_gaps=5` (owner titles only). The research loop grades **L2 craft** next: judged motion/aesthetics and weight pressure, not a further drop in `experience_gaps`. Design-stack keeps through run 86 cover Track 2 tokens, hero drift, theme cross-fade, Explore tiles, chart draw-in, and phone/print hardening; #122 residual tasks (page transitions, motif life, stat count-up, matrix test) remain.
 
 Project stage was checked against the source repositories, not guessed. AeroGlobe and MapReduce-Reloaded keep their "in active development" kickers and now also carry a WIP tag on the project index and the case study. AeroGlobe's planned list no longer says the logbook, time-zone overlay, history panel and route search are unbuilt; the README at `a011ff7` (8 November 2026) describes them as built, and the page says they were not re-run here. The appendix checklist matches that split. A real historical day is still not claimed on the live site. MapReduce charts stay the 11 November `def9c62` snapshot. The caveat records the later README summary at `6d93f33`, with the 3.7× word-count figure from E0 at `3a907de` (the other experiments in that README ran at `8f0ddb9`) and the planned section no longer says E7 was never run. AeroGlobe's narrative stays the 23 October snapshot; its 282 declarations and 8,090 TypeScript lines stay the 30 October recount. Wave Laboratory's October grep count stays; the README at `261979b` reports 632 passing tests, not re-run here. Neuron Atlas findings stay the 6 November review; `main` later moved to `7d15c18`. The corpus report still describes `v9.2`; the analysis README at `aed84818` still pins that loader, and `v9.4` is not called staged.
 
-The MapReduce case study stays under its 19,000-byte gzip budget (18,981 after the social-card keep trimmed the meta description). Do not add a long paragraph to that page without cutting something else. `kpi.py` and `test_page_budget.py` share `scripts/hillclimb/page_budgets.py`, so every page type feeds `pages_over_budget`, and chart-title / figure-alt guards are part of `experience_gaps` (both currently 0).
+MapReduce sits in the **red** case-study weight band (~19,255 / 19,500). Projects index is also red (~24,968 / 26,000). Prefer weight-neutral CSS and shorter copy before raising budgets again. `kpi.py` and `test_page_budget.py` share `scripts/hillclimb/page_budgets.py`.
 
-Per-project Open Graph cards shipped in hill-climb run 73 (`e128dee`): `scripts/build/make-og.py` writes `assets/og/<slug>.png` from each cover motif; project front matter points `image:` at the absolute URL. `experience_gaps` is **5** (only #121 repo-style titles). Owner contact-sheet signoff of the 14 cards is still needed; do not invent display titles.
+Per-project Open Graph cards shipped in hill-climb run 73 (`e128dee`): `projects_without_own_social_card=0`. Owner contact-sheet signoff is **L3**; do not invent display titles (#121).
 
 Résumé employment was not edited. The résumé regression forbids returning `Jan 2026 – Present` and `Avis Budget Group`. #71 stays open until the owner chooses the wording and the regression is updated with it.
 
 `.github/BUILDING.md` no longer claims invisible HTML TODOs in the sources; those comments are gone and open gaps stay on the issues.
 
-Next priority: #121 owner titles, #118 motif signoff, residual #122–#125, and #153. Start an experience segment before experience-scored keeps.
+Next priority by level: **L2** residual #122 and weight-safe craft; **L3** #121 titles, #118 motif confirmation, #120 OG signoff; then #153 and content issues #71/#76/#84/#112.
 
 ## Current state (2026-11-12)
 
