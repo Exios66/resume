@@ -416,6 +416,29 @@
 
   if (reduce) return;
 
+  // Soft page enter once per navigation. Head sets page-pending with js-motion so
+  // the paper never flashes opaque; reload, back/forward and restored scroll skip it.
+  (function () {
+    if (!root.classList.contains("page-pending")) return;
+    var page = doc.querySelector(".page");
+    var skip = !page || scrollTop() > 0;
+    try {
+      var nav = performance.getEntriesByType("navigation")[0];
+      if (nav && (nav.type === "reload" || nav.type === "back_forward")) skip = true;
+    } catch (e) {}
+    if (skip) {
+      root.classList.remove("page-pending");
+      return;
+    }
+    page.classList.add("is-entered");
+    root.classList.remove("page-pending");
+    setTimeout(function () { page.classList.remove("is-entered"); }, 800);
+    window.addEventListener("beforeprint", function () {
+      root.classList.remove("page-pending");
+      page.classList.remove("is-entered");
+    });
+  })();
+
   // Reading progress on technical reports. Scroll-driven CSS animation where supported.
   (function () {
     var active = doc.querySelector('.project-nav a[aria-current="page"]');

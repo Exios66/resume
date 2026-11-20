@@ -706,6 +706,17 @@ div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
   }
   html.js-motion .rv.is-in { opacity: 1; transform: none; }
 
+  /* Soft page enter once per navigation (head sets page-pending; site.js clears it). */
+  html.js-motion.page-pending .page:not(.is-entered) {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  html.js-motion .page.is-entered {
+    opacity: 1;
+    transform: none;
+    transition: opacity var(--motion-slow) var(--motion-ease), transform var(--motion-slow) var(--motion-ease);
+  }
+
   /* Reading progress (technical reports) */
   .read-progress {
     position: fixed; top: 0; left: 0; z-index: 30; width: 100%; height: 2px;
@@ -750,6 +761,8 @@ div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
 @media print {
   .read-progress { display: none !important; }
   html.js-motion .rv { opacity: 1 !important; transform: none !important; transition: none !important; }
+  html.js-motion.page-pending .page,
+  html.js-motion .page.is-entered { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 
 /* ==========================================================================
