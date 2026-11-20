@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=309da07a02">
+<link rel="stylesheet" href="../styles.css?v=00f55e02f4">
 <meta property="og:title" content="Projects — Jack J. Burleson">
 <meta property="og:description" content="Selected work in mechanistic interpretability, document intelligence, data engineering, distributed systems, behavioral machine learning, LLM agent design, and simulation, with case studies and selected technical reports.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -345,6 +345,12 @@ ul.task-list li input[type="checkbox"] {
       label(toggle);
       toggle.addEventListener("click", function () {
         var next = current() === "dark" ? "light" : "dark";
+        var reduce = false;
+        try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+        if (!reduce) {
+          root.classList.add("theme-switching");
+          window.setTimeout(function () { root.classList.remove("theme-switching"); }, 320);
+        }
         root.setAttribute("data-theme", next);
         try { localStorage.setItem("theme", next); } catch (e) {}
         label(toggle);

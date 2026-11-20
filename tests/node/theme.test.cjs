@@ -22,7 +22,11 @@ function element() {
   const classes = new Set();
   return {
     textContent: '',
-    classList: { add: (name) => classes.add(name), contains: (name) => classes.has(name) },
+    classList: {
+      add: (name) => classes.add(name),
+      remove: (name) => classes.delete(name),
+      contains: (name) => classes.has(name),
+    },
     getAttribute: (name) => attributes.get(name) ?? null,
     setAttribute: (name, value) => attributes.set(name, value),
     addEventListener(name, callback) {
@@ -72,9 +76,14 @@ function environment({ saved = null, dark = false, storageFails = false,
         assert.equal(query, '(prefers-color-scheme: dark)');
         return { matches: dark };
       },
+      // Theme cross-fade schedules a class removal; tests need the timer to exist.
+      setTimeout(callback) { return callback(); },
       print() { printCalls += 1; },
     },
   });
+  // Inline scripts call setTimeout without a window qualifier in some engines;
+  // expose the same stub at the context root for the theme-switching cleanup.
+  context.setTimeout = context.window.setTimeout;
   return { root, toggle, print, writes, context, printCalls: () => printCalls };
 }
 
