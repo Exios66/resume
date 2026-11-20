@@ -124,7 +124,7 @@ Do not tick #122 complete until its unchecked tasks and the motion matrix test l
 ## Rules for the loop
 
 1. One small change per experiment. Measure before and after with the commands above.
-2. Keep a change only if all gates hold **and** one of: `experience_gaps` falls; a judged indicator improves with evidence; a residual roadmap task closes with evidence; or a clear regression risk is removed (guard/hardening) without making the look worse.
+2. Keep a change only if all gates hold, **`experience_gaps` does not rise** (L2 inherits L1: once the floor is ≤ 5, a keep may not push it above 5), **and** one of: `experience_gaps` falls; a judged indicator improves with evidence at an equal score; a residual roadmap task closes with evidence; or a clear regression risk is removed (guard/hardening) without making the look worse.
 3. At L1 complete / L2 active, a flat `experience_gaps` is expected. Log design keeps as judged changes with screenshots (design-spec rule 8). The ledger may still show metric 5; that is not a reason to discard a good craft keep. **This file governs** equal-score judged keeps; `.claude/skills/portfolio-hillclimb/SKILL.md` defers here when the two conflict.
 4. Do not game a metric: no hidden images to satisfy a count, no fake sizes, no title changes without the owner's wording.
 5. Report `experience_gaps` after each render. Since the experience-scored tooling landed (#126), `autoresearch.sh` also prints the KPI metrics and the ledger can score `experience_gaps` directly: start such a segment with `hc.sh segment "<name>" --metric experience_gaps --gate polish_defects=0`. Never edit the audit, the checks or `kpi.py` to rescue a result.

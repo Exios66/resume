@@ -110,10 +110,11 @@ ask whether to continue. Every step names its command and what you must see befo
 | 10 | Publish | `git push -u origin <branch>` | Every few keeps. |
 
 **Decision rules.**
-- Keep only if checks pass, the screenshots look right, nothing nearby got worse, **and** either the
-  scored metric improves **or** `.10x/metrics.md` allows an equal-score keep (judged indicator,
-  residual roadmap task, or regression hardening while gates hold). At L1 complete / L2 active, a
-  flat `experience_gaps` is expected; do not discard a good craft keep only because the number is flat.
+- Keep only if checks pass, the screenshots look right, nothing nearby got worse, the scored metric
+  does not rise, **and** either the metric improves **or** `.10x/metrics.md` allows an equal-score
+  keep (judged indicator, residual roadmap task, or regression hardening while gates hold). At L1
+  complete / L2 active, a flat `experience_gaps` is expected; do not discard a good craft keep only
+  because the number is flat, and do not keep a craft change that pushes `experience_gaps` above 5.
 - Higher score, failed checks, or a worse look: log it with the reason in the ASI, then `hc.sh discard`.
   Equal score with no judged/roadmap/hardening justification: discard the same way.
 - A side effect you can fix inside the same idea (bigger labels made the pager wrap): fix it,
