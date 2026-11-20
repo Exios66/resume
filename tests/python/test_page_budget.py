@@ -1,53 +1,31 @@
 """Page transfer budgets: every built page stays within the budget for its type.
 
-Budgets are gzipped HTML bytes, measured on 10 November 2026 with the same
-compression level as scripts/hillclimb/kpi.py. The shared stylesheet and script
-have their own budgets because every page pays for them. Each budget leaves
-roughly 15 percent headroom over the heaviest page of its type, so ordinary
-editing does not fail the check but a new figure or a large script does.
+Budgets are gzipped HTML bytes, measured with the same compression level as
+scripts/hillclimb/kpi.py. The shared stylesheet and script have their own
+budgets because every page pays for them. Headroom varies by type (see
+.10x/metrics.md): ordinary edits usually stay under budget, but the projects
+index and MapReduce case study are tight enough that a new figure or longer
+paragraph can fail the check.
 
-Recorded baselines are in .10x/metrics.md under "Page transfer budgets".
+Budgets and classification live in scripts/hillclimb/page_budgets.py so the
+experience KPI and this gate cannot drift. Recorded baselines are in
+.10x/metrics.md under "Page transfer budgets".
 """
 
 import gzip
 import pathlib
+import sys
 
-DOCS = pathlib.Path(__file__).resolve().parents[2] / "docs"
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "scripts" / "hillclimb"))
+from page_budgets import PAGE_TYPES, SHARED, page_type  # noqa: E402
 
-# (measured baseline, budget) in gzip bytes.
-PAGE_TYPES = {
-    "home": (14127, 16000),
-    "projects index": (23702, 26000),
-    "case study": (16028, 19000),
-    "technical report": (19345, 22000),
-    "appendix": (11018, 13000),
-    "other page": (12099, 15000),
-}
-SHARED = {
-    "styles.css": (14935, 20000),
-    "assets/js/site.js": (5683, 9000),
-}
+DOCS = ROOT / "docs"
 
 
 def gz(path):
     """Return the gzipped byte length of a built file."""
     return len(gzip.compress(path.read_bytes(), 9))
-
-
-def page_type(rel):
-    """Return the budget key for a path relative to docs/."""
-    if rel == "index.html":
-        return "home"
-    if rel == "projects/index.html":
-        return "projects index"
-    if rel.startswith("projects/"):
-        if rel.endswith("/report.html"):
-            return "technical report"
-        if rel.endswith("/appendix.html"):
-            return "appendix"
-        if rel.count("/") == 1:
-            return "case study"
-    return "other page"
 
 
 def pages():
@@ -66,11 +44,28 @@ def test_every_page_stays_within_its_transfer_budget():
         baseline, budget = PAGE_TYPES[kind]
         size = gz(DOCS / rel)
         checked.add(kind)
-        assert size <= budget, f"{kind} over budget: {rel} is {size} bytes, limit {budget} (baseline {baseline})"
-    assert checked == set(PAGE_TYPES), f"page types without a built page: {set(PAGE_TYPES) - checked}"
+        assert size <= budget, (
+            f"{kind} over budget: {rel} is {size} bytes, limit {budget} "
+            f"(baseline {baseline})"
+        )
+    assert checked == set(PAGE_TYPES), (
+        f"page types without a built page: {set(PAGE_TYPES) - checked}"
+    )
 
 
 def test_shared_stylesheet_and_script_stay_within_budget():
     for rel, (baseline, budget) in SHARED.items():
         size = gz(DOCS / rel)
-        assert size <= budget, f"{rel} is {size} bytes, limit {budget} (baseline {baseline})"
+        assert size <= budget, (
+            f"{rel} is {size} bytes, limit {budget} (baseline {baseline})"
+        )
+
+
+def test_kpi_and_gate_share_the_same_page_budgets():
+    """kpi.py must classify pages with the same helper the gate uses."""
+    assert page_type("index.html") == "home"
+    assert page_type("projects/index.html") == "projects index"
+    assert page_type("projects/mapreduce-reloaded.html") == "case study"
+    assert page_type("projects/natd/report.html") == "technical report"
+    assert page_type("projects/langtons-ant/appendix.html") == "appendix"
+    assert page_type("resume.html") == "other page"
