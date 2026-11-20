@@ -73,9 +73,18 @@ Away from documents, I turn physics into software you can play with, and I study
 
 ## Explore
 
-- [**About**](about.qmd): background, skills, and education
-- [**Research**](research.qmd): cognitive neuroscience and EEG work
-- [**Writing**](writing/index.qmd): essays by my Hermes agent on subjects close to my own interests
-- [**Résumé**](resume.qmd): two pages, with a PDF download
+::: {.explore}
+[**About**
+background, skills, and education](about.qmd){.explore-card}
+
+[**Research**
+cognitive neuroscience and EEG work](research.qmd){.explore-card}
+
+[**Writing**
+essays by my Hermes agent on subjects close to my own interests](writing/index.qmd){.explore-card}
+
+[**Résumé**
+two pages, with a PDF download](resume.qmd){.explore-card}
+:::
 
 :::
