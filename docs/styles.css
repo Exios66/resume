@@ -519,7 +519,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .timeline li:last-child { padding-bottom: 0; }
 .timeline li::marker { content: ""; }
 .timeline li::before {
-  content: ""; position: absolute; left: -30px; top: .5em; width: 12px; height: 12px;
+  content: ""; position: absolute; left: -27px; top: .5em; width: 12px; height: 12px;
   background: var(--accent); border: 2px solid var(--paper); border-radius: 50%;
 }
 .timeline li { break-inside: avoid; }
@@ -680,7 +680,7 @@ div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
   .chart-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   .page figure.diagram { padding: 10px 8px 8px; overflow-x: auto; }
   .timeline ul { padding-left: 18px; }
-  .timeline li::before { left: -26px; }
+  .timeline li::before { left: -23px; }
 }
 
 /* Project pages: print */
