@@ -6,6 +6,8 @@ tiny text, separators, balanced headings, wbr in table-cell code, stack classifi
 v0 content fixes, labelled prose rows, compact phone header, duplicate back link removed, mobile checks at
 375 px dark (segment 4).
 
+Checked on the craft-harden pass (runs 87–89) and left alone: footer inset already matches the page at 375; dark card and Explore hairlines stay visible; writing-index kickers do not wrap; balancing the research degree splits "Data" from "Science".
+
 Open:
 1. Layout findings are 0. The one accepted finding is the "Graduate research, UW–Madison" heading widow
    (UW–Madison is a single unit). The second widow found in run 46, the Writing title at 768 px, was fixed in run 49.

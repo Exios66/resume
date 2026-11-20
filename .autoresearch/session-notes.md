@@ -239,6 +239,13 @@ Two-candidate leg from merged main bd2605c. Source authentication and checkpoint
 
 Segment15 completed: run68 baseline16 → run69 e08048a8 → run70 211e0120. Final gate: 257 passed, 2 deselected, 634 subtests passed in 229.57s (0:03:49). Both ideas refined after screenshot/code review before their single keeps; audit unchanged. Earlier duration gate had one recorded local-server teardown warning; initial interval gate was interrupted for refinement, not claimed as passed. Archived source/review checkpoints and 17 reviewed captures. Two-candidate budget complete; review/merge PR111 next. MapReduce follow-ons and the broader uncovered objectives remain in the queue.
 
+## Segment 17 craft hardening (runs 87–89)
+L2 judged keeps on `cursor/craft-harden-1d08`. `polish_defects` stayed 0 and `experience_gaps` stayed 5. Checks: 321 passed, 705 subtests.
+- Run 87 `b612eb1`: wrapped section headings keep the node inset on every line. A non-breaking space keeps the three-word appendix heading off a one-word last line.
+- Run 88 `6b377d3`: timeline disks sit on the rail (`left` −27px / −23px). Measured center delta 0 at 375 and 1280.
+- Run 89 `e4e4f5d`: on phones the research degree breaks after the colon. Desktop stays one line.
+Scouted and not changed: footer inset already matches the page; dark card hairlines are still visible; writing-index kickers do not wrap; `text-wrap: balance` on the degree splits "Data" from "Science" and was not shipped. Net CSS gzip 17,850 → 18,086. Projects index and MapReduce case study gzip ended where they started (24,968 and 19,255).
+
 
 ## Segment16: reviewed MapReduce condition and numeric guards
 Separate audit commit 58b3897 strengthens the documented CPU condition and numeric source-cell guards. Baseline run71 score0, 258 tests/634 subtests passed in234.75s. This correctness review does not change segment15 history or claim a new metric improvement. Fractional-width input fixed in ecbabf7; explicit-domain preservation in908d5aa and collapsed-domain guard in06622bf. Final source06622bf full gate:258 passed,2 deselected,634 subtests,166.61s,no warnings. The intermediate908 gate was interrupted for checkpoint refinement. Existing17 captures remain representative; current-source local8-case smoke passed. Source/verification and follow-on MapReduce queue archived. Two-candidate leg and review fixes complete; publish, resolve verified threads and merge with current checks.
