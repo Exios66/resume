@@ -493,6 +493,18 @@
     });
   });
 
+  // Explore tiles: the same below-fold fade, staggered so the section arrives as a
+  // sequence rather than four tiles popping together. Reduced motion already returned.
+  Array.prototype.forEach.call(doc.querySelectorAll(".page .explore"), function (grid) {
+    var n = 0;
+    Array.prototype.forEach.call(grid.querySelectorAll("a.explore-card"), function (tile) {
+      if (tile.getBoundingClientRect().top < fold) return;
+      tile.style.setProperty("--rv-i", String(Math.min(n++, 3)));
+      tile.classList.add("rv");
+      observer.observe(tile);
+    });
+  });
+
   // Never print a card mid-fade.
   window.addEventListener("beforeprint", function () {
     Array.prototype.forEach.call(doc.querySelectorAll(".rv"), function (el) { el.classList.remove("rv", "is-in"); });
