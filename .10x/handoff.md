@@ -2,6 +2,18 @@
 
 Read `AGENTS.md`, `.github/BUILDING.md`, `scripts/hillclimb/README.md`, this file, `.10x/status.md`, and the live issue before editing. Run `bash scripts/setup-agent.sh` once per worktree and source `.autoresearch-tools/env.sh` in every render/audit shell. Doctor must end with `All tools present.`
 
+## Current state (2026-11-25)
+
+`main` is merge `b1d38f5`. #160, #161, #163, #164, #165 and #144 are merged. There is no open pull request. Recorded `experience_gaps` is 5 and `polish_defects` is 0. MapReduce is 19,711 / 20,000 gzip bytes after the phone chart. The projects index is 24,305 / 26,000.
+
+Shipped since the 20 November note: craft keeps for wrapped headings, timeline nodes and the phone degree break (#165); phone-width chart drawings, the two-row phone header, full-size screenshot links and Wave Laboratory subscripts (#144). Social cards from run 73 are on main. Explore is four home tiles. Motion tokens, hero drift, chart draw-in and the theme cross-fade are on main.
+
+Still open, with the acceptance that is not done: #118 motif signoff, #120 owner contact sheet, #121 owner titles and the remaining layout tasks, #122 page transitions / motif life / stat count-up / motion matrix, #123 single-row header, active section mark, category chips, no-JS filter and motif pager, #124's remaining chart kinds, #125's content issues plus forced-colour and device checks, and #126 until `experience_gaps` is 0. Also #33, #71, #76 (entries listed, attribution wording not), #84, #106, #112, #143, #153 and #166. Do not invent titles, employment or the RVL-CDIP cost sentence.
+
+The 12 November paragraph below that calls #144 an open PR, and the remaining-work line that says #120 still needs cards, are out of date. #144 is merged. The cards exist. The owner contact sheet does not.
+
+GitHub issue checkboxes were not updated in the 25 November pass: the app token returned `403 Resource not accessible by integration` for issue edits and comments. Trust this file and `.10x/status.md` over an unchecked box that this section marks shipped.
+
 ## Current state (2026-11-20)
 
 Quality levels live in `.10x/metrics.md`. **L1 (measured Track 1) is held** at `experience_gaps=5` (owner titles only). The research loop grades **L2 craft** next: judged motion/aesthetics and weight pressure, not a further drop in `experience_gaps`. Design-stack keeps through run 86 cover Track 2 tokens, hero drift, theme cross-fade, Explore tiles, chart draw-in, and phone/print hardening; #122 residual tasks (page transitions, motif life, stat count-up, matrix test) remain.
@@ -37,7 +49,7 @@ Evidence from review follow-up is under `.10x/reviews/pr-review-followup/`; diag
 ## Remaining work and boundaries
 
 - The approved design remains `.10x/specs/2026-11-10-portfolio-experience-v2-design.md`. Owner priority is Track 1 first. #118 retains motif redraw/signoff work; diagram collision repair does not complete that visual review.
-- #119 shipped in #148, with real lead screenshots, intrinsic dimensions/lazy loading and delayed-image geometry checks. #120 still needs project-specific social cards and owner review; set matching image-alt when adding image front matter.
+- #119 shipped in #148, with real lead screenshots, intrinsic dimensions/lazy loading and delayed-image geometry checks. #120's cards are on main (1200×630, one per project); the owner contact sheet is still open. Set matching image-alt when a motif changes and regenerate the card.
 - #121 display titles and remaining layout decisions need the owner. Do not invent replacements or project results.
 - #123 slash shortcut is implemented, but the phone header, full active section rail, category/filter work and motif-bearing project pager are not completed by this batch. Existing report/appendix TOCs and plain project pager links should not be rebuilt blindly.
 - #124 has the diagram regression and #115 recording contribution; chart conversions, new chart kinds and other visualisations remain. Existing chart restyles require the owner's draft review as specified in #124.
