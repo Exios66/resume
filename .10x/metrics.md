@@ -44,7 +44,7 @@ those new parts as 0; `pages_over_budget` counts every page type (currently 0).
 | `figures_without_alt` | — | 0 | 0 | guard; empty `alt`, or `alt` that only repeats the figcaption |
 
 Secondary numbers, reported but not summed (gzip bytes of the heaviest page of each type, plus shared assets):
-`gz_home` 14,816; `gz_projects_index` 24,670; `gz_case_study` 18,989; `gz_technical_report` 19,388;
+`gz_home` 14,883; `gz_projects_index` 24,741; `gz_case_study` 19,008; `gz_technical_report` 19,470;
 `gz_appendix` 11,699; `gz_other_page` 12,181; `gz_styles_css` 15,653; `gz_site_js` 6,643.
 Soft limits: CSS 20,000; JavaScript 9,000. `kpi.py` prints an `INFO heaviest_…` line naming the page behind each
 `gz_*` size.
@@ -60,16 +60,17 @@ page or a heavier case study moves both the gate and `pages_over_budget` togethe
 | --- | --- | ---: | ---: | ---: |
 | Home | `index.html` | 14,816 | 16,000 | 7% |
 | Projects index | `projects/index.html` | 24,670 | 26,000 | 5% |
-| Case study | `projects/mapreduce-reloaded.html` | 18,981 | 19,000 | under 1% |
+| Case study | `projects/mapreduce-reloaded.html` | 19,008 | 19,500 | 3% |
 | Technical report | `projects/natd/report.html` | 19,401 | 22,000 | 12% |
 | Appendix | `projects/langtons-ant/appendix.html` | 11,716 | 13,000 | 10% |
 | Other page | `resume.html` | 12,181 | 15,000 | 19% |
 | Shared stylesheet | `styles.css` | 15,653 | 20,000 | 22% |
 | Shared script | `assets/js/site.js` | 6,643 | 9,000 | 26% |
 
-The case-study budget is the tightest: MapReduce sits 11 bytes under 19,000. Raising a budget is a deliberate
-decision that belongs in the pull request, with the reason and the new measurement. Do not trim meaningful
-content only to pass the gate.
+The case-study budget was raised from 19,000 to 19,500 on 19 November 2026 because the Track 2 theme
+cross-fade script lands on every page and MapReduce was already within 20 bytes of the old ceiling. Raising a
+budget is a deliberate decision that belongs in the pull request, with the reason and the new measurement.
+Do not trim meaningful content only to pass the gate.
 
 ## Judged indicators (a person or a reviewing agent scores these; a script cannot)
 
@@ -107,7 +108,7 @@ repository-style display titles (#121). Chart-title and figure-alt guards are at
 | Number | 10 Nov | 19 Nov evening | Limit | Note |
 | --- | ---: | ---: | ---: | --- |
 | `gz_projects_index` | 23,702 | 24,670 | 26,000 | 95% used; a new card or longer card text can break it |
-| `gz_case_study` | 16,028 | 18,981 | 19,000 | MapReduce is 19 bytes under after the social-card description trim |
+| `gz_case_study` | 16,028 | 19,008 | 19,500 | Raised with the Track 2 theme cross-fade; MapReduce is the heaviest case study |
 | `gz_home` | 14,127 | 14,816 | 16,000 | 93% used |
 | `gz_site_js` | 5,683 | 6,643 | 9,000 | Watch phone-chart and motion additions |
 | `gz_styles_css` | 14,935 | 15,653 | 20,000 | |

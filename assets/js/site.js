@@ -416,6 +416,29 @@
 
   if (reduce) return;
 
+  // Soft page enter once per navigation. Head sets page-pending with js-motion so
+  // the paper never flashes opaque; reload, back/forward and restored scroll skip it.
+  (function () {
+    if (!root.classList.contains("page-pending")) return;
+    var page = doc.querySelector(".page");
+    var skip = !page || scrollTop() > 0;
+    try {
+      var nav = performance.getEntriesByType("navigation")[0];
+      if (nav && (nav.type === "reload" || nav.type === "back_forward")) skip = true;
+    } catch (e) {}
+    if (skip) {
+      root.classList.remove("page-pending");
+      return;
+    }
+    page.classList.add("is-entered");
+    root.classList.remove("page-pending");
+    setTimeout(function () { page.classList.remove("is-entered"); }, 800);
+    window.addEventListener("beforeprint", function () {
+      root.classList.remove("page-pending");
+      page.classList.remove("is-entered");
+    });
+  })();
+
   // Reading progress on technical reports. Scroll-driven CSS animation where supported.
   (function () {
     var active = doc.querySelector('.project-nav a[aria-current="page"]');
@@ -435,6 +458,32 @@
       bar.style.setProperty("--read", ratio.toFixed(4));
     });
   })();
+
+  // Charts: draw marks in once when the figure enters the viewport. Without
+  // IntersectionObserver (or with reduced motion, already returned above) the
+  // marks stay fully visible — the CSS only hides them under html.js-motion.
+  if ("IntersectionObserver" in window) {
+    (function () {
+      var charts = doc.querySelectorAll("figure.chart");
+      if (!charts.length) return;
+      var chartObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var figure = entry.target;
+          chartObserver.unobserve(figure);
+          var marks = figure.querySelectorAll(".mark");
+          Array.prototype.forEach.call(marks, function (mark, index) {
+            mark.style.setProperty("--mark-i", String(Math.min(index, 8)));
+          });
+          figure.classList.add("is-drawn");
+        });
+      }, { threshold: 0.18, rootMargin: "0px 0px -6% 0px" });
+      Array.prototype.forEach.call(charts, function (figure) { chartObserver.observe(figure); });
+      window.addEventListener("beforeprint", function () {
+        Array.prototype.forEach.call(charts, function (figure) { figure.classList.add("is-drawn"); });
+      });
+    })();
+  }
 
   // Project cards below the fold fade in as they arrive. Skipped on a deep link,
   // a reload or back/forward navigation, where the browser restores a scroll
@@ -464,6 +513,18 @@
       card.style.setProperty("--rv-i", String(Math.min(n++, 3)));
       card.classList.add("rv");
       observer.observe(card);
+    });
+  });
+
+  // Explore tiles: the same below-fold fade, staggered so the section arrives as a
+  // sequence rather than four tiles popping together. Reduced motion already returned.
+  Array.prototype.forEach.call(doc.querySelectorAll(".page .explore"), function (grid) {
+    var n = 0;
+    Array.prototype.forEach.call(grid.querySelectorAll("a.explore-card"), function (tile) {
+      if (tile.getBoundingClientRect().top < fold) return;
+      tile.style.setProperty("--rv-i", String(Math.min(n++, 3)));
+      tile.classList.add("rv");
+      observer.observe(tile);
     });
   });
 
