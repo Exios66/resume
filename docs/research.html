@@ -54,10 +54,20 @@ ul.task-list li input[type="checkbox"] {
     if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
   } catch (e) {}
   // Motion styles apply only when the visitor has not asked for reduced motion.
+  // page-pending hides .page until site.js runs the once-per-navigation enter
+  // (skipped for hash deep-links so the target is never blank).
   try {
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("js-motion");
+      if (!location.hash) document.documentElement.classList.add("page-pending");
+    }
   } catch (e) {}
 </script>
+<noscript>
+  <style>
+    html.page-pending .page { opacity: 1 !important; transform: none !important; }
+  </style>
+</noscript>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -80,7 +90,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="styles.css?v=544baee724">
+<link rel="stylesheet" href="styles.css?v=b8ba65db09">
 <meta property="og:title" content="Research — Jack J. Burleson">
 <meta property="og:description" content="Cognitive neuroscience research on chatbot truth, deception, and cognitive workload, plus EEG analysis, presented at the 2025 Midwestern Psychological Association conference.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -120,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="research" class="page-title page">
 <h1 class="page-title">Research</h1>
 <h2 id="graduate-research-at-uwmadison">Graduate research at UW–Madison</h2>
-<p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">M.S. in Psychology: Data Science in Human Behavior</span><span class="seg"> <span class="sep">·</span> August 2025 – expected December 2026</span><span class="seg"> <span class="sep">·</span> GPA 3.85</span></span></span></span></p>
+<p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">M.S. in Psychology: <span class="degree-field">Data Science in Human Behavior</span></span><span class="seg"> <span class="sep">·</span> August 2025 – expected December 2026</span><span class="seg"> <span class="sep">·</span> GPA 3.85</span></span></span></span></p>
 <p>Roughly 95% of the program’s coursework is data science and data engineering, pairing behavioral-science training with the computer science toolchain: statistical modeling; machine learning with transformer fine-tuning and LLM evaluation; and large-scale data systems with Spark, SQL, Parquet, Docker, and gRPC services.</p>
 <ul>
 <li>The <a href="./projects/digital-mailroom.html">Digital-Mailroom</a> capstone with American Family Insurance (February 2026 – present) routes each document in a stream to the cheapest step that can handle it: five Python packages and one LangGraph pipeline for routing, prompt experiments, deterministic scoring, and deployment, built on a dataset assembled from public sources.</li>
@@ -156,7 +166,7 @@ ul.task-list li input[type="checkbox"] {
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="assets/js/site.js?v=196b28f6b1" defer=""></script>
+<script src="assets/js/site.js?v=83a152c7b0" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol></svg>
 
 <script>
@@ -181,6 +191,7 @@ ul.task-list li input[type="checkbox"] {
       if (sun && moon) { sun.hidden = !dark; moon.hidden = dark; }
     }
     var toggle = document.querySelector(".theme-toggle");
+    var themeCleanup = null;
     if (toggle) {
       // Its list item is rendered hidden so there is no dead control (or stray bullet) without JavaScript; shown once it can work.
       if (toggle.parentNode) toggle.parentNode.hidden = false;
@@ -188,6 +199,17 @@ ul.task-list li input[type="checkbox"] {
       label(toggle);
       toggle.addEventListener("click", function () {
         var next = current() === "dark" ? "light" : "dark";
+        var reduce = false;
+        try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+        if (!reduce) {
+          root.classList.add("theme-switching");
+          // Cancel any prior cleanup so a rapid second click keeps the full cross-fade.
+          if (themeCleanup !== null) window.clearTimeout(themeCleanup);
+          themeCleanup = window.setTimeout(function () {
+            themeCleanup = null;
+            root.classList.remove("theme-switching");
+          }, 320);
+        }
         root.setAttribute("data-theme", next);
         try { localStorage.setItem("theme", next); } catch (e) {}
         label(toggle);

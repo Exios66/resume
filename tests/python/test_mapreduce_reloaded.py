@@ -51,6 +51,7 @@ class MapReduceReloadedTests(unittest.TestCase):
         self.assertEqual(destination(page, links[0]), (checks.DOCS / PAGE).resolve())
         text = parser.text(cards[0])
         self.assertIn("In active development", text)
+        self.assertIn("WIP", text)
         self.assertIn("S3 storage, compression, a VM evaluation and the final report are built", text)
 
     def test_group_reuses_an_existing_icon_and_the_sprite_is_unchanged(self):
@@ -100,6 +101,11 @@ class MapReduceReloadedTests(unittest.TestCase):
         self.assertIn("Work in progress", parser.text(caveat))
         self.assertIn("now built", parser.text(caveat))
         self.assertIn("11 November 2026", parser.text(caveat))
+        self.assertIn("6d93f33", parser.text(caveat))
+        self.assertIn("3.7×", parser.text(caveat))
+        self.assertIn("3a907de", parser.text(caveat))
+        self.assertNotIn("8f0ddb9", parser.text(caveat))
+        self.assertIn("WIP", parser.text(self.one(parser, "div", **{"class": "page"})))
         self.one(parser, "h2", id="what-is-planned")
         self.assertFalse(any(tag == "img" for tag, _, _ in parser.elements), "No unverified screenshot")
 
@@ -138,7 +144,9 @@ class MapReduceReloadedTests(unittest.TestCase):
         text = parser.text(card)
         self.assertIn("An early version is live", text)
         self.assertIn("recorded when the site was built", text)
-        self.assertIn("full-day playback is planned", text)
+        self.assertIn("Full-day playback is planned", text)
+        self.assertIn("not on the live site yet", text)
+        self.assertIn("WIP", text)
         self.assertNotIn("current traffic", text)
 
     def test_readme_links_the_published_case_study_once(self):

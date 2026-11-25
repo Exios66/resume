@@ -26,6 +26,14 @@
   --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --serif: "Newsreader", Georgia, "Times New Roman", serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  /* Motion scale (Track 2). Durations stay short; easing is shared so motion feels one system. */
+  --motion-ease: cubic-bezier(.2, .7, .2, 1);
+  --motion-fast: 150ms;
+  --motion-med: 320ms;
+  --motion-slow: 420ms;
+  --motion-drift: 24s;
+  --motion-ambient: 16s;
+  --motion-theme: 280ms;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -70,7 +78,13 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
 
 /* Icons carry width/height="1em" in the markup too, so a missing stylesheet cannot enlarge them. */
 .icon { width: 1em; height: 1em; vertical-align: -.125em; flex: none; }
@@ -213,9 +227,17 @@ p { margin: 0 0 12px; }
 .site-title { font: 600 1.05rem/1 var(--serif); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
 .site-title:hover { text-decoration: none; color: var(--accent); }
 .nav-list { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 4px; margin: 0; padding: 0; list-style: none; }
-.nav-link { display: flex; align-items: center; min-height: 44px; padding: 6px 12px; border-radius: 8px; font-size: .88rem; font-weight: 600; color: var(--muted); }
+.nav-link {
+  position: relative; z-index: 0;
+  display: flex; align-items: center; min-height: 44px; padding: 6px 12px; border-radius: 8px;
+  font-size: .88rem; font-weight: 600; color: var(--muted);
+}
 .nav-link:hover { color: var(--accent); background: var(--accent-soft); text-decoration: none; }
-.nav-link[aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
+.nav-link[aria-current="page"] {
+  color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+}
 .nav-link .key-hint {
   margin-left: 5px; padding: 0 4px; border: 1px solid var(--rule); border-radius: 4px;
   font: 600 .72em/1.5 var(--mono); color: inherit;
@@ -265,8 +287,8 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 .lede p { margin: 0; color: var(--muted); font-size: 1.05rem; }
 .more { display: inline-flex; align-items: center; font-weight: 600; }
 /* Links inside running text must not rely on color alone */
-.page :is(p, li) a:not(.btn, .chip, .back, .more, .project-nav a) { text-decoration: underline; text-decoration-thickness: 1px; }
-.page :is(p, li) a:not(.btn, .chip, .back, .more, .project-nav a):hover { text-decoration-thickness: 2px; }
+.page :is(p, li) a:not(.btn, .chip, .back, .more, .project-nav a, .explore-card) { text-decoration: underline; text-decoration-thickness: 1px; }
+.page :is(p, li) a:not(.btn, .chip, .back, .more, .project-nav a, .explore-card):hover { text-decoration-thickness: 2px; }
 .card :is(h2, h3) a { text-decoration: none; }
 .page li { margin: 4px 0; }
 .page li::marker { color: var(--accent); }
@@ -300,6 +322,13 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 :is(.kicker, .sample-source).segs .seg-run { display: block; margin-left: -1.4em; }
 :is(.kicker, .sample-source).segs .seg { position: relative; padding-left: 1.4em; }
 :is(.kicker, .sample-source).segs .sep { position: absolute; left: 0; width: 1.4em; text-align: center; }
+/* Phone: break the degree after the colon so "Human Behavior" is not a short last line.
+   The whole segment is a block so the date and GPA drop below it instead of sitting
+   beside the two-line title near the 720px breakpoint. Desktop still fits one line. */
+@media (max-width: 720px) {
+  .kicker .seg:has(.degree-field) { display: block; }
+  .kicker .degree-field { display: block; }
+}
 /* The centred hero line cannot clip a gutter, so on phones each part takes its own line. Wider,
    keep the space before each separator, which an inline-block would otherwise drop. */
 @media (min-width: 561px) { .role.segs .seg { white-space: pre-wrap; } }
@@ -324,12 +353,12 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 @media (max-width: 720px) {
   body { font-size: 15px; }
   .page { margin: 0; padding: 36px 20px 28px; border-radius: 0; box-shadow: none; }
+  /* Two rows: the title, with Search and the theme toggle at its right, then the
+     five section links. The title is the home link, so Home is dropped here.
+     16px inset keeps the title clear of Search at 320px. One .site-nav rule
+     keeps the selector from duplicating. */
   .site-header { padding: 0 16px; }
-  .site-nav { justify-content: flex-start; row-gap: 0; column-gap: 4px; }
-  /* Phone header, two rows: the title with Search and the theme toggle at its right,
-     then the five section links. The title is the home link, so "Home" is dropped
-     here. Links keep their 44 px touch height. */
-  .site-nav { position: relative; }
+  .site-nav { position: relative; justify-content: flex-start; row-gap: 0; column-gap: 4px; }
   .site-title { flex-basis: 100%; display: flex; align-items: center; min-height: 44px; }
   .nav-list { flex: 1 1 auto; flex-wrap: nowrap; justify-content: flex-start; gap: 0 2px; }
   .nav-list li:first-child { position: absolute; top: 0; left: 0; visibility: hidden; }
@@ -347,7 +376,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
     .nav-link { padding: 6px 4px; font-size: .8rem; }
     .site-title { letter-spacing: .04em; gap: .4em; font-size: 1rem; }
   }
-  .site-footer { padding: 0 16px; }
+  .site-footer { padding: 0 20px; }
   .site-header + main .page { margin-top: 12px; }
   .skills dl { grid-template-columns: 1fr; gap: 2px; }
   .skills dd { margin-bottom: 10px; }
@@ -355,10 +384,12 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
   /* A location or year that wraps to its own line starts at the text edge, not indented. */
   .head-main .sub, .training .date { margin-left: 0; }
 }
-/* Résumé action buttons: tighter so all three share a row at 375px; if they must wrap they stretch. */
+/* Phone hero CTAs: primary alone on the first row, secondary pair below — avoids one
+   cramped edge-to-edge trio at 375px while keeping 44px targets. */
 @media (max-width: 480px) {
-  .actions { gap: 8px; }
-  .actions .btn { flex: 1 1 auto; padding-inline: 12px; }
+  .actions { gap: 10px; }
+  .actions .btn { flex: 1 1 calc(50% - 5px); padding-inline: 14px; }
+  .actions .btn.primary { flex: 1 1 100%; }
 }
 
 /* ---------- Print ---------- */
@@ -408,6 +439,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .project-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
 .project-nav p { display: contents; }
 .project-nav a {
+  position: relative; z-index: 0;
   display: inline-flex; align-items: center; gap: .5em; min-height: 44px; padding: 0 14px;
   font-size: .88rem; font-weight: 600; color: var(--accent);
   border: 1.5px solid var(--rule); border-radius: 999px;
@@ -513,7 +545,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .timeline li:last-child { padding-bottom: 0; }
 .timeline li::marker { content: ""; }
 .timeline li::before {
-  content: ""; position: absolute; left: -30px; top: .5em; width: 12px; height: 12px;
+  content: ""; position: absolute; left: -27px; top: .5em; width: 12px; height: 12px;
   background: var(--accent); border: 2px solid var(--paper); border-radius: 50%;
 }
 .timeline li { break-inside: avoid; }
@@ -674,7 +706,7 @@ div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
   .chart-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   .page figure.diagram { padding: 10px 8px 8px; overflow-x: auto; }
   .timeline ul { padding-left: 18px; }
-  .timeline li::before { left: -26px; }
+  .timeline li::before { left: -23px; }
 }
 
 /* Project pages: print */
@@ -703,15 +735,63 @@ div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
    assets/js/site.js only on cards below the fold).
    ========================================================================== */
 @media (prefers-reduced-motion: no-preference) {
-  .card .icon-go, .more .icon-go { transition: transform .2s cubic-bezier(.2, .7, .2, 1); }
+  .card .icon-go, .more .icon-go { transition: transform var(--motion-fast) var(--motion-ease); }
   .card:is(:hover, :focus-within) .icon-go, .more:hover .icon-go { transform: translateX(3px); }
 
   html.js-motion .rv {
     opacity: 0; transform: translateY(8px);
-    transition: opacity 420ms cubic-bezier(.2, .7, .2, 1), transform 420ms cubic-bezier(.2, .7, .2, 1);
+    transition: opacity var(--motion-slow) var(--motion-ease), transform var(--motion-slow) var(--motion-ease);
     transition-delay: calc(var(--rv-i, 0) * 50ms);
   }
   html.js-motion .rv.is-in { opacity: 1; transform: none; }
+
+  /* Soft page enter once per navigation (head sets page-pending; site.js clears it). */
+  html.js-motion.page-pending .page:not(.is-entered) {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  html.js-motion .page.is-entered {
+    opacity: 1;
+    transform: none;
+    transition: opacity var(--motion-slow) var(--motion-ease), transform var(--motion-slow) var(--motion-ease);
+  }
+
+  /* Focus ring: offset eases out from the control. Solid accent outline, not a glow. */
+  @keyframes focus-ring-ease {
+    from { outline-offset: 0; }
+  }
+  a:focus-visible, .btn:focus-visible, .theme-toggle:focus-visible,
+  .site-search input:focus-visible, .site-search select:focus-visible,
+  .page .code-copy-button:focus-visible,
+  .explore a.explore-card:focus-visible,
+  pre:focus-visible, .page table:focus-visible, div.sourceCode:focus-visible,
+  figure.diagram:focus-visible,
+  .chart-scroll:focus-visible, .chart-body:focus-visible {
+    animation: focus-ring-ease var(--motion-fast) var(--motion-ease);
+  }
+
+  /* Active nav pill: slides in via scaleX instead of an abrupt background jump. */
+  @keyframes nav-indicator-slide {
+    from { transform: scaleX(.18); opacity: .55; }
+    to { transform: scaleX(1); opacity: 1; }
+  }
+  .nav-link[aria-current="page"] {
+    background: transparent;
+    box-shadow: none;
+  }
+  .nav-link[aria-current="page"]:hover { background: transparent; }
+  .nav-link[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--accent-soft);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+    transform-origin: left center;
+    animation: nav-indicator-slide var(--motion-med) var(--motion-ease) both;
+    pointer-events: none;
+  }
 
   /* Reading progress (technical reports) */
   .read-progress {
@@ -723,11 +803,47 @@ div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
     .read-progress { transform: scaleX(0); animation: read-grow linear both; animation-timeline: scroll(root); }
     @keyframes read-grow { to { transform: scaleX(1); } }
   }
+
+  /* Hero constellation: a slow vertical drift so the motif feels alive, not stuck. */
+  @keyframes hero-constellation-drift {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -8px, 0); }
+  }
+  @keyframes hero-glow-breathe {
+    0%, 100% { opacity: .55; transform: scale(1); }
+    50% { opacity: .85; transform: scale(1.04); }
+  }
+  .hero::before {
+    animation: hero-constellation-drift var(--motion-drift) ease-in-out infinite;
+  }
+  .hero::after {
+    animation: hero-glow-breathe var(--motion-ambient) ease-in-out infinite;
+  }
+
+  /* Theme toggle: brief cross-fade of surfaces so the switch is not a hard cut. */
+  html.theme-switching,
+  html.theme-switching body,
+  html.theme-switching .page,
+  html.theme-switching .site-header,
+  html.theme-switching .card,
+  html.theme-switching .explore-card,
+  html.theme-switching .stat,
+  html.theme-switching .page-toc,
+  html.theme-switching .chip,
+  html.theme-switching .tag {
+    transition:
+      background-color var(--motion-theme) ease,
+      color var(--motion-theme) ease,
+      border-color var(--motion-theme) ease,
+      box-shadow var(--motion-theme) ease !important;
+  }
 }
 
 @media print {
   .read-progress { display: none !important; }
   html.js-motion .rv { opacity: 1 !important; transform: none !important; transition: none !important; }
+  html.js-motion.page-pending .page,
+  html.js-motion .page.is-entered { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 
 /* ==========================================================================
@@ -769,7 +885,6 @@ body::before {
   background: var(--pop);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--pop) 18%, transparent);
 }
-.nav-link[aria-current="page"] { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent); }
 @media (min-width: 721px) {
   .site-header.is-scrolled {
     background: color-mix(in srgb, var(--bg) 78%, transparent);
@@ -806,8 +921,24 @@ body::before {
   background: linear-gradient(90deg, transparent, var(--accent), var(--pop), transparent);
 }
 .chip { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent); }
-a.chip { transition: box-shadow .15s, transform .15s; }
-a.chip:hover { filter: none; box-shadow: inset 0 0 0 1px var(--accent); }
+/* Link chips (contact + search suggestions): Explore-like border lift, no glow. */
+a.chip {
+  transition:
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease),
+    transform var(--motion-fast) var(--motion-ease);
+}
+a.chip:hover,
+a.chip:focus-visible {
+  filter: none;
+  text-decoration: none;
+  background: color-mix(in srgb, var(--accent) 10%, var(--paper));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, var(--rule));
+}
+a.chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 /* Buttons: the primary carries the gradient and a soft glow. */
 .btn { position: relative; overflow: hidden; transition: background .15s, color .15s, box-shadow .2s, transform .2s; }
@@ -825,8 +956,13 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
   border-radius: 1.5px; transform: rotate(45deg); vertical-align: middle;
   background: var(--pop);
 }
-.card :is(h2, h3) { border-image: none; }
 .card :is(h2, h3)::before { content: none; }
+/* Wrapped headings parked the node on line 1, so line 2 started under it.
+   1.35em is the old inline marker (0.1em + 0.5em + 0.75em); single lines stay put.
+   Card titles keep the earlier reset, after this rule so it wins. */
+h2:not(.group-title) { position: relative; padding-left: 1.35em; }
+h2:not(.group-title)::before { position: absolute; left: .1em; top: .35em; margin: 0; }
+.card :is(h2, h3) { border-image: none; position: static; padding-left: 0; }
 
 /* Cards: gradient edge, a top signal line that draws in, and a light that follows the pointer. */
 .card {
@@ -861,8 +997,14 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
   background: linear-gradient(180deg, var(--accent), var(--accent-2));
 }
 
-/* Project tabs, timeline, tables and code pick up the same gradient. */
-.project-nav a[aria-current="page"] { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; box-shadow: 0 6px 18px -10px var(--glow); }
+/* Project tabs match the header soft active pill (readable mid-slide; no glow fill). */
+.project-nav a[aria-current="page"] {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.project-nav a[aria-current="page"]:hover { filter: none; background: var(--accent-soft); }
 .timeline ul { border-left: 0; background: linear-gradient(180deg, var(--accent), var(--accent-2) 45%, var(--rule)) 0 0 / 2px 100% no-repeat; }
 .timeline li::before { box-shadow: 0 0 0 4px var(--accent-soft); }
 .page thead th { border-bottom: 2px solid var(--accent); border-image: linear-gradient(90deg, var(--accent), var(--accent-2)) 1; }
@@ -885,35 +1027,152 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 
 /* Motion for the design layer, only when the visitor has not asked for less. */
 @media (prefers-reduced-motion: no-preference) {
-  .card::before { transition: transform .35s cubic-bezier(.2, .7, .2, 1); }
+  .card::before { transition: transform var(--motion-med) var(--motion-ease); }
   .btn:hover { transform: translateY(-1px); }
   .btn.primary::after {
     content: ""; position: absolute; inset: 0; pointer-events: none;
     background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .28) 50%, transparent 70%);
     transform: translateX(-120%);
   }
-  .btn.primary:hover::after { transform: translateX(120%); transition: transform .7s cubic-bezier(.2, .7, .2, 1); }
-  .theme-toggle { transition: color .15s, border-color .15s, transform .3s cubic-bezier(.2, .7, .2, 1); }
+  .btn.primary:hover::after { transform: translateX(120%); transition: transform .7s var(--motion-ease); }
+  .theme-toggle { transition: color var(--motion-fast), border-color var(--motion-fast), transform var(--motion-med) var(--motion-ease); }
   .theme-toggle:hover { transform: rotate(-18deg); }
+
+  /* Project-nav active pill: same scaleX slide as the header nav indicator. */
+  .project-nav a[aria-current="page"] {
+    background: transparent;
+    box-shadow: none;
+  }
+  .project-nav a[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--accent-soft);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+    transform-origin: left center;
+    animation: nav-indicator-slide var(--motion-med) var(--motion-ease) both;
+    pointer-events: none;
+  }
 }
 
-/* Windows high contrast: drop the gradient text so the name stays visible. */
+/* Explore: four destination tiles instead of a plain list (Track 1 layout correction). */
+/* Heading→first-tile was 22px (h2 14 + explore 8) vs a 12px grid gap; match the rhythm.
+   Zero the h2 bottom margin so it does not collapse under the explore top margin. */
+h2:has(+ .explore) { margin-bottom: 0; }
+.explore {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 12px 0 4px;
+}
+.explore > p { margin: 0; }
+.explore a.explore-card {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  min-height: 100%;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--rule);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 6%, var(--paper)), var(--paper) 70%);
+  color: var(--muted);
+  font-size: .92rem;
+  line-height: 1.45;
+  text-decoration: none;
+  box-shadow: none;
+  transition: border-color var(--motion-fast), box-shadow var(--motion-med) var(--motion-ease), transform var(--motion-fast) var(--motion-ease);
+}
+.explore a.explore-card:hover,
+.explore a.explore-card:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--rule));
+  box-shadow: 0 10px 24px -16px var(--glow);
+  filter: none;
+}
+.explore a.explore-card strong {
+  display: block;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  line-height: 1.3;
+  margin-bottom: .15rem;
+}
+@media (max-width: 560px) {
+  .explore { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .explore a.explore-card:hover { transform: translateY(-1px); }
+  a.chip:hover,
+  a.chip:focus-visible { transform: translateY(-1px); }
+  /* Explore entrance reuses .rv; a slightly longer stagger reads as one section arriving. */
+  html.js-motion .explore a.explore-card.rv {
+    transition-delay: calc(var(--rv-i, 0) * 70ms);
+  }
+}
+@media print {
+  .explore { display: block; }
+  .explore a.explore-card {
+    border: none; background: none; padding: 0 0 .4rem; box-shadow: none;
+  }
+}
+
+/* Windows high contrast: drop decorative washes so content stays readable. */
 @media (forced-colors: active) {
   .hero .name { background: none; -webkit-text-fill-color: currentColor; }
-  body::before, .hero::before, .hero::after, .page::before, .card::before, .stat::before { display: none; }
+  body::before,
+  .hero::before, .hero::after, .hero .role::before,
+  .page::before, .card::before, .stat::before,
+  .site-title::before, h2::before, .btn::after, .site-footer::before,
+  .nav-link[aria-current="page"]::before,
+  .project-nav a[aria-current="page"]::before,
+  .card-cover::after,
+  .read-progress { display: none !important; }
+  h2:not(.group-title) { padding-left: 0; }
+  .timeline ul { background: none; border-left: 2px solid CanvasText; }
+  /* Screen rail is a 2px background at the padding edge. This border's center is 2px further left. */
+  .timeline li::before { left: -29px; }
+  .card, .explore a.explore-card, .stat, .caveat {
+    background: Canvas; border-color: CanvasText; box-shadow: none;
+  }
+  .project-nav a[aria-current="page"],
+  .nav-link[aria-current="page"] {
+    background: Highlight; color: HighlightText; box-shadow: none; forced-color-adjust: none;
+  }
+  html.js-motion .rv,
+  html.js-motion.page-pending .page,
+  html.js-motion .page.is-entered {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
 }
 
 @media print {
   body::before, .page::before, .hero::before, .hero::after, .hero .role::before,
-  .card::before, .stat::before, .site-title::before, h2::before, .btn::after { display: none !important; }
+  .card::before, .stat::before, .site-title::before, h2::before, .btn::after,
+  .site-footer::before,
+  .nav-link[aria-current="page"]::before,
+  .project-nav a[aria-current="page"]::before,
+  .card-cover::after { display: none !important; }
   .hero .name { background: none; -webkit-text-fill-color: currentColor; color: #111; }
   .hero .role { padding-top: 0; }
   .page { padding-top: 0; }
   h2, .page thead th { border-image: none; }
+  h2:not(.group-title) { padding-left: 0; }
   .card { background: #fff; border-color: #ccc; }
   .stat { background: none; }
   .timeline ul { background: none; border-left: 2px solid #ccc; }
+  .timeline li::before { left: -29px; }
   .caveat { background: none; }
+}
+/* Narrow print and forced colors also shrink the rail padding (18px), so the node
+   shifts 4px less than the desktop border correction. */
+@media (forced-colors: active) and (max-width: 720px) {
+  .timeline li::before { left: -25px; }
+}
+@media print and (max-width: 720px) {
+  .timeline li::before { left: -25px; }
 }
 
 /* ==========================================================================
@@ -951,6 +1210,47 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
 .chart .mark .hit { fill: transparent; }
 .chart .mark:is(:hover, :focus-visible) .hit { fill: color-mix(in srgb, var(--accent) 8%, transparent); }
 .chart .mark:focus-visible .hit { stroke: var(--accent); stroke-width: 1.5; }
+
+/* Chart draw-in (Track 2): marks reveal when the figure enters view. Needs
+   html.js-motion (head) plus .is-drawn (site.js). No-JS and reduced-motion keep
+   every mark visible. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js-motion figure.chart:not(.is-drawn) .mark :is(.bar, .dot, .link, text.val) {
+    opacity: 0;
+  }
+  html.js-motion figure.chart:not(.is-drawn) .mark .bar {
+    transform: scaleY(0.08);
+    transform-box: fill-box;
+    transform-origin: center bottom;
+  }
+  html.js-motion figure.chart:not(.is-drawn) .mark .dot {
+    transform: scale(0.4);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  html.js-motion figure.chart.is-drawn .mark :is(.bar, .dot, .link, text.val) {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--motion-slow) var(--motion-ease),
+      transform var(--motion-slow) var(--motion-ease);
+    transition-delay: calc(var(--mark-i, 0) * 45ms);
+  }
+}
+@media print {
+  html.js-motion figure.chart .mark :is(.bar, .dot, .link, text.val) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+@media (forced-colors: active) {
+  html.js-motion figure.chart .mark :is(.bar, .dot, .link, text.val) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
 .chart-body:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 .chart-tooltip {
   position: fixed; z-index: 50; max-width: 260px; padding: 6px 10px; pointer-events: none;
@@ -1102,10 +1402,39 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
   .cards-wide > .card.has-cover:only-child > .card-cover svg { height: auto; aspect-ratio: 8 / 3; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .card-cover svg { transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
+  .card-cover { position: relative; }
+  .card-cover svg {
+    transition: transform var(--motion-slow) var(--motion-ease);
+  }
   .card:is(:hover, :focus-within) .card-cover svg { transform: scale(1.04); }
+  /* Soft sheen across the motif on hover; reduced-motion skips both scale and sheen. */
+  .card-cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(
+      110deg,
+      transparent 35%,
+      color-mix(in srgb, var(--paper) 55%, transparent) 50%,
+      transparent 65%
+    );
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  .card:is(:hover, :focus-within) .card-cover::after {
+    opacity: 1;
+    transform: translateX(120%);
+    transition:
+      transform calc(var(--motion-slow) + 80ms) var(--motion-ease),
+      opacity var(--motion-fast) var(--motion-ease);
+  }
 }
-@media (forced-colors: active) { .card-cover, .card-cover .cv-pop { color: CanvasText; background: none; } }
+@media (forced-colors: active) {
+  .card-cover, .card-cover .cv-pop { color: CanvasText; background: none; }
+  .card-cover::after { content: none; }
+}
 @media print { .card-cover { display: none; } }
 
 /* ---------- Hot pink ----------

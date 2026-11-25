@@ -54,10 +54,20 @@ ul.task-list li input[type="checkbox"] {
     if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
   } catch (e) {}
   // Motion styles apply only when the visitor has not asked for reduced motion.
+  // page-pending hides .page until site.js runs the once-per-navigation enter
+  // (skipped for hash deep-links so the target is never blank).
   try {
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("js-motion");
+      if (!location.hash) document.documentElement.classList.add("page-pending");
+    }
   } catch (e) {}
 </script>
+<noscript>
+  <style>
+    html.page-pending .page { opacity: 1 !important; transform: none !important; }
+  </style>
+</noscript>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -80,7 +90,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=544baee724">
+<link rel="stylesheet" href="../styles.css?v=b8ba65db09">
 <meta property="og:title" content="Projects — Jack J. Burleson">
 <meta property="og:description" content="Selected work in mechanistic interpretability, document intelligence, data engineering, distributed systems, behavioral machine learning, LLM agent design, and simulation, with case studies and selected technical reports.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
@@ -120,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="projects" class="page-title page">
 <h1 class="page-title">Projects</h1>
 <p>Most of this work comes back to one idea: a system is only as useful as its honesty about its own errors. It runs through document intelligence, interpretability, data engineering, distributed systems, behavioral machine learning, LLM agent design and simulation. Each project has a short case study. Most also have a technical report with the experiment history, the metrics and the steps to reproduce the results, including the results that did not go my way.</p>
-<p>Content review: <strong>6 November 2026</strong>. Test totals and benchmarks belong to the snapshots named on each page; they are not live status counters. Some older reports retain historical results and are labeled where newer releases supersede them.</p>
+<p>Content review: <strong>19 November 2026</strong>. Test totals and benchmarks belong to the snapshots named on each page; they are not live status counters. Some older reports retain historical results and are labeled where newer releases supersede them. A WIP tag marks a project whose own page still calls it unfinished.</p>
 <nav class="project-jump" aria-label="Project categories">
 <p><a href="#mechanistic-interpretability">Interpretability</a> <a href="#document-intelligence">Document AI</a> <a href="#data-engineering-visualization">Data &amp; visualization</a> <a href="#big-data-distributed-systems">Distributed systems</a> <a href="#behavioral-machine-learning">Behavioral ML</a> <a href="#cognitive-neuroscience">Neuroscience</a> <a href="#llm-agent-design">Agents</a> <a href="#side-projects-interests">Simulations</a></p>
 </nav>
@@ -239,8 +249,8 @@ ul.task-list li input[type="checkbox"] {
 <h3><a href="../projects/aeroglobe.html">AeroGlobe<svg class="icon icon-go" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-right"></use></svg></a></h3>
 <div class="card-cover" aria-hidden="true"><svg viewbox="0 0 320 120" preserveaspectratio="xMidYMid slice" focusable="false"><circle class="cv-glow" cx="160" cy="62" r="54"></circle><circle class="cv-page" cx="160" cy="62" r="46"></circle><path class="cv-soft" d="M160 16 A46 46 0 0 1 160 108 A19.32 46 0 0 0 160 16 Z"></path><ellipse class="cv-line cv-faint" cx="160" cy="62" rx="16.6" ry="46"></ellipse><ellipse class="cv-line cv-faint" cx="160" cy="62" rx="34" ry="46"></ellipse><path class="cv-line cv-faint" d="M160 16 V108"></path><path class="cv-line cv-faint" d="M122.1 36 Q160 45 197.9 36"></path><path class="cv-line cv-faint" d="M114 62 Q160 71 206 62"></path><path class="cv-line cv-faint" d="M122.1 88 Q160 97 197.9 88"></path><circle class="cv-accent" cx="160" cy="62" r="46"></circle><path class="cv-accent" d="M134 46 Q166 44 187 76"></path><path class="cv-accent" d="M141 84 Q150 52 178 38"></path><path class="cv-accent cv-dash" d="M34 80 Q74 18 134 46"></path><path class="cv-accent cv-dash" d="M187 76 Q246 34 290 38"></path><path class="cv-accent cv-dash" d="M141 84 Q204 122 266 100"></path><circle class="cv-dot" cx="134" cy="46" r="3.2"></circle><circle class="cv-dot" cx="178" cy="38" r="3.2"></circle><circle class="cv-dot" cx="187" cy="76" r="3.2"></circle><circle class="cv-dot" cx="141" cy="84" r="3.2"></circle><circle class="cv-dot" cx="34" cy="80" r="2.6"></circle><circle class="cv-dot" cx="290" cy="38" r="2.6"></circle><circle class="cv-dot" cx="266" cy="100" r="2.6"></circle><g transform="translate(248.4 43.4) rotate(-17.8)"><path class="cv-fill cv-pop" d="M10 0 Q8 -1.7 4 -1.7 L1 -1.7 L-3 -9 L-5.6 -9 L-3.6 -1.7 L-8 -1.5 L-10 -4.6 L-11.6 -4.6 L-10.9 0 L-11.6 4.6 L-10 4.6 L-8 1.5 L-3.6 1.7 L-5.6 9 L-3 9 L1 1.7 L4 1.7 Q8 1.7 10 0 Z"></path></g></svg></div>
 <p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">In active development</span><span class="seg"> <span class="sep">·</span> 3D flight data on a globe</span></span></span></span></p>
-<p>A browser globe for flight tracking, built around a static data pipeline so that flights can be replayed without an always-on server. An early version is live: it shows a short sample of real traffic recorded when the site was built and replays recorded tracks, and full-day playback is planned.</p>
-<p><span class="tag">TypeScript</span> <span class="tag">CesiumJS</span> <span class="tag">React</span> <span class="tag">Data pipeline</span></p>
+<p>A browser globe for flight tracking, built around a static data pipeline so that flights can be replayed without an always-on server. An early version is live: it shows a short sample of real traffic recorded when the site was built and replays recorded tracks. Route search, a time-zone overlay and an in-browser logbook are described in the repository README. Full-day playback is planned for a real published historical day, which is not on the live site yet.</p>
+<p><span class="tag">WIP</span> <span class="tag">TypeScript</span> <span class="tag">CesiumJS</span> <span class="tag">React</span> <span class="tag">Data pipeline</span></p>
 </section>
 </div>
 <h2 class="group-title" id="big-data-distributed-systems"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-layers"></use></svg>Big data &amp; distributed systems</h2>
@@ -250,7 +260,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="card-cover" aria-hidden="true"><svg viewbox="0 0 320 120" preserveaspectratio="xMidYMid slice" focusable="false"><circle class="cv-glow" cx="132" cy="88" r="24"></circle><rect class="cv-shade" x="27" y="15" width="36" height="18" rx="4"></rect><rect class="cv-page" x="24" y="12" width="36" height="18" rx="4"></rect><path class="cv-line" d="M32 21 h20"></path><rect class="cv-shade" x="27" y="41" width="36" height="18" rx="4"></rect><rect class="cv-page" x="24" y="38" width="36" height="18" rx="4"></rect><path class="cv-line" d="M32 47 h20"></path><rect class="cv-shade" x="27" y="67" width="36" height="18" rx="4"></rect><rect class="cv-page" x="24" y="64" width="36" height="18" rx="4"></rect><path class="cv-line" d="M32 73 h20"></path><rect class="cv-shade" x="27" y="93" width="36" height="18" rx="4"></rect><rect class="cv-page" x="24" y="90" width="36" height="18" rx="4"></rect><path class="cv-line" d="M32 99 h20"></path><path class="cv-accent" d="M60 21 H93"></path><path class="cv-accent" d="M111 21 C159.5 21 147.5 40 196 40"></path><path class="cv-line" d="M111 21 C159.5 21 147.5 80 196 80"></path><path class="cv-accent" d="M60 47 H93"></path><path class="cv-line" d="M111 47 C159.5 47 147.5 40 196 40"></path><path class="cv-accent" d="M111 47 C159.5 47 147.5 80 196 80"></path><path class="cv-line cv-dash" d="M60 73 H91"></path><path class="cv-accent" d="M141 88 C174.5 88 162.5 40 196 40"></path><path class="cv-line" d="M141 88 C174.5 88 162.5 80 196 80"></path><path class="cv-accent" d="M60 99 H93"></path><path class="cv-line" d="M111 99 C159.5 99 147.5 40 196 40"></path><path class="cv-accent" d="M111 99 C159.5 99 147.5 80 196 80"></path><path class="cv-accent cv-dash cv-pop" d="M60 78 C84 92 100 88 122 88"></path><path class="cv-accent" d="M216 40 C241 40 229 60 254 60"></path><path class="cv-accent" d="M216 80 C241 80 229 60 254 60"></path><circle class="cv-page" cx="102" cy="21" r="9"></circle><circle class="cv-dot" cx="102" cy="21" r="3.5"></circle><circle class="cv-page" cx="102" cy="47" r="9"></circle><circle class="cv-dot" cx="102" cy="47" r="3.5"></circle><circle class="cv-under" cx="102" cy="73" r="9"></circle><circle class="cv-line cv-dash" cx="102" cy="73" r="9"></circle><path class="cv-line" d="M98 69 l8 8 M106 69 l-8 8"></path><circle class="cv-page" cx="102" cy="99" r="9"></circle><circle class="cv-dot" cx="102" cy="99" r="3.5"></circle><circle class="cv-under" cx="132" cy="88" r="9"></circle><circle class="cv-accent cv-pop" cx="132" cy="88" r="9"></circle><circle class="cv-dot cv-pop" cx="132" cy="88" r="3.5"></circle><circle class="cv-page" cx="206" cy="40" r="10"></circle><circle class="cv-dot" cx="206" cy="40" r="4"></circle><circle class="cv-page" cx="206" cy="80" r="10"></circle><circle class="cv-dot" cx="206" cy="80" r="4"></circle><rect class="cv-shade" x="259" y="46" width="42" height="34" rx="5"></rect><rect class="cv-page" x="256" y="43" width="42" height="34" rx="5"></rect><path class="cv-line" d="M265 53.5 h24 M265 60 h24 M265 66.5 h15"></path></svg></div>
 <p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">In active development</span><span class="seg"> <span class="sep">·</span> distributed systems</span><span class="seg"> <span class="sep">·</span> Go &amp; Python</span></span></span></span></p>
 <p>A from-scratch rebuild of Google’s 2004 MapReduce, with a Go cluster and a Python reference. The paper mapping now includes 24 items, including performance experiments. S3 storage, compression, a VM evaluation and the final report are built; full Python worker parity remains a stretch goal.</p>
-<p><span class="tag">Go</span> <span class="tag">Python</span> <span class="tag">gRPC</span> <span class="tag">Docker Compose</span> <span class="tag">Fault tolerance</span></p>
+<p><span class="tag">WIP</span> <span class="tag">Go</span> <span class="tag">Python</span> <span class="tag">gRPC</span> <span class="tag">Docker Compose</span> <span class="tag">Fault tolerance</span></p>
 </section>
 </div>
 <h2 class="group-title" id="behavioral-machine-learning"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-brain"></use></svg>Behavioral machine learning</h2>
@@ -313,7 +323,7 @@ ul.task-list li input[type="checkbox"] {
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="../assets/js/site.js?v=196b28f6b1" defer=""></script>
+<script src="../assets/js/site.js?v=83a152c7b0" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol><symbol id="i-layers" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></symbol><symbol id="i-brain" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M19.938 10.5a4 4 0 0 1 .585.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M19.967 17.484A4 4 0 0 1 18 18"></path></symbol><symbol id="i-scale" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></symbol><symbol id="i-waves" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></symbol><symbol id="i-database" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></symbol></svg>
 
 <script>
@@ -338,6 +348,7 @@ ul.task-list li input[type="checkbox"] {
       if (sun && moon) { sun.hidden = !dark; moon.hidden = dark; }
     }
     var toggle = document.querySelector(".theme-toggle");
+    var themeCleanup = null;
     if (toggle) {
       // Its list item is rendered hidden so there is no dead control (or stray bullet) without JavaScript; shown once it can work.
       if (toggle.parentNode) toggle.parentNode.hidden = false;
@@ -345,6 +356,17 @@ ul.task-list li input[type="checkbox"] {
       label(toggle);
       toggle.addEventListener("click", function () {
         var next = current() === "dark" ? "light" : "dark";
+        var reduce = false;
+        try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+        if (!reduce) {
+          root.classList.add("theme-switching");
+          // Cancel any prior cleanup so a rapid second click keeps the full cross-fade.
+          if (themeCleanup !== null) window.clearTimeout(themeCleanup);
+          themeCleanup = window.setTimeout(function () {
+            themeCleanup = null;
+            root.classList.remove("theme-switching");
+          }, 320);
+        }
         root.setAttribute("data-theme", next);
         try { localStorage.setItem("theme", next); } catch (e) {}
         label(toggle);

@@ -54,10 +54,20 @@ ul.task-list li input[type="checkbox"] {
     if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
   } catch (e) {}
   // Motion styles apply only when the visitor has not asked for reduced motion.
+  // page-pending hides .page until site.js runs the once-per-navigation enter
+  // (skipped for hash deep-links so the target is never blank).
   try {
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("js-motion");
+      if (!location.hash) document.documentElement.classList.add("page-pending");
+    }
   } catch (e) {}
 </script>
+<noscript>
+  <style>
+    html.page-pending .page { opacity: 1 !important; transform: none !important; }
+  </style>
+</noscript>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -80,17 +90,18 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=544baee724">
+<link rel="stylesheet" href="../styles.css?v=b8ba65db09">
 <meta property="og:title" content="AeroGlobe — Jack J. Burleson">
 <meta property="og:description" content="A 3D flight-tracking globe in active development, with an early version live: a React and CesiumJS client over a static data pipeline, built to play back flights without an always-on server.">
-<meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta property="og:image" content="https://exios66.github.io/resume/assets/og/aeroglobe.png">
 <meta property="og:site_name" content="Jack J. Burleson">
 <meta property="og:image:alt" content="Jack J. Burleson — Machine Learning · Data Science · AI Engineering &amp; Safety">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="AeroGlobe — Jack J. Burleson">
 <meta name="twitter:description" content="A 3D flight-tracking globe in active development, with an early version live: a React and CesiumJS client over a static data pipeline, built to play back flights without an always-on server.">
-<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og/aeroglobe.png">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="AeroGlobe project motif">
 <link rel="canonical" href="https://exios66.github.io/resume/projects/aeroglobe.html">
 </head>
 
@@ -124,12 +135,13 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <h1 class="page-title" id="aeroglobe">AeroGlobe</h1>
 <p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">In active development</span><span class="seg"> <span class="sep">·</span> data pipeline &amp; 3D visualization</span></span></span></span></p>
-<p>A browser-based 3D globe for flight tracking. It is a work in progress, and an early version is live. The implementation details and test counts below describe the 23 October 2026 snapshot, not a continuously updated release dashboard.</p>
+<p><span class="tag">WIP</span></p>
+<p>A browser-based 3D globe for flight tracking. It is a work in progress, and an early version is live. The implementation details below describe the 23 October 2026 snapshot, not a continuously updated release dashboard. The test-declaration and TypeScript-line counts are a later recount, dated 30 October 2026.</p>
 <div class="actions">
 <p><a href="https://exios66.github.io/aeroglobe/" class="btn primary">Open the live site</a> <a href="https://github.com/Exios66/aeroglobe" class="btn">View the code</a></p>
 </div>
 <div class="caveat">
-<p><strong>Work in progress.</strong> This case study describes the code on 23 October 2026. The <a href="https://github.com/Exios66/aeroglobe/blob/935bd07515b6fd857f0ff449618c6f244fb49353/README.md">repository’s deployment notes⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>, checked on 6 November, still describe build-time OpenSky observations with a labeled sample-data fallback and a generated sample day. The <a href="https://exios66.github.io/aeroglobe/">live site⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> is not a continuously polling live feed, and no real historical day is published yet. Dataset availability can change between builds.</p>
+<p><strong>Work in progress.</strong> The narrative describes the code on 23 October 2026. The test-declaration and TypeScript-line stats are the 30 October 2026 recount. Checked again on 19 November 2026 against the <a href="https://github.com/Exios66/aeroglobe/blob/a011ff7b46c0/README.md">README at a011ff7⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> (8 November 2026) and the <a href="https://github.com/Exios66/aeroglobe/blob/935bd07515b6fd857f0ff449618c6f244fb49353/README.md">earlier deployment notes at 935bd07⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>. Both still describe build-time OpenSky observations with a labeled sample-data fallback. The <a href="https://exios66.github.io/aeroglobe/">live site⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> is not a continuously polling live feed, and no real historical day is published yet. The later README describes route search, a history panel, a time-zone overlay and an in-browser logbook as built; those notes were not re-run for this page.</p>
 </div>
 <h2 id="at-a-glance">At a glance</h2>
 <div class="stats">
@@ -156,19 +168,25 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>A static data pipeline.</strong> Normalization, flight segmentation, hourly chunking and a catalog, with a snapshot command that records a few OpenSky observations and a fixture command that writes a deterministic set of generated traces for offline work.</li>
 <li><strong>A historical source.</strong> An adapter for full days of adsb.lol flight data, which runs through the same pipeline and can publish to a separate data branch from my own machine. A global day needs about 10 GB of disk.</li>
 <li><strong>Playback and track replay.</strong> A day picker and a time slider with play and pause, driven by the globe’s clock, that moves every aircraft along its recorded positions. A <strong>Replay track</strong> control follows one selected aircraft, with an option to keep the camera on it. Up to 2,000 aircraft nearest the camera draw a short trail from their consecutive observations.</li>
-<li><strong>Reference data.</strong> Airport and airline tables built from public sources, with the source and licence of each recorded next to the file, and time-zone polygons for the planned overlay.</li>
+<li><strong>Reference data.</strong> Airport and airline tables built from public sources, with the source and licence of each recorded next to the file.</li>
 <li><strong>Tests and checks.</strong> The repository’s continuous integration runs lint, the type-checker, the tests and the build on pushes and pull requests to the main branch.</li>
 </ul>
-<h2 id="what-is-planned">What is planned</h2>
-<p>The design spec for the next stage is a draft. In outline:</p>
+<p>The README at <code>a011ff7</code> also describes these as built. This page did not re-run them:</p>
 <ul>
-<li>a published historical day on the live site;</li>
-<li>a faster playback engine that decodes data off the main thread and draws aircraft as one layer, with a transport bar that sets the speed and shows traffic over the day;</li>
-<li>inferred routes between airports and a time-zone overlay;</li>
-<li>a per-aircraft history panel;</li>
-<li>a personal flight logbook kept in the browser.</li>
+<li><strong>Route-pair search</strong> over the loaded day’s index, plus callsign, registration, aircraft type and airline prefix.</li>
+<li><strong>An aircraft history panel</strong> that seeks the clock to one airframe’s indexed leg.</li>
+<li><strong>UTC and airport-local times</strong> on the flight card, left blank when a zone is unknown.</li>
+<li><strong>A time-zone overlay</strong> with a hover chip and marks where the selected route crosses a boundary.</li>
+<li><strong>A personal logbook</strong> kept in the browser (IndexedDB), with JSON and CSV export. Nothing in that log leaves the browser.</li>
 </ul>
-<p>None of these is built yet beyond the basic playback above, and the spec may change as I build.</p>
+<h2 id="what-is-planned">What is planned</h2>
+<p>Still not claimed by that README, and not built on the live site as far as this page can say:</p>
+<ul>
+<li>a real historical day published on the live site (full-day playback is planned for that day; the live demo still uses the labeled sample);</li>
+<li>a faster playback engine that decodes data off the main thread and draws aircraft as one layer;</li>
+<li>inferred routes between airports, as distinct from searching flights already in the loaded index.</li>
+</ul>
+<p>The spec may change as those are built.</p>
 <h2 id="what-im-learning">What I’m learning</h2>
 <ul>
 <li>Choose where the work happens before choosing the framework. Moving the heavy work into a build step is what makes a historical view possible without running a server.</li>
@@ -181,10 +199,10 @@ ul.task-list li input[type="checkbox"] {
 </div>
 
 </main>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"AeroGlobe","description":"A 3D flight-tracking globe in active development, with an early version live: a React and CesiumJS client over a static data pipeline, built to play back flights without an always-on server.","url":"https://exios66.github.io/resume/projects/aeroglobe.html","author":{"@type":"Person","name":"Jack J. Burleson","url":"https://exios66.github.io/resume/"},"isPartOf":{"@type":"WebSite","name":"Jack J. Burleson","url":"https://exios66.github.io/resume/"},"image":"https://exios66.github.io/resume/assets/og-image.png"}</script><footer class="site-footer">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"AeroGlobe","description":"A 3D flight-tracking globe in active development, with an early version live: a React and CesiumJS client over a static data pipeline, built to play back flights without an always-on server.","url":"https://exios66.github.io/resume/projects/aeroglobe.html","author":{"@type":"Person","name":"Jack J. Burleson","url":"https://exios66.github.io/resume/"},"isPartOf":{"@type":"WebSite","name":"Jack J. Burleson","url":"https://exios66.github.io/resume/"},"image":"https://exios66.github.io/resume/assets/og/aeroglobe.png"}</script><footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="../assets/js/site.js?v=196b28f6b1" defer=""></script>
+<script src="../assets/js/site.js?v=83a152c7b0" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol></svg>
 
 <script>
@@ -209,6 +227,7 @@ ul.task-list li input[type="checkbox"] {
       if (sun && moon) { sun.hidden = !dark; moon.hidden = dark; }
     }
     var toggle = document.querySelector(".theme-toggle");
+    var themeCleanup = null;
     if (toggle) {
       // Its list item is rendered hidden so there is no dead control (or stray bullet) without JavaScript; shown once it can work.
       if (toggle.parentNode) toggle.parentNode.hidden = false;
@@ -216,6 +235,17 @@ ul.task-list li input[type="checkbox"] {
       label(toggle);
       toggle.addEventListener("click", function () {
         var next = current() === "dark" ? "light" : "dark";
+        var reduce = false;
+        try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+        if (!reduce) {
+          root.classList.add("theme-switching");
+          // Cancel any prior cleanup so a rapid second click keeps the full cross-fade.
+          if (themeCleanup !== null) window.clearTimeout(themeCleanup);
+          themeCleanup = window.setTimeout(function () {
+            themeCleanup = null;
+            root.classList.remove("theme-switching");
+          }, 320);
+        }
         root.setAttribute("data-theme", next);
         try { localStorage.setItem("theme", next); } catch (e) {}
         label(toggle);

@@ -1,6 +1,8 @@
 ---
 pagetitle: "NATD: appendix — Jack J. Burleson"
 description: "Publication scope for The Neural Architecture of Truth and Deception: what the pilot supports, what stays withheld until authentication, and which provenance questions remain open."
+image: https://exios66.github.io/resume/assets/og/natd.png
+image-alt: "The Neural Architecture of Truth and Deception project motif"
 ---
 
 ::: {.page}
@@ -27,7 +29,7 @@ This appendix records what can and cannot be published from the pilot. It delibe
 
 The case study keeps the caveats visible: the sample is tiny, the design is a pilot, and gains from a low baseline need care.
 
-## Withheld until authentication
+## Withheld until&nbsp;authentication
 
 Physiology, EEG, eye-tracking, workload and the per-session source files stay unpublished until every recording is authenticated against its session. The repository does not contain them, so this site does not link to them. The instruments in the design include EEG, eye tracking, a pulse oximeter and GSR sensors.
 

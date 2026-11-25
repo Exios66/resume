@@ -158,33 +158,64 @@ class PostRenderTests(unittest.TestCase):
 
 
 class SocialImageTests(BrowserTestCase):
+    def load_make_og(self):
+        # Load without executing __main__ so tests can call main([...]) with a clean argv.
+        return runpy.run_path(str(ROOT / "scripts/build/make-og.py"), run_name="make_og")
+
     def test_screenshot_dimensions_fonts_destination_and_browser_selection(self):
         """Verify social-image capture uses the expected browser, fonts, and output."""
-        for matches, expected in (([], {}), (["/b/z/chrome", "/b/a/chrome"],
-                                             {"executable_path": "/b/z/chrome"})):
-            with self.subTest(matches=matches), \
-                    patch.dict(os.environ, {"PLAYWRIGHT_BROWSERS_PATH": "/b"}, clear=True), \
-                    patch("glob.glob", return_value=matches) as glob:
-                self.factory.reset_mock()
-                runpy.run_path(str(ROOT / "scripts/build/make-og.py"), run_name="__main__")
-                glob.assert_called_once_with("/b/chromium-*/chrome-linux*/chrome")
-                self.factory.return_value.__enter__.return_value.chromium.launch.assert_called_once_with(**expected)
-                self.browser.new_page.assert_called_once_with(viewport={"width": 1200, "height": 630})
-                self.assertEqual(self.page.method_calls, [
-                    call.goto((ROOT / "scripts/build/og-image.html").as_uri(), wait_until="networkidle"),
-                    call.evaluate("document.fonts.ready"),
-                    call.screenshot(path=str(ROOT / "assets/og-image.png")),
-                ])
-                self.browser.close.assert_called_once_with()
+        make_og = self.load_make_og()
+        with tempfile.TemporaryDirectory() as tmp:
+            site_og = Path(tmp) / "og-image.png"
+            for matches, expected in (([], {}), (["/b/z/chrome", "/b/a/chrome"],
+                                                 {"executable_path": "/b/z/chrome"})):
+                with self.subTest(matches=matches), \
+                        patch.dict(os.environ, {"PLAYWRIGHT_BROWSERS_PATH": "/b"}, clear=True), \
+                        patch.object(make_og["glob"], "glob", return_value=matches) as glob, \
+                        patch.dict(make_og["write_site_card"].__globals__, {"SITE_OG": site_og}):
+                    self.factory.reset_mock()
+                    self.page.method_calls.clear()
+                    # Atomic capture writes a temporary .partial.png then renames it.
+                    self.page.screenshot.side_effect = (
+                        lambda path, **_kwargs: Path(path).write_bytes(b"x" * 2000)
+                    )
+                    make_og["main"]([])
+                    glob.assert_called_once_with("/b/chromium-*/chrome-linux*/chrome")
+                    self.factory.return_value.__enter__.return_value.chromium.launch.assert_called_once_with(**expected)
+                    self.browser.new_page.assert_called_once_with(viewport={"width": 1200, "height": 630})
+                    self.assertEqual(
+                        [c for c in self.page.method_calls if c[0] in {"goto", "evaluate"}],
+                        [
+                            call.goto((ROOT / "scripts/build/og-image.html").as_uri(), wait_until="networkidle"),
+                            call.evaluate("document.fonts.ready"),
+                        ],
+                    )
+                    self.assertTrue(any(c[0] == "screenshot" for c in self.page.method_calls))
+                    self.assertTrue(site_og.is_file())
+                    self.browser.close.assert_called_once_with()
         self.assertIn("wrote assets/og-image.png", self.stdout.getvalue())
 
     def test_screenshot_failure_is_not_reported_as_success(self):
-        self.page.screenshot.side_effect = RuntimeError("capture failed")
-        with patch("glob.glob", return_value=[]):
-            with self.assertRaisesRegex(RuntimeError, "capture failed"):
-                runpy.run_path(str(ROOT / "scripts/build/make-og.py"), run_name="__main__")
+        make_og = self.load_make_og()
+        with tempfile.TemporaryDirectory() as tmp:
+            site_og = Path(tmp) / "og-image.png"
+            self.page.screenshot.side_effect = RuntimeError("capture failed")
+            with patch.object(make_og["glob"], "glob", return_value=[]), \
+                    patch.dict(make_og["write_site_card"].__globals__, {"SITE_OG": site_og}):
+                with self.assertRaisesRegex(RuntimeError, "capture failed"):
+                    make_og["main"]([])
+            self.assertFalse(site_og.exists())
         self.assertNotIn("wrote assets/og-image.png", self.stdout.getvalue())
         self.factory.return_value.__exit__.assert_called_once()
+
+    def test_project_card_uses_title_kicker_and_motif(self):
+        make_og = self.load_make_og()
+        html = make_og["project_card_html"]("wave-laboratory")
+        self.assertIn("Wave Laboratory", html)
+        self.assertIn("Side project", html)
+        self.assertIn("card-cover", html)
+        self.assertIn("#fe01b1", html)
+        self.assertIn((ROOT / "partials/covers/wave-laboratory.svg").read_text(encoding="utf-8").strip()[:40], html)
 
 
 class TitleTests(unittest.TestCase):

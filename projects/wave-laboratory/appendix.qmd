@@ -1,6 +1,8 @@
 ---
 pagetitle: "Wave Laboratory: appendix — Jack J. Burleson"
 description: "Supporting notes for Wave Laboratory: the wave models, validation scope and what the lab does not model."
+image: https://exios66.github.io/resume/assets/og/wave-laboratory.png
+image-alt: "Wave Laboratory project motif"
 ---
 
 ::: {.page}

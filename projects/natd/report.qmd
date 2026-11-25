@@ -1,6 +1,8 @@
 ---
 pagetitle: "The Neural Architecture of Truth and Deception: technical report — Jack J. Burleson"
 description: "Technical report on a study of nine participants and 18 sessions with helpful and deceitful chatbot personas: literature review, method, learning outcomes, detection, clusters, limits and references."
+image: https://exios66.github.io/resume/assets/og/natd.png
+image-alt: "The Neural Architecture of Truth and Deception project motif"
 ---
 
 ::: {.page}

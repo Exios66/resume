@@ -54,10 +54,20 @@ ul.task-list li input[type="checkbox"] {
     if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
   } catch (e) {}
   // Motion styles apply only when the visitor has not asked for reduced motion.
+  // page-pending hides .page until site.js runs the once-per-navigation enter
+  // (skipped for hash deep-links so the target is never blank).
   try {
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("js-motion");
+      if (!location.hash) document.documentElement.classList.add("page-pending");
+    }
   } catch (e) {}
 </script>
+<noscript>
+  <style>
+    html.page-pending .page { opacity: 1 !important; transform: none !important; }
+  </style>
+</noscript>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -80,17 +90,18 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=544baee724">
+<link rel="stylesheet" href="../styles.css?v=b8ba65db09">
 <meta property="og:title" content="Neuron Atlas — Jack J. Burleson">
 <meta property="og:description" content="A browser-based language-model neuron explorer: live TinyStories steering, random-direction controls, and recorded Qwen studies, with reproducible findings and explicit limits.">
-<meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta property="og:image" content="https://exios66.github.io/resume/assets/og/neuron-atlas.png">
 <meta property="og:site_name" content="Jack J. Burleson">
 <meta property="og:image:alt" content="Jack J. Burleson — Machine Learning · Data Science · AI Engineering &amp; Safety">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="Neuron Atlas — Jack J. Burleson">
 <meta name="twitter:description" content="A browser-based language-model neuron explorer: live TinyStories steering, random-direction controls, and recorded Qwen studies, with reproducible findings and explicit limits.">
-<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og/neuron-atlas.png">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="Neuron Atlas project motif">
 <link rel="canonical" href="https://exios66.github.io/resume/projects/neuron-atlas.html">
 </head>
 
@@ -164,7 +175,7 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>A small-model study, not a safety guarantee.</strong> These are interventions on particular models, prompts and scoring rules. Beating a finite set of controls is not a corrected significance test, a general explanation of a neuron, or evidence that a system is safe. TinyStories live inference and the larger models’ offline recordings are different capabilities.</p>
 </div>
 <p>The upstream runtime verification reports exact replay of all 16 curated neuron cards, but only 47 of 48 sampled sweep rollouts: near-tied float32 logits can change greedy decoding. The model, corpus and code also have separate license terms.</p>
-<p>This page was reviewed on <strong>6 November 2026</strong>, against <a href="https://github.com/Exios66/LLM_Viz/tree/a58000861b424280158cea728cf7b29edaf385d1">source revision a580008⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>. The project linked in issue #89 began on the <a href="https://github.com/Exios66/LLM_Viz/tree/neuron-atlas">neuron-atlas branch⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>; the published project now includes the recorded-model studies too. The <a href="https://github.com/Exios66/LLM_Viz/tree/a58000861b424280158cea728cf7b29edaf385d1/docs/research">research reports⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> and the live site’s <a href="https://exios66.github.io/LLM_Viz/#/method">Method page⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> contain the methods, findings and limitations.</p>
+<p>This page was reviewed on <strong>6 November 2026</strong>, against <a href="https://github.com/Exios66/LLM_Viz/tree/a58000861b424280158cea728cf7b29edaf385d1">source revision a580008⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>. The project linked in issue #89 began on the <a href="https://github.com/Exios66/LLM_Viz/tree/neuron-atlas">neuron-atlas branch⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a>; the published project now includes the recorded-model studies too. The <a href="https://github.com/Exios66/LLM_Viz/tree/a58000861b424280158cea728cf7b29edaf385d1/docs/research">research reports⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> and the live site’s <a href="https://exios66.github.io/LLM_Viz/#/method">Method page⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> contain the methods, findings and limitations. <code>main</code> later moved to <a href="https://github.com/Exios66/LLM_Viz/tree/7d15c18a5bd8">7d15c18⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> (7 November 2026), a region-key sweep. The findings on this page stay the 6 November review.</p>
 <h2 id="what-i-learned">What I learned</h2>
 <ul>
 <li>Put a null comparison next to the attractive example, not in a footnote.</li>
@@ -177,10 +188,10 @@ ul.task-list li input[type="checkbox"] {
 </div>
 
 </main>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"Neuron Atlas","description":"A browser-based language-model neuron explorer: live TinyStories steering, random-direction controls, and recorded Qwen studies, with reproducible findings and explicit limits.","url":"https://exios66.github.io/resume/projects/neuron-atlas.html","author":{"@type":"Person","name":"Jack J. Burleson","url":"https://exios66.github.io/resume/"},"isPartOf":{"@type":"WebSite","name":"Jack J. Burleson","url":"https://exios66.github.io/resume/"},"image":"https://exios66.github.io/resume/assets/og-image.png"}</script><footer class="site-footer">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"Neuron Atlas","description":"A browser-based language-model neuron explorer: live TinyStories steering, random-direction controls, and recorded Qwen studies, with reproducible findings and explicit limits.","url":"https://exios66.github.io/resume/projects/neuron-atlas.html","author":{"@type":"Person","name":"Jack J. Burleson","url":"https://exios66.github.io/resume/"},"isPartOf":{"@type":"WebSite","name":"Jack J. Burleson","url":"https://exios66.github.io/resume/"},"image":"https://exios66.github.io/resume/assets/og/neuron-atlas.png"}</script><footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="../assets/js/site.js?v=196b28f6b1" defer=""></script>
+<script src="../assets/js/site.js?v=83a152c7b0" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol></svg>
 
 <script>
@@ -205,6 +216,7 @@ ul.task-list li input[type="checkbox"] {
       if (sun && moon) { sun.hidden = !dark; moon.hidden = dark; }
     }
     var toggle = document.querySelector(".theme-toggle");
+    var themeCleanup = null;
     if (toggle) {
       // Its list item is rendered hidden so there is no dead control (or stray bullet) without JavaScript; shown once it can work.
       if (toggle.parentNode) toggle.parentNode.hidden = false;
@@ -212,6 +224,17 @@ ul.task-list li input[type="checkbox"] {
       label(toggle);
       toggle.addEventListener("click", function () {
         var next = current() === "dark" ? "light" : "dark";
+        var reduce = false;
+        try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+        if (!reduce) {
+          root.classList.add("theme-switching");
+          // Cancel any prior cleanup so a rapid second click keeps the full cross-fade.
+          if (themeCleanup !== null) window.clearTimeout(themeCleanup);
+          themeCleanup = window.setTimeout(function () {
+            themeCleanup = null;
+            root.classList.remove("theme-switching");
+          }, 320);
+        }
         root.setAttribute("data-theme", next);
         try { localStorage.setItem("theme", next); } catch (e) {}
         label(toggle);

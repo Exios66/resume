@@ -89,10 +89,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
   } catch (e) {}
   // Motion styles apply only when the visitor has not asked for reduced motion.
+  // page-pending hides .page until site.js runs the once-per-navigation enter
+  // (skipped for hash deep-links so the target is never blank).
   try {
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("js-motion");
+      if (!location.hash) document.documentElement.classList.add("page-pending");
+    }
   } catch (e) {}
 </script>
+<noscript>
+  <style>
+    html.page-pending .page { opacity: 1 !important; transform: none !important; }
+  </style>
+</noscript>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -115,17 +125,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=544baee724">
+<link rel="stylesheet" href="../../styles.css?v=b8ba65db09">
 <meta property="og:title" content="Mailroom-ML: technical report — Jack J. Burleson">
 <meta property="og:description" content="Historical technical report through Mailroom-ML M9b: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits. See the case study for M9c.">
-<meta property="og:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta property="og:image" content="https://exios66.github.io/resume/assets/og/mailroom-ml.png">
 <meta property="og:site_name" content="Jack J. Burleson">
 <meta property="og:image:alt" content="Jack J. Burleson — Machine Learning · Data Science · AI Engineering &amp; Safety">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:title" content="Mailroom-ML: technical report — Jack J. Burleson">
 <meta name="twitter:description" content="Historical technical report through Mailroom-ML M9b: system and data, iteration history, test-split results, calibration, routing, reproduction steps and limits. See the case study for M9c.">
-<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og-image.png">
+<meta name="twitter:image" content="https://exios66.github.io/resume/assets/og/mailroom-ml.png">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="Mailroom-ML project motif">
 <link rel="canonical" href="https://exios66.github.io/resume/projects/mailroom-ml/report.html">
 </head>
 
@@ -532,7 +543,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <footer class="site-footer">
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="../../assets/js/site.js?v=196b28f6b1" defer=""></script>
+<script src="../../assets/js/site.js?v=83a152c7b0" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol></svg>
 
 <script>
@@ -557,6 +568,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       if (sun && moon) { sun.hidden = !dark; moon.hidden = dark; }
     }
     var toggle = document.querySelector(".theme-toggle");
+    var themeCleanup = null;
     if (toggle) {
       // Its list item is rendered hidden so there is no dead control (or stray bullet) without JavaScript; shown once it can work.
       if (toggle.parentNode) toggle.parentNode.hidden = false;
@@ -564,6 +576,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       label(toggle);
       toggle.addEventListener("click", function () {
         var next = current() === "dark" ? "light" : "dark";
+        var reduce = false;
+        try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+        if (!reduce) {
+          root.classList.add("theme-switching");
+          // Cancel any prior cleanup so a rapid second click keeps the full cross-fade.
+          if (themeCleanup !== null) window.clearTimeout(themeCleanup);
+          themeCleanup = window.setTimeout(function () {
+            themeCleanup = null;
+            root.classList.remove("theme-switching");
+          }, 320);
+        }
         root.setAttribute("data-theme", next);
         try { localStorage.setItem("theme", next); } catch (e) {}
         label(toggle);

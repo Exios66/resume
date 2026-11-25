@@ -3,6 +3,38 @@
 Use this file to choose a goal, measure it, and know when to stop. It adds to the polish hill-climb in
 `.claude/skills/portfolio-hillclimb/SKILL.md`; it does not replace it. Roadmap and tasks: issue #117.
 
+## How far the goalposts have moved
+
+| Date | `experience_gaps` | What changed |
+| --- | ---: | --- |
+| 10 Nov 2026 (post #116) | **125** | Motif system and covers on main |
+| 12 Nov 2026 (post #148) | **19** | Image sizing, lazy loading, lead captures (#119) |
+| 19 Nov 2026 evening (run 73) | **5** | Per-project social cards (#120 measured) |
+| 20 Nov 2026 (design stack) | **5** | Track 2 motion and aesthetic hardening; number cannot fall without #121 owner titles |
+
+`polish_defects` has been **0** for many segments. Equal-score `5 → 5` keeps no longer prove Track 1 progress; they are craft work under the levels below. Do not treat a flat `experience_gaps` chart as failure, and do not invent titles or motifs to force the number down.
+
+## Quality levels (grade the loop here)
+
+Each level assumes every lower level still holds. Agents pick the **lowest incomplete** level as the grading bar for a session.
+
+| Level | Name | Bar | How to pass a keep | Stop / escalate when |
+| --- | --- | --- | --- | --- |
+| **L0** | Safety net | `polish_defects=0`, checks pass, `pages_over_budget=0` | Regression only: discard any break | A deliberate design finding is recorded, not gamed away |
+| **L1** | Measured Track 1 | `experience_gaps` ≤ 5, all KPI parts at target except owner titles | A keep that lowers a gap, or a guard that prevents a regression | Remaining gaps are only `repo_style_titles` (**current**) |
+| **L2** | Craft / Track 2–3 | Judged motion and layout feel finished; weight soft limits hold | Screenshots + checks; log as judged keep when the number is flat | Owner says stop, or residual #122 tasks need a design section |
+| **L3** | Owner closure | Titles, motif specificity, OG contact sheet signed off | Owner wording / confirmation only | #118, #120 signoff, #121 titles done |
+| **L4** | Roadmap complete | `experience_gaps=0` + all judged indicators at target + three-engine scope recorded | Issue #117 acceptance | Close #126 / #117 with evidence |
+
+**Current grade (20 Nov 2026, design branch):** **L1 held; working in L2.** Measured Track 1 is complete except owner-gated titles. Further hill-climb keeps must improve a judged indicator, close a residual #122–#125 task, or harden a regression—not chase a number that cannot move.
+
+### What “good enough” means at L2
+
+- Motion uses the shared `--motion-*` scale and is off under reduced motion, print, and forced colours.
+- Small aesthetic slips (spacing rhythm, phone CTA crowding, theme-fade orphans, print chrome) are fair game; inventing content or display titles is not.
+- Soft weight: treat **≥90% of a page/asset budget** as yellow and **≥95%** as red before adding CSS/JS or case-study prose.
+- Do not open a new KPI part in the same PR that “improves” it.
+
 ## How to measure
 
 ```
@@ -18,131 +50,136 @@ bash autoresearch.checks.sh               # correctness gate: must end with "All
 | --- | --- | --- |
 | Correctness | `bash autoresearch.checks.sh` | All checks passed |
 | Polish audit | `scripts/hillclimb/hc.sh findings` | `polish_defects` stays at 0, or the new finding is a recorded design choice |
-| Page weight | `kpi.py` | `pages_over_budget` = 0 (home HTML ≤ 16,000 gzip bytes; projects index ≤ 26,000) |
+| Page weight | `kpi.py` | `pages_over_budget` = 0 for **every** built page type (see budgets below), not only home and projects index |
 
 Never edit the audit, the checks or `kpi.py` to rescue a result. Change them only in a separate pull request that says why.
+Page budgets and classification live in `scripts/hillclimb/page_budgets.py` so `kpi.py` and
+`tests/python/test_page_budget.py` stay aligned.
 
 ## Primary metric for the experience loop: `experience_gaps` (lower is better, target 0)
 
 It is the sum of the counts below. Baseline measured on `main` after pull request #116, 10 November 2026: **125**.
+After #148 (image sizing/lazy): **19**. After hill-climb run 73 (per-project social cards, 19 November 2026 evening):
+**5**. The KPI expansion (full-site page budgets plus chart-title and figure-alt guards) still reads those new
+parts as 0; `pages_over_budget` counts every page type (currently 0).
 
-| Part | Baseline | Target | Closed by |
-| --- | --- | --- | --- |
-| `cards_without_cover` | 0 | 0 | done (#116); guards against regressions |
-| `repo_style_titles` (card titles that are hyphenated repository names) | 5 | 0 | #121; needs the owner's titles first |
-| `projects_without_own_social_card` | 14 | 0 | #120 |
-| `projects_without_structured_data` | 0 | 0 | guard |
-| `images_without_size` (no `width` and `height`) | 61 | 0 | #119 |
-| `later_images_not_lazy` (not the first image on a page, and not `loading="lazy"`) | 45 | 0 | #119 |
-| `pages_over_budget` | 0 | 0 | gate |
+| Part | Baseline | Now (20 Nov 2026) | Target | Closed by |
+| --- | ---: | ---: | --- | --- |
+| `cards_without_cover` | 0 | 0 | 0 | done (#116); regression guard |
+| `repo_style_titles` | 5 | 5 | 0 | #121; **owner titles only** — L3 |
+| `projects_without_own_social_card` | 14 | 0 | 0 | #120 measured (run 73); owner contact-sheet signoff still L3 |
+| `projects_without_structured_data` | 0 | 0 | 0 | guard |
+| `images_without_size` | 61 | 0 | 0 | #119 |
+| `later_images_not_lazy` | 45 | 0 | 0 | #119 |
+| `pages_over_budget` | 0 | 0 | 0 | gate; every page type in `page_budgets.py` |
+| `charts_without_title` | — | 0 | 0 | guard (#139) |
+| `figures_without_alt` | — | 0 | 0 | guard |
 
-Secondary numbers, reported but not summed: `gz_index` 14,127; `gz_projects_index` 23,702; `gz_styles_css` 14,935;
-`gz_site_js` 5,683 (gzip bytes). Watch them for sudden growth. Soft limits: CSS 20,000; JavaScript 9,000.
+At **5**, the metric is **owner-blocked**. Scripts must not invent the five display titles. Grade L2+ work with judged
+indicators and gates, not with a fake drop in `experience_gaps`.
+
+Secondary numbers (gzip bytes of the heaviest page of each type, plus shared assets), refreshed 25 Nov 2026 after
+the phone-fit merge: `gz_home` 14,296; `gz_projects_index` 24,305; `gz_case_study` 19,711; `gz_technical_report` 19,143;
+`gz_appendix` 11,006; `gz_other_page` 11,714; `gz_styles_css` 18,673; `gz_site_js` 7,946.
+Soft limits: CSS 20,000; JavaScript 9,000. `kpi.py` prints an `INFO heaviest_…` line naming the page behind each
+`gz_*` size.
 
 ## Page transfer budgets
 
-Recorded on 10 November 2026 against the same render as the baseline above. Sizes are gzipped HTML bytes at
-compression level 9; the shared stylesheet and script are measured separately because every page pays for them.
-`tests/python/test_page_budget.py` checks every built page, not only the example named here, and fails with the page path,
-its size and its budget.
+Refreshed 20 November 2026 against the design-stack build (motion + aesthetic hardening). Sizes are gzipped HTML
+bytes at compression level 9; the shared stylesheet and script are measured separately because every page pays for
+them. `tests/python/test_page_budget.py` and `kpi.py` both import `scripts/hillclimb/page_budgets.py`.
 
-| Page type | Heaviest page at baseline | Measured | Budget |
-| --- | --- | ---: | ---: |
-| Home | `index.html` | 14,127 | 16,000 |
-| Projects index | `projects/index.html` | 23,702 | 26,000 |
-| Case study | `projects/mapreduce-reloaded.html` | 19,433 | 20,000 |
-| Technical report | `projects/natd/report.html` | 19,345 | 22,000 |
-| Appendix | `projects/mailroom-ml/appendix.html` | 11,018 | 13,000 |
-| Other page | `resume.html` | 12,099 | 15,000 |
-| Shared stylesheet | `styles.css` | 14,935 | 20,000 |
-| Shared script | `assets/js/site.js` | 5,683 | 9,000 |
+| Page type | Heaviest page now | Measured | Budget | Headroom | Pressure |
+| --- | --- | ---: | ---: | ---: | --- |
+| Home | `index.html` | 14,296 | 16,000 | 11% | ok |
+| Projects index | `projects/index.html` | 24,305 | 26,000 | 7% | yellow (≥90%) |
+| Case study | `projects/mapreduce-reloaded.html` | 19,711 | 20,000 | 1% | red (≥95%) |
+| Technical report | `projects/natd/report.html` | 19,143 | 22,000 | 13% | ok |
+| Appendix | `projects/langtons-ant/appendix.html` | 11,006 | 13,000 | 15% | ok |
+| Other page | `resume.html` | 11,714 | 15,000 | 22% | ok |
+| Shared stylesheet | `styles.css` | 18,673 | 20,000 | 7% | yellow |
+| Shared script | `assets/js/site.js` | 7,946 | 9,000 | 12% | ok |
 
-The case-study budget was raised from 19,000 on 12 November 2026. The update to its heaviest page (#142) had
-brought it to 18,988 bytes. Phone-width chart drawings then added 1,407 bytes, and pruning unused icons from each page's
-sprite saved 948, for 19,433. The other budgets are unchanged; every page type got lighter from the sprite pruning.
-
-Page budgets leave roughly 10–24 percent headroom over their baselines; shared CSS and JavaScript budgets allow roughly 34 and 58 percent, respectively. Raising one is a deliberate decision that belongs in
-the pull request, with the reason and the new measurement.
+The case-study budget was raised from 19,000 to 19,500 on 19 November 2026 because the Track 2 theme cross-fade
+script lands on every page and MapReduce was already within 20 bytes of the old ceiling. Phone-width chart
+drawings (25 November 2026) put that page at 19,711, so the budget is 20,000. The second drawing is the phone
+chart itself, not decorative CSS. Raising a budget is a deliberate decision that belongs in the pull request,
+with the reason and the new measurement. Do not trim meaningful content only to pass the gate. Prefer cutting
+decorative CSS/JS before raising budgets again.
 
 ## Judged indicators (a person or a reviewing agent scores these; a script cannot)
 
-| Indicator | Now | Target | How it is scored |
+These are the **L2 / L3 scoreboard** while `experience_gaps` sits at 5.
+
+| Indicator | Now (20 Nov 2026) | Target | How it is scored |
 | --- | --- | --- | --- |
-| Motifs that pass the specificity test | 8 of 14, not yet confirmed by the owner | 14 of 14, owner confirmed | Test in #118: cover the title; the drawing must fit only its project |
-| Case studies of visual projects that lead with a real screenshot | 0 of 2 | 2 of 2 | #119; real captures only |
-| Motion that is off under reduced motion, print and forced colours | Live reduced-motion video pause covered; full roadmap matrix remains open | 100%, with a browser test | #122 |
-| Browsers checked | Chromium suite; targeted Firefox/WebKit chart and video cases (#133/#129) | Chromium, Firefox, WebKit with scope recorded | #125; real devices remain unverified |
+| Motifs that pass the specificity test | 8 of 14, not yet owner-confirmed | 14 of 14, owner confirmed | Test in #118: cover the title; the drawing must fit only its project |
+| Case studies of visual projects that lead with a real screenshot | **2 of 2** (#148) | 2 of 2 | #119; real captures only — **measured done** |
+| Motion scale + hero drift + chart draw-in + theme cross-fade | Shipped on design stack (runs 74–86); matrix test incomplete | Spec items + browser proof | #122; still open: page transitions, per-motif life, stat count-up, full reduced-motion/print/forced-colours test |
+| Aesthetic hardening (spacing, phone chrome, print leftovers) | Runs 80–86 kept with evidence | No obvious slips at 375/1280 light+dark | Judged; screenshots required |
+| Browsers checked | Chromium suite; targeted Firefox/WebKit chart and video cases | Chromium, Firefox, WebKit with scope recorded | #125; real devices remain unverified |
 
 Do not turn a judged indicator into a number by guessing. Record who judged it and attach the screenshot.
+Do not tick #122 complete until its unchecked tasks and the motion matrix test land.
 
 ## Rules for the loop
 
 1. One small change per experiment. Measure before and after with the commands above.
-2. Keep a change only if all gates hold and either `experience_gaps` falls or a judged indicator improves with evidence.
-3. Design work that moves no number is allowed (rule 8 of the design spec). Log it as a judged change with screenshots.
+2. Keep a change only if all gates hold, **`experience_gaps` does not rise** (L2 inherits L1: once the floor is ≤ 5, a keep may not push it above 5), **and** one of: `experience_gaps` falls; a judged indicator improves with evidence at an equal score; a residual roadmap task closes with evidence; or a clear regression risk is removed (guard/hardening) without making the look worse.
+3. At L1 complete / L2 active, a flat `experience_gaps` is expected. Log design keeps as judged changes with screenshots (design-spec rule 8). The ledger may still show metric 5; that is not a reason to discard a good craft keep. **This file governs** equal-score judged keeps; `.claude/skills/portfolio-hillclimb/SKILL.md` defers here when the two conflict.
 4. Do not game a metric: no hidden images to satisfy a count, no fake sizes, no title changes without the owner's wording.
 5. Report `experience_gaps` after each render. Since the experience-scored tooling landed (#126), `autoresearch.sh` also prints the KPI metrics and the ledger can score `experience_gaps` directly: start such a segment with `hc.sh segment "<name>" --metric experience_gaps --gate polish_defects=0`. Never edit the audit, the checks or `kpi.py` to rescue a result.
+6. Prefer weight-neutral or weight-negative CSS when projects index or MapReduce are in the red band.
 
 ## How to raise each metric
 
-Measured on `main` at d11a820 (11 November 2026): `experience_gaps` = **125**, unchanged since the baseline. After #148 (12 November 2026) it is **19**: image sizing and lazy loading are done, and the remaining 19 gaps are the 14 shared social cards (#120) and 5 repository-style display titles (#121).
-The levers below are ordered by gaps closed per pull request. Re-run `kpi.py` before starting; these counts drift.
+Measured after run 73 + KPI expansion + design stack through run 86: `experience_gaps` = **5**. The remaining gaps are
+repository-style display titles (#121). Chart-title and figure-alt guards are at 0; keep them there. Re-run
+`kpi.py` before starting; these counts drift as the portfolio grows.
 
-### 1. `images_without_size` (61) and `later_images_not_lazy` (45): one filter change, up to 106 gaps
-
-- **Where they come from.** All 61 unsized images are project figures written as
-  `![…](figures/x.jpg){.fig fig-alt="…" width="100%"}` (39 JPEG, 21 SVG, 1 PNG). Quarto turns `width="100%"` into
-  `style="width:100.0%"`, so no `width`/`height` attributes reach the HTML. Check the count with
-  `grep -rn 'width="100%"' projects --include=*.qmd | wc -l`. It should match `images_without_size`.
-- **Heaviest pages:** `projects/rvl-cdip-classifier/report.html` (9 images), `projects/wave-laboratory/report.html` (9),
-  `projects/wave-laboratory.html` (6), `projects/mailroom-ml/report.html` (6),
-  `projects/psychometric-digital-twin/report.html` (5).
-- **Lever (#119):** add an `Image` handler to `scripts/filters/site.lua`. It reads each file's intrinsic size: the JPEG
-  SOF marker, the PNG IHDR chunk, or the SVG `viewBox`/`width`/`height`. It replaces the percentage width with
-  `width` and `height` attributes, and sets `loading="lazy" decoding="async"` on every image after the first in `<main>`.
-  `styles.css` already forces `width: 100%; height: auto` on `.page img.fig`, so the attributes reserve the aspect
-  ratio without changing the layout. Check that claim with before and after screenshots at 375 and 1280 px.
-- **Do not game it.** The sizes must be the file's real pixels or viewBox, never constants. Keep the first figure of each
-  page eager, because it is often the largest paint. Add a Lua test in `tests/lua/test_site.lua` for each format, and
-  a case for a missing or unreadable file, which must leave the image unchanged rather than fail the render.
-
-### 2. `projects_without_own_social_card` (14): one card per project
-
-- **Where they come from.** Every project page inherits the site-wide `open-graph.image` in `_quarto.yml`
-  (`assets/og-image.png`). `kpi.py` counts a project as covered only when its slug appears in its own `og:image` URL.
-- **Lever (#120):** make a 1200 × 630 PNG per project from the project's existing cover motif in `partials/covers/`.
-  Use the real title and no invented imagery. Name it after the slug, for example
-  `assets/social/wave-laboratory.png`, and set `image:` in that project's front matter to the absolute URL
-  (`https://exios66.github.io/resume/assets/social/wave-laboratory.png`). `project_schema` in `site.lua` accepts only
-  `http(s)` images and falls back to the site-wide image for a relative path, so a relative value would leave the
-  JSON-LD on the generic card. Script the generator so that a new project gets a card from the same command. Check one page's `og:image` and `twitter:image` in the built HTML.
-
-### 3. `repo_style_titles` (5): owner decision first
+### 1. `repo_style_titles` (5): owner decision first — L3
 
 - The five cards are Digital-Mailroom, Mailroom-ML, RVL-CDIP-Classifier, Mailroom-Corpus-EDA and MapReduce-Reloaded.
-- **Lever (#121):** ask the owner for the display titles. Do not write them yourself (rule 4 below). Once given, change
+- **Lever (#121):** ask the owner for the display titles. Do not write them yourself (rule 4). Once given, change
   only the card and page titles and keep the repository names in links and code.
 
-### Headroom to protect while doing the above
+### 2. Page-weight headroom (gate; pressure bands above)
 
-| Number | 10 Nov | 11 Nov | Limit | Note |
-| --- | ---: | ---: | ---: | --- |
-| `gz_projects_index` | 23,702 | 24,520 | 26,000 | 94% used; the tightest budget. A new card or longer card text can break it |
-| `gz_index` | 14,127 | 14,815 | 16,000 | 93% used |
-| `gz_site_js` | 5,683 | 6,643 | 9,000 | Up 17% in a day; check that new script code earns its weight |
-| `gz_styles_css` | 14,935 | 15,152 | 20,000 | |
+| Number | 10 Nov | 19 Nov evening | 20 Nov design | 25 Nov phone-fit | Limit | Note |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `gz_projects_index` | 23,702 | 24,670 | 24,968 | 24,305 | 26,000 | Yellow; still tight for a new card |
+| `gz_case_study` | 16,028 | 19,008 | 19,255 | 19,711 | 20,000 | Red; phone chart drawing is the ceiling |
+| `gz_home` | 14,127 | 14,816 | 15,103 | 14,296 | 16,000 | Under the yellow band after the fresh render |
+| `gz_styles_css` | 14,935 | 15,653 | 17,850 | 18,673 | 20,000 | Yellow; motion plus the two-row phone header |
+| `gz_site_js` | 5,683 | 6,643 | 7,199 | 7,946 | 9,000 | Phone chart swap sits on the shared script |
+
+### 3. `#120` social cards (measured closed; owner signoff open — L3)
+
+- Run 73 wrote `assets/og/<slug>.png` from cover motifs via `scripts/build/make-og.py` and set absolute `image:` URLs.
+- `projects_without_own_social_card=0`. Keep regenerating after #118 motif redraws; owner contact-sheet signoff remains.
+
+### 4. Track 2 residual (#122) — L2
+
+Still open relative to the issue checklist: cross-page view transitions, per-motif hover life (one motif first for
+approval), stat count-up with final number in HTML, and a browser test that the motion matrix is off under reduced
+motion, print and forced colours. Shipped pieces (tokens, hero drift, chart draw-in, theme cross-fade, nav/card
+polish) count toward L2 craft but do not close #122 alone.
 
 ## Metrics worth adding next
 
-`experience_gaps` does not yet measure these. Each needs a separate, reviewed change to `kpi.py`
-(or a test), a fresh baseline recorded here, and a target. Never add one in the same pull request that improves it.
+`experience_gaps` already includes chart-title and figure-alt guards and full-site page budgets. Each new candidate
+needs a separate, reviewed change to `kpi.py` (or a test), a fresh baseline recorded here, and a target. Never add
+one in the same pull request that improves it. Prefer candidates that score **L2** work the ledger currently
+flattens to `5 → 5`.
 
 | Candidate | Why | How to count |
 | --- | --- | --- |
-| `charts_without_title` | #139 gave every chart a title; a guard keeps it that way | In built HTML, `figure.chart` elements whose `figcaption.chart-title` is missing or empty (the source `title` attribute becomes that caption), plus hand-drawn figure SVGs with no visible title |
-| `figures_without_alt` | Alt text is part of the experience, and the polish audit checks presence, not substance | `<img>` in `<main>` with an empty `alt` or one that repeats the caption |
+| `motion_matrix_gaps` | Track 2 “done when” is still manual | Count of #122 checklist items without a passing browser assertion (reduced motion / print / forced colours) |
 | `layout_shift` | `images_without_size` is a proxy; this measures the effect | Playwright `PerformanceObserver('layout-shift')` on the five heaviest pages at 375 px; report the worst page |
 | `largest_paint_ms` | Real speed, not only bytes | Playwright LCP on the home and projects index pages, median of 3 runs; report it, do not gate on it, because CI timing is noisy |
+| `wip_pages_without_status` | Portfolio expansion adds WIP tracks; stale claims confuse visitors | Project pages whose front matter or body marks WIP but lack a visible status callout the audit already expects |
+| `weight_pressure` | Soft yellow/red bands above are easy to ignore | Count of page/asset rows at ≥90% of budget; report beside `pages_over_budget` |
 
 ## Making the loop score experience (#126)
 
@@ -153,7 +190,12 @@ Landed 2026-11-12 in the experience-ledger tooling PR:
 3. Start the segment with `hc.sh segment "<name>" --metric experience_gaps --gate polish_defects=0`, then log the baseline on the same commit with `hc.sh baseline`. A run whose gate fails cannot be logged as keep.
 4. Regression tests live in `tests/python/test_ledger.py`.
 
+While `experience_gaps` is stuck at 5, keep using that segment for the polish gate, but grade session success by
+**level L2/L3 criteria**, not by expecting the ledger best to beat run 73’s metric of 5.
+
 ## Success points
 
-- **Track 1 complete:** `experience_gaps` ≤ 5 (only the title decision left) and both lead screenshots in place.
-- **Roadmap complete:** `experience_gaps` = 0, all judged indicators at target, all gates green on three browsers.
+- **L1 / Track 1 measured complete:** `experience_gaps` ≤ 5 (only the title decision left) and both lead screenshots in place. **Met** (run 73 + #148).
+- **L2 / craft bar:** residual #122 motion items and aesthetic hardening land with evidence; weight stays out of red where possible. **In progress** (design stack runs 74–86).
+- **L3 / owner closure:** #121 titles, #118 motif confirmation, #120 OG contact-sheet signoff.
+- **L4 / roadmap complete:** `experience_gaps` = 0, all judged indicators at target, all gates green with three-browser scope recorded.

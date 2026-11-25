@@ -1,6 +1,8 @@
 ---
 pagetitle: "Wave Laboratory: technical report — Jack J. Burleson"
 description: "Wave spectra and ship-dynamics models, architecture, validation suite, test counts, limitations and plan-versus-shipped notes for Wave Laboratory."
+image: https://exios66.github.io/resume/assets/og/wave-laboratory.png
+image-alt: "Wave Laboratory project motif"
 ---
 
 ::: {.page}
