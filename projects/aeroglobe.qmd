@@ -1,6 +1,8 @@
 ---
 pagetitle: "AeroGlobe — Jack J. Burleson"
 description: "A 3D flight-tracking globe in active development, with an early version live: a React and CesiumJS client over a static data pipeline, built to play back flights without an always-on server."
+image: https://exios66.github.io/resume/assets/og/aeroglobe.png
+image-alt: "AeroGlobe project motif"
 ---
 
 ::: {.page}
@@ -15,14 +17,16 @@ description: "A 3D flight-tracking globe in active development, with an early ve
 
 [In active development · data pipeline & 3D visualization]{.kicker}
 
-A browser-based 3D globe for flight tracking. It is a work in progress, and an early version is live. The implementation details and test counts below describe the 23 October 2026 snapshot, not a continuously updated release dashboard.
+[WIP]{.tag}
+
+A browser-based 3D globe for flight tracking. It is a work in progress, and an early version is live. The implementation details below describe the 23 October 2026 snapshot, not a continuously updated release dashboard. The test-declaration and TypeScript-line counts are a later recount, dated 30 October 2026.
 
 ::: {.actions}
 [Open the live site](https://exios66.github.io/aeroglobe/){.btn .primary} [View the code](https://github.com/Exios66/aeroglobe){.btn}
 :::
 
 ::: {.caveat}
-**Work in progress.** This case study describes the code on 23 October 2026. The [repository's deployment notes](https://github.com/Exios66/aeroglobe/blob/935bd07515b6fd857f0ff449618c6f244fb49353/README.md), checked on 6 November, still describe build-time OpenSky observations with a labeled sample-data fallback and a generated sample day. The [live site](https://exios66.github.io/aeroglobe/) is not a continuously polling live feed, and no real historical day is published yet. Dataset availability can change between builds.
+**Work in progress.** The narrative describes the code on 23 October 2026. The test-declaration and TypeScript-line stats are the 30 October 2026 recount. Checked again on 19 November 2026 against the [README at a011ff7](https://github.com/Exios66/aeroglobe/blob/a011ff7b46c0/README.md) (8 November 2026) and the [earlier deployment notes at 935bd07](https://github.com/Exios66/aeroglobe/blob/935bd07515b6fd857f0ff449618c6f244fb49353/README.md). Both still describe build-time OpenSky observations with a labeled sample-data fallback. The [live site](https://exios66.github.io/aeroglobe/) is not a continuously polling live feed, and no real historical day is published yet. The later README describes route search, a history panel, a time-zone overlay and an in-browser logbook as built; those notes were not re-run for this page.
 :::
 
 ## At a glance
@@ -59,20 +63,26 @@ The data side is a Node and TypeScript pipeline. It takes state vectors, turns t
 - **A static data pipeline.** Normalization, flight segmentation, hourly chunking and a catalog, with a snapshot command that records a few OpenSky observations and a fixture command that writes a deterministic set of generated traces for offline work.
 - **A historical source.** An adapter for full days of adsb.lol flight data, which runs through the same pipeline and can publish to a separate data branch from my own machine. A global day needs about 10 GB of disk.
 - **Playback and track replay.** A day picker and a time slider with play and pause, driven by the globe's clock, that moves every aircraft along its recorded positions. A **Replay track** control follows one selected aircraft, with an option to keep the camera on it. Up to 2,000 aircraft nearest the camera draw a short trail from their consecutive observations.
-- **Reference data.** Airport and airline tables built from public sources, with the source and licence of each recorded next to the file, and time-zone polygons for the planned overlay.
+- **Reference data.** Airport and airline tables built from public sources, with the source and licence of each recorded next to the file.
 - **Tests and checks.** The repository's continuous integration runs lint, the type-checker, the tests and the build on pushes and pull requests to the main branch.
+
+The README at `a011ff7` also describes these as built. This page did not re-run them:
+
+- **Route-pair search** over the loaded day's index, plus callsign, registration, aircraft type and airline prefix.
+- **An aircraft history panel** that seeks the clock to one airframe's indexed leg.
+- **UTC and airport-local times** on the flight card, left blank when a zone is unknown.
+- **A time-zone overlay** with a hover chip and marks where the selected route crosses a boundary.
+- **A personal logbook** kept in the browser (IndexedDB), with JSON and CSV export. Nothing in that log leaves the browser.
 
 ## What is planned
 
-The design spec for the next stage is a draft. In outline:
+Still not claimed by that README, and not built on the live site as far as this page can say:
 
-- a published historical day on the live site;
-- a faster playback engine that decodes data off the main thread and draws aircraft as one layer, with a transport bar that sets the speed and shows traffic over the day;
-- inferred routes between airports and a time-zone overlay;
-- a per-aircraft history panel;
-- a personal flight logbook kept in the browser.
+- a real historical day published on the live site (full-day playback is planned for that day; the live demo still uses the labeled sample);
+- a faster playback engine that decodes data off the main thread and draws aircraft as one layer;
+- inferred routes between airports, as distinct from searching flights already in the loaded index.
 
-None of these is built yet beyond the basic playback above, and the spec may change as I build.
+The spec may change as those are built.
 
 ## What I'm learning
 

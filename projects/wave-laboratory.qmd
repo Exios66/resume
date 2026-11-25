@@ -1,6 +1,8 @@
 ---
 pagetitle: "Wave Laboratory — Jack J. Burleson"
 description: "A real-time 3D ocean-wave and ship-motion sandbox that runs in the browser, built on published wave spectra and checked against analytic results."
+image: https://exios66.github.io/resume/assets/og/wave-laboratory.png
+image-alt: "Wave Laboratory project motif"
 ---
 
 ::: {.page}
@@ -36,6 +38,8 @@ The lab needs a browser with WebGL 2. It runs on desktop and on phones.
 [481 + 25]{.stat-value} [unit and validation test declarations at the 24 October 2026 snapshot, counted by grep; not a current passing-test count]{.stat-label}
 :::
 :::
+
+The repository README at [261979b](https://github.com/Exios66/wave-laboratory/tree/261979b33a1e) (14 November 2026) reports 632 passing tests and an 11-hull library. That passing total is the README's claim, not a suite I re-ran, and it is not a replacement for the October grep count above. Version 0.1.0 is the live demo. The plan's Stokes, cnoidal, Boussinesq and scripting phases are still not built.
 
 ## The problem
 

@@ -1,6 +1,8 @@
 ---
 pagetitle: "The Neural Architecture of Truth and Deception — Jack J. Burleson"
 description: "A pilot study of what happens when people talk to chatbots told to help or to deceive: nine participants, 18 sessions, five personas. Exam scores rose after helpful personas and fell after deceitful ones, and almost nobody flagged the deception."
+image: https://exios66.github.io/resume/assets/og/natd.png
+image-alt: "The Neural Architecture of Truth and Deception project motif"
 ---
 
 ::: {.page}

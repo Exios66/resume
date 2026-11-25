@@ -92,9 +92,9 @@ To refresh the site social image, run `.venv/bin/python scripts/build/make-og.py
 
 Review and merge procedure, partial-issue reporting and evidence requirements are in [AGENTS.md](../AGENTS.md). Current shipped state is in [status](../.10x/status.md) and [handoff](../.10x/handoff.md). The historical review record and actual screenshots are under `.10x/reviews/pr-review-followup/`.
 
-## Things to fill in
+## Open content gaps
 
-Some pages have TODO comments (invisible on the site) marking missing results, figures, and repo links. Search with `rg -n TODO projects research.qmd`.
+Public `.qmd` sources no longer carry invisible HTML TODO comments. Remaining content gaps are tracked as GitHub issues (for example résumé employment in #71, Mailroom Reloaded verification in #84, and Hermes attribution wording in #76). Prefer those issues over searching the tree for `TODO`.
 
 ## Publish
 

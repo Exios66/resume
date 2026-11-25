@@ -1,6 +1,8 @@
 ---
 pagetitle: "NATD: appendix — Jack J. Burleson"
 description: "Publication scope for The Neural Architecture of Truth and Deception: what the pilot supports, what stays withheld until authentication, and which provenance questions remain open."
+image: https://exios66.github.io/resume/assets/og/natd.png
+image-alt: "The Neural Architecture of Truth and Deception project motif"
 ---
 
 ::: {.page}
