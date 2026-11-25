@@ -937,13 +937,13 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
   border-radius: 1.5px; transform: rotate(45deg); vertical-align: middle;
   background: var(--pop);
 }
-.card :is(h2, h3) { border-image: none; }
 .card :is(h2, h3)::before { content: none; }
 /* Wrapped headings parked the node on line 1, so line 2 started under it.
-   1.35em is the old inline marker (0.1em + 0.5em + 0.75em); single lines stay put. */
+   1.35em is the old inline marker (0.1em + 0.5em + 0.75em); single lines stay put.
+   Card titles keep the earlier reset, after this rule so it wins. */
 h2:not(.group-title) { position: relative; padding-left: 1.35em; }
 h2:not(.group-title)::before { position: absolute; left: .1em; top: .35em; margin: 0; }
-.card :is(h2, h3) { position: static; padding-left: 0; }
+.card :is(h2, h3) { border-image: none; position: static; padding-left: 0; }
 
 /* Cards: gradient edge, a top signal line that draws in, and a light that follows the pointer. */
 .card {
