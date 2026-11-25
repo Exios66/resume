@@ -8,16 +8,16 @@ decision; record the reason and the new measurement in .10x/metrics.md.
 
 # (measured heaviest at the last metrics refresh, budget) in gzip bytes.
 PAGE_TYPES = {
-    "home": (14816, 16000),
-    "projects index": (24670, 26000),
-    "case study": (19008, 19500),
-    "technical report": (19401, 22000),
-    "appendix": (11716, 13000),
-    "other page": (12181, 15000),
+    "home": (14296, 16000),
+    "projects index": (24305, 26000),
+    "case study": (19711, 20000),
+    "technical report": (19143, 22000),
+    "appendix": (11006, 13000),
+    "other page": (11714, 15000),
 }
 SHARED = {
-    "styles.css": (15653, 20000),
-    "assets/js/site.js": (6643, 9000),
+    "styles.css": (18673, 20000),
+    "assets/js/site.js": (7946, 9000),
 }
 
 

@@ -78,9 +78,9 @@ parts as 0; `pages_over_budget` counts every page type (currently 0).
 At **5**, the metric is **owner-blocked**. Scripts must not invent the five display titles. Grade L2+ work with judged
 indicators and gates, not with a fake drop in `experience_gaps`.
 
-Secondary numbers (gzip bytes of the heaviest page of each type, plus shared assets), refreshed 20 Nov 2026 on the
-design stack: `gz_home` 15,103; `gz_projects_index` 24,968; `gz_case_study` 19,255; `gz_technical_report` 19,693;
-`gz_appendix` 11,997; `gz_other_page` 12,451; `gz_styles_css` 17,850; `gz_site_js` 7,199.
+Secondary numbers (gzip bytes of the heaviest page of each type, plus shared assets), refreshed 25 Nov 2026 after
+the phone-fit merge: `gz_home` 14,296; `gz_projects_index` 24,305; `gz_case_study` 19,711; `gz_technical_report` 19,143;
+`gz_appendix` 11,006; `gz_other_page` 11,714; `gz_styles_css` 18,673; `gz_site_js` 7,946.
 Soft limits: CSS 20,000; JavaScript 9,000. `kpi.py` prints an `INFO heaviest_…` line naming the page behind each
 `gz_*` size.
 
@@ -92,19 +92,21 @@ them. `tests/python/test_page_budget.py` and `kpi.py` both import `scripts/hillc
 
 | Page type | Heaviest page now | Measured | Budget | Headroom | Pressure |
 | --- | --- | ---: | ---: | ---: | --- |
-| Home | `index.html` | 15,103 | 16,000 | 6% | yellow (≥90%) |
-| Projects index | `projects/index.html` | 24,968 | 26,000 | 4% | red (≥95%) |
-| Case study | `projects/mapreduce-reloaded.html` | 19,255 | 19,500 | 1% | red |
-| Technical report | `projects/natd/report.html` | 19,693 | 22,000 | 10% | ok |
-| Appendix | `projects/langtons-ant/appendix.html` | 11,997 | 13,000 | 8% | yellow |
-| Other page | `resume.html` | 12,451 | 15,000 | 17% | ok |
-| Shared stylesheet | `styles.css` | 17,850 | 20,000 | 11% | ok (watch motion CSS) |
-| Shared script | `assets/js/site.js` | 7,199 | 9,000 | 20% | ok |
+| Home | `index.html` | 14,296 | 16,000 | 11% | ok |
+| Projects index | `projects/index.html` | 24,305 | 26,000 | 7% | yellow (≥90%) |
+| Case study | `projects/mapreduce-reloaded.html` | 19,711 | 20,000 | 1% | red (≥95%) |
+| Technical report | `projects/natd/report.html` | 19,143 | 22,000 | 13% | ok |
+| Appendix | `projects/langtons-ant/appendix.html` | 11,006 | 13,000 | 15% | ok |
+| Other page | `resume.html` | 11,714 | 15,000 | 22% | ok |
+| Shared stylesheet | `styles.css` | 18,673 | 20,000 | 7% | yellow |
+| Shared script | `assets/js/site.js` | 7,946 | 9,000 | 12% | ok |
 
 The case-study budget was raised from 19,000 to 19,500 on 19 November 2026 because the Track 2 theme cross-fade
-script lands on every page and MapReduce was already within 20 bytes of the old ceiling. Raising a budget is a
-deliberate decision that belongs in the pull request, with the reason and the new measurement. Do not trim
-meaningful content only to pass the gate. Prefer cutting decorative CSS/JS before raising budgets again.
+script lands on every page and MapReduce was already within 20 bytes of the old ceiling. Phone-width chart
+drawings (25 November 2026) put that page at 19,711, so the budget is 20,000. The second drawing is the phone
+chart itself, not decorative CSS. Raising a budget is a deliberate decision that belongs in the pull request,
+with the reason and the new measurement. Do not trim meaningful content only to pass the gate. Prefer cutting
+decorative CSS/JS before raising budgets again.
 
 ## Judged indicators (a person or a reviewing agent scores these; a script cannot)
 
@@ -144,13 +146,13 @@ repository-style display titles (#121). Chart-title and figure-alt guards are at
 
 ### 2. Page-weight headroom (gate; pressure bands above)
 
-| Number | 10 Nov | 19 Nov evening | 20 Nov design | Limit | Note |
-| --- | ---: | ---: | ---: | ---: | --- |
-| `gz_projects_index` | 23,702 | 24,670 | 24,968 | 26,000 | Red; new cards need shorter copy elsewhere |
-| `gz_case_study` | 16,028 | 19,008 | 19,255 | 19,500 | Red; MapReduce is the ceiling |
-| `gz_home` | 14,127 | 14,816 | 15,103 | 16,000 | Yellow; Explore tiles added weight |
-| `gz_styles_css` | 14,935 | 15,653 | 17,850 | 20,000 | Motion/aesthetic CSS; still under soft limit |
-| `gz_site_js` | 5,683 | 6,643 | 7,199 | 9,000 | Watch chart draw-in and page-enter |
+| Number | 10 Nov | 19 Nov evening | 20 Nov design | 25 Nov phone-fit | Limit | Note |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `gz_projects_index` | 23,702 | 24,670 | 24,968 | 24,305 | 26,000 | Yellow; still tight for a new card |
+| `gz_case_study` | 16,028 | 19,008 | 19,255 | 19,711 | 20,000 | Red; phone chart drawing is the ceiling |
+| `gz_home` | 14,127 | 14,816 | 15,103 | 14,296 | 16,000 | Under the yellow band after the fresh render |
+| `gz_styles_css` | 14,935 | 15,653 | 17,850 | 18,673 | 20,000 | Yellow; motion plus the two-row phone header |
+| `gz_site_js` | 5,683 | 6,643 | 7,199 | 7,946 | 9,000 | Phone chart swap sits on the shared script |
 
 ### 3. `#120` social cards (measured closed; owner signoff open — L3)
 
