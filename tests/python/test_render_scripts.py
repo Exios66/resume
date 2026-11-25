@@ -91,6 +91,14 @@ class PostRenderTests(unittest.TestCase):
         self.assertIn('href="f/c.jpg"', link('<img class="fig" alt="" src="f/c.jpg">'))
         self.assertEqual(link('<img src="f/x.jpg" class="figure-img" alt="">'), '<img src="f/x.jpg" class="figure-img" alt="">')
 
+    def test_empty_highlight_placeholder_is_removed_once(self):
+        drop = POST["drop_empty_highlight_rule"]
+        page = "div.sourceCode { margin: 1em 0; }\npre.numberSource { margin-left: 3em; }\ndiv.sourceCode\n  {   }\n@media screen {\n"
+        fixed = drop(page)
+        self.assertEqual(fixed, "div.sourceCode { margin: 1em 0; }\npre.numberSource { margin-left: 3em; }\n@media screen {\n")
+        self.assertEqual(drop(fixed), fixed)
+        self.assertEqual(drop("<p>No highlight.</p>"), "<p>No highlight.</p>")
+
     def test_sprite_keeps_only_the_icons_a_page_uses(self):
         prune = POST["prune_sprite"]
         page = ('<a><svg class="icon"><use href="#i-mail"></use></svg></a>'
