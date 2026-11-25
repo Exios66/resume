@@ -322,6 +322,13 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 :is(.kicker, .sample-source).segs .seg-run { display: block; margin-left: -1.4em; }
 :is(.kicker, .sample-source).segs .seg { position: relative; padding-left: 1.4em; }
 :is(.kicker, .sample-source).segs .sep { position: absolute; left: 0; width: 1.4em; text-align: center; }
+/* Phone: break the degree after the colon so "Human Behavior" is not a short last line.
+   The whole segment is a block so the date and GPA drop below it instead of sitting
+   beside the two-line title near the 720px breakpoint. Desktop still fits one line. */
+@media (max-width: 720px) {
+  .kicker .seg:has(.degree-field) { display: block; }
+  .kicker .degree-field { display: block; }
+}
 /* The centred hero line cannot clip a gutter, so on phones each part takes its own line. Wider,
    keep the space before each separator, which an inline-block would otherwise drop. */
 @media (min-width: 561px) { .role.segs .seg { white-space: pre-wrap; } }
@@ -519,7 +526,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .timeline li:last-child { padding-bottom: 0; }
 .timeline li::marker { content: ""; }
 .timeline li::before {
-  content: ""; position: absolute; left: -30px; top: .5em; width: 12px; height: 12px;
+  content: ""; position: absolute; left: -27px; top: .5em; width: 12px; height: 12px;
   background: var(--accent); border: 2px solid var(--paper); border-radius: 50%;
 }
 .timeline li { break-inside: avoid; }
@@ -680,7 +687,7 @@ div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
   .chart-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   .page figure.diagram { padding: 10px 8px 8px; overflow-x: auto; }
   .timeline ul { padding-left: 18px; }
-  .timeline li::before { left: -26px; }
+  .timeline li::before { left: -23px; }
 }
 
 /* Project pages: print */
@@ -930,8 +937,13 @@ h2:not(.group-title)::before, h2.group-title:not(:has(> .icon))::before {
   border-radius: 1.5px; transform: rotate(45deg); vertical-align: middle;
   background: var(--pop);
 }
-.card :is(h2, h3) { border-image: none; }
 .card :is(h2, h3)::before { content: none; }
+/* Wrapped headings parked the node on line 1, so line 2 started under it.
+   1.35em is the old inline marker (0.1em + 0.5em + 0.75em); single lines stay put.
+   Card titles keep the earlier reset, after this rule so it wins. */
+h2:not(.group-title) { position: relative; padding-left: 1.35em; }
+h2:not(.group-title)::before { position: absolute; left: .1em; top: .35em; margin: 0; }
+.card :is(h2, h3) { border-image: none; position: static; padding-left: 0; }
 
 /* Cards: gradient edge, a top signal line that draws in, and a light that follows the pointer. */
 .card {
@@ -1099,7 +1111,10 @@ h2:has(+ .explore) { margin-bottom: 0; }
   .project-nav a[aria-current="page"]::before,
   .card-cover::after,
   .read-progress { display: none !important; }
+  h2:not(.group-title) { padding-left: 0; }
   .timeline ul { background: none; border-left: 2px solid CanvasText; }
+  /* Screen rail is a 2px background at the padding edge. This border's center is 2px further left. */
+  .timeline li::before { left: -29px; }
   .card, .explore a.explore-card, .stat, .caveat {
     background: Canvas; border-color: CanvasText; box-shadow: none;
   }
@@ -1125,10 +1140,20 @@ h2:has(+ .explore) { margin-bottom: 0; }
   .hero .role { padding-top: 0; }
   .page { padding-top: 0; }
   h2, .page thead th { border-image: none; }
+  h2:not(.group-title) { padding-left: 0; }
   .card { background: #fff; border-color: #ccc; }
   .stat { background: none; }
   .timeline ul { background: none; border-left: 2px solid #ccc; }
+  .timeline li::before { left: -29px; }
   .caveat { background: none; }
+}
+/* Narrow print and forced colors also shrink the rail padding (18px), so the node
+   shifts 4px less than the desktop border correction. */
+@media (forced-colors: active) and (max-width: 720px) {
+  .timeline li::before { left: -25px; }
+}
+@media print and (max-width: 720px) {
+  .timeline li::before { left: -25px; }
 }
 
 /* ==========================================================================

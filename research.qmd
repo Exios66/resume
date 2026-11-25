@@ -9,7 +9,7 @@ description: "Cognitive neuroscience research on chatbot truth, deception, and c
 
 ## Graduate research at UW–Madison
 
-[M.S. in Psychology: Data Science in Human Behavior · August 2025 – expected December 2026 · GPA 3.85]{.kicker}
+[M.S. in Psychology: [Data Science in Human Behavior]{.degree-field} · August 2025 – expected December 2026 · GPA 3.85]{.kicker}
 
 Roughly 95% of the program's coursework is data science and data engineering, pairing behavioral-science training with the computer science toolchain: statistical modeling; machine learning with transformer fine-tuning and LLM evaluation; and large-scale data systems with Spark, SQL, Parquet, Docker, and gRPC services.
 
