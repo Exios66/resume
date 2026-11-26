@@ -11,7 +11,7 @@ from urllib.parse import unquote, urlsplit
 import xml.etree.ElementTree as ET
 
 import test_links as checks
-from test_portfolio_additions import ContentParser, destination
+from test_portfolio_additions import ContentParser, assert_diagram_matches_partial, destination
 
 
 SITE_URL = "https://exios66.github.io/resume/"
@@ -112,12 +112,9 @@ class LangtonsAntTests(unittest.TestCase):
         source = ContentParser(checks.ROOT / "partials/diagrams/_langtons-ant.qmd")
         diagram = self.one(published, "figure", **{"class": "diagram"})
         original = self.one(source, "figure", **{"class": "diagram"})
-        self.assertEqual(diagram, original)
-        self.assertEqual(published.children(diagram), source.children(original))
+        assert_diagram_matches_partial(self, published, diagram, source, original)
         caption = self.one(published, "figcaption", id=checks.attr(diagram, "aria-labelledby"))
-        original_caption = self.one(source, "figcaption", id=checks.attr(original, "aria-labelledby"))
         self.assertTrue(published.text(caption))
-        self.assertEqual(published.text(caption), source.text(original_caption))
         self.assertEqual(checks.attr(diagram, "role"), "img")
 
     def test_screenshots_have_alt_caption_provenance_and_identical_published_bytes(self):

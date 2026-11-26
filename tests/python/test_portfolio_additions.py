@@ -40,6 +40,30 @@ class ContentParser(checks.PageParser):
         return " ".join("".join(fragments).split())
 
 
+SCROLL_HINT = "Scroll sideways to see the whole diagram."
+
+
+def assert_diagram_matches_partial(test, published, diagram, source, original):
+    """The published diagram is its partial plus only the translation additions.
+
+    post-render.py (prepare_translation) marks the drawing translate="no", puts a scroll
+    hint at the start of the caption and wraps project names in the caption in
+    <span translate="no">; nothing else may change.
+    """
+    test.assertEqual(diagram, original)
+    children = published.children(diagram)
+    test.assertEqual([attrs.get("translate") for tag, attrs in children if tag == "svg"], ["no"])
+    hints = [(tag, attrs) for tag, attrs in children if checks.attr(attrs, "class") == "scroll-hint"]
+    test.assertEqual(len(hints), 1)
+    drawn = [(tag, {k: v for k, v in attrs.items() if not (tag == "svg" and k == "translate")})
+             for tag, attrs in children if (tag, attrs) not in hints and (tag, attrs) != ("span", {"translate": "no"})]
+    test.assertEqual(drawn, source.children(original))
+    caption = published.text(next(attrs for tag, attrs in children if tag == "figcaption"))
+    original_caption = source.text(next(attrs for tag, attrs in source.children(original) if tag == "figcaption"))
+    test.assertTrue(caption.startswith(SCROLL_HINT), caption)
+    test.assertEqual(caption[len(SCROLL_HINT):].strip(), original_caption)
+
+
 def destination(page, attributes):
     href = checks.attr(attributes, "href")
     if checks.is_external(href):
@@ -188,12 +212,9 @@ class PortfolioAdditionTests(unittest.TestCase):
                 source = ContentParser(checks.ROOT / "partials/diagrams" / f"_{slug}.qmd")
                 diagram = self.one(published, "figure", **{"class": "diagram"})
                 original = self.one(source, "figure", **{"class": "diagram"})
-                self.assertEqual(diagram, original)
-                self.assertEqual(published.children(diagram), source.children(original))
+                assert_diagram_matches_partial(self, published, diagram, source, original)
                 caption = self.one(published, "figcaption", id=checks.attr(diagram, "aria-labelledby"))
-                original_caption = self.one(source, "figcaption", id=checks.attr(original, "aria-labelledby"))
                 self.assertTrue(published.text(caption))
-                self.assertEqual(published.text(caption), source.text(original_caption))
 
     def test_both_mailroom_figures_have_captions_alt_text_provenance_and_identical_published_bytes(self):
         page, parser = self.read_page("projects/mailroom-corpus-eda.html")

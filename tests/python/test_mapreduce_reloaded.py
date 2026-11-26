@@ -10,7 +10,7 @@ import unittest
 import xml.etree.ElementTree as ET
 
 import test_links as checks
-from test_portfolio_additions import ContentParser, destination
+from test_portfolio_additions import ContentParser, assert_diagram_matches_partial, destination
 
 
 SITE_URL = "https://exios66.github.io/resume/"
@@ -109,8 +109,9 @@ class MapReduceReloadedTests(unittest.TestCase):
         # Every evaluation number is the five-run rerun at 8f0ddb9 (E0 at 3a907de),
         # not the superseded three-run snapshot of 11 November.
         notes = (checks.DOCS / PAGE).read_text(encoding="utf-8")
-        self.assertIn("<code>8f0ddb9</code>", notes)
-        self.assertIn("<code>3a907de</code>", notes)
+        # A commit hash is code, so browser translators leave it as written.
+        self.assertIn('<code translate="no">8f0ddb9</code>', notes)
+        self.assertIn('<code translate="no">3a907de</code>', notes)
         self.assertNotIn("3.8×", page_text)
         stale = [checks.attr(attrs, "href") for tag, attrs, _ in parser.elements
                  if tag == "a" and "def9c62846e8c560b9be6c72b76f1cf325582059" in (checks.attr(attrs, "href") or "")]
@@ -129,8 +130,7 @@ class MapReduceReloadedTests(unittest.TestCase):
         source = ContentParser(checks.ROOT / "partials/diagrams/_mapreduce-reloaded.qmd")
         diagram = self.one(published, "figure", **{"class": "diagram"})
         original = self.one(source, "figure", **{"class": "diagram"})
-        self.assertEqual(diagram, original)
-        self.assertEqual(published.children(diagram), source.children(original))
+        assert_diagram_matches_partial(self, published, diagram, source, original)
         caption = self.one(published, "figcaption", id=checks.attr(diagram, "aria-labelledby"))
         self.assertTrue(published.text(caption))
         self.assertEqual(checks.attr(diagram, "role"), "img")
