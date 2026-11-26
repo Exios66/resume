@@ -58,7 +58,9 @@
   function textCut(el) {
     const t = textBox(el).getBoundingClientRect();
     // A narrower ancestor with hidden or clipped overflow cuts the text off even when the label itself fits it.
-    for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+    // Only ancestors below the first sideways scroller count: scrolling it cannot reveal what they cut off.
+    const stop = scroller(el);
+    for (let p = el.parentElement; p && p !== document.body && p !== stop; p = p.parentElement) {
       if (/^(hidden|clip)$/.test(getComputedStyle(p).overflowX) && leaves(t, p)) {
         return `text ${Math.round(t.width)}px cut off by ${name(p).split(' ')[0]} (${p.clientWidth}px)`;
       }
@@ -73,7 +75,7 @@
   /** clipped: a control's or label's text is wider than its box or a hidden-overflow ancestor. */
   function clipped() {
     const labels = '.nav-link, .btn, .chip, .code-copy-button, .site-title, .pager-name, .project-jump a, .footer-links a, .kicker, h1, h2';
-    return [...document.querySelectorAll(labels)].filter((el) => visible(el) && !scroller(el) && !srOnly(el))
+    return [...document.querySelectorAll(labels)].filter((el) => visible(el) && !srOnly(el))
       .map((el) => [el, textCut(el)]).filter(([, cut]) => cut).map(([el, cut]) => `clipped: ${name(el)} ${cut}`);
   }
 
