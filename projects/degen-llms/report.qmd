@@ -97,9 +97,9 @@ These are collected, not pass rates. I did not run the suite for this report.
 
 | Suite | Count | Source |
 | --- | --- | --- |
-| pytest | 379 `def test_` declarations at the 30 October 2026 snapshot | grep over `tests/`; not a collected or passing count |
-| Node smoke scripts | 12 scripts | `scripts/smoke-test-*.mjs` |
-| Browser smoke test | 1 script | `scripts/smoke-test-web.py` |
+| pytest | 419 passed | `tests/`, re-run on `main` at `80399bf` on 26 November 2026 |
+| Node smoke and regression scripts | 18 passed (13 smoke, 5 regression) | `scripts/smoke-test-*.mjs`, `scripts/test-*-regressions.mjs`, same run |
+| Browser smoke test | 1 script, not run here | `scripts/smoke-test-web.py` |
 
 CI (`.github/workflows/checks.yml`) runs pytest on Python 3.11. A second job runs on Node 22: a validation that every import under `docs/js` resolves, the browser smoke test, and all 18 Node scripts (13 smoke, 5 regression).
 

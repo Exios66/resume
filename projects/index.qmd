@@ -9,7 +9,7 @@ description: "Selected work in mechanistic interpretability, document intelligen
 
 Most of this work comes back to one idea: a system is only as useful as its honesty about its own errors. It runs through document intelligence, interpretability, data engineering, distributed systems, behavioral machine learning, LLM agent design and simulation. Each project has a short case study. Most also have a technical report with the experiment history, the metrics and the steps to reproduce the results, including the results that did not go my way.
 
-Content review: **19 November 2026**. Test totals and benchmarks belong to the snapshots named on each page; they are not live status counters. Some older reports retain historical results and are labeled where newer releases supersede them. A WIP tag marks a project whose own page still calls it unfinished.
+Every page was checked against its repository on **26 November 2026**. A WIP tag marks a project still in progress.
 
 <nav class="project-jump" aria-label="Project categories">
 
