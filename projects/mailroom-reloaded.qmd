@@ -24,7 +24,7 @@ image-alt: "Mailroom Reloaded project motif"
 [2]{.stat-value} [LLM calls for a clean text-layer document (sort, then extract)]{.stat-label}
 :::
 ::: {.stat}
-[1,597]{.stat-value} [tests passed in the 11 October 2026 verification run; the 1 November revision declares 1,276 test functions in 89 files]{.stat-label}
+[1,844]{.stat-value} [Python tests passing on main, re-run on 26 November 2026, plus 397 for the replay viewer]{.stat-label}
 :::
 :::
 

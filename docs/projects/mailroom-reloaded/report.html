@@ -333,6 +333,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>After sampling, the runner checks overlap with the fast-path model’s training manifest and records a warning instead of failing, so overlapping documents can be excluded from reported numbers.</li>
 <li>Metrics cover sorter KPIs (accuracy, confusion matrix, expected calibration error, fast-path rate), specialist KPIs (field precision, recall and F1, schema-valid rate) and gate KPIs.</li>
 </ul>
+<h3 id="test-re-run-on-main-2026-11-26">Test re-run on <code>main</code> (2026-11-26)</h3>
+<p>I re-ran the offline suites on <code>main</code> at <a href="https://github.com/Exios66/mailroom-reloaded/tree/8c35413">8c35413⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> (1 November 2026) with Python 3.11 on Linux. Live-provider and Docker tests are deselected by the project’s default pytest settings.</p>
+<table class="caption-top stack" role="table">
+<thead>
+<tr class="header" role="row">
+<th role="columnheader">Check</th>
+<th role="columnheader">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd" role="row">
+<td role="cell" data-label="Check"><code>ruff check .</code></td>
+<td role="cell" data-label="Result">all checks passed</td>
+</tr>
+<tr class="even" role="row">
+<td role="cell" data-label="Check"><code>uv run pytest -q</code></td>
+<td role="cell" data-label="Result">1,844 passed, 5 skipped, 3 deselected, 0 failed</td>
+</tr>
+<tr class="odd" role="row">
+<td role="cell" data-label="Check"><code>node --test tests/tui/js/*.test.mjs</code></td>
+<td role="cell" data-label="Result">397 pass, 1 skipped, 0 fail</td>
+</tr>
+</tbody>
+</table>
 <h3 id="verification-run-on-merged-main-2026-10-11">Verification run on merged <code>main</code> (2026-10-11)</h3>
 <p>This used a mock LLM provider with four seeded documents. It tests plumbing, not model quality.</p>
 <table class="caption-top stack" role="table">
@@ -369,7 +393,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>The changelog later records the TUI Node suite as 300 tests after removing dormant code, so the 290 above is the verification-time figure and the two differ because the code changed in between.</p>
 <h2 id="figures">Figures</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -433,7 +456,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
 <script src="../../assets/js/site.js?v=83a152c7b0" defer=""></script>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol></svg>
 
 <script>
   // Theme toggle: shown only once this script runs; switches to the opposite of what is currently shown and remembers the choice.

@@ -101,6 +101,16 @@ There are no committed accuracy, cost or throughput results. The evaluation harn
 - After sampling, the runner checks overlap with the fast-path model's training manifest and records a warning instead of failing, so overlapping documents can be excluded from reported numbers.
 - Metrics cover sorter KPIs (accuracy, confusion matrix, expected calibration error, fast-path rate), specialist KPIs (field precision, recall and F1, schema-valid rate) and gate KPIs.
 
+### Test re-run on `main` (2026-11-26)
+
+I re-ran the offline suites on `main` at [8c35413](https://github.com/Exios66/mailroom-reloaded/tree/8c35413) (1 November 2026) with Python 3.11 on Linux. Live-provider and Docker tests are deselected by the project's default pytest settings.
+
+| Check | Result |
+| --- | --- |
+| `ruff check .` | all checks passed |
+| `uv run pytest -q` | 1,844 passed, 5 skipped, 3 deselected, 0 failed |
+| `node --test tests/tui/js/*.test.mjs` | 397 pass, 1 skipped, 0 fail |
+
 ### Verification run on merged `main` (2026-10-11)
 
 This used a mock LLM provider with four seeded documents. It tests plumbing, not model quality.
@@ -113,8 +123,6 @@ This used a mock LLM provider with four seeded documents. It tests plumbing, not
 | replay-only subset of those | 96 pass, 0 fail |
 | `GET /v1/documents` | 4 documents, all archived |
 | browser replay check script | 11 of 11 checks passed |
-
-The changelog later records the TUI Node suite as 300 tests after removing dormant code, so the 290 above is the verification-time figure and the two differ because the code changed in between.
 
 ## Figures
 
