@@ -62,14 +62,20 @@ const server = http.createServer((req, res) => {
   fs.createReadStream(file).pipe(res);
 });
 
-/** Load one page, translate it and return its problems. */
-async function check(page, url, rel, lang) {
-  await page.goto(url, { waitUntil: 'load' });
+/** Load a page; returns its project title before translation, or throws if it did not load. */
+async function load(page, url, rel) {
+  const response = await page.goto(url, { waitUntil: 'load' });
+  if (!response || !response.ok()) throw new Error(`HTTP ${response ? response.status() : 'no response'} for ${rel}`);
   await page.evaluate(() => document.fonts.ready);
   // A thesis title and Langton's Ant have names in other languages, so they translate.
   const project = /^projects\/[^/]+\.html$/.test(rel) && !/\/(index|natd|langtons-ant)\.html$/.test(rel);
-  const before = project ? await page.evaluate(() => (document.querySelector('h1.page-title') || {}).textContent?.trim() || null) : null;
+  return project ? page.evaluate(() => (document.querySelector('h1.page-title') || {}).textContent?.trim() || null) : null;
+}
+
+/** Load one page, translate it and return its problems; a page that fails to load or check is one problem. */
+async function check(page, url, rel, lang) {
   try {
+    const before = await load(page, url, rel);
     await page.evaluate(l => window.pseudoTranslate(l), lang);
     await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
     return await page.evaluate(title => window.translationChecks(title), before);
@@ -83,21 +89,24 @@ async function sweepWidth(browser, engine, width, base) {
   const ctx = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
   await ctx.addInitScript(SCRIPT);
   await ctx.addInitScript(CHECKS);
-  const page = await ctx.newPage();
   let loads = 0, failures = 0;
-  for (const lang of list(opt.langs)) {
-    for (const rel of pages) {
-      const problems = await check(page, base + rel, rel, lang);
-      loads++;
-      if (problems.length) { failures++; console.log(`FAIL ${engine} ${width} ${lang} ${rel}\n  ${problems.join('\n  ')}`); }
-      if ((problems.length || shots.has(rel)) && engine === 'chromium' && width !== 320) {
-        fs.mkdirSync(OUT, { recursive: true });
-        const shot = path.join(OUT, `${lang}-${width}-${rel.replace(/\//g, '_').replace(/\.html$/, '')}.png`);
-        await page.screenshot({ path: shot, fullPage: !(width === 375 && !problems.length) });
+  try {
+    const page = await ctx.newPage();
+    for (const lang of list(opt.langs)) {
+      for (const rel of pages) {
+        const problems = await check(page, base + rel, rel, lang);
+        loads++;
+        if (problems.length) { failures++; console.log(`FAIL ${engine} ${width} ${lang} ${rel}\n  ${problems.join('\n  ')}`); }
+        if ((problems.length || shots.has(rel)) && engine === 'chromium' && width !== 320) {
+          fs.mkdirSync(OUT, { recursive: true });
+          const shot = path.join(OUT, `${lang}-${width}-${rel.replace(/\//g, '_').replace(/\.html$/, '')}.png`);
+          await page.screenshot({ path: shot, fullPage: !(width === 375 && !problems.length) });
+        }
       }
     }
+  } finally {
+    await ctx.close();
   }
-  await ctx.close();
   return [loads, failures];
 }
 
@@ -107,11 +116,14 @@ server.listen(0, '127.0.0.1', async () => {
   try {
     for (const engine of list(opt.engines)) {
       const browser = await ENGINES[engine].launch();
-      for (const width of list(opt.widths).map(Number)) {
-        const [views, failed] = await sweepWidth(browser, engine, width, base);
-        loads += views; failures += failed;
+      try {
+        for (const width of list(opt.widths).map(Number)) {
+          const [views, failed] = await sweepWidth(browser, engine, width, base);
+          loads += views; failures += failed;
+        }
+      } finally {
+        await browser.close();
       }
-      await browser.close();
     }
   } finally {
     server.close();

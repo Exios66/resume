@@ -39,7 +39,7 @@ git diff --check
 git diff fda83d9 -- autoresearch.audit.cjs autoresearch.checks.sh
 ```
 
-Doctor ended `All tools present.` The final diff command is empty: neither evaluation nor gate definition changed after baseline. The filter candidate was amended to include its new interaction checks, then rendered/audited again before the gate and keep. See the exact keep records and observations in [run 54](evidence/run-54.md) and [run 55](evidence/run-55.md).
+Doctor ended `All tools present.` The final diff command is empty: neither evaluation nor gate definition changed after baseline. The filter candidate was amended to include its new interaction checks, then rendered/audited again before the gate and keep. See the exact keep records and observations in [run 54](../evidence/run-54.md) and [run 55](../evidence/run-55.md).
 
 The first targeted fallback assertion used the `noscript` wrapper, which Playwright's text matcher skips. Inspecting the rendered HTML confirmed the paragraph; scoping the assertion to `noscript p` passed. The six targeted cases then passed (21 deselected).
 
@@ -55,11 +55,11 @@ The screen grid rule is now inside `@media screen`; the new print assertion runs
 
 Opened and reviewed **21 actual captures**: two baseline, six label-candidate, ten filter-candidate, and three after the print repair. No private data observed. All evidence is outside the published site.
 
-- [Baseline phone](screenshots/segment-8-before-search-375-light.png) and [desktop](screenshots/segment-8-before-search-1280-light.png).
-- [Run 54 phone labels](screenshots/run-54-search-375-light.png) and [desktop dark](screenshots/run-54-search-1280-dark.png).
-- [Final phone search](screenshots/run-55-final-search-375-light.png) and [final filtered desktop](screenshots/run-55-final-reports-1280-dark.png).
-- [Filtered phone](screenshots/run-55-reports-375-light.png), [empty state](screenshots/run-55-empty-375-dark.png), and [phone keyboard focus](screenshots/run-55-filter-375-dark-focus.png) (375 CSS px at 2× density).
-- [Print-media form visibility](screenshots/run-55-print-1280-light.png). This verifies CSS print media, not PDF pagination; pre-existing suggestion-link print styling remains separate backlog work.
+- [Baseline phone](../screenshots/segment-8-before-search-375-light.png) and [desktop](../screenshots/segment-8-before-search-1280-light.png).
+- [Run 54 phone labels](../screenshots/run-54-search-375-light.png) and [desktop dark](../screenshots/run-54-search-1280-dark.png).
+- [Final phone search](../screenshots/run-55-final-search-375-light.png) and [final filtered desktop](../screenshots/run-55-final-reports-1280-dark.png).
+- [Filtered phone](../screenshots/run-55-reports-375-light.png), [empty state](../screenshots/run-55-empty-375-dark.png), and [phone keyboard focus](../screenshots/run-55-filter-375-dark-focus.png) (375 CSS px at 2× density).
+- [Print-media form visibility](../screenshots/run-55-print-1280-light.png). This verifies CSS print media, not PDF pagination; pre-existing suggestion-link print styling remains separate backlog work.
 
 Screenshots used `hc.sh shot 'search.html?q=calibration' <width> <theme> run-54-search-<width>-<theme>` and the equivalent run-55 names, at 375/768/1280 in light/dark. Filtered URLs add `&type=report`; the empty capture uses `q=zzzznothing&type=appendix`. The final print capture uses the repository Playwright runtime with `page.emulate_media(media='print')`, asserts the form is hidden, and saves an actual browser screenshot.
 

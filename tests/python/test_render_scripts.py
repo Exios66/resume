@@ -354,7 +354,7 @@ class TranslationReadyTests(unittest.TestCase):
         out = self.prepare(page)
         self.assertIn('<span class="cc-copy">Copy</span><span class="cc-done">Copied</span></button>', out)
         self.assertIn('<img src="a.jpg" class="fig"><span class="zoom-hint">Tap to open full size</span></a>', out)
-        self.assertIn('<figcaption><span class="scroll-hint">Scroll sideways to see the whole diagram. </span>How it fits.</figcaption>', out)
+        self.assertIn('<figcaption><span class="scroll-hint" aria-hidden="true">Scroll sideways to see the whole diagram. </span>How it fits.</figcaption>', out)
         self.assertIn('<p class="chart-tools"></p><p class="scroll-hint">Scroll sideways to see the whole chart.</p></figure>', out)
         self.assertEqual(self.prepare(out), out)
 

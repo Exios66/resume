@@ -162,6 +162,9 @@ def test_ecosystem_text_padding_and_code_font(site):
         assert not failures, failures
         page.set_viewport_size({"width": 375, "height": 812})
         diagram = page.locator(".diagram-ecosystem")
+        # The visible scroll hint sits in the caption that names the drawing, but not in its name.
+        expect(diagram.locator(".scroll-hint")).to_be_visible()
+        expect(diagram).to_have_accessible_name(re.compile(r"^(?!Scroll sideways)\S"))
         diagram.focus()
         expect(diagram).to_be_focused()
         assert diagram.evaluate("el => el.scrollWidth > el.clientWidth")
@@ -1335,6 +1338,11 @@ def test_translated_pages_keep_layout_names_and_code(site, playwright, engine, l
                 assert after["h1"] == before["h1"] == "MapReduce-Reloaded"
             elif before["h1"]:
                 assert after["h1"] != before["h1"], path
+        # The report is last: printed, its code keeps the print spacing, as the Copy button is not printed.
+        page.emulate_media(media="print")
+        pads = page.evaluate("() => [...document.querySelectorAll('div.code-copy-outer-scaffold div.sourceCode pre')].map(p => getComputedStyle(p).paddingTop)")
+        assert pads and set(pads) == {"12px"}, pads
+        page.emulate_media(media="screen")
         if lang == "ar":
             # Translated prose reads right to left: its first line starts at the right edge.
             edge = page.evaluate("""() => {

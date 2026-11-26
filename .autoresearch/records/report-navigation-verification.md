@@ -31,7 +31,7 @@ scripts/hillclimb/hc.sh checks
 git diff --check
 ```
 
-Doctor ended `All tools present.` Each candidate also used `hc.sh evidence` with the inspected screenshot/browser observations and `hc.sh log keep` with its hypothesis, result and next action. See [run 51](evidence/run-51.md) and [run 52](evidence/run-52.md) for those records. A documentation-only workspace commit landed between the run-51 experiment and gate; the record explicitly identifies both commits and the source diff.
+Doctor ended `All tools present.` Each candidate also used `hc.sh evidence` with the inspected screenshot/browser observations and `hc.sh log keep` with its hypothesis, result and next action. See [run 51](../evidence/run-51.md) and [run 52](../evidence/run-52.md) for those records. A documentation-only workspace commit landed between the run-51 experiment and gate; the record explicitly identifies both commits and the source diff.
 
 ```sh
 for width in 375 768 1280; do
@@ -44,12 +44,12 @@ done
 
 ## Visual and interaction evidence
 
-Opened all 12 candidate screenshots, both baseline screenshots, and the additional actual phone keyboard-focus capture. They contain public portfolio content, with no private data observed. Archive: [screenshots](screenshots/).
+Opened all 12 candidate screenshots, both baseline screenshots, and the additional actual phone keyboard-focus capture. They contain public portfolio content, with no private data observed. Archive: [screenshots](../screenshots/).
 
-- [Baseline desktop](screenshots/segment-7-before-contents-1280-light.png) and [phone](screenshots/segment-7-before-contents-375-light.png).
-- [Run 51 desktop](screenshots/run-51-contents-1280-light.png): aligned row starts and reading order. Phone remains one column; tablet/desktop have two.
-- [Run 52 phone](screenshots/run-52-contents-375-light.png) and [desktop dark](screenshots/run-52-contents-1280-dark.png): larger click areas, no clipped labels or page overflow. The eight-link phone box grows from roughly 290px after run 51 to 451.20px; this space is accepted for 44px targets.
-- [Run 52 phone keyboard focus](screenshots/run-52-contents-375-dark-focus.png): 375 CSS px at 2× capture density, visible focus outline and background.
+- [Baseline desktop](../screenshots/segment-7-before-contents-1280-light.png) and [phone](../screenshots/segment-7-before-contents-375-light.png).
+- [Run 51 desktop](../screenshots/run-51-contents-1280-light.png): aligned row starts and reading order. Phone remains one column; tablet/desktop have two.
+- [Run 52 phone](../screenshots/run-52-contents-375-light.png) and [desktop dark](../screenshots/run-52-contents-1280-dark.png): larger click areas, no clipped labels or page overflow. The eight-link phone box grows from roughly 290px after run 51 to 451.20px; this space is accepted for 44px targets.
+- [Run 52 phone keyboard focus](../screenshots/run-52-contents-375-dark-focus.png): 375 CSS px at 2× capture density, visible focus outline and background.
 
 Collaborative browser on the `/resume/` simulation confirmed equal first-row positions at 1280, 44px link heights, Tab moving to “System and data”, `:focus-visible`, a 2px outline, and Enter activating the section (settled heading top 84.11px). At 375, a pointer click at x330/y439 in the far-right padded area activated “Results” (heading top 15.91px, no sticky phone header). No page overflow in either layout.
 

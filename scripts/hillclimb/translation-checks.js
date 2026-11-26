@@ -9,9 +9,10 @@
     const cls = typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/).join('.') : '';
     return el.tagName.toLowerCase() + cls + ' "' + (el.textContent || '').trim().slice(0, 40) + '"';
   };
+  // A reader can scroll an auto or scroll container sideways; hidden and clip cut content off instead.
   const scroller = (el) => {
     for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
-      if (getComputedStyle(p).overflowX !== 'visible') return p;
+      if (/^(auto|scroll)$/.test(getComputedStyle(p).overflowX)) return p;
     }
     return null;
   };
@@ -39,14 +40,20 @@
     });
   }
 
+  /** Whether a label's text is cut off or spills out of its box. */
+  function textCut(el) {
+    if (el.scrollWidth <= el.clientWidth + 1) return false;
+    // Hidden or clipped overflow cuts the text off; visible overflow only matters if the text leaves the box.
+    if (/^(hidden|clip)$/.test(getComputedStyle(el).overflowX)) return true;
+    const t = textBox(el).getBoundingClientRect(); const r = el.getBoundingClientRect();
+    return t.right > r.right + 1 || t.left < r.left - 1;
+  }
+
   /** clipped: a control's or label's text is wider than its box. */
   function clipped() {
     const labels = '.nav-link, .btn, .chip, .code-copy-button, .site-title, .pager-name, .project-jump a, .footer-links a, .kicker, h1, h2';
-    return [...document.querySelectorAll(labels)].filter((el) => visible(el) && !scroller(el)
-      && el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).overflowX === 'visible').flatMap((el) => {
-      const t = textBox(el).getBoundingClientRect(); const r = el.getBoundingClientRect();
-      return t.right > r.right + 1 || t.left < r.left - 1 ? [`clipped: ${name(el)} text ${Math.round(t.width)}px in a ${Math.round(r.width)}px box`] : [];
-    });
+    return [...document.querySelectorAll(labels)].filter((el) => visible(el) && !scroller(el) && textCut(el)).map((el) =>
+      `clipped: ${name(el)} text ${el.scrollWidth}px in a ${el.clientWidth}px box`);
   }
 
   /** header: a header control is under 44px, or the title runs under Search or the toggle. */

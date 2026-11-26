@@ -357,7 +357,9 @@ COPY_ICON = '<i class="bi"></i></button>'
 COPY_LABELS = '<span class="cc-copy">Copy</span><span class="cc-done">Copied</span></button>'
 ZOOM_LINK = re.compile(r'(<a class="fig-zoom"[^>]*><img\b[^>]*>)(</a>)')
 CHART = re.compile(r'<figure class="chart(?=[\s"]).*?</figure>', re.S)
-DIAGRAM_HINT = '<span class="scroll-hint">Scroll sideways to see the whole diagram. </span>'
+# The diagram's figure is role="img" named by its caption, so the hint is aria-hidden: it
+# instructs sighted readers and would otherwise start every diagram's accessible name.
+DIAGRAM_HINT = '<span class="scroll-hint" aria-hidden="true">Scroll sideways to see the whole diagram. </span>'
 CHART_HINT = '<p class="scroll-hint">Scroll sideways to see the whole chart.</p>'
 
 

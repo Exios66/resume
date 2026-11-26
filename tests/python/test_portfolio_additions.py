@@ -55,6 +55,8 @@ def assert_diagram_matches_partial(test, published, diagram, source, original):
     test.assertEqual([attrs.get("translate") for tag, attrs in children if tag == "svg"], ["no"])
     hints = [child for child in children if checks.attr(child[1], "class") == "scroll-hint"]
     test.assertEqual(len(hints), 1)
+    # The figure is named by its caption; the hint must not become part of that name.
+    test.assertEqual(checks.attr(hints[0][1], "aria-hidden"), "true")
     drawn = [without_translation_marks(child) for child in children
              if child not in hints and child != ("span", {"translate": "no"})]
     test.assertEqual(drawn, source.children(original))
