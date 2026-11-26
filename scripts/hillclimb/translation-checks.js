@@ -48,20 +48,33 @@
     });
   }
 
-  /** Whether a label's text is cut off or spills out of its box. */
+  /** Whether a text box runs past an element's padding box, where hidden or clipped overflow cuts it off. */
+  const leaves = (t, el) => {
+    const r = el.getBoundingClientRect(); const left = r.left + el.clientLeft;
+    return t.right > left + el.clientWidth + 1 || t.left < left - 1;
+  };
+
+  /** How a label's text is cut off or spills out of its box, or null if it fits. */
   function textCut(el) {
-    if (el.scrollWidth <= el.clientWidth + 1) return false;
+    const t = textBox(el).getBoundingClientRect();
+    // A narrower ancestor with hidden or clipped overflow cuts the text off even when the label itself fits it.
+    for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+      if (/^(hidden|clip)$/.test(getComputedStyle(p).overflowX) && leaves(t, p)) {
+        return `text ${Math.round(t.width)}px cut off by ${name(p).split(' ')[0]} (${p.clientWidth}px)`;
+      }
+    }
+    const own = `text ${el.scrollWidth}px in a ${el.clientWidth}px box`;
+    if (el.scrollWidth <= el.clientWidth + 1) return null;
     // Hidden or clipped overflow cuts the text off; visible overflow only matters if the text leaves the box.
-    if (/^(hidden|clip)$/.test(getComputedStyle(el).overflowX)) return true;
-    const t = textBox(el).getBoundingClientRect(); const r = el.getBoundingClientRect();
-    return t.right > r.right + 1 || t.left < r.left - 1;
+    if (/^(hidden|clip)$/.test(getComputedStyle(el).overflowX)) return own;
+    return leaves(t, el) ? own : null;
   }
 
-  /** clipped: a control's or label's text is wider than its box. */
+  /** clipped: a control's or label's text is wider than its box or a hidden-overflow ancestor. */
   function clipped() {
     const labels = '.nav-link, .btn, .chip, .code-copy-button, .site-title, .pager-name, .project-jump a, .footer-links a, .kicker, h1, h2';
-    return [...document.querySelectorAll(labels)].filter((el) => visible(el) && !scroller(el) && !srOnly(el) && textCut(el)).map((el) =>
-      `clipped: ${name(el)} text ${el.scrollWidth}px in a ${el.clientWidth}px box`);
+    return [...document.querySelectorAll(labels)].filter((el) => visible(el) && !scroller(el) && !srOnly(el))
+      .map((el) => [el, textCut(el)]).filter(([, cut]) => cut).map(([el, cut]) => `clipped: ${name(el)} ${cut}`);
   }
 
   /** header: a header control is under 44px, or the title runs under Search or the toggle. */
