@@ -919,12 +919,12 @@ def test_mapreduce_duration_keeps_condition_and_source_context(site, width, them
     try:
         page.goto(base + "projects/mapreduce-reloaded.html")
         panel = page.locator("#mr-backup-duration")
-        expect(panel).to_contain_text("three runs")
-        expect(panel).to_contain_text("fixed setting order")
-        expect(panel).to_contain_text("not drift-controlled")
+        expect(panel).to_contain_text("five runs")
+        expect(panel).to_contain_text("took turns")
+        expect(panel).to_contain_text("one shared VM")
         marks = panel.locator(".mark")
         expect(marks).to_have_count(2)
-        assert [m.get_attribute("data-tip-value") for m in marks.all()] == ["17.58 s", "11.24 s"]
+        assert [m.get_attribute("data-tip-value") for m in marks.all()] == ["17.9 s", "11.36 s"]
         if width == 375:
             for label in panel.locator('.chart text.val').all():
                 box = label.bounding_box()
@@ -932,13 +932,13 @@ def test_mapreduce_duration_keeps_condition_and_source_context(site, width, them
             assert panel.locator('.chart-body').evaluate("el => el.scrollWidth <= el.clientWidth + 1")
         marks.last.focus()
         expect(panel.locator(".chart-readout")).to_contain_text("Backups on")
-        expect(panel.locator(".chart-readout")).to_contain_text("11.24")
+        expect(panel.locator(".chart-readout")).to_contain_text("11.36")
         expect(panel.locator(".chart-readout")).to_contain_text("Runs")
         citation = panel.locator('a[role="doc-noteref"]')
         note = citation.get_attribute("href")
         citation.click()
-        expect(page.locator(note)).to_contain_text("E2 evaluation")
-        assert page.locator(f'{note} a[href*="def9c62846e8c560b9be6c72b76f1cf325582059"]').count() == 2
+        expect(page.locator(note)).to_contain_text("E2 in the benchmark notes")
+        assert page.locator(f'{note} a[href*="6d93f33318a4d9195114ed59d7ad1343ce7d2c55"]').count() == 2
     finally:
         page.close()
 
@@ -956,14 +956,14 @@ def test_mapreduce_interval_distinguishes_mean_bounds_and_zero(site, width, them
         plot = panel.locator("figure.chart")
         mark = plot.locator(".mark")
         expect(mark).to_have_count(1)
-        assert mark.get_attribute("data-tip-value") == "−0.11 s; −0.38 s to +0.16 s"
+        assert mark.get_attribute("data-tip-value") == "−0.14 s; −0.36 s to +0.08 s"
         geometry = plot.evaluate("""el => {
             const line = el.querySelector('.interval-range'), dot = el.querySelector('.dot'), zero = el.querySelector('line.ref');
             return [Number(line.getAttribute('x1')), Number(dot.getAttribute('cx')), Number(zero.getAttribute('x1')), Number(line.getAttribute('x2'))];
         }""")
         assert geometry == sorted(geometry)
         mark.focus()
-        for value in ("−0.11", "−0.38", "+0.16", "10"):
+        for value in ("−0.14", "−0.36", "+0.08", "10"):
             expect(plot.locator(".chart-readout")).to_contain_text(value)
         page.emulate_media(media="print")
         expect(plot.locator("svg")).to_be_visible()

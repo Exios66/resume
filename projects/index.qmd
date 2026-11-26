@@ -107,11 +107,11 @@ A browser globe for flight tracking, built around a static data pipeline so that
 ::: {.cards .cards-wide}
 ::: {.card cover="mapreduce-reloaded"}
 ### [MapReduce-Reloaded](mapreduce-reloaded.qmd)
-[In active development · distributed systems · Go & Python]{.kicker}
+[Core complete · distributed systems · Go & Python]{.kicker}
 
-A from-scratch rebuild of Google's 2004 MapReduce, with a Go cluster and a Python reference. The paper mapping now includes 24 items, including performance experiments. S3 storage, compression, a VM evaluation and the final report are built; full Python worker parity remains a stretch goal.
+A from-scratch rebuild of Google's 2004 MapReduce, with a Go cluster and a Python reference. Every feature in the paper has its own test, and S3 storage, compression, LATE speculation, an eight-experiment VM evaluation and the final report are built. Python workers are planned.
 
-[WIP]{.tag} [Go]{.tag} [Python]{.tag} [gRPC]{.tag} [Docker Compose]{.tag} [Fault tolerance]{.tag}
+[Go]{.tag} [Python]{.tag} [gRPC]{.tag} [Docker Compose]{.tag} [Fault tolerance]{.tag}
 :::
 :::
 
