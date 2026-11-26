@@ -24,7 +24,7 @@ image-alt: "Mailroom Reloaded project motif"
 [2]{.stat-value} [LLM calls for a clean text-layer document (sort, then extract)]{.stat-label}
 :::
 ::: {.stat}
-[1,844]{.stat-value} [Python tests passing on main, re-run on 26 November 2026, plus 397 for the replay viewer]{.stat-label}
+[1,844]{.stat-value} [Python tests passing on main, re-run on 26 November 2026, plus 397 for the browser terminal]{.stat-label}
 :::
 :::
 

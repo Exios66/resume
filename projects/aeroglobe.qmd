@@ -33,7 +33,7 @@ A browser-based 3D globe for looking back at flights: where an aircraft went, an
 
 ::: {.stats}
 ::: {.stat}
-[451]{.stat-value} [tests passing on main, re-run on 26 November 2026]{.stat-label}
+[451]{.stat-value} [tests passing in 54 of 56 files on main, re-run on 26 November 2026]{.stat-label}
 :::
 ::: {.stat}
 [4]{.stat-value} [stages in the data pipeline: normalize, segment, chunk, catalog]{.stat-label}

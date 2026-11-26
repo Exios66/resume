@@ -162,7 +162,7 @@ uv run mailroom eval --per-class 20 --seed 42 --split test
 
 ## Engineering quality
 
-- **Test suite.** 1,844 Python tests and 397 replay-viewer tests pass on `main` (re-run above). Live-provider and Docker tests need a configured provider or a Docker daemon and were not run.
+- **Test suite.** 1,844 Python tests and 397 browser-terminal (`/tui`) tests pass on `main` (re-run above). Live-provider and Docker tests need a configured provider or a Docker daemon and were not run.
 - **Tiers.** Agents, pipeline, eval, observability, API, deploy, intake, ingest, LLM, scoring, schemas, storage, TUI and `/ui`.
 - **Dependency fence.** A test fails if any `langgraph`, `langchain*`, `langfuse`, `braintrust` or `litellm` import appears under `src/` or in any dependency.
 - **Prompt lock.** A test checks the sha256 of every vendored prompt against its lineage file, so frozen prompts cannot drift silently.
