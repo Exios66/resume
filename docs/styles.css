@@ -1479,9 +1479,11 @@ span[translate="no"] { display: contents; }
 :is(p, li, dt, dd, h1, h2, h3, h4, h5, h6, figcaption, caption, th, td, blockquote, summary, .kicker, .sub) { unicode-bidi: plaintext; }
 :root:is(:lang(ar), :lang(fa), :lang(he), :lang(ur), .translated-rtl) :is(*, ::before, ::after) { letter-spacing: 0 !important; }
 /* Translated into a right-to-left language, prose runs right to left even when it opens
-   with a code name; code itself stays left to right. List items keep the automatic
-   direction so their markers stay inside the list's indent. */
-:root:is(:lang(ar), :lang(fa), :lang(he), :lang(ur), .translated-rtl) :is(p, dt, dd, h1, h2, h3, h4, h5, h6, figcaption, caption, blockquote, summary) { direction: rtl; unicode-bidi: isolate; }
+   with a code name; code itself stays left to right. List markers move inside the item,
+   so a marker on the right never hangs past the edge the list's indent is on. */
+:root:is(:lang(ar), :lang(fa), :lang(he), :lang(ur), .translated-rtl) :is(p, dt, dd, h1, h2, h3, h4, h5, h6, figcaption, caption, blockquote, summary, main li) { direction: rtl; unicode-bidi: isolate; }
+/* Firefox and Safari give list items text-align: match-parent, which follows the list's own direction. */
+:root:is(:lang(ar), :lang(fa), :lang(he), :lang(ur), .translated-rtl) main li { list-style-position: inside; text-align: start; }
 :root:is(:lang(ar), :lang(fa), :lang(he), :lang(ur), .translated-rtl) :is(pre, code, kbd, samp) { direction: ltr; unicode-bidi: isolate; }
 /* A translated Copy label can be wider than the space kept for it, so the button gets its own row. */
 :root:is(.translated-ltr, .translated-rtl, :not(:lang(en))) div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 40px; padding-right: 14px; }

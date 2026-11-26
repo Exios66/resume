@@ -121,7 +121,8 @@ function inspect(before) {
       const boxes = [...range.getClientRects()].filter(x => x.width); const r = p.getBoundingClientRect();
       if (!boxes.length) continue;
       const lineRight = Math.max(...boxes.filter(x => Math.abs(x.top - boxes[0].top) < 2).map(x => x.right));
-      if (Math.abs(r.right - parseFloat(s.paddingRight) - parseFloat(s.borderRightWidth) - lineRight) > 3) { if (off++ < 2) problems.push(`align: ${name(p)} does not start at its right edge`); }
+      // One-sided: Firefox measures a trailing space a few pixels past the edge of a right-aligned line.
+      if (r.right - parseFloat(s.paddingRight) - parseFloat(s.borderRightWidth) - lineRight > 3) { if (off++ < 2) problems.push(`align: ${name(p)} does not start at its right edge`); }
     }
   }
 
