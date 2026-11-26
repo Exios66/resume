@@ -88,8 +88,8 @@ html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 
 /* Icons carry width/height="1em" in the markup too, so a missing stylesheet cannot enlarge them. */
 .icon { width: 1em; height: 1em; vertical-align: -.125em; flex: none; }
-.icon-ext { width: .75em; height: .75em; margin-left: .2em; vertical-align: -.02em; color: var(--muted); }
-.icon-go { width: .85em; height: .85em; margin-left: .35em; }
+.icon-ext { width: .75em; height: .75em; margin-inline-start: .2em; vertical-align: -.02em; color: var(--muted); }
+.icon-go { width: .85em; height: .85em; margin-inline-start: .35em; }
 [hidden] { display: none !important; }
 
 body {
@@ -1486,4 +1486,4 @@ span[translate="no"] { display: contents; }
 :root:is(:lang(ar), :lang(fa), :lang(he), :lang(ur), .translated-rtl) main li { list-style-position: inside; text-align: start; }
 :root:is(:lang(ar), :lang(fa), :lang(he), :lang(ur), .translated-rtl) :is(pre, code, kbd, samp) { direction: ltr; unicode-bidi: isolate; }
 /* A translated Copy label can be wider than the space kept for it, so the button gets its own row. */
-:root:is(.translated-ltr, .translated-rtl, :not(:lang(en))) div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 40px; padding-right: 14px; }
+@media screen { :root:is(.translated-ltr, .translated-rtl, :not(:lang(en))) div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 40px; padding-right: 14px; } }
