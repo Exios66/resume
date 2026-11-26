@@ -96,7 +96,7 @@ The data work behind the mailroom projects: 3,302 documents assembled from publi
 ### [AeroGlobe](aeroglobe.qmd)
 [In active development · 3D flight data on a globe]{.kicker}
 
-A browser globe for flight tracking, built around a static data pipeline so that flights can be replayed without an always-on server. An early version is live: it shows a short sample of real traffic recorded when the site was built and replays recorded tracks. Route search, a time-zone overlay and an in-browser logbook are described in the repository README. Full-day playback is planned for a real published historical day, which is not on the live site yet.
+A browser globe that replays flights from a static data pipeline, with no always-on server. An early version is live, with route search, a time-zone overlay and an in-browser logbook, and it plays back traffic recorded when the site was built. Full-day playback is planned for a real historical day, which is not on the live site yet.
 
 [WIP]{.tag} [TypeScript]{.tag} [CesiumJS]{.tag} [React]{.tag} [Data pipeline]{.tag}
 :::
