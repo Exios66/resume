@@ -249,3 +249,13 @@ Scouted and not changed: footer inset already matches the page; dark card hairli
 
 ## Segment16: reviewed MapReduce condition and numeric guards
 Separate audit commit 58b3897 strengthens the documented CPU condition and numeric source-cell guards. Baseline run71 score0, 258 tests/634 subtests passed in234.75s. This correctness review does not change segment15 history or claim a new metric improvement. Fractional-width input fixed in ecbabf7; explicit-domain preservation in908d5aa and collapsed-domain guard in06622bf. Final source06622bf full gate:258 passed,2 deselected,634 subtests,166.61s,no warnings. The intermediate908 gate was interrupted for checkpoint refinement. Existing17 captures remain representative; current-source local8-case smoke passed. Source/verification and follow-on MapReduce queue archived. Two-candidate leg and review fixes complete; publish, resolve verified threads and merge with current checks.
+
+## Segments 18–19: content truth and de-clutter (26 Nov 2026)
+Branch `claude/magical-babbage-0xtnx7` from main `1ee7583`. Segment 18 baseline run 90: 0 / experience_gaps 5, 332 passed, 930 subtests.
+Segment 19 starts with audit commit `ca18fe4`: `inspectMapReduceEvidence` pinned the superseded 11 Nov three-run E2 values (17.58/11.24 s, −0.11 [−0.38, +0.16]); it now expects the five-run interleaved rerun at 8f0ddb9 published on MapReduce main 6d93f33 (17.90/11.36 s, −0.14 [−0.36, +0.08]). Baseline run 91 = 16 (stale page), logged checks_failed because a browser test runs the updated inspector on the stale page.
+- Run 92 keep: MapReduce core-complete status (no WIP), all evaluation numbers from the rerun, E7 LATE row, failure cost in seconds, 228 PRs / 24 ADRs. 16 → 0.
+- Run 93 keep: measured tests — Wave Lab 972 (932 unit + 40 validation, 3211918), Mailroom Reloaded 1,844 pytest + 397 node (8c35413); Neuron Atlas provenance without internal issue ref.
+- Run 94 keep: AeroGlobe intro/caveat cut to plain status; live site checked (Timeline, Time zones, Logbook, Search); 451 tests in 54 of 56 files (2 need a release-hosted tz file, HTTP 401); 8,091 TS lines.
+- Run 95 keep: Degen 419 pytest + 18 node scripts all pass (80399bf); projects-index disclaimer to one line.
+- Run 96 keep: Mailroom-ML 384 passed/55 skipped core suite (01c2272); Corpus EDA 1,114 tests: 1,046 passed, 67 skipped, 1 failed (aed8481, labeling review portal); Wave appendix and Reloaded report updated.
+Langton's ant 108 re-run and matches. Source repos for NATD, PDT, Personas, RVL-CDIP, Digital-Mailroom have no commits after the cited revisions.

@@ -105,3 +105,10 @@ Open (segments must be re-baselined per issue 106's contract before adding check
 - [x] Signed mean/95% interval from ten interleaved pairs, zero-crossing uncertainty visible.
 - [ ] Follow-on: worker scaling shape, shuffle-phase interpretation and failure recovery, only after authenticating the matching source data and defining fixed evaluations.
 - Review checkpoints: source/design before edit, diff/visual/function after render, evidence before keep, entire PR and open reviews before merge.
+
+## From segment 19 (26 Nov 2026)
+- Case-study "actions" buttons (View the code) duplicate the Code tab directly above them; consider dropping one (pinned by tests and an Issue #51 ordering rule — owner call).
+- Corpus EDA: one failing test upstream (test_save_logs_model_attribution_and_manual_verification); update the page once the owner fixes it.
+- mailroom-ml: `ruff check .` reports one fixable issue at 01c2272 upstream.
+- Wave Lab live demo (14 Nov) predates clouds/sun shafts; refresh the captures after a redeploy.
+- MapReduce: an E7 chart would be welcome but the case study sits at 19,697 / 20,000 gzip.
