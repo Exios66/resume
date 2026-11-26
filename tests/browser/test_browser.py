@@ -1356,3 +1356,29 @@ def test_translated_pages_keep_layout_names_and_code(site, playwright, engine, l
     finally:
         context.close()
         browser.close()
+
+
+CLIP_FIXTURE = """<html lang="de"><body style="margin:8px;font:16px sans-serif"><main>
+<p><a class="btn" style="display:inline-block;width:80px;white-space:nowrap;overflow:hidden">Own box cut</a></p>
+<div style="width:100px;overflow:hidden"><a class="btn" style="display:inline-block;white-space:nowrap">Cut by a narrower ancestor</a></div>
+<div style="width:250px;overflow-x:auto"><div style="width:90px;overflow:hidden"><a class="btn" style="display:inline-block;white-space:nowrap">Cut inside a scroller</a></div></div>
+<div style="width:300px;overflow:hidden"><a class="btn" style="display:inline-block;white-space:nowrap">Fits</a></div>
+<div style="width:150px;overflow-x:auto"><a class="btn" style="display:inline-block;white-space:nowrap">Wide but scrollable sideways</a></div>
+<div style="position:absolute;width:1px;height:1px;overflow:hidden"><a class="btn" style="display:inline-block;white-space:nowrap">Screen reader only</a></div>
+</main></body></html>"""
+
+
+def test_translation_sweep_reports_labels_cut_off_by_hidden_overflow(site):
+    """The sweep's clipped check finds labels cut off by their own box or a hidden-overflow ancestor
+    below the first sideways scroller, and ignores scrollable and screen-reader-only labels."""
+    browser, _ = site
+    page = browser.new_page(viewport={"width": 320, "height": 600})
+    try:
+        page.set_content(CLIP_FIXTURE)
+        page.add_script_tag(path=str(ROOT / "scripts/hillclimb/translation-checks.js"))
+        found = [line for line in page.evaluate("() => window.translationChecks(null)") if line.startswith("clipped:")]
+        labels = [re.search(r'"([^"]*)"', line).group(1) for line in found]
+        assert labels == ["Own box cut", "Cut by a narrower ancestor", "Cut inside a scroller"], found
+        assert "in a 80px box" in found[0] and "cut off by div (100px)" in found[1] and "cut off by div (90px)" in found[2], found
+    finally:
+        page.close()
