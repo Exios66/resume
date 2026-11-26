@@ -152,7 +152,9 @@ a:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-
 a.chip { color: var(--accent); }
 a.chip:hover { text-decoration: none; filter: brightness(.95); }
 
-.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; }
+.actions { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px; margin-top: 22px; }
+/* Only the home hero is centred; elsewhere the buttons line up with the text above them. */
+.hero .actions { justify-content: center; }
 .actions p { display: contents; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .5em;
@@ -1279,7 +1281,6 @@ h2:has(+ .explore) { margin-bottom: 0; }
 }
 
 /* 404 page: buttons line up with the text above them. */
-.not-found .actions { justify-content: flex-start; }
 
 /* Numbered source notes: native links, no popovers over the reading column. */
 a.footnote-ref { white-space: nowrap; font-weight: 600; padding-inline: 3px; }
