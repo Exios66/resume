@@ -39,7 +39,7 @@ The Jev decision model is off by default and only acts on the medium-confidence 
 
 ## Verification scope
 
-The case study and technical report preserve a dated verification run. They are not a current passing-test total, because the suite has changed since. The repository has no hosted CI; the local suite is the gate.
+The case study and technical report give the result of a run made on 26 November 2026 on `main` at `8c35413`. The suite keeps changing, so a later checkout will count differently. The repository has no hosted CI; the local suite is the gate.
 
 Screenshots in the report come from a seeded demo run with the mock provider. They show the interface, not document quality, and `/ui` and `/tui` have changed since the capture.
 

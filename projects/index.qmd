@@ -9,7 +9,7 @@ description: "Selected work in mechanistic interpretability, document intelligen
 
 Most of this work comes back to one idea: a system is only as useful as its honesty about its own errors. It runs through document intelligence, interpretability, data engineering, distributed systems, behavioral machine learning, LLM agent design and simulation. Each project has a short case study. Most also have a technical report with the experiment history, the metrics and the steps to reproduce the results, including the results that did not go my way.
 
-Content review: **19 November 2026**. Test totals and benchmarks belong to the snapshots named on each page; they are not live status counters. Some older reports retain historical results and are labeled where newer releases supersede them. A WIP tag marks a project whose own page still calls it unfinished.
+Every page was checked against its repository on **26 November 2026**. A WIP tag marks a project still in progress.
 
 <nav class="project-jump" aria-label="Project categories">
 
@@ -96,7 +96,7 @@ The data work behind the mailroom projects: 3,302 documents assembled from publi
 ### [AeroGlobe](aeroglobe.qmd)
 [In active development · 3D flight data on a globe]{.kicker}
 
-A browser globe for flight tracking, built around a static data pipeline so that flights can be replayed without an always-on server. An early version is live: it shows a short sample of real traffic recorded when the site was built and replays recorded tracks. Route search, a time-zone overlay and an in-browser logbook are described in the repository README. Full-day playback is planned for a real published historical day, which is not on the live site yet.
+A browser globe that replays flights from a static data pipeline, with no always-on server. An early version is live, with route search, a time-zone overlay and an in-browser logbook, and it plays back traffic recorded when the site was built. Full-day playback is planned for a real historical day, which is not on the live site yet.
 
 [WIP]{.tag} [TypeScript]{.tag} [CesiumJS]{.tag} [React]{.tag} [Data pipeline]{.tag}
 :::
@@ -107,11 +107,11 @@ A browser globe for flight tracking, built around a static data pipeline so that
 ::: {.cards .cards-wide}
 ::: {.card cover="mapreduce-reloaded"}
 ### [MapReduce-Reloaded](mapreduce-reloaded.qmd)
-[In active development · distributed systems · Go & Python]{.kicker}
+[Core complete · distributed systems · Go & Python]{.kicker}
 
-A from-scratch rebuild of Google's 2004 MapReduce, with a Go cluster and a Python reference. The paper mapping now includes 24 items, including performance experiments. S3 storage, compression, a VM evaluation and the final report are built; full Python worker parity remains a stretch goal.
+A from-scratch rebuild of Google's 2004 MapReduce, with a Go cluster and a Python reference. Every feature in the paper has its own test, and S3 storage, compression, LATE speculation, an eight-experiment VM evaluation and the final report are built. Python workers are planned.
 
-[WIP]{.tag} [Go]{.tag} [Python]{.tag} [gRPC]{.tag} [Docker Compose]{.tag} [Fault tolerance]{.tag}
+[Go]{.tag} [Python]{.tag} [gRPC]{.tag} [Docker Compose]{.tag} [Fault tolerance]{.tag}
 :::
 :::
 

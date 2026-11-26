@@ -35,11 +35,11 @@ The lab needs a browser with WebGL 2. It runs on desktop and on phones.
 [280]{.stat-value} [water columns, at most, sampled under a hull to integrate pressure]{.stat-label}
 :::
 ::: {.stat}
-[481 + 25]{.stat-value} [unit and validation test declarations at the 24 October 2026 snapshot, counted by grep; not a current passing-test count]{.stat-label}
+[972]{.stat-value} [tests passing on main on 26 November 2026: 932 unit and 40 physics validation]{.stat-label}
 :::
 :::
 
-The repository README at [261979b](https://github.com/Exios66/wave-laboratory/tree/261979b33a1e) (14 November 2026) reports 632 passing tests and an 11-hull library. That passing total is the README's claim, not a suite I re-ran, and it is not a replacement for the October grep count above. Version 0.1.0 is the live demo. The plan's Stokes, cnoidal, Boussinesq and scripting phases are still not built.
+The ship library has 11 parametric hulls, from a lifeboat to an aircraft carrier. Since the live demo was published on 14 November, `main` has added volumetric clouds that shadow the sea, sun shafts, wet bands and foam where hulls meet the water, and quality tiers that adapt to the device. Stokes, cnoidal and Boussinesq waves and a scripting API are planned for later phases.
 
 ## The problem
 

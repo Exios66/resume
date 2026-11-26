@@ -253,7 +253,9 @@ function inspectChartEvidence() {
 }
 
 // MapReduce's two backup experiments answer different questions. Both plots
-// must retain their design limitations and the source-pinned measurements.
+// must retain their design limitations and the source-pinned measurements:
+// the five-run interleaved rerun at 8f0ddb9 (bench/README.md on main 6d93f33),
+// which superseded the three-run, fixed-order results of 11 November.
 function inspectMapReduceEvidence() {
   const failures = [];
   const duration = document.getElementById('mr-backup-duration');
@@ -262,11 +264,11 @@ function inspectMapReduceEvidence() {
   const number = value => Number((value || '').replace(/−/g, '-').replace(/[^0-9.+-]/g, ''));
   const marks = duration ? [...duration.querySelectorAll('.chart .mark')] : [];
   const durationText = text(duration);
-  if (marks.length !== 2 || !marks.some(m => Math.abs(number(m.dataset.tipValue) - 17.58) < 1e-6)
-    || !marks.some(m => Math.abs(number(m.dataset.tipValue) - 11.24) < 1e-6)
+  if (marks.length !== 2 || !marks.some(m => Math.abs(number(m.dataset.tipValue) - 17.90) < 1e-6)
+    || !marks.some(m => Math.abs(number(m.dataset.tipValue) - 11.36) < 1e-6)
     || duration.querySelectorAll('.bar').length !== 2
-    || !/0\.2\s*CPU/i.test(durationText) || !/three runs/i.test(durationText) || !/fixed setting order/i.test(durationText)
-    || !/not drift-controlled/i.test(durationText)) failures.push('slow-worker duration with experiment limits');
+    || !/0\.2\s*CPU/i.test(durationText) || !/five runs/i.test(durationText) || !/took turns/i.test(durationText)
+    || !/one shared VM/i.test(durationText)) failures.push('slow-worker duration with experiment limits');
   const range = uncertainty && uncertainty.querySelector('.interval-range');
   const point = uncertainty && uncertainty.querySelector('.mark .dot');
   const zero = uncertainty && uncertainty.querySelector('line.ref');
@@ -275,11 +277,11 @@ function inspectMapReduceEvidence() {
     const low = +range.getAttribute('x1'), high = +range.getAttribute('x2');
     const mean = +point.getAttribute('cx'), origin = +zero.getAttribute('x1');
     geometry = low < mean && mean < origin && origin < high
-      && Math.abs((mean - low) / (high - low) - 0.27 / 0.54) < .02
-      && Math.abs((origin - low) / (high - low) - 0.38 / 0.54) < .02;
+      && Math.abs((mean - low) / (high - low) - 0.22 / 0.44) < .02
+      && Math.abs((origin - low) / (high - low) - 0.36 / 0.44) < .02;
   }
   const cells = uncertainty ? [...uncertainty.querySelectorAll('table tbody tr:first-child td')].slice(1, 5).map(c => number(c.textContent)) : [];
-  const expected = [-.11, -.38, .16, 10];
+  const expected = [-.14, -.36, .08, 10];
   const uncertaintyText = text(uncertainty);
   if (!geometry || cells.length !== 4 || cells.some((n, i) => !Number.isFinite(n) || Math.abs(n - expected[i]) > 1e-6)
     || !/95%/.test(uncertaintyText) || !/interleaved/i.test(uncertaintyText)

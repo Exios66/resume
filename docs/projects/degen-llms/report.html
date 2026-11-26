@@ -123,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=b8ba65db09">
+<link rel="stylesheet" href="../../styles.css?v=cbf04186ab">
 <meta property="og:title" content="The Mandalay Bay: technical report — Jack J. Burleson">
 <meta property="og:description" content="Architecture, shared-screen rule, save format, randomness, exact slot return calculation, test counts, bugs fixed and limitations for The Mandalay Bay.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/degen-llms.png">
@@ -269,7 +269,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 id="results">Results</h2>
 <p>There are no performance benchmarks. The evidence is the test suite, the CI run list and the screenshots below.</p>
 <h3 id="test-counts">Test counts</h3>
-<p>These are collected, not pass rates. I did not run the suite for this report.</p>
+<p>I ran pytest and the Node scripts on <code>main</code> at <code>80399bf</code> on 26 November 2026; every test passed. The browser smoke test was not run.</p>
 <table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 33%">
@@ -286,17 +286,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd" role="row">
 <td role="cell" data-label="Suite">pytest</td>
-<td role="cell" data-label="Count">379 <code>def test_</code> declarations at the 30 October 2026 snapshot</td>
-<td role="cell" data-label="Source">grep over <code>tests/</code>; not a collected or passing count</td>
+<td class="num" role="cell" data-label="Count">419 passed</td>
+<td role="cell" data-label="Source"><code>tests/</code>, re-run on <code>main</code> at <code>80399bf</code> on 26 November 2026</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="Suite">Node smoke scripts</td>
-<td class="num" role="cell" data-label="Count">12 scripts</td>
-<td role="cell" data-label="Source"><code>scripts/</code><wbr><code>smoke-</code><wbr><code>test-</code><wbr><code>*.</code><wbr><code>mjs</code></td>
+<td role="cell" data-label="Suite">Node smoke and regression scripts</td>
+<td class="num" role="cell" data-label="Count">18 passed (13 smoke, 5 regression)</td>
+<td role="cell" data-label="Source"><code>scripts/</code><wbr><code>smoke-</code><wbr><code>test-</code><wbr><code>*.</code><wbr><code>mjs</code>, <code>scripts/</code><wbr><code>test-</code><wbr><code>*-</code><wbr><code>regressions.</code><wbr><code>mjs</code>, same run</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Suite">Browser smoke test</td>
-<td class="num" role="cell" data-label="Count">1 script</td>
+<td role="cell" data-label="Count">1 script, not run here</td>
 <td role="cell" data-label="Source"><code>scripts/</code><wbr><code>smoke-</code><wbr><code>test-</code><wbr><code>web.</code><wbr><code>py</code></td>
 </tr>
 </tbody>
@@ -358,6 +358,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </main>
 <footer class="site-footer">
+  <p class="footer-links"><a href="https://github.com/Exios66">GitHub</a> <a href="https://www.linkedin.com/in/jackjburleson">LinkedIn</a> <a href="mailto:jackjburleson@proton.me">Email</a></p>
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
 <script src="../../assets/js/site.js?v=83a152c7b0" defer=""></script>

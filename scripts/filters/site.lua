@@ -651,6 +651,7 @@ function Pandoc(doc)
 </main>
 ]] .. project_schema(path, doc) .. string.format([[
 <footer class="site-footer">
+  <p class="footer-links"><a href="https://github.com/Exios66">GitHub</a> <a href="https://www.linkedin.com/in/jackjburleson">LinkedIn</a> <a href="mailto:jackjburleson@proton.me">Email</a></p>
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
 <script src="%sassets/js/site.js" defer></script>

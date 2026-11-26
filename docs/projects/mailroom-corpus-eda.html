@@ -90,7 +90,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=b8ba65db09">
+<link rel="stylesheet" href="../styles.css?v=cbf04186ab">
 <meta property="og:title" content="Mailroom-Corpus-EDA — Jack J. Burleson">
 <meta property="og:description" content="The data engineering behind the mailroom dataset: 3,302 documents assembled from public sources, with identity, provenance, label separation and an audit pipeline that checks every number it publishes.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/mailroom-corpus-eda.png">
@@ -165,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Fixing correspondence intent.</strong> Many email rows had no intent label. I hydrated them by an exact match on a hash of the normalised body against a larger Enron corpus and against AESLC, ran a constrained model pass on the rest, and recorded which path produced each label. All 1,000 rows now have one of eight intents.</li>
 <li><strong>Hardened export.</strong> The exporter keeps metadata types uniform and handles the Unicode line separators that break JSON Lines readers. A byte-verify script compares a local export against what is on the Hub.</li>
 <li><strong>An audit pipeline.</strong> Integrity, composition, 30 static figures, 18 interactive figures, 17 tables, and a summary report, all rerunnable.</li>
-<li><strong>Tests.</strong> 594 <code>def test_</code> declarations in 26 files at the 6 November 2026 snapshot cover identity, the integrity audit, ground-truth quality rules, fixtures and the revision builders. They are counted, not run.</li>
+<li><strong>Tests.</strong> 1,114 tests cover identity, the integrity audit, ground-truth quality rules, fixtures and the revision builders. Re-run on 26 November 2026, 1,046 passed, 67 skipped because a sibling repository, local data or an opt-in live check was not present, and 1 failed in the labeling review portal; the <a href="../projects/mailroom-corpus-eda/report.html#tests">technical report</a> has the details.</li>
 </ul>
 <h2 id="results">Results</h2>
 <div class="quarto-figure quarto-figure-center">
@@ -201,6 +201,7 @@ ul.task-list li input[type="checkbox"] {
 
 </main>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"Mailroom-Corpus-EDA","description":"The data engineering behind the mailroom dataset: 3,302 documents assembled from public sources, with identity, provenance, label separation and an audit pipeline that checks every number it publishes.","url":"https://exios66.github.io/resume/projects/mailroom-corpus-eda.html","author":{"@type":"Person","name":"Jack J. Burleson","url":"https://exios66.github.io/resume/"},"isPartOf":{"@type":"WebSite","name":"Jack J. Burleson","url":"https://exios66.github.io/resume/"},"image":"https://exios66.github.io/resume/assets/og/mailroom-corpus-eda.png"}</script><footer class="site-footer">
+  <p class="footer-links"><a href="https://github.com/Exios66">GitHub</a> <a href="https://www.linkedin.com/in/jackjburleson">LinkedIn</a> <a href="mailto:jackjburleson@proton.me">Email</a></p>
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
 <script src="../assets/js/site.js?v=83a152c7b0" defer=""></script>

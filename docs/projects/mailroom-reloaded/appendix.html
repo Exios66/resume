@@ -90,7 +90,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=b8ba65db09">
+<link rel="stylesheet" href="../../styles.css?v=cbf04186ab">
 <meta property="og:title" content="Mailroom Reloaded: appendix — Jack J. Burleson">
 <meta property="og:description" content="Supporting notes for Mailroom Reloaded: routing gate bands, defer classes, the opt-in Jev gate and the verification scope.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/mailroom-reloaded.png">
@@ -169,13 +169,14 @@ ul.task-list li input[type="checkbox"] {
 <h2 id="opt-in-jev-gate">Opt-in Jev gate</h2>
 <p>The Jev decision model is off by default and only acts on the medium-confidence band once <code>models/jev_calibration.json</code> exists. It never overrides a hard rule. Its threshold is 0.8. All of this is opt-in; without the calibration file the gate is inert.</p>
 <h2 id="verification-scope">Verification scope</h2>
-<p>The case study and technical report preserve a dated verification run. They are not a current passing-test total, because the suite has changed since. The repository has no hosted CI; the local suite is the gate.</p>
+<p>The case study and technical report give the result of a run made on 26 November 2026 on <code>main</code> at <code>8c35413</code>. The suite keeps changing, so a later checkout will count differently. The repository has no hosted CI; the local suite is the gate.</p>
 <p>Screenshots in the report come from a seeded demo run with the mock provider. They show the interface, not document quality, and <code>/ui</code> and <code>/tui</code> have changed since the capture.</p>
 <nav class="project-pager" aria-label="Project navigation"><a class="pager-prev" href="../../projects/mailroom-ml.html" rel="prev"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg><span class="pager-text"><span class="pager-label">Previous project</span><span class="pager-name">Mailroom-ML</span></span></a><a class="pager-next" href="../../projects/rvl-cdip-classifier.html" rel="next"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-right"></use></svg><span class="pager-text"><span class="pager-label">Next project</span><span class="pager-name">RVL-CDIP-Classifier</span></span></a></nav>
 </div>
 
 </main>
 <footer class="site-footer">
+  <p class="footer-links"><a href="https://github.com/Exios66">GitHub</a> <a href="https://www.linkedin.com/in/jackjburleson">LinkedIn</a> <a href="mailto:jackjburleson@proton.me">Email</a></p>
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
 <script src="../../assets/js/site.js?v=83a152c7b0" defer=""></script>

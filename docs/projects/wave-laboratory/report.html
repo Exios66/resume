@@ -123,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=b8ba65db09">
+<link rel="stylesheet" href="../../styles.css?v=cbf04186ab">
 <meta property="og:title" content="Wave Laboratory: technical report — Jack J. Burleson">
 <meta property="og:description" content="Wave spectra and ship-dynamics models, architecture, validation suite, test counts, limitations and plan-versus-shipped notes for Wave Laboratory.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/wave-laboratory.png">
@@ -306,7 +306,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 id="results">Results</h2>
 <p>There are no benchmark numbers against external data. The evidence is the validation suite below.</p>
 <h3 id="validation-suite">Validation suite</h3>
-<p>The longer statistical checks live in <code>*.validation.ts</code> files and run with <code>pnpm validate</code>, with a 120-second timeout per test. There are 9 files and 25 test definitions.</p>
+<p>The longer statistical checks live in <code>*.validation.ts</code> files and run with <code>pnpm validate</code> (and with <code>pnpm test</code>, which runs both projects), with a 120-second timeout per test. In the 26 November run, 40 validation tests passed in 9 files.</p>
 <table class="caption-top stack" role="table" data-prose-rows="true">
 <colgroup>
 <col style="width: 50%">
@@ -355,13 +355,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>The physics note also records that the simulated roll period of a flooded barge matches the closed-form value within 1 per cent, and that the elastic catenary was compared with a direct numerical integration of the governing equations for three stiffnesses.</p>
 <h3 id="test-counts">Test counts</h3>
-<p>These are counts of test definitions found by grep, not a run result. I did not run the suite for this report, so I make no pass-rate claim.</p>
+<p>I ran the unit and validation suites (<code>pnpm test</code>) on <code>main</code> at <a href="https://github.com/Exios66/wave-laboratory/tree/3211918">3211918⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> on 26 November 2026: all 972 tests in 106 files passed. I did not run the browser suite, so its row is a count of definitions.</p>
 <table class="caption-top stack" role="table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
 <thead>
 <tr class="header" role="row">
 <th role="columnheader">Suite</th>
@@ -372,22 +367,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd" role="row">
 <td role="cell" data-label="Suite">Unit</td>
-<td role="cell" data-label="Count">481 definitions in <code>src/</code><wbr><code>**/</code><wbr><code>*.</code><wbr><code>test.</code><wbr><code>ts</code></td>
-<td role="cell" data-label="Where">Counted by grep at the 24 October snapshot</td>
+<td role="cell" data-label="Count">932 passed in 97 files</td>
+<td role="cell" data-label="Where"><code>src/</code><wbr><code>**/</code><wbr><code>*.</code><wbr><code>test.</code><wbr><code>ts</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Suite">Validation</td>
-<td role="cell" data-label="Count">25 definitions in 9 files</td>
+<td role="cell" data-label="Count">40 passed in 9 files</td>
 <td role="cell" data-label="Where"><code>src/</code><wbr><code>**/</code><wbr><code>*.</code><wbr><code>validation.</code><wbr><code>ts</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Suite">Browser (Playwright)</td>
-<td role="cell" data-label="Count">27 definitions in 2 files: 22 desktop, 5 mobile</td>
-<td role="cell" data-label="Where"><code>e2e/</code><wbr><code>app.</code><wbr><code>spec.</code><wbr><code>ts</code>, <code>e2e/</code><wbr><code>mobile.</code><wbr><code>spec.</code><wbr><code>ts</code></td>
+<td role="cell" data-label="Count">51 definitions in 5 files</td>
+<td role="cell" data-label="Where"><code>e2e/*.spec.ts</code></td>
 </tr>
 </tbody>
 </table>
-<p>The grep counts <code>it(</code> and <code>test(</code> at the start of a line, so parametrised and template-generated tests are undercounted. The Playwright config defines desktop Chromium at 1440 by 900, a Pixel 7 profile and an iPhone 14 viewport, so each browser test can run several times.</p>
+<p>The Playwright config defines desktop Chromium at 1440 by 900, a Pixel 7 profile and an iPhone 14 viewport, so each browser test can run several times.</p>
 <h2 id="figures">Figures</h2>
 <p>The <code>overview-light</code>, <code>overview-dark</code> and <code>rogue-wave</code> captures below were made for this portfolio and predate the 9–24 October 2026 render and scenery merges. They show the interface at that point, not the current deployed build.</p>
 <div class="quarto-figure quarto-figure-center">
@@ -447,7 +442,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 id="reproducibility">Reproducibility</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> install</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> dev            <span class="co"># http://localhost:5173</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> test           <span class="co"># unit tests</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> test           <span class="co"># unit and validation tests</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> validate       <span class="co"># longer statistical physics validation</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> build <span class="kw">&amp;&amp;</span> <span class="ex">pnpm</span> test:e2e   <span class="co"># browser tests on desktop and phone viewports</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> check          <span class="co"># format, lint, typecheck, unit tests and build</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -479,10 +474,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </main>
 <footer class="site-footer">
+  <p class="footer-links"><a href="https://github.com/Exios66">GitHub</a> <a href="https://www.linkedin.com/in/jackjburleson">LinkedIn</a> <a href="mailto:jackjburleson@proton.me">Email</a></p>
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
 <script src="../../assets/js/site.js?v=83a152c7b0" defer=""></script>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol></svg>
 
 <script>
   // Theme toggle: shown only once this script runs; switches to the opposite of what is currently shown and remembers the choice.

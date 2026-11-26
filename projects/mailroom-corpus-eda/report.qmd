@@ -163,7 +163,7 @@ After the v9.1 change moved the MAUD count to the ground-truth side, the integri
 
 ## Tests
 
-I ran the test suite in a fresh environment, with the latest versions of the dependencies and not the pinned ones. That older run had 200 tests, of which 185 passed, 14 skipped and 1 failed. The current revision declares 594 `def test_` functions in 26 files; that is a count, not a passing run. The 14 skipped tests need the full dataset snapshot, which `run_all.py --phases P0` downloads. The failure is a contract test that reads a taxonomy file from a sibling checkout of another repository, which my environment did not have.
+I re-ran the suite on `main` at `aed8481` on 26 November 2026, with the pinned requirements: 1,114 tests, of which 1,046 passed, 67 skipped and 1 failed. The skips need a sibling checkout of the scoring repository (37), the local dataset snapshot that `run_all.py --phases P0` downloads (15), revision stages built locally (11), the opt-in live Hub check `MAILROOM_LIVE_HUB=1` (3) or recorded run files kept out of the checkout (1). The failure is in the labeling review portal: its save check rejects the test's fixture because the fixture lists a verified model that the target did not run.
 
 ## Limitations
 

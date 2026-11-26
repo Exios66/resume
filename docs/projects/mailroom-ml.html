@@ -90,7 +90,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=b8ba65db09">
+<link rel="stylesheet" href="../styles.css?v=cbf04186ab">
 <meta property="og:title" content="Mailroom-ML — Jack J. Burleson">
 <meta property="og:description" content="A ModernBERT document classifier with calibrated confidence, a routing gate that decides which documents can skip an LLM, and a leak audit that caught a label leak in my own training data.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/mailroom-ml.png">
@@ -212,7 +212,7 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Data lineage.</strong> Every training set is pinned to a revision. A provenance module writes a byte-reproducible manifest with sha256 hashes and no timestamps, so a rebuild on the same inputs gives the same bytes.</li>
 <li><strong>A leak audit.</strong> Early on, the model’s insurance subclass score looked too good. The audit showed that titles fell back to filenames, and 42.8% of filenames contained the subclass name. I removed the fallback and added a build-time check that fails if a filename-shaped title returns.</li>
 <li><strong>ONNX export for CPU serving.</strong> An exported model is checked against the PyTorch one before promotion; the Modal serving app is a fallback. In the historical Apple M2 test with the earlier Run 3 checkpoint, fp32 matched PyTorch to within 4.25e-06 per head and int8 did not. That check is not evidence of M9c export parity.</li>
-<li><strong>A test suite.</strong> The earlier audit counted 485 test functions in 33 files, not a current passing-test total. CI runs ruff and pytest; heavy-dependency tests can skip when torch or Modal is absent.</li>
+<li><strong>A test suite.</strong> CI runs ruff and the core pytest suite on every pull request. Re-run on <code>main</code> on 26 November 2026, 384 tests passed and 55 skipped; the skipped ones need torch, ONNX or Modal, which the core suite does not install.</li>
 </ul>
 <h2 id="earlier-results-m9b">Earlier results: M9b</h2>
 <p>The numbers below come from the earlier M9b run. It trained for four epochs and was scored on a test split of 323 documents (541 windows). The test split was not used for training, for choosing the checkpoint epoch or for fitting calibration. It was used for more than one evaluation, though: I compared runs on it, ran a confidence sweep on it and ran the decode sweep described below on it. The 0.97 cutoff itself is a preset from the project’s config, and the sweep landed on the same value.</p>
@@ -285,6 +285,7 @@ ul.task-list li input[type="checkbox"] {
 
 </main>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"Mailroom-ML","description":"A ModernBERT document classifier with calibrated confidence, a routing gate that decides which documents can skip an LLM, and a leak audit that caught a label leak in my own training data.","url":"https://exios66.github.io/resume/projects/mailroom-ml.html","author":{"@type":"Person","name":"Jack J. Burleson","url":"https://exios66.github.io/resume/"},"isPartOf":{"@type":"WebSite","name":"Jack J. Burleson","url":"https://exios66.github.io/resume/"},"image":"https://exios66.github.io/resume/assets/og/mailroom-ml.png"}</script><footer class="site-footer">
+  <p class="footer-links"><a href="https://github.com/Exios66">GitHub</a> <a href="https://www.linkedin.com/in/jackjburleson">LinkedIn</a> <a href="mailto:jackjburleson@proton.me">Email</a></p>
   <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
 <script src="../assets/js/site.js?v=83a152c7b0" defer=""></script>

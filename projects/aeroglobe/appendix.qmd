@@ -39,7 +39,7 @@ A full global day needs about 10 GB of disk and roughly 6 GB of RAM at build tim
 
 ## Built versus planned
 
-| Built (README at a011ff7; not re-run here) | Planned, not claimed by that README |
+| Built (README at a011ff7) | Planned, not claimed by that README |
 | --- | --- |
 | Globe client with search, filters and flight cards | A published real historical day on the live site |
 | Playback, track replay and trails | Off-main-thread decoding and a transport bar |
@@ -53,7 +53,7 @@ A full global day needs about 10 GB of disk and roughly 6 GB of RAM at build tim
 
 ## Snapshot counts
 
-The 23 October 2026 notes recorded 395 passing tests in 42 files and about 5,800 lines of TypeScript, with a clean lint, type-check and production build. The case study later recounts 282 test declarations in 43 files and 8,090 lines of TypeScript on 30 October 2026. Neither figure is a current passing-test total.
+The 23 October 2026 notes recorded 395 passing tests in 42 files and about 5,800 lines of TypeScript, with a clean lint, type-check and production build. A recount on 30 October 2026 found 282 test declarations in 43 files and 8,090 lines of TypeScript. On 26 November 2026 I ran the suite on `main` at `a011ff7`: 451 tests passed in 54 of 56 files; the other two need a time-zone file from a GitHub release that the run could not download.
 
 ## Reproduce
 

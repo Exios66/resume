@@ -50,9 +50,12 @@ class MapReduceReloadedTests(unittest.TestCase):
         self.assertEqual(len(links), 1)
         self.assertEqual(destination(page, links[0]), (checks.DOCS / PAGE).resolve())
         text = parser.text(cards[0])
-        self.assertIn("In active development", text)
-        self.assertIn("WIP", text)
-        self.assertIn("S3 storage, compression, a VM evaluation and the final report are built", text)
+        # The core shipped (README at 6d93f33: phases 0-4 and 7 done); only stretch work remains.
+        self.assertIn("Core complete", text)
+        self.assertNotIn("WIP", text)
+        self.assertNotIn("In active development", text)
+        self.assertIn("LATE speculation, an eight-experiment VM evaluation and the final report are built", text)
+        self.assertIn("Python workers are planned", text)
 
     def test_group_reuses_an_existing_icon_and_the_sprite_is_unchanged(self):
         _, index = self.read_page("projects/index.html")
@@ -81,7 +84,7 @@ class MapReduceReloadedTests(unittest.TestCase):
         links = [attrs for tag, attrs in parser.children(nav) if tag == "a"]
         self.assertEqual({parser.text(link): destination(page, link) for link in links},
                          {"Case study": page.resolve(), "Code": CODE_URL,
-                          "Technical report": CODE_URL + "/blob/def9c62846e8c560b9be6c72b76f1cf325582059/docs/report.md"})
+                          "Technical report": CODE_URL + "/blob/6d93f33318a4d9195114ed59d7ad1343ce7d2c55/docs/report.md"})
         current = [link for link in links if checks.attr(link, "aria-current") == "page"]
         self.assertEqual(len(current), 1)
         back = self.one(parser, "a", **{"class": "back"})
@@ -91,21 +94,27 @@ class MapReduceReloadedTests(unittest.TestCase):
                          [CODE_URL], "There is no live demo; link only the code")
         self.assertFalse((checks.DOCS / "projects/mapreduce-reloaded/report.html").exists())
 
-    def test_page_keeps_its_work_in_progress_caveat_and_plan(self):
+    def test_page_states_core_complete_status_and_plan(self):
         _, parser = self.read_page()
         kickers = [attrs for element, attrs, _ in parser.elements
                    if element == "span" and "kicker" in checks.classes(attrs)]
         self.assertEqual(len(kickers), 1)
-        self.assertIn("In active development", parser.text(kickers[0]))
+        self.assertIn("Core complete", parser.text(kickers[0]))
         caveat = self.one(parser, "div", **{"class": "caveat"})
-        self.assertIn("Work in progress", parser.text(caveat))
-        self.assertIn("now built", parser.text(caveat))
-        self.assertIn("11 November 2026", parser.text(caveat))
-        self.assertIn("6d93f33", parser.text(caveat))
-        self.assertIn("3.7×", parser.text(caveat))
-        self.assertIn("3a907de", parser.text(caveat))
-        self.assertNotIn("8f0ddb9", parser.text(caveat))
-        self.assertIn("WIP", parser.text(self.one(parser, "div", **{"class": "page"})))
+        self.assertIn("The core is complete", parser.text(caveat))
+        self.assertIn("Python workers", parser.text(caveat))
+        page_text = parser.text(self.one(parser, "div", **{"class": "page"}))
+        self.assertNotIn("WIP", page_text)
+        self.assertNotIn("Work in progress", page_text)
+        # Every evaluation number is the five-run rerun at 8f0ddb9 (E0 at 3a907de),
+        # not the superseded three-run snapshot of 11 November.
+        notes = (checks.DOCS / PAGE).read_text(encoding="utf-8")
+        self.assertIn("<code>8f0ddb9</code>", notes)
+        self.assertIn("<code>3a907de</code>", notes)
+        self.assertNotIn("3.8×", page_text)
+        stale = [checks.attr(attrs, "href") for tag, attrs, _ in parser.elements
+                 if tag == "a" and "def9c62846e8c560b9be6c72b76f1cf325582059" in (checks.attr(attrs, "href") or "")]
+        self.assertEqual(stale, [], "Sources link the rerun on main, not the 11 November revision")
         self.one(parser, "h2", id="what-is-planned")
         self.assertFalse(any(tag == "img" for tag, _, _ in parser.elements), "No unverified screenshot")
 
@@ -113,7 +122,7 @@ class MapReduceReloadedTests(unittest.TestCase):
         _, parser = self.read_page()
         values = [parser.text(attrs) for _, attrs, _ in parser.elements
                   if "stat-value" in checks.classes(attrs)]
-        self.assertEqual(values, ["24", "4", "3.8×"])
+        self.assertEqual(values, ["24", "4", "3.7×"])
 
     def test_diagram_publishes_the_partial_without_geometry_loss(self):
         _, published = self.read_page()

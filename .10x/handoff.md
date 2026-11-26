@@ -2,6 +2,10 @@
 
 Read `AGENTS.md`, `.github/BUILDING.md`, `scripts/hillclimb/README.md`, this file, `.10x/status.md`, and the live issue before editing. Run `bash scripts/setup-agent.sh` once per worktree and source `.autoresearch-tools/env.sh` in every render/audit shell. Doctor must end with `All tools present.`
 
+## Current state (2026-11-26)
+
+Branch `claude/magical-babbage-0xtnx7`, runs 90–96 (segments 18–19), pushed, no PR yet. Content-truth pass: each project page was checked against its repository and stale snapshot/grep counts were replaced by test runs made on 26 November (see `.10x/status.md`). MapReduce-Reloaded is now presented as core complete with the `8f0ddb9` rerun; the audit commit `ca18fe4` moved `inspectMapReduceEvidence` to those values. Hedging walls were cut on AeroGlobe, the projects index, Neuron Atlas (no internal issue numbers) and Degen. Upstream issues for the owner: one failing Corpus EDA test, one ruff finding in mailroom-ml. MapReduce case study is 19,697 / 20,000 gzip, so an E7 chart needs a weight trade.
+
 ## Current state (2026-11-25)
 
 `main` is merge `b1d38f5`. #160, #161, #163, #164, #165 and #144 are merged. There is no open pull request. Recorded `experience_gaps` is 5 and `polish_defects` is 0. MapReduce is 19,711 / 20,000 gzip bytes after the phone chart. The projects index is 24,305 / 26,000.

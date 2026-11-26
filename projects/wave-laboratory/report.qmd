@@ -100,7 +100,7 @@ There are no benchmark numbers against external data. The evidence is the valida
 
 ### Validation suite
 
-The longer statistical checks live in `*.validation.ts` files and run with `pnpm validate`, with a 120-second timeout per test. There are 9 files and 25 test definitions.
+The longer statistical checks live in `*.validation.ts` files and run with `pnpm validate` (and with `pnpm test`, which runs both projects), with a 120-second timeout per test. In the 26 November run, 40 validation tests passed in 9 files.
 
 | File | What it checks |
 | --- | --- |
@@ -117,15 +117,15 @@ The physics note also records that the simulated roll period of a flooded barge 
 
 ### Test counts
 
-These are counts of test definitions found by grep, not a run result. I did not run the suite for this report, so I make no pass-rate claim.
+I ran the unit and validation suites (`pnpm test`) on `main` at [3211918](https://github.com/Exios66/wave-laboratory/tree/3211918) on 26 November 2026: all 972 tests in 106 files passed. I did not run the browser suite, so its row is a count of definitions.
 
 | Suite | Count | Where |
 | --- | --- | --- |
-| Unit | 481 definitions in `src/**/*.test.ts` | Counted by grep at the 24 October snapshot |
-| Validation | 25 definitions in 9 files | `src/**/*.validation.ts` |
-| Browser (Playwright) | 27 definitions in 2 files: 22 desktop, 5 mobile | `e2e/app.spec.ts`, `e2e/mobile.spec.ts` |
+| Unit | 932 passed in 97 files | `src/**/*.test.ts` |
+| Validation | 40 passed in 9 files | `src/**/*.validation.ts` |
+| Browser (Playwright) | 51 definitions in 5 files | `e2e/*.spec.ts` |
 
-The grep counts `it(` and `test(` at the start of a line, so parametrised and template-generated tests are undercounted. The Playwright config defines desktop Chromium at 1440 by 900, a Pixel 7 profile and an iPhone 14 viewport, so each browser test can run several times.
+The Playwright config defines desktop Chromium at 1440 by 900, a Pixel 7 profile and an iPhone 14 viewport, so each browser test can run several times.
 
 ## Figures
 
@@ -154,7 +154,7 @@ The `overview-light`, `overview-dark` and `rogue-wave` captures below were made 
 ```sh
 pnpm install
 pnpm dev            # http://localhost:5173
-pnpm test           # unit tests
+pnpm test           # unit and validation tests
 pnpm validate       # longer statistical physics validation
 pnpm build && pnpm test:e2e   # browser tests on desktop and phone viewports
 pnpm check          # format, lint, typecheck, unit tests and build
