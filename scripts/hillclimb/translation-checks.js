@@ -16,6 +16,14 @@
     }
     return null;
   };
+  // Visually hidden for screen readers only (such as a stacked table's header): a clipping box of 1px or less.
+  const srOnly = (el) => {
+    for (let p = el; p && p !== document.body; p = p.parentElement) {
+      const r = p.getBoundingClientRect();
+      if (/^(hidden|clip)$/.test(getComputedStyle(p).overflowX) && (r.width <= 1 || r.height <= 1)) return true;
+    }
+    return false;
+  };
   const textBox = (el) => { const range = document.createRange(); range.selectNodeContents(el); return range; };
   const overlaps = (a, b, slack = 1) => a.right > b.left + slack && a.left < b.right - slack && a.bottom > b.top + slack && a.top < b.bottom - slack;
   const width = () => document.documentElement.clientWidth;
@@ -30,7 +38,7 @@
   function escape() {
     const vw = width();
     const out = [...document.body.querySelectorAll('*')].filter((el) => {
-      if (el.closest('svg, .visually-hidden, .sr-only, .skip-link, [hidden]') || !visible(el) || scroller(el)) return false;
+      if (el.closest('svg, .visually-hidden, .sr-only, .skip-link, [hidden]') || !visible(el) || scroller(el) || srOnly(el)) return false;
       const r = el.getBoundingClientRect();
       return r.right > vw + 1 || r.left < -1;
     });
@@ -52,7 +60,7 @@
   /** clipped: a control's or label's text is wider than its box. */
   function clipped() {
     const labels = '.nav-link, .btn, .chip, .code-copy-button, .site-title, .pager-name, .project-jump a, .footer-links a, .kicker, h1, h2';
-    return [...document.querySelectorAll(labels)].filter((el) => visible(el) && !scroller(el) && textCut(el)).map((el) =>
+    return [...document.querySelectorAll(labels)].filter((el) => visible(el) && !scroller(el) && !srOnly(el) && textCut(el)).map((el) =>
       `clipped: ${name(el)} text ${el.scrollWidth}px in a ${el.clientWidth}px box`);
   }
 
