@@ -123,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=03576af822">
+<link rel="stylesheet" href="../../styles.css?v=821e2e5949">
 <meta property="og:title" content="AeroGlobe: appendix — Jack J. Burleson">
 <meta property="og:description" content="Supporting notes for the AeroGlobe case study: pipeline stages, data sources and licences, snapshot counts and the built-versus-planned checklist.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/aeroglobe.png">
@@ -247,7 +247,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </colgroup>
 <thead>
 <tr class="header">
-<th>Built (README at a011ff7; not re-run here)</th>
+<th>Built (README at a011ff7)</th>
 <th>Planned, not claimed by that README</th>
 </tr>
 </thead>
@@ -291,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <h2 id="snapshot-counts">Snapshot counts</h2>
-<p>The 23 October 2026 notes recorded 395 passing tests in 42 files and about 5,800 lines of TypeScript, with a clean lint, type-check and production build. The case study later recounts 282 test declarations in 43 files and 8,090 lines of TypeScript on 30 October 2026. Neither figure is a current passing-test total.</p>
+<p>The 23 October 2026 notes recorded 395 passing tests in 42 files and about 5,800 lines of TypeScript, with a clean lint, type-check and production build. A recount on 30 October 2026 found 282 test declarations in 43 files and 8,090 lines of TypeScript. On 26 November 2026 I ran the suite on <code>main</code> at <code>a011ff7</code>: 451 tests passed in 54 of 56 files; the other two need a time-zone file from a GitHub release that the run could not download.</p>
 <h2 id="reproduce">Reproduce</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">DATA_SOURCE</span><span class="op">=</span>fixtures <span class="ex">npm</span> run build     <span class="co"># offline, deterministic sample data</span></span>

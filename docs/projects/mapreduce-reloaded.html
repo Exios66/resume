@@ -90,7 +90,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../styles.css?v=03576af822">
+<link rel="stylesheet" href="../styles.css?v=821e2e5949">
 <meta property="og:title" content="MapReduce-Reloaded — Jack J. Burleson">
 <meta property="og:description" content="A from-scratch MapReduce rebuild: Go cluster and Python reference, paper mapping, S3 storage, compression, fault injection and a small VM evaluation.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/mapreduce-reloaded.png">
@@ -197,7 +197,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Its first runs failed on seed 7. The output held an extra <code>_temporary</code> directory: a reduce attempt that had already lost, to a backup copy or because its worker was declared dead, kept running and recreated the directory after the job had cleaned it up. Now the job creates that directory when it starts, and attempts never do. An attempt that runs after the job has finished fails and leaves nothing behind.</p>
 <p>The original test runs in one process, so a “dead” worker behaves like a machine cut off from the network, not one that lost power. The repository now also has a seeded <code>make chaos</code> driver for container kills, pauses and coordinator crashes in Compose. Dropped-packet fault injection remains out of scope.</p>
 <h2 id="evaluation-at-small-scale">Evaluation at small scale</h2>
-<p>The <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/6d93f33318a4d9195114ed59d7ad1343ce7d2c55/docs/evaluation.md">evaluation⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> compares the paper’s mechanisms, not its absolute throughput: four one-CPU workers share one 4-vCPU, 8 GB VM and one disk, versus roughly 1,800 machines in the paper. Every number is the median of five runs on 1 GiB inputs, with each experiment’s settings taking turns within every repeat so drift on the VM falls on all of them alike.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>The <a href="https://github.com/Exios66/MapReduce-Reloaded/blob/6d93f33318a4d9195114ed59d7ad1343ce7d2c55/docs/evaluation.md">evaluation⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> compares the paper’s mechanisms, not its absolute throughput: four one-CPU workers share one 4-vCPU, 8 GB VM and one disk, versus roughly 1,800 machines in the paper. Every number is the median of five runs on 1 GiB inputs, with each experiment’s settings taking turns within every repeat so drift on the VM falls on all of them alike. The one exception is the no-straggler backup check, which reports a mean difference and its interval over ten paired runs.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 33%">

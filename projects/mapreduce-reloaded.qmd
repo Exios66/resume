@@ -101,7 +101,7 @@ The original test runs in one process, so a "dead" worker behaves like a machine
 
 ## Evaluation at small scale
 
-The [evaluation](https://github.com/Exios66/MapReduce-Reloaded/blob/6d93f33318a4d9195114ed59d7ad1343ce7d2c55/docs/evaluation.md) compares the paper's mechanisms, not its absolute throughput: four one-CPU workers share one 4-vCPU, 8 GB VM and one disk, versus roughly 1,800 machines in the paper. Every number is the median of five runs on 1 GiB inputs, with each experiment's settings taking turns within every repeat so drift on the VM falls on all of them alike.[^mr-bench]
+The [evaluation](https://github.com/Exios66/MapReduce-Reloaded/blob/6d93f33318a4d9195114ed59d7ad1343ce7d2c55/docs/evaluation.md) compares the paper's mechanisms, not its absolute throughput: four one-CPU workers share one 4-vCPU, 8 GB VM and one disk, versus roughly 1,800 machines in the paper. Every number is the median of five runs on 1 GiB inputs, with each experiment's settings taking turns within every repeat so drift on the VM falls on all of them alike. The one exception is the no-straggler backup check, which reports a mean difference and its interval over ten paired runs.[^mr-bench]
 
 | Experiment | Result | Limit |
 | --- | --- | --- |

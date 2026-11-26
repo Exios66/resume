@@ -93,7 +93,7 @@ There are no performance benchmarks. The evidence is the test suite, the CI run 
 
 ### Test counts
 
-These are collected, not pass rates. I did not run the suite for this report.
+I ran pytest and the Node scripts on `main` at `80399bf` on 26 November 2026; every test passed. The browser smoke test was not run.
 
 | Suite | Count | Source |
 | --- | --- | --- |

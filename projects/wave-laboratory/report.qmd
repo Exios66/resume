@@ -100,7 +100,7 @@ There are no benchmark numbers against external data. The evidence is the valida
 
 ### Validation suite
 
-The longer statistical checks live in `*.validation.ts` files and run with `pnpm validate`, with a 120-second timeout per test. There are 9 files and 25 test definitions.
+The longer statistical checks live in `*.validation.ts` files and run with `pnpm validate` (and with `pnpm test`, which runs both projects), with a 120-second timeout per test. In the 26 November run, 40 validation tests passed in 9 files.
 
 | File | What it checks |
 | --- | --- |
@@ -154,7 +154,7 @@ The `overview-light`, `overview-dark` and `rogue-wave` captures below were made 
 ```sh
 pnpm install
 pnpm dev            # http://localhost:5173
-pnpm test           # unit tests
+pnpm test           # unit and validation tests
 pnpm validate       # longer statistical physics validation
 pnpm build && pnpm test:e2e   # browser tests on desktop and phone viewports
 pnpm check          # format, lint, typecheck, unit tests and build

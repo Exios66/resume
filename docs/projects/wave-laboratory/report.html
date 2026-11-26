@@ -123,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=03576af822">
+<link rel="stylesheet" href="../../styles.css?v=821e2e5949">
 <meta property="og:title" content="Wave Laboratory: technical report — Jack J. Burleson">
 <meta property="og:description" content="Wave spectra and ship-dynamics models, architecture, validation suite, test counts, limitations and plan-versus-shipped notes for Wave Laboratory.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/wave-laboratory.png">
@@ -306,7 +306,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 id="results">Results</h2>
 <p>There are no benchmark numbers against external data. The evidence is the validation suite below.</p>
 <h3 id="validation-suite">Validation suite</h3>
-<p>The longer statistical checks live in <code>*.validation.ts</code> files and run with <code>pnpm validate</code>, with a 120-second timeout per test. There are 9 files and 25 test definitions.</p>
+<p>The longer statistical checks live in <code>*.validation.ts</code> files and run with <code>pnpm validate</code> (and with <code>pnpm test</code>, which runs both projects), with a 120-second timeout per test. In the 26 November run, 40 validation tests passed in 9 files.</p>
 <table class="caption-top stack" role="table" data-prose-rows="true">
 <colgroup>
 <col style="width: 50%">
@@ -442,7 +442,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 id="reproducibility">Reproducibility</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> install</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> dev            <span class="co"># http://localhost:5173</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> test           <span class="co"># unit tests</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> test           <span class="co"># unit and validation tests</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> validate       <span class="co"># longer statistical physics validation</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> build <span class="kw">&amp;&amp;</span> <span class="ex">pnpm</span> test:e2e   <span class="co"># browser tests on desktop and phone viewports</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">pnpm</span> check          <span class="co"># format, lint, typecheck, unit tests and build</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
