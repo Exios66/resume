@@ -283,8 +283,9 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 .page > h1 + p, .page > .kicker + p { margin-top: 0; }
 .kicker { display: block; margin-bottom: 14px; color: var(--accent); font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
 .back { display: inline-flex; align-items: center; gap: .4em; min-height: 24px; margin-bottom: 14px; font-size: .88rem; font-weight: 600; }
-.lede { max-width: 56ch; margin: 18px auto 0; }
-.lede p { margin: 0; color: var(--muted); font-size: 1.05rem; }
+.lede { max-width: 54ch; margin: 22px auto 0; }
+.lede p { margin: 0; color: color-mix(in srgb, var(--ink) 78%, var(--muted)); font-size: 1.12rem; line-height: 1.65; text-wrap: pretty; }
+@media (max-width: 560px) { .lede p { font-size: 1.02rem; line-height: 1.6; } }
 .more { display: inline-flex; align-items: center; font-weight: 600; }
 /* Links inside running text must not rely on color alone */
 .page :is(p, li) a:not(.btn, .chip, .back, .more, .project-nav a, .explore-card) { text-decoration: underline; text-decoration-thickness: 1px; }
@@ -804,17 +805,9 @@ div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
     @keyframes read-grow { to { transform: scaleX(1); } }
   }
 
-  /* Hero constellation: a slow vertical drift so the motif feels alive, not stuck. */
-  @keyframes hero-constellation-drift {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(0, -8px, 0); }
-  }
   @keyframes hero-glow-breathe {
     0%, 100% { opacity: .55; transform: scale(1); }
     50% { opacity: .85; transform: scale(1.04); }
-  }
-  .hero::before {
-    animation: hero-constellation-drift var(--motion-drift) ease-in-out infinite;
   }
   .hero::after {
     animation: hero-glow-breathe var(--motion-ambient) ease-in-out infinite;
@@ -892,19 +885,9 @@ body::before {
   }
 }
 
-/* Hero: a faint neural constellation framing the name, drawn in the brand gradient. */
+/* Hero: one soft glow behind the name; no clip-art framing. */
 .hero { position: relative; isolation: isolate; }
-.hero::before, .hero::after { content: ""; position: absolute; z-index: -1; pointer-events: none; }
-/* 110px bands (92px at 960px and below) anchored at the card's padding edge stay clear of the widest
-   hero row, the contact chips; below 768px the gutter is too narrow, so the motif is dropped
-   rather than drawn behind text. */
-.hero::before {
-  inset: -40px -64px -10px;
-  background: linear-gradient(120deg, var(--accent-2), var(--accent));
-  opacity: .34;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 190 310'%3E%3Cg stroke='black' stroke-width='1.1' fill='black'%3E%3Cline x1='18' y1='40' x2='92' y2='18'/%3E%3Cline x1='92' y1='18' x2='150' y2='86'/%3E%3Cline x1='18' y1='40' x2='54' y2='134'/%3E%3Cline x1='54' y1='134' x2='150' y2='86'/%3E%3Cline x1='54' y1='134' x2='128' y2='176'/%3E%3Cline x1='150' y1='86' x2='128' y2='176'/%3E%3Cline x1='128' y1='176' x2='158' y2='250'/%3E%3Cline x1='54' y1='134' x2='30' y2='236'/%3E%3Cline x1='30' y1='236' x2='104' y2='292'/%3E%3Cline x1='104' y1='292' x2='158' y2='250'/%3E%3Cline x1='128' y1='176' x2='104' y2='292'/%3E%3Cline x1='150' y1='86' x2='170' y2='150'/%3E%3Cline x1='158' y1='250' x2='170' y2='150'/%3E%3Cline x1='128' y1='176' x2='170' y2='150'/%3E%3Ccircle cx='18' cy='40' r='2.8'/%3E%3Ccircle cx='92' cy='18' r='2.8'/%3E%3Ccircle cx='150' cy='86' r='4.5'/%3E%3Ccircle cx='54' cy='134' r='2.8'/%3E%3Ccircle cx='128' cy='176' r='4.5'/%3E%3Ccircle cx='30' cy='236' r='2.8'/%3E%3Ccircle cx='104' cy='292' r='2.8'/%3E%3Ccircle cx='158' cy='250' r='2.8'/%3E%3Ccircle cx='170' cy='150' r='2.8'/%3E%3Ccircle cx='150' cy='86' r='10' fill='none'/%3E%3Ccircle cx='128' cy='176' r='10' fill='none'/%3E%3C/g%3E%3C/svg%3E") left 0 center / 110px auto no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 190 310'%3E%3Cg stroke='black' stroke-width='1.1' fill='black'%3E%3Cline x1='172' y1='32' x2='98' y2='30'/%3E%3Cline x1='98' y1='30' x2='40' y2='78'/%3E%3Cline x1='172' y1='32' x2='136' y2='146'/%3E%3Cline x1='136' y1='146' x2='40' y2='78'/%3E%3Cline x1='136' y1='146' x2='62' y2='168'/%3E%3Cline x1='40' y1='78' x2='62' y2='168'/%3E%3Cline x1='62' y1='168' x2='32' y2='262'/%3E%3Cline x1='136' y1='146' x2='160' y2='248'/%3E%3Cline x1='160' y1='248' x2='86' y2='284'/%3E%3Cline x1='86' y1='284' x2='32' y2='262'/%3E%3Cline x1='62' y1='168' x2='86' y2='284'/%3E%3Cline x1='40' y1='78' x2='20' y2='142'/%3E%3Cline x1='32' y1='262' x2='20' y2='142'/%3E%3Cline x1='62' y1='168' x2='20' y2='142'/%3E%3Ccircle cx='172' cy='32' r='2.8'/%3E%3Ccircle cx='98' cy='30' r='2.8'/%3E%3Ccircle cx='40' cy='78' r='4.5'/%3E%3Ccircle cx='136' cy='146' r='2.8'/%3E%3Ccircle cx='62' cy='168' r='4.5'/%3E%3Ccircle cx='160' cy='248' r='2.8'/%3E%3Ccircle cx='86' cy='284' r='2.8'/%3E%3Ccircle cx='32' cy='262' r='2.8'/%3E%3Ccircle cx='20' cy='142' r='2.8'/%3E%3Ccircle cx='40' cy='78' r='10' fill='none'/%3E%3Ccircle cx='62' cy='168' r='10' fill='none'/%3E%3C/g%3E%3C/svg%3E") right 0 center / 110px auto no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 190 310'%3E%3Cg stroke='black' stroke-width='1.1' fill='black'%3E%3Cline x1='18' y1='40' x2='92' y2='18'/%3E%3Cline x1='92' y1='18' x2='150' y2='86'/%3E%3Cline x1='18' y1='40' x2='54' y2='134'/%3E%3Cline x1='54' y1='134' x2='150' y2='86'/%3E%3Cline x1='54' y1='134' x2='128' y2='176'/%3E%3Cline x1='150' y1='86' x2='128' y2='176'/%3E%3Cline x1='128' y1='176' x2='158' y2='250'/%3E%3Cline x1='54' y1='134' x2='30' y2='236'/%3E%3Cline x1='30' y1='236' x2='104' y2='292'/%3E%3Cline x1='104' y1='292' x2='158' y2='250'/%3E%3Cline x1='128' y1='176' x2='104' y2='292'/%3E%3Cline x1='150' y1='86' x2='170' y2='150'/%3E%3Cline x1='158' y1='250' x2='170' y2='150'/%3E%3Cline x1='128' y1='176' x2='170' y2='150'/%3E%3Ccircle cx='18' cy='40' r='2.8'/%3E%3Ccircle cx='92' cy='18' r='2.8'/%3E%3Ccircle cx='150' cy='86' r='4.5'/%3E%3Ccircle cx='54' cy='134' r='2.8'/%3E%3Ccircle cx='128' cy='176' r='4.5'/%3E%3Ccircle cx='30' cy='236' r='2.8'/%3E%3Ccircle cx='104' cy='292' r='2.8'/%3E%3Ccircle cx='158' cy='250' r='2.8'/%3E%3Ccircle cx='170' cy='150' r='2.8'/%3E%3Ccircle cx='150' cy='86' r='10' fill='none'/%3E%3Ccircle cx='128' cy='176' r='10' fill='none'/%3E%3C/g%3E%3C/svg%3E") left 0 center / 110px auto no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 190 310'%3E%3Cg stroke='black' stroke-width='1.1' fill='black'%3E%3Cline x1='172' y1='32' x2='98' y2='30'/%3E%3Cline x1='98' y1='30' x2='40' y2='78'/%3E%3Cline x1='172' y1='32' x2='136' y2='146'/%3E%3Cline x1='136' y1='146' x2='40' y2='78'/%3E%3Cline x1='136' y1='146' x2='62' y2='168'/%3E%3Cline x1='40' y1='78' x2='62' y2='168'/%3E%3Cline x1='62' y1='168' x2='32' y2='262'/%3E%3Cline x1='136' y1='146' x2='160' y2='248'/%3E%3Cline x1='160' y1='248' x2='86' y2='284'/%3E%3Cline x1='86' y1='284' x2='32' y2='262'/%3E%3Cline x1='62' y1='168' x2='86' y2='284'/%3E%3Cline x1='40' y1='78' x2='20' y2='142'/%3E%3Cline x1='32' y1='262' x2='20' y2='142'/%3E%3Cline x1='62' y1='168' x2='20' y2='142'/%3E%3Ccircle cx='172' cy='32' r='2.8'/%3E%3Ccircle cx='98' cy='30' r='2.8'/%3E%3Ccircle cx='40' cy='78' r='4.5'/%3E%3Ccircle cx='136' cy='146' r='2.8'/%3E%3Ccircle cx='62' cy='168' r='4.5'/%3E%3Ccircle cx='160' cy='248' r='2.8'/%3E%3Ccircle cx='86' cy='284' r='2.8'/%3E%3Ccircle cx='32' cy='262' r='2.8'/%3E%3Ccircle cx='20' cy='142' r='2.8'/%3E%3Ccircle cx='40' cy='78' r='10' fill='none'/%3E%3Ccircle cx='62' cy='168' r='10' fill='none'/%3E%3C/g%3E%3C/svg%3E") right 0 center / 110px auto no-repeat;
-}
+.hero::after { content: ""; position: absolute; z-index: -1; pointer-events: none; }
 .hero::after {
   inset: -62px 8% 30%;
   background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 12%, transparent), transparent);
@@ -1014,12 +997,6 @@ h2:not(.group-title)::before { position: absolute; left: .1em; top: .35em; margi
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
 }
 
-@media (max-width: 960px) {
-  .hero::before { -webkit-mask-size: 92px auto, 92px auto; mask-size: 92px auto, 92px auto; }
-}
-@media (max-width: 767px) {
-  .hero::before { display: none; }
-}
 @media (max-width: 720px) {
   .page { padding-top: 40px; }
   .page::before { border-radius: 0; height: 4px; }
