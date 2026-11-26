@@ -38,10 +38,10 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-95-degen-stats-375-dark.png`
-- `.hillclimb-shots/run-95-index-top-1280-dark.png`
-- `.hillclimb-shots/run-95-index-top-1280-light.png`
-- `.hillclimb-shots/run-95-index-top-375-light.png`
+- `.autoresearch/screenshots/run-95-degen-stats-375-dark.png`
+- `.autoresearch/screenshots/run-95-index-top-1280-dark.png`
+- `.autoresearch/screenshots/run-95-index-top-1280-light.png`
+- `.autoresearch/screenshots/run-95-index-top-375-light.png`
 
 Reviewer notes: Opened run-95 shots. Projects index 1280 light/dark and 375 light: the three-sentence defensive snapshot disclaimer is now one line (checked against each repository on 26 Nov 2026; WIP tag meaning), category jump links unchanged. Degen 375 dark: stat 419 + 18 with label 'all passing when re-run on 26 November 2026' wraps cleanly. Degen report 1280 light: test table lists 419 passed, 18 Node scripts passed (13 smoke, 5 regression), browser smoke test marked not run; the stale '12 scripts' row and the leftover '7 of 12 superseded' edit note are gone. Sources: own pytest (419 passed) and node runs (18/18 + import check) on degen-llms 80399bf. Not checked: browser smoke test, other engines, devices.
 

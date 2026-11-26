@@ -37,11 +37,11 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-94-aeroglobe-built-1280-light.png`
-- `.hillclimb-shots/run-94-aeroglobe-top-1280-dark.png`
-- `.hillclimb-shots/run-94-aeroglobe-top-1280-light.png`
-- `.hillclimb-shots/run-94-aeroglobe-top-375-dark.png`
-- `.hillclimb-shots/run-94-aeroglobe-top-375-light.png`
+- `.autoresearch/screenshots/run-94-aeroglobe-built-1280-light.png`
+- `.autoresearch/screenshots/run-94-aeroglobe-top-1280-dark.png`
+- `.autoresearch/screenshots/run-94-aeroglobe-top-1280-light.png`
+- `.autoresearch/screenshots/run-94-aeroglobe-top-375-dark.png`
+- `.autoresearch/screenshots/run-94-aeroglobe-top-375-light.png`
 
 Reviewer notes: Opened run-94 shots (top 375/1280 light+dark, built 1280 light). Intro is two sentences instead of a paragraph of snapshot dates; caveat is one short status naming the 8 Nov deploy, labeled sample day and no real historical day, with one source link; stats 451 tests / 4 stages / 8,091 TS lines read cleanly and wrap on phone. Built list now includes route search, history panel, time-zone overlay, logbook (verified on the live site: Timeline, Time zones, Logbook, Search flights controls present on 26 Nov) plus icon LOD and the honest 54-of-56-files test note. Sources: own vitest run on aeroglobe a011ff7 (451 passed, 2 files need a release-hosted tz file, HTTP 401), gh-pages e2efcb1 deploy 2026-11-08, git ls-tree line count. Not checked: other engines, real devices.
 

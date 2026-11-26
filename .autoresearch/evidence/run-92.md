@@ -56,14 +56,14 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-92-index-card-1280-light.png`
-- `.hillclimb-shots/run-92-mapreduce-backups-1280-dark.png`
-- `.hillclimb-shots/run-92-mapreduce-eval-1280-light.png`
-- `.hillclimb-shots/run-92-mapreduce-eval-375-dark.png`
-- `.hillclimb-shots/run-92-mapreduce-top-1280-dark.png`
-- `.hillclimb-shots/run-92-mapreduce-top-1280-light.png`
-- `.hillclimb-shots/run-92-mapreduce-top-375-dark.png`
-- `.hillclimb-shots/run-92-mapreduce-top-375-light.png`
+- `.autoresearch/screenshots/run-92-index-card-1280-light.png`
+- `.autoresearch/screenshots/run-92-mapreduce-backups-1280-dark.png`
+- `.autoresearch/screenshots/run-92-mapreduce-eval-1280-light.png`
+- `.autoresearch/screenshots/run-92-mapreduce-eval-375-dark.png`
+- `.autoresearch/screenshots/run-92-mapreduce-top-1280-dark.png`
+- `.autoresearch/screenshots/run-92-mapreduce-top-1280-light.png`
+- `.autoresearch/screenshots/run-92-mapreduce-top-375-dark.png`
+- `.autoresearch/screenshots/run-92-mapreduce-top-375-light.png`
 
 Reviewer notes: Opened all 8 run-92 shots. Top 375/1280 light+dark: kicker reads CORE COMPLETE, WIP tag gone, Status box is three lines of plain status with no commit hashes, stats 24/4/3.7x with short labels. Eval 1280 light: five-row summary table incl. E7 LATE row, scaling chart 3.7/3.1/2x with ideal 4x line. 375 dark: failure-cost chart now seconds (7.9/12.8/26.2/1.2 s) fits phone width, readout and table legible. Backups 1280 dark: 17.9 vs 11.36 s bars, five runs / took turns / one shared VM text, interval prose. Index card 1280 light: Core complete kicker, no WIP tag, body names LATE and eight-experiment evaluation. All values cross-checked against bench/README.md and docs/report.md on MapReduce-Reloaded main 6d93f33 (system at 8f0ddb9, E0 at 3a907de). Not checked: Firefox/WebKit visuals beyond the targeted suite cases, real devices, screen readers.
 

@@ -36,10 +36,10 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-99-about-1280-dark.png`
-- `.hillclimb-shots/run-99-about-1280-light.png`
-- `.hillclimb-shots/run-99-about-375-dark.png`
-- `.hillclimb-shots/run-99-about-375-light.png`
+- `.autoresearch/screenshots/run-99-about-1280-dark.png`
+- `.autoresearch/screenshots/run-99-about-1280-light.png`
+- `.autoresearch/screenshots/run-99-about-375-dark.png`
+- `.autoresearch/screenshots/run-99-about-375-light.png`
 
 Reviewer notes: Opened run-99 About shots at 1280 light and 375 dark (1280 dark and 375 light also captured). The résumé button now sits 28px below the Research Training list instead of touching it, matching the section rhythm; the button and the list are otherwise unchanged; the card bottom padding still frames it. Not checked: real devices.
 

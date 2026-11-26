@@ -41,10 +41,10 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-96-eda-report-1280-dark.png`
-- `.hillclimb-shots/run-96-eda-tests-375-light.png`
-- `.hillclimb-shots/run-96-ml-tests-1280-light.png`
-- `.hillclimb-shots/run-96-wave-appendix-375-dark.png`
+- `.autoresearch/screenshots/run-96-eda-report-1280-dark.png`
+- `.autoresearch/screenshots/run-96-eda-tests-375-light.png`
+- `.autoresearch/screenshots/run-96-ml-tests-1280-light.png`
+- `.autoresearch/screenshots/run-96-wave-appendix-375-dark.png`
 
 Reviewer notes: Opened run-96 shots. Corpus EDA case study 375 light: Tests bullet states 1,114 tests and the 26 Nov result (1,046 passed, 67 skipped, 1 failed) with a link to the report section; no more 'counted, not run'. EDA report 1280 dark: Tests section replaces the old unpinned 200-test run with the pinned re-run and skip/failure reasons (36 sibling repo, 15 dataset snapshot; review-portal fixture failure). Wave appendix 375 dark: stacked table now Suite/Result with 40 and 932 passed and browser tests '51 defined; not run here'; stale 'Count at the snapshot' header gone. Mailroom-ML 1280 light: test bullet shows 384 passed / 55 skipped core suite. Sources: own runs (Mailroom-Corpus-EDA aed8481 pytest junit; mailroom-ml 01c2272 pytest -m 'not fullcorpus'; wave-laboratory 3211918 vitest). test_appendices pin updated on purpose (25 in 9 files -> 40 passed in 9 files). Not checked: other engines, devices.
 

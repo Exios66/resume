@@ -40,13 +40,13 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-93-mrl-report-1280-light.png`
-- `.hillclimb-shots/run-93-mrl-stats-1280-dark.png`
-- `.hillclimb-shots/run-93-mrl-stats-375-dark.png`
-- `.hillclimb-shots/run-93-neuron-limits-1280-dark.png`
-- `.hillclimb-shots/run-93-wave-report-375-light.png`
-- `.hillclimb-shots/run-93-wave-stats-1280-light.png`
-- `.hillclimb-shots/run-93-wave-stats-375-light.png`
+- `.autoresearch/screenshots/run-93-mrl-report-1280-light.png`
+- `.autoresearch/screenshots/run-93-mrl-stats-1280-dark.png`
+- `.autoresearch/screenshots/run-93-mrl-stats-375-dark.png`
+- `.autoresearch/screenshots/run-93-neuron-limits-1280-dark.png`
+- `.autoresearch/screenshots/run-93-wave-report-375-light.png`
+- `.autoresearch/screenshots/run-93-wave-stats-1280-light.png`
+- `.autoresearch/screenshots/run-93-wave-stats-375-light.png`
 
 Reviewer notes: Opened run-93 shots. Wave stats 375/1280 light: third stat reads 972 tests passing on main on 26 Nov (932 unit, 40 validation); paragraph names 11 hulls, says live demo predates clouds/sun shafts/hull-water contact, keeps Stokes/cnoidal/Boussinesq as planned. Wave report 375: test table is run results (932/40) plus 51 Playwright definitions labelled as definitions. Mailroom Reloaded stats 375/1280 dark: 1,844 stat label wraps cleanly. Report 1280 light: new 2026-11-26 re-run table above the historical 2026-10-11 table. Neuron Atlas 1280 dark: provenance paragraph no longer names internal issue #89, keeps branch link, says only later change is one browser test. Sources: own runs of vitest (wave-laboratory 3211918), uv run pytest + ruff + node --test (mailroom-reloaded 8c35413), git diff a580008..7d15c18 (LLM_Viz). Not checked: Wave Lab Playwright suite, mailroom-reloaded live/docker tests, other engines, real devices.
 

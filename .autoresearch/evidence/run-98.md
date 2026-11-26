@@ -36,10 +36,10 @@ All checks passed.
 ```
 
 ## Visual evidence
-- `.hillclimb-shots/run-98-home-1280-dark.png`
-- `.hillclimb-shots/run-98-home-1280-light.png`
-- `.hillclimb-shots/run-98-home-375-dark.png`
-- `.hillclimb-shots/run-98-home-375-light.png`
+- `.autoresearch/screenshots/run-98-home-1280-dark.png`
+- `.autoresearch/screenshots/run-98-home-1280-light.png`
+- `.autoresearch/screenshots/run-98-home-375-dark.png`
+- `.autoresearch/screenshots/run-98-home-375-light.png`
 
 Reviewer notes: Opened all four run-98 shots. 1280 light/dark: the wireframe constellations beside the name are gone; only the soft glow remains, so the hero reads as name, role, statement, contacts, actions. The lede is darker (ink 78%) and 1.12rem across 5 balanced lines in a 54ch measure. 375 light/dark: the lede is 1.02rem with text-wrap pretty, 8 lines, last line 'someone checks.' rather than a lone word; chips and buttons unchanged. Not checked: other pages (hero is home only), real devices.
 
