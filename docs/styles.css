@@ -210,6 +210,8 @@ p { margin: 0 0 12px; }
 .training ul { list-style: none; padding: 0; }
 .training li { padding: 0; }
 .training .date { margin-left: 6px; }
+/* The closing call to action needs air after the list it follows. */
+.training + p:has(> .btn) { margin-top: 28px; }
 
 .footer { margin-top: 36px; padding-top: 14px; border-top: 1px solid var(--rule); text-align: center; color: var(--muted); font-size: .8rem; }
 .footer p { margin: 0; }
