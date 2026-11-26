@@ -28,12 +28,14 @@ Run these after sourcing the environment. Add narrowly required regressions when
 | Search, typing, no-script shortcut semantics | `RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q tests/browser/test_browser.py -k 'slash or no_script or unavailable_script'` |
 | Diagram labels against arrows and borders | `RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q tests/browser/test_browser.py -k diagram_text` |
 | Recorded video motion, visibility, manual pause | `RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q tests/browser/test_browser.py -k recording` |
+| Browser translation (layout, names, code) on four pages, three engines | `RUN_BROWSER_TESTS=1 .venv/bin/python -m pytest -q tests/browser/test_browser.py -k translated_pages` |
+| Browser translation on every page (about 1,900 page views, several minutes) | `node scripts/hillclimb/translation-sweep.cjs` (`--engines`, `--widths`, `--langs`, `--pages` narrow it) |
 | Complete correctness gate after a source render | `bash autoresearch.checks.sh` |
 | Documentation only | Inspect links/commands against current source, then `git diff --check` |
 
 Render source changes with `"$QUARTO" render --quiet` before checks that read `docs/`. Never hand-edit generated HTML, cache keys or the search index. Inspect sitemap changes: restore timestamp-only churn only when the URL set is unchanged. Keep genuine URL additions/removals.
 
-The complete gate runs Lua and Node tests plus Python/browser tests. Most browser assertions use Chromium. Firefox/WebKit have targeted mobile-chart cases and the recording matrix at 375 and 1280 px. Inspect current parametrization before claiming coverage; do not equate successful installation with a full browser matrix. Native Safari/iOS, Android, screen-reader sessions and physical international keyboards need their own evidence.
+The complete gate runs Lua and Node tests plus Python/browser tests. Most browser assertions use Chromium. Firefox/WebKit have targeted mobile-chart cases and the recording matrix at 375 and 1280 px. Inspect current parametrization before claiming coverage; do not equate successful installation with a full browser matrix. Native Safari/iOS, Android, screen-reader sessions and physical international keyboards need their own evidence. The translation checks simulate a translator (`tests/browser/pseudo_translate.js`); they do not run Chrome's or Safari's own translation.
 
 ## Evidence for an interaction or visual change
 

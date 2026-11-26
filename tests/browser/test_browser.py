@@ -650,7 +650,8 @@ def test_charts_fit_a_phone_and_scroll_only_without_scripts(site):
         page.goto(base + "projects/natd.html")
         body = page.locator(".chart-body").first
         assert body.evaluate("el => el.scrollWidth > el.clientWidth")
-        assert "Scroll sideways" in page.locator("figure.chart").first.evaluate("el => getComputedStyle(el, '::after').content")
+        expect(page.locator("figure.chart").first.locator(".scroll-hint")).to_have_text("Scroll sideways to see the whole chart.")
+        expect(page.locator("figure.chart").first.locator(".scroll-hint")).to_be_visible()
     finally:
         context.close()
 
@@ -1207,8 +1208,9 @@ def test_screenshots_open_full_size_and_say_so_on_phones(site):
             link = page.locator("a.fig-zoom").first
             src = link.locator("img").get_attribute("src")
             assert link.get_attribute("href") == src and src.endswith(".jpg")
-            content = link.evaluate("el => getComputedStyle(el, '::after').content")
-            assert ("full size" in content) == hint, content
+            # The hint is real text, so a browser translator can translate it.
+            expect(link.locator(".zoom-hint")).to_have_text("Tap to open full size")
+            assert link.locator(".zoom-hint").is_visible() == hint
             response = page.request.get(base + "projects/" + src)
             assert response.ok and response.headers["content-type"].startswith("image/")
             expect(page.locator('a.fig-zoom img[src$=".svg"]')).to_have_count(0)
@@ -1269,3 +1271,80 @@ def test_lead_capture_reserves_space_before_image_download(site, slug, width, th
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
     finally:
         context.close()
+
+
+TRANSLATE = (ROOT / "tests/browser/pseudo_translate.js").read_text(encoding="utf-8")
+TRANSLATED_CHECKS = """() => {
+    const vw = document.documentElement.clientWidth;
+    const box = el => el.getBoundingClientRect();
+    const shown = el => { const s = getComputedStyle(el); return s.display !== 'none' && s.visibility !== 'hidden' && box(el).width > 0; };
+    const controls = [...document.querySelectorAll('.nav-list li')].filter(shown).map(li => li.querySelector('a, button')).filter(Boolean);
+    const title = document.createRange(); title.selectNodeContents(document.querySelector('.site-title'));
+    const t = title.getBoundingClientRect();
+    const covered = [...document.querySelectorAll('div.code-copy-outer-scaffold')].filter(block => {
+        const b = box(block.querySelector('.code-copy-button')); const code = document.createRange();
+        code.selectNodeContents(block.querySelector('code'));
+        return [...code.getClientRects()].some(r => r.width && r.right > b.left && r.left < b.right && r.bottom > b.top && r.top < b.bottom);
+    }).length;
+    const stacked = [...document.querySelectorAll('table.stack')].filter(shown).flatMap(table => {
+        const heads = [...table.tHead.rows[table.tHead.rows.length - 1].cells].map(c => c.textContent.trim());
+        return [...table.tBodies[0].rows[0].cells].map((cell, i) => [cell.getAttribute('data-label'), heads[i]]).filter(([label]) => label !== null);
+    });
+    return {
+        overflow: document.documentElement.scrollWidth - vw,
+        small: controls.filter(c => box(c).height < 44 || box(c).width < 40).length,
+        overlap: controls.filter(c => { const r = box(c); return t.right > r.left + 1 && t.left < r.right - 1 && t.bottom > r.top + 1 && t.top < r.bottom - 1; }).length,
+        covered,
+        stale: stacked.filter(([label, head]) => label !== head).length,
+        h1: (document.querySelector('h1') || {}).textContent,
+        code: [...document.querySelectorAll('main code')].map(c => c.textContent).join('|'),
+        drawn: [...document.querySelectorAll('figure.chart svg text, figure.diagram svg text')].map(c => c.textContent).join('|'),
+    };
+}"""
+
+
+@pytest.mark.parametrize("engine", ["chromium", "firefox", "webkit"])
+@pytest.mark.parametrize("lang", ["de", "ar", "zh"])
+@pytest.mark.parametrize("width", [320, 1280])
+def test_translated_pages_keep_layout_names_and_code(site, playwright, engine, lang, width):
+    """A browser translator rewrites text in place; layout, names, code and drawings must survive.
+
+    Simulated translation (tests/browser/pseudo_translate.js): language-shaped pseudo-text,
+    not a real translator. German is long with compounds, Chinese is short, Arabic is RTL.
+    """
+    _, base = site
+    browser = getattr(playwright, engine).launch()
+    context = browser.new_context(viewport={"width": width, "height": 900}, reduced_motion="reduce")
+    context.add_init_script(TRANSLATE)
+    page = context.new_page()
+    try:
+        for path in ("index.html", "projects/index.html", "projects/mapreduce-reloaded.html", "projects/mailroom-ml/report.html"):
+            page.goto(base + path)
+            before = page.evaluate(TRANSLATED_CHECKS)
+            summary = page.evaluate("lang => window.pseudoTranslate(lang)", lang)
+            assert summary["translated"] > 20, summary
+            page.evaluate("() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))")
+            after = page.evaluate(TRANSLATED_CHECKS)
+            assert after["overflow"] <= 0, (path, after)
+            assert after["small"] == 0 and after["overlap"] == 0, (path, after)
+            assert after["covered"] == 0, (path, after)
+            # Phone table labels follow the translated column headers.
+            assert after["stale"] == 0, (path, after)
+            assert after["code"] == before["code"] and after["drawn"] == before["drawn"], path
+            if path == "projects/mapreduce-reloaded.html":
+                assert after["h1"] == before["h1"] == "MapReduce-Reloaded"
+            elif before["h1"]:
+                assert after["h1"] != before["h1"], path
+        if lang == "ar":
+            # Translated prose reads right to left: its first line starts at the right edge.
+            edge = page.evaluate("""() => {
+                const p = [...document.querySelectorAll('main p')].find(p => p.textContent.trim().length > 200 && !p.firstElementChild);
+                const r = document.createRange(); r.selectNodeContents(p);
+                const boxes = [...r.getClientRects()].filter(b => b.width);
+                const first = Math.max(...boxes.filter(b => Math.abs(b.top - boxes[0].top) < 2).map(b => b.right));
+                return p.getBoundingClientRect().right - first;
+            }""")
+            assert abs(edge) <= 3, edge
+    finally:
+        context.close()
+        browser.close()

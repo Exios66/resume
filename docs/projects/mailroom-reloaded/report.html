@@ -123,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=cbf04186ab">
+<link rel="stylesheet" href="../../styles.css?v=68555abf19">
 <meta property="og:title" content="Mailroom Reloaded: technical report — Jack J. Burleson">
 <meta property="og:description" content="Pipeline structure, durability, escalation gates, observability, deployment profiles and test evidence for Mailroom Reloaded, with an honest note that evaluation results are not yet published.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/mailroom-reloaded.png">
@@ -147,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header class="site-header">
   <nav class="site-nav" aria-label="Main">
-    <a class="site-title" href="../../index.html">Jack J. Burleson</a>
+    <a class="site-title" href="../../index.html"><span translate="no">Jack J. Burleson</span></a>
     <ul class="nav-list">
       <li><a class="nav-link" href="../../index.html">Home</a></li>
       <li><a class="nav-link" href="../../about.html">About</a></li>
@@ -155,7 +155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <li><a class="nav-link" href="../../research.html">Research</a></li>
       <li><a class="nav-link" href="../../writing/index.html">Writing</a></li>
       <li><a class="nav-link" href="../../resume.html">Résumé</a></li>
-      <li><a class="nav-link" href="../../search.html" data-search-shortcut="/">Search <kbd class="key-hint" aria-hidden="true" hidden="">/</kbd></a></li>
+      <li><a class="nav-link" href="../../search.html" data-search-shortcut="/">Search <kbd translate="no" class="key-hint" aria-hidden="true" hidden="">/</kbd></a></li>
       <li hidden=""><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden=""><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg></span><span class="i-moon"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg></span></button></li>
     </ul>
   </nav>
@@ -165,14 +165,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="project-nav">
 <p><a href="../../projects/mailroom-reloaded.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/mailroom-reloaded/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/mailroom-reloaded/appendix.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Appendix</a> <a href="https://github.com/Exios66/mailroom-reloaded"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
 </div>
-<h1 class="page-title" id="mailroom-reloaded-technical-report">Mailroom Reloaded: technical report</h1>
+<h1 class="page-title" id="mailroom-reloaded-technical-report"><span translate="no">Mailroom Reloaded</span>: technical report</h1>
 <p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">Agentic document pipeline</span><span class="seg"> <span class="sep">·</span> deployable rebuild</span></span></span></span></p>
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#summary">Summary</a></li><li><a href="#system-and-data">System and data</a></li><li><a href="#iteration-history">Iteration history</a></li><li><a href="#results">Results</a></li><li><a href="#figures">Figures</a></li><li><a href="#reproducibility">Reproducibility</a></li><li><a href="#engineering-quality">Engineering quality</a></li><li><a href="#limitations-and-next-steps">Limitations and next steps</a></li></ul></nav>
 <h2 id="summary">Summary</h2>
-<p>Mailroom Reloaded is a single deployable service that ingests documents, classifies them, extracts structured fields and archives them with a verifiable audit trail. It is built on CrewAI Flows, but a deterministic driver, not the framework’s event engine, owns control flow. Agents are called at fixed points, and routing between them is plain threshold code. A clean text-layer document costs exactly two LLM calls.</p>
+<p><span translate="no">Mailroom Reloaded</span> is a single deployable service that ingests documents, classifies them, extracts structured fields and archives them with a verifiable audit trail. It is built on CrewAI Flows, but a deterministic driver, not the framework’s event engine, owns control flow. Agents are called at fixed points, and routing between them is plain threshold code. A clean text-layer document costs exactly two LLM calls.</p>
 <p>The package is version 0.4.2 and requires Python 3.11 or 3.12. No accuracy or cost results are committed to the repository, so this report publishes none. It describes what the system does and the evidence that it runs.</p>
 <h2 id="system-and-data">System and data</h2>
-<p>The canonical main path is <code>ingest</code>, <code>bert_primary</code>, <code>sort</code>, <code>gate_classify</code>, <code>extract</code>, <code>gate_extract</code>, then <code>report_catalog_archive</code> (<code>pipeline/state.py</code>). The two gates are pure route computations. <code>verify</code>, <code>boss</code>, <code>human_review</code> and an evaluation-only <code>grade</code> step are dispatched by the driver outside that tuple.</p>
+<p>The canonical main path is <code translate="no">ingest</code>, <code translate="no">bert_primary</code>, <code translate="no">sort</code>, <code translate="no">gate_classify</code>, <code translate="no">extract</code>, <code translate="no">gate_extract</code>, then <code translate="no">report_catalog_archive</code> (<code translate="no">pipeline/state.py</code>). The two gates are pure route computations. <code translate="no">verify</code>, <code translate="no">boss</code>, <code translate="no">human_review</code> and an evaluation-only <code translate="no">grade</code> step are dispatched by the driver outside that tuple.</p>
 <table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 33%">
@@ -188,57 +188,57 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd" role="row">
-<td role="cell" data-label="Node"><code>ingest</code></td>
+<td role="cell" data-label="Node"><code translate="no">ingest</code></td>
 <td role="cell" data-label="Kind">deterministic: text normalisation, PDF text layer, else vision transcription</td>
-<td role="cell" data-label="Module"><code>ingest/</code><wbr><code>clerk.</code><wbr><code>py</code>, <code>ingest/pdf.py</code>, <code>ingest/</code><wbr><code>vision.</code><wbr><code>py</code></td>
+<td role="cell" data-label="Module"><code translate="no">ingest/</code><wbr><code translate="no">clerk.</code><wbr><code translate="no">py</code>, <code translate="no">ingest/pdf.py</code>, <code translate="no">ingest/</code><wbr><code translate="no">vision.</code><wbr><code translate="no">py</code></td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="Node"><code>bert_primary</code></td>
+<td role="cell" data-label="Node"><code translate="no">bert_primary</code></td>
 <td role="cell" data-label="Kind">local ModernBERT classification plus a handoff policy; fails open</td>
-<td role="cell" data-label="Module"><code>ingest/</code><wbr><code>bert.</code><wbr><code>py</code></td>
+<td role="cell" data-label="Module"><code translate="no">ingest/</code><wbr><code translate="no">bert.</code><wbr><code translate="no">py</code></td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="Node"><code>sort</code></td>
+<td role="cell" data-label="Node"><code translate="no">sort</code></td>
 <td role="cell" data-label="Kind">LLM call 1: structured sorter</td>
-<td role="cell" data-label="Module"><code>agents/</code><wbr><code>sorter.</code><wbr><code>py</code></td>
+<td role="cell" data-label="Module"><code translate="no">agents/</code><wbr><code translate="no">sorter.</code><wbr><code translate="no">py</code></td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="Node"><code>gate_classify</code>, <code>gate_extract</code></td>
+<td role="cell" data-label="Node"><code translate="no">gate_classify</code>, <code translate="no">gate_extract</code></td>
 <td role="cell" data-label="Kind">deterministic route decisions, zero LLM calls</td>
-<td role="cell" data-label="Module"><code>agents/</code><wbr><code>gate.</code><wbr><code>py</code>, <code>pipeline/</code><wbr><code>flow.</code><wbr><code>py</code></td>
+<td role="cell" data-label="Module"><code translate="no">agents/</code><wbr><code translate="no">gate.</code><wbr><code translate="no">py</code>, <code translate="no">pipeline/</code><wbr><code translate="no">flow.</code><wbr><code translate="no">py</code></td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="Node"><code>extract</code></td>
+<td role="cell" data-label="Node"><code translate="no">extract</code></td>
 <td role="cell" data-label="Kind">LLM call 2: per-class specialist</td>
-<td role="cell" data-label="Module"><code>agents/</code><wbr><code>specialists.</code><wbr><code>py</code></td>
+<td role="cell" data-label="Module"><code translate="no">agents/</code><wbr><code translate="no">specialists.</code><wbr><code translate="no">py</code></td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="Node"><code>verify</code></td>
+<td role="cell" data-label="Node"><code translate="no">verify</code></td>
 <td role="cell" data-label="Kind">LLM: judge, then arbiter</td>
-<td role="cell" data-label="Module"><code>agents/</code><wbr><code>judge.</code><wbr><code>py</code>, <code>agents/</code><wbr><code>arbiter.</code><wbr><code>py</code></td>
+<td role="cell" data-label="Module"><code translate="no">agents/</code><wbr><code translate="no">judge.</code><wbr><code translate="no">py</code>, <code translate="no">agents/</code><wbr><code translate="no">arbiter.</code><wbr><code translate="no">py</code></td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="Node"><code>boss</code></td>
+<td role="cell" data-label="Node"><code translate="no">boss</code></td>
 <td role="cell" data-label="Kind">LLM: escalation and class reassignment</td>
-<td role="cell" data-label="Module"><code>agents/</code><wbr><code>boss.</code><wbr><code>py</code></td>
+<td role="cell" data-label="Module"><code translate="no">agents/</code><wbr><code translate="no">boss.</code><wbr><code translate="no">py</code></td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="Node"><code>report_</code><wbr><code>catalog_</code><wbr><code>archive</code></td>
+<td role="cell" data-label="Node"><code translate="no">report_</code><wbr><code translate="no">catalog_</code><wbr><code translate="no">archive</code></td>
 <td role="cell" data-label="Kind">deterministic: report, move to archive, catalog row</td>
-<td role="cell" data-label="Module"><code>pipeline/</code><wbr><code>report.</code><wbr><code>py</code>, <code>pipeline/</code><wbr><code>archivist.</code><wbr><code>py</code></td>
+<td role="cell" data-label="Module"><code translate="no">pipeline/</code><wbr><code translate="no">report.</code><wbr><code translate="no">py</code>, <code translate="no">pipeline/</code><wbr><code translate="no">archivist.</code><wbr><code translate="no">py</code></td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="Node"><code>human_review</code></td>
-<td role="cell" data-label="Kind">deterministic: park in <code>review/</code></td>
-<td role="cell" data-label="Module"><code>pipeline/</code><wbr><code>flow.</code><wbr><code>py</code>, <code>review.py</code></td>
+<td role="cell" data-label="Node"><code translate="no">human_review</code></td>
+<td role="cell" data-label="Kind">deterministic: park in <code translate="no">review/</code></td>
+<td role="cell" data-label="Module"><code translate="no">pipeline/</code><wbr><code translate="no">flow.</code><wbr><code translate="no">py</code>, <code translate="no">review.py</code></td>
 </tr>
 </tbody>
 </table>
-<p>The driver is <code>MailroomFlow._drive_nodes</code> in <code>pipeline/flow.py</code>. The decorated <code>@start</code>, <code>@listen</code> and <code>@router</code> methods exist so the class is routable and plottable, and they delegate to the same guarded node implementations. The stated reasons for an explicit driver are that CrewAI rejects the literal self-loop wiring, and that crash resume and deadline enforcement need one deterministic traversal.</p>
+<p>The driver is <code translate="no">MailroomFlow._drive_nodes</code> in <code translate="no">pipeline/flow.py</code>. The decorated <code translate="no">@start</code>, <code translate="no">@listen</code> and <code translate="no">@router</code> methods exist so the class is routable and plottable, and they delegate to the same guarded node implementations. The stated reasons for an explicit driver are that CrewAI rejects the literal self-loop wiring, and that crash resume and deadline enforcement need one deterministic traversal.</p>
 <h3 id="the-fast-path-and-its-failure-mode">The fast path and its failure mode</h3>
-<p><code>ingest</code> and <code>bert_primary</code> are local, so they add no LLM calls. If ModernBERT is flagged off, missing, given an oversized input, or raises, the adapter returns an “unavailable” verdict and the handoff forces a full sort. Classes listed under <code>defer_classes</code> (by default <code>contract</code> and <code>merger_agreement</code>) and multi-window verdicts also fall back to a full sort. The model comes from <a href="../../projects/mailroom-ml.html">Mailroom-ML</a> through the optional <code>bert</code> extra.</p>
+<p><code translate="no">ingest</code> and <code translate="no">bert_primary</code> are local, so they add no LLM calls. If ModernBERT is flagged off, missing, given an oversized input, or raises, the adapter returns an “unavailable” verdict and the handoff forces a full sort. Classes listed under <code translate="no">defer_classes</code> (by default <code translate="no">contract</code> and <code translate="no">merger_agreement</code>) and multi-window verdicts also fall back to a full sort. The model comes from <a href="../../projects/mailroom-ml.html"><span translate="no">Mailroom-ML</span></a> through the optional <code translate="no">bert</code> extra.</p>
 <h3 id="the-gates-and-their-escalation-paths">The gates and their escalation paths</h3>
-<p><code>BandGate</code> applies per-class thresholds from <code>config/taxonomy.yaml</code>. The global defaults are a high band of 0.95, a low band of 0.70, and <code>retry_max</code> of 2. Some classes override them.</p>
+<p><code translate="no">BandGate</code> applies per-class thresholds from <code translate="no">config/taxonomy.yaml</code>. The global defaults are a high band of 0.95, a low band of 0.70, and <code translate="no">retry_max</code> of 2. Some classes override them.</p>
 <table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 33%">
@@ -256,7 +256,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">classify</td>
 <td role="cell" data-label="Condition">BERT and sorter disagree, not yet re-sorted</td>
-<td role="cell" data-label="Action"><code>re_sort</code> (once, as a full sort)</td>
+<td role="cell" data-label="Action"><code translate="no">re_sort</code> (once, as a full sort)</td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">classify</td>
@@ -271,22 +271,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">classify</td>
 <td role="cell" data-label="Condition">below high, retries spent</td>
-<td role="cell" data-label="Action"><code>human_review</code></td>
+<td role="cell" data-label="Action"><code translate="no">human_review</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">extract</td>
 <td role="cell" data-label="Condition">length-capped or schema-invalid output</td>
-<td role="cell" data-label="Action">retry, then <code>human_review</code></td>
+<td role="cell" data-label="Action">retry, then <code translate="no">human_review</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">extract</td>
-<td role="cell" data-label="Condition">confidence at or above <code>judge_</code><wbr><code>band_</code><wbr><code>high</code></td>
+<td role="cell" data-label="Condition">confidence at or above <code translate="no">judge_</code><wbr><code translate="no">band_</code><wbr><code translate="no">high</code></td>
 <td role="cell" data-label="Action">proceed</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">extract</td>
-<td role="cell" data-label="Condition">between low and <code>judge_</code><wbr><code>band_</code><wbr><code>high</code></td>
-<td role="cell" data-label="Action"><code>verify</code> (judge, then arbiter)</td>
+<td role="cell" data-label="Condition">between low and <code translate="no">judge_</code><wbr><code translate="no">band_</code><wbr><code translate="no">high</code></td>
+<td role="cell" data-label="Action"><code translate="no">verify</code> (judge, then arbiter)</td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Stage">extract</td>
@@ -296,45 +296,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd" role="row">
 <td role="cell" data-label="Stage">extract</td>
 <td role="cell" data-label="Condition">below low, retries spent</td>
-<td role="cell" data-label="Action"><code>boss</code></td>
+<td role="cell" data-label="Action"><code translate="no">boss</code></td>
 </tr>
 </tbody>
 </table>
-<p>The arbiter’s verdict maps <code>accept</code> and <code>accept_with_caveats</code> to report, <code>re_extract</code> to a retry, and <code>escalate</code> to the boss. The boss can reassign the class once, after which the document is extracted again, send the document to human review, or accept it. If the arbiter asks for a re-extraction after the retries are spent, the document goes to human review.</p>
-<p>The gate slot is pluggable. A <code>LearnedGate</code> (logistic model stored as plain JSON) loads when <code>models/route_gate.json</code> exists. It overrides the band only inside the medium band and never a hard rule.</p>
+<p>The arbiter’s verdict maps <code translate="no">accept</code> and <code translate="no">accept_with_caveats</code> to report, <code translate="no">re_extract</code> to a retry, and <code translate="no">escalate</code> to the boss. The boss can reassign the class once, after which the document is extracted again, send the document to human review, or accept it. If the arbiter asks for a re-extraction after the retries are spent, the document goes to human review.</p>
+<p>The gate slot is pluggable. A <code translate="no">LearnedGate</code> (logistic model stored as plain JSON) loads when <code translate="no">models/route_gate.json</code> exists. It overrides the band only inside the medium band and never a hard rule.</p>
 <h3 id="jev-the-opt-in-decision-model">Jev, the opt-in decision model</h3>
-<p>Jev (the “TypeSafe System One”) is a probabilistic decision model, not a text generator. It returns typed answers: a <code>choice</code> with a probability distribution, a <code>noul</code> (a single probability of yes), or a <code>score</code>. The gate asks it two questions: which route (<code>proceed</code>, <code>retry</code>, <code>verify</code>, <code>boss</code> or <code>human_review</code>) and whether to escalate to a human. Its confidence is derived from the concentration of the probability distribution, so it must be re-scaled by a calibration before the gate trusts it.</p>
-<p>A <code>JevGate</code> is used only when the provider is switched on and <code>models/jev_calibration.json</code> exists. It asks only inside the medium band and never overrides a hard rule. Calibration (<code>mailroom jev calibrate</code>) fits a temperature and thresholds, and refuses any row whose split is not <code>train</code>. When Jev is off, which is the default, the pipeline behaves as it does without it. Its default accept threshold is 0.8.</p>
+<p>Jev (the “TypeSafe System One”) is a probabilistic decision model, not a text generator. It returns typed answers: a <code translate="no">choice</code> with a probability distribution, a <code translate="no">noul</code> (a single probability of yes), or a <code translate="no">score</code>. The gate asks it two questions: which route (<code translate="no">proceed</code>, <code translate="no">retry</code>, <code translate="no">verify</code>, <code translate="no">boss</code> or <code translate="no">human_review</code>) and whether to escalate to a human. Its confidence is derived from the concentration of the probability distribution, so it must be re-scaled by a calibration before the gate trusts it.</p>
+<p>A <code translate="no">JevGate</code> is used only when the provider is switched on and <code translate="no">models/jev_calibration.json</code> exists. It asks only inside the medium band and never overrides a hard rule. Calibration (<code translate="no">mailroom jev calibrate</code>) fits a temperature and thresholds, and refuses any row whose split is not <code translate="no">train</code>. When Jev is off, which is the default, the pipeline behaves as it does without it. Its default accept threshold is 0.8.</p>
 <h3 id="durability">Durability</h3>
 <ul>
-<li>Bins are directories under a base directory: <code>inbox</code>, <code>processing/&lt;worker&gt;</code>, <code>classified</code>, <code>review</code>, <code>failed</code>, <code>archive</code> and <code>manifests</code>. A worker claims a file by atomic rename, and a loser of a race gets nothing and moves on (<code>storage/bins.py</code>).</li>
-<li>A manifest records the document id (the first 16 hex characters of the content sha256), filename, status, <code>completed_nodes</code> and serialised state. It is written with a temporary file and <code>os.replace</code>.</li>
-<li>Each node is wrapped by <code>guarded(...)</code>, which on success appends the node to <code>completed_nodes</code>, snapshots state and appends an audit entry (<code>pipeline/guards.py</code>). On startup the watcher re-runs every manifest still in status <code>processing</code> from its first incomplete node (<code>watcher.py</code>).</li>
-<li>The per-document audit log is an append-only SQLite table keyed by document id and sequence. Each entry holds <code>prev_hash</code> and <code>entry_hash</code>, a sha256 over canonical JSON. Appends are resume-safe: a repeated node and event with an identical payload writes nothing (<code>storage/audit_log.py</code>).</li>
-<li>A separate archive ledger is one hash chain over every run (<code>storage/ledger.py</code>), with optional off-host anchoring and <code>mailroom audit verify</code>, <code>anchor</code> and <code>export-head</code> commands.</li>
-<li>An exclusive <code>flock</code> (<code>watcher.lock</code>) admits one draining process, which is why the <code>split-watcher</code> profile requires the embedded watcher to be switched off.</li>
+<li>Bins are directories under a base directory: <code translate="no">inbox</code>, <code translate="no">processing/&lt;worker&gt;</code>, <code translate="no">classified</code>, <code translate="no">review</code>, <code translate="no">failed</code>, <code translate="no">archive</code> and <code translate="no">manifests</code>. A worker claims a file by atomic rename, and a loser of a race gets nothing and moves on (<code translate="no">storage/bins.py</code>).</li>
+<li>A manifest records the document id (the first 16 hex characters of the content sha256), filename, status, <code translate="no">completed_nodes</code> and serialised state. It is written with a temporary file and <code translate="no">os.replace</code>.</li>
+<li>Each node is wrapped by <code translate="no">guarded(...)</code>, which on success appends the node to <code translate="no">completed_nodes</code>, snapshots state and appends an audit entry (<code translate="no">pipeline/guards.py</code>). On startup the watcher re-runs every manifest still in status <code translate="no">processing</code> from its first incomplete node (<code translate="no">watcher.py</code>).</li>
+<li>The per-document audit log is an append-only SQLite table keyed by document id and sequence. Each entry holds <code translate="no">prev_hash</code> and <code translate="no">entry_hash</code>, a sha256 over canonical JSON. Appends are resume-safe: a repeated node and event with an identical payload writes nothing (<code translate="no">storage/audit_log.py</code>).</li>
+<li>A separate archive ledger is one hash chain over every run (<code translate="no">storage/ledger.py</code>), with optional off-host anchoring and <code translate="no">mailroom audit verify</code>, <code translate="no">anchor</code> and <code translate="no">export-head</code> commands.</li>
+<li>An exclusive <code translate="no">flock</code> (<code translate="no">watcher.lock</code>) admits one draining process, which is why the <code translate="no">split-watcher</code> profile requires the embedded watcher to be switched off.</li>
 </ul>
 <h2 id="iteration-history">Iteration history</h2>
 <p>The repository’s changelog is the iteration record (141 commits in the history I could read). Notable recent entries, newest first:</p>
 <div class="timeline">
 <ul>
-<li><strong>Unreleased</strong> — operator commands in <code>/tui</code> (<code>links</code>, readiness views, a read-only configuration summary, replay export, and a review queue with per-document detail); an operator SMS pager that is off by default; accessibility passes on <code>/ui</code> and <code>/tui</code> (a page heading, labelled tables, live regions, keyboard-reachable rows, focus rings, contrast fixes); a real provider probe behind <code>GET /ready</code>; the vendored <code>llm-dojo-scoring</code> updated to v0.22.0, with its scoring fixes; and a fix so <code>mailroom eval</code> no longer drops rows whose filename has no supported suffix. <em>Dormant sandbox deep links removed from <code>/tui</code>.</em></li>
-<li><strong>0.4.2 (2026-10-11)</strong> — fixed the <code>/ui</code> documents table at phone widths. <em>Verified at 420, 768 and 1280 px with no page-level horizontal overflow.</em></li>
-<li><strong>v1 trim</strong> — an offline ingress simulator was moved off <code>main</code> onto a feature branch, leaving the core pipeline and the replay viewer. <em>Verified on merged <code>main</code>.</em></li>
+<li><strong>Unreleased</strong> — operator commands in <code translate="no">/tui</code> (<code translate="no">links</code>, readiness views, a read-only configuration summary, replay export, and a review queue with per-document detail); an operator SMS pager that is off by default; accessibility passes on <code translate="no">/ui</code> and <code translate="no">/tui</code> (a page heading, labelled tables, live regions, keyboard-reachable rows, focus rings, contrast fixes); a real provider probe behind <code translate="no">GET /ready</code>; the vendored <code translate="no">llm-dojo-scoring</code> updated to v0.22.0, with its scoring fixes; and a fix so <code translate="no">mailroom eval</code> no longer drops rows whose filename has no supported suffix. <em>Dormant sandbox deep links removed from <code translate="no">/tui</code>.</em></li>
+<li><strong>0.4.2 (2026-10-11)</strong> — fixed the <code translate="no">/ui</code> documents table at phone widths. <em>Verified at 420, 768 and 1280 px with no page-level horizontal overflow.</em></li>
+<li><strong>v1 trim</strong> — an offline ingress simulator was moved off <code translate="no">main</code> onto a feature branch, leaving the core pipeline and the replay viewer. <em>Verified on merged <code translate="no">main</code>.</em></li>
 </ul>
 </div>
 <h2 id="results">Results</h2>
-<p>There are no committed accuracy, cost or throughput results. The evaluation harness (<code>mailroom eval</code>) exists, but I have not published a run. What follows is verification evidence, not model quality.</p>
+<p>There are no committed accuracy, cost or throughput results. The evaluation harness (<code translate="no">mailroom eval</code>) exists, but I have not published a run. What follows is verification evidence, not model quality.</p>
 <h3 id="evaluation-harness-design">Evaluation harness design</h3>
 <ul>
-<li>The dataset is loaded at a pinned revision (default <code>ed7576b6</code>) with a blind configuration (text only, no labels) and a separate ground-truth configuration, joined on filename. A sha256 check against the document text raises an error on mismatch.</li>
-<li>Sampling is per class and nested: with the same seed and class, the 20-document draw is a prefix of the 50-document draw. The default seed is 42, the default is 20 documents per class, and the default split is <code>test</code>.</li>
-<li>The learned gate and sorter temperature calibration are fitted on the <code>train</code> split only; the fitting code raises an error for any other split, and KPIs are meant to be reported on <code>test</code>.</li>
+<li>The dataset is loaded at a pinned revision (default <code translate="no">ed7576b6</code>) with a blind configuration (text only, no labels) and a separate ground-truth configuration, joined on filename. A sha256 check against the document text raises an error on mismatch.</li>
+<li>Sampling is per class and nested: with the same seed and class, the 20-document draw is a prefix of the 50-document draw. The default seed is 42, the default is 20 documents per class, and the default split is <code translate="no">test</code>.</li>
+<li>The learned gate and sorter temperature calibration are fitted on the <code translate="no">train</code> split only; the fitting code raises an error for any other split, and KPIs are meant to be reported on <code translate="no">test</code>.</li>
 <li>After sampling, the runner checks overlap with the fast-path model’s training manifest and records a warning instead of failing, so overlapping documents can be excluded from reported numbers.</li>
 <li>Metrics cover sorter KPIs (accuracy, confusion matrix, expected calibration error, fast-path rate), specialist KPIs (field precision, recall and F1, schema-valid rate) and gate KPIs.</li>
 </ul>
-<h3 id="test-re-run-on-main-2026-11-26">Test re-run on <code>main</code> (2026-11-26)</h3>
-<p>I re-ran the offline suites on <code>main</code> at <a href="https://github.com/Exios66/mailroom-reloaded/tree/8c35413">8c35413⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> (1 November 2026) with Python 3.11 on Linux. Live-provider and Docker tests are deselected by the project’s default pytest settings.</p>
+<h3 id="test-re-run-on-main-2026-11-26">Test re-run on <code translate="no">main</code> (2026-11-26)</h3>
+<p>I re-ran the offline suites on <code translate="no">main</code> at <a href="https://github.com/Exios66/mailroom-reloaded/tree/8c35413">8c35413⁠<svg class="icon icon-ext" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-up-right"></use></svg></a> (1 November 2026) with Python 3.11 on Linux. Live-provider and Docker tests are deselected by the project’s default pytest settings.</p>
 <table class="caption-top stack" role="table">
 <thead>
 <tr class="header" role="row">
@@ -344,20 +344,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd" role="row">
-<td role="cell" data-label="Check"><code>ruff check .</code></td>
+<td role="cell" data-label="Check"><code translate="no">ruff check .</code></td>
 <td role="cell" data-label="Result">all checks passed</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="Check"><code>uv run pytest -q</code></td>
+<td role="cell" data-label="Check"><code translate="no">uv run pytest -q</code></td>
 <td role="cell" data-label="Result">1,844 passed, 5 skipped, 3 deselected, 0 failed</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="Check"><code>node --test tests/tui/js/*.test.mjs</code></td>
+<td role="cell" data-label="Check"><code translate="no">node --test tests/tui/js/*.test.mjs</code></td>
 <td role="cell" data-label="Result">397 pass, 1 skipped, 0 fail</td>
 </tr>
 </tbody>
 </table>
-<h3 id="verification-run-on-merged-main-2026-10-11">Verification run on merged <code>main</code> (2026-10-11)</h3>
+<h3 id="verification-run-on-merged-main-2026-10-11">Verification run on merged <code translate="no">main</code> (2026-10-11)</h3>
 <p>This used a mock LLM provider with four seeded documents. It tests plumbing, not model quality.</p>
 <table class="caption-top stack" role="table">
 <thead>
@@ -368,15 +368,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd" role="row">
-<td role="cell" data-label="Check"><code>ruff check .</code></td>
+<td role="cell" data-label="Check"><code translate="no">ruff check .</code></td>
 <td role="cell" data-label="Result">all checks passed</td>
 </tr>
 <tr class="even" role="row">
-<td role="cell" data-label="Check"><code>uv run pytest -q</code></td>
+<td role="cell" data-label="Check"><code translate="no">uv run pytest -q</code></td>
 <td role="cell" data-label="Result">1,597 passed, 3 skipped, 3 deselected, 0 failed</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="Check"><code>node --test tests/tui/js/*.test.mjs</code></td>
+<td role="cell" data-label="Check"><code translate="no">node --test tests/tui/js/*.test.mjs</code></td>
 <td role="cell" data-label="Result">290 pass, 0 fail</td>
 </tr>
 <tr class="even" role="row">
@@ -384,7 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td role="cell" data-label="Result">96 pass, 0 fail</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="Check"><code>GET /v1/documents</code></td>
+<td role="cell" data-label="Check"><code translate="no">GET /v1/documents</code></td>
 <td role="cell" data-label="Result">4 documents, all archived</td>
 </tr>
 <tr class="even" role="row">
@@ -396,46 +396,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 id="figures">Figures</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a class="fig-zoom" href="figures/replay-viewer.jpg" title="Open full size"><img src="figures/replay-viewer.jpg" class="fig" loading="lazy" decoding="async" alt="A dark terminal page with a cyan MAILROOM banner, running replay run:7e57d0c0ffee --at 90. Station rows from intake to failed, grouped under intake_sort, extraction, review, reporting and terminal, show dotted progress bars and counts, with a red marker on the specialist row. A scrub bar and a metrics line reading docs 4 of 6, done 3, failed 1, tok 680, $0.0060, calls 4, first-pass 25% sit below." width="1200" height="900"></a></p>
+<p><a class="fig-zoom" href="figures/replay-viewer.jpg" title="Open full size"><img src="figures/replay-viewer.jpg" class="fig" loading="lazy" decoding="async" alt="A dark terminal page with a cyan MAILROOM banner, running replay run:7e57d0c0ffee --at 90. Station rows from intake to failed, grouped under intake_sort, extraction, review, reporting and terminal, show dotted progress bars and counts, with a red marker on the specialist row. A scrub bar and a metrics line reading docs 4 of 6, done 3, failed 1, tok 680, $0.0060, calls 4, first-pass 25% sit below." width="1200" height="900"><span class="zoom-hint">Tap to open full size</span></a></p>
 <figcaption>Replay viewer in the cyan theme, paused at 01:30 of a 02:15 demo run.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a class="fig-zoom" href="figures/inspector-retry.jpg" title="Open full size"><img src="figures/inspector-retry.jpg" class="fig" loading="lazy" decoding="async" alt="The cyan replay viewer at the end of the run with its inspector open. It shows the document's station archive, status archived and attempt 1, and two events: 00:30.4 gate_decision gate, then 00:30.7 retry gate." width="1200" height="900"></a></p>
+<p><a class="fig-zoom" href="figures/inspector-retry.jpg" title="Open full size"><img src="figures/inspector-retry.jpg" class="fig" loading="lazy" decoding="async" alt="The cyan replay viewer at the end of the run with its inspector open. It shows the document's station archive, status archived and attempt 1, and two events: 00:30.4 gate_decision gate, then 00:30.7 retry gate." width="1200" height="900"><span class="zoom-hint">Tap to open full size</span></a></p>
 <figcaption>Inspector in the cyan theme, on a document with a gate decision followed by a retry.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a class="fig-zoom" href="figures/ledger.jpg" title="Open full size"><img src="figures/ledger.jpg" class="fig" loading="lazy" decoding="async" alt="A cyan terminal page with a table of six ledger entries with seq, kind, run, doc, ts and hash columns, followed by the ledger verify command and a green line reading chain ok, 6 entries, head #6." width="1200" height="900"></a></p>
+<p><a class="fig-zoom" href="figures/ledger.jpg" title="Open full size"><img src="figures/ledger.jpg" class="fig" loading="lazy" decoding="async" alt="A cyan terminal page with a table of six ledger entries with seq, kind, run, doc, ts and hash columns, followed by the ledger verify command and a green line reading chain ok, 6 entries, head #6." width="1200" height="900"><span class="zoom-hint">Tap to open full size</span></a></p>
 <figcaption>The ledger listing and its chain verification, in the cyan theme.</figcaption>
 </figure>
 </div>
 <h2 id="reproducibility">Reproducibility</h2>
 <p>Install and run the tests, with live-provider tests deselected by default:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync <span class="at">--extra</span> dev</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre translate="no" class="sourceCode sh code-with-copy"><code translate="no" class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync <span class="at">--extra</span> dev</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest <span class="at">-q</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run ruff check .</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> <span class="at">--test</span> tests/tui/js/<span class="pp">*</span>.test.mjs</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> <span class="at">--test</span> tests/ui/js/<span class="pp">*</span>.test.mjs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Run one document, then the compose stack. The default provider is a mock that needs a fake OpenAI-compatible server, so set a real provider in <code>.env</code> first (<code>DEFAULT_PROVIDER</code> and its key):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env   <span class="co"># then set DEFAULT_PROVIDER and its credentials</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> <span class="at">--test</span> tests/ui/js/<span class="pp">*</span>.test.mjs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><span class="cc-copy">Copy</span><span class="cc-done">Copied</span></button></div>
+<p>Run one document, then the compose stack. The default provider is a mock that needs a fake OpenAI-compatible server, so set a real provider in <code translate="no">.env</code> first (<code translate="no">DEFAULT_PROVIDER</code> and its key):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre translate="no" class="sourceCode sh code-with-copy"><code translate="no" class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env   <span class="co"># then set DEFAULT_PROVIDER and its credentials</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run mailroom run tests/ingest/fixtures/letter.txt</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose <span class="at">-f</span> deploy/docker-compose.yml <span class="at">--env-file</span> .env up <span class="at">-d</span> <span class="at">--build</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/smoke.sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Compose profiles: the default stack (API with embedded watcher, OpenTelemetry collector, Phoenix, Prometheus, Grafana), <code>local-llm</code> (llamafile), <code>gpu</code> (local vLLM and a GPU metrics exporter) and <code>split-watcher</code> (a standalone watcher). Observability and engine ports bind to loopback only. Image versions are pinned in the compose file. An evaluation run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync <span class="at">--extra</span> dev <span class="at">--extra</span> eval <span class="at">--extra</span> bert</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run mailroom eval <span class="at">--per-class</span> 20 <span class="at">--seed</span> 42 <span class="at">--split</span> test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/smoke.sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><span class="cc-copy">Copy</span><span class="cc-done">Copied</span></button></div>
+<p>Compose profiles: the default stack (API with embedded watcher, OpenTelemetry collector, Phoenix, Prometheus, Grafana), <code translate="no">local-llm</code> (llamafile), <code translate="no">gpu</code> (local vLLM and a GPU metrics exporter) and <code translate="no">split-watcher</code> (a standalone watcher). Observability and engine ports bind to loopback only. Image versions are pinned in the compose file. An evaluation run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre translate="no" class="sourceCode sh code-with-copy"><code translate="no" class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> sync <span class="at">--extra</span> dev <span class="at">--extra</span> eval <span class="at">--extra</span> bert</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run mailroom eval <span class="at">--per-class</span> 20 <span class="at">--seed</span> 42 <span class="at">--split</span> test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><span class="cc-copy">Copy</span><span class="cc-done">Copied</span></button></div>
 <h2 id="engineering-quality">Engineering quality</h2>
 <ul>
-<li><strong>Test suite.</strong> 1,844 Python tests and 397 browser-terminal (<code>/tui</code>) tests pass on <code>main</code> (re-run above). Live-provider and Docker tests need a configured provider or a Docker daemon and were not run.</li>
-<li><strong>Tiers.</strong> Agents, pipeline, eval, observability, API, deploy, intake, ingest, LLM, scoring, schemas, storage, TUI and <code>/ui</code>.</li>
-<li><strong>Dependency fence.</strong> A test fails if any <code>langgraph</code>, <code>langchain*</code>, <code>langfuse</code>, <code>braintrust</code> or <code>litellm</code> import appears under <code>src/</code> or in any dependency.</li>
+<li><strong>Test suite.</strong> 1,844 Python tests and 397 browser-terminal (<code translate="no">/tui</code>) tests pass on <code translate="no">main</code> (re-run above). Live-provider and Docker tests need a configured provider or a Docker daemon and were not run.</li>
+<li><strong>Tiers.</strong> Agents, pipeline, eval, observability, API, deploy, intake, ingest, LLM, scoring, schemas, storage, TUI and <code translate="no">/ui</code>.</li>
+<li><strong>Dependency fence.</strong> A test fails if any <code translate="no">langgraph</code>, <code translate="no">langchain*</code>, <code translate="no">langfuse</code>, <code translate="no">braintrust</code> or <code translate="no">litellm</code> import appears under <code translate="no">src/</code> or in any dependency.</li>
 <li><strong>Prompt lock.</strong> A test checks the sha256 of every vendored prompt against its lineage file, so frozen prompts cannot drift silently.</li>
 <li><strong>Leak guard.</strong> A helper asserts that no ground-truth value appears in any recorded sorter or specialist request.</li>
-<li><strong>Scoring parity.</strong> The vendored scoring subset is checked against the upstream package on ten fixture pairs when the <code>parity</code> extra is installed.</li>
-<li><strong>Security defaults.</strong> Every <code>/v1</code> route requires a bearer token when one is configured, and the app refuses to start off loopback without one. Uploads are capped at 50 MB.</li>
+<li><strong>Scoring parity.</strong> The vendored scoring subset is checked against the upstream package on ten fixture pairs when the <code translate="no">parity</code> extra is installed.</li>
+<li><strong>Security defaults.</strong> Every <code translate="no">/v1</code> route requires a bearer token when one is configured, and the app refuses to start off loopback without one. Uploads are capped at 50 MB.</li>
 <li><strong>No hosted CI.</strong> The repository has no CI workflows; gates are run locally and their output recorded.</li>
 </ul>
 <h2 id="limitations-and-next-steps">Limitations and next steps</h2>
@@ -445,18 +445,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Gate decisions and thresholds are only as good as the calibration data; Jev’s usefulness depends on a calibration fitted on training rows.</li>
 <li>Deadlines are cooperative: they are checked after a node returns.</li>
 <li>Images and scanned PDFs need a configured vision provider. RTF and HTML are rejected.</li>
-<li>The offline ingress simulator is not on <code>main</code>.</li>
+<li>The offline ingress simulator is not on <code translate="no">main</code>.</li>
 <li>Next: run and publish a test-split evaluation with the seed, revision and cost card.</li>
 </ul>
-<nav class="project-pager" aria-label="Project navigation"><a class="pager-prev" href="../../projects/mailroom-ml.html" rel="prev"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg><span class="pager-text"><span class="pager-label">Previous project</span><span class="pager-name">Mailroom-ML</span></span></a><a class="pager-next" href="../../projects/rvl-cdip-classifier.html" rel="next"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-right"></use></svg><span class="pager-text"><span class="pager-label">Next project</span><span class="pager-name">RVL-CDIP-Classifier</span></span></a></nav>
+<nav class="project-pager" aria-label="Project navigation"><a class="pager-prev" href="../../projects/mailroom-ml.html" rel="prev"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg><span class="pager-text"><span class="pager-label">Previous project</span><span class="pager-name"><span translate="no">Mailroom-ML</span></span></span></a><a class="pager-next" href="../../projects/rvl-cdip-classifier.html" rel="next"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-right"></use></svg><span class="pager-text"><span class="pager-label">Next project</span><span class="pager-name"><span translate="no">RVL-CDIP-Classifier</span></span></span></a></nav>
 </div>
 
 </main>
 <footer class="site-footer">
   <p class="footer-links"><a href="https://github.com/Exios66">GitHub</a> <a href="https://www.linkedin.com/in/jackjburleson">LinkedIn</a> <a href="mailto:jackjburleson@proton.me">Email</a></p>
-  <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
+  <p>© 2026 <span translate="no">Jack J. Burleson</span> · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="../../assets/js/site.js?v=83a152c7b0" defer=""></script>
+<script src="../../assets/js/site.js?v=d6c56fb63a" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol></svg>
 
 <script>

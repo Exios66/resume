@@ -90,7 +90,7 @@ ul.task-list li input[type="checkbox"] {
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=cbf04186ab">
+<link rel="stylesheet" href="../../styles.css?v=68555abf19">
 <meta property="og:title" content="Mailroom-ML: appendix — Jack J. Burleson">
 <meta property="og:description" content="Supporting tables for the Mailroom-ML M9c release: evaluation protocol, release gates, per-head results, cohorts and selective-risk checks.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/mailroom-ml.png">
@@ -114,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header class="site-header">
   <nav class="site-nav" aria-label="Main">
-    <a class="site-title" href="../../index.html">Jack J. Burleson</a>
+    <a class="site-title" href="../../index.html"><span translate="no">Jack J. Burleson</span></a>
     <ul class="nav-list">
       <li><a class="nav-link" href="../../index.html">Home</a></li>
       <li><a class="nav-link" href="../../about.html">About</a></li>
@@ -122,7 +122,7 @@ ul.task-list li input[type="checkbox"] {
       <li><a class="nav-link" href="../../research.html">Research</a></li>
       <li><a class="nav-link" href="../../writing/index.html">Writing</a></li>
       <li><a class="nav-link" href="../../resume.html">Résumé</a></li>
-      <li><a class="nav-link" href="../../search.html" data-search-shortcut="/">Search <kbd class="key-hint" aria-hidden="true" hidden="">/</kbd></a></li>
+      <li><a class="nav-link" href="../../search.html" data-search-shortcut="/">Search <kbd translate="no" class="key-hint" aria-hidden="true" hidden="">/</kbd></a></li>
       <li hidden=""><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden=""><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg></span><span class="i-moon"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg></span></button></li>
     </ul>
   </nav>
@@ -132,9 +132,9 @@ ul.task-list li input[type="checkbox"] {
 <div class="project-nav">
 <p><a href="../../projects/mailroom-ml.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/mailroom-ml/report.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/mailroom-ml/appendix.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Appendix</a> <a href="https://github.com/LLM-Mailroom-Services/mailroom-ml"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a></p>
 </div>
-<h1 class="page-title" id="mailroom-ml-appendix">Mailroom-ML: appendix</h1>
+<h1 class="page-title" id="mailroom-ml-appendix"><span translate="no">Mailroom-ML</span>: appendix</h1>
 <p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">M9c supporting tables</span><span class="seg"> <span class="sep">·</span> evaluation protocol, gates, per-head results</span></span></span></span></p>
-<p>These tables support the <a href="../../projects/mailroom-ml.html">Mailroom-ML case study</a>. Every number below comes from the held-out test report for run <code>m9c-20261014-113614</code>, or from the trainer configuration recorded in it. They are copied, not re-run here.</p>
+<p>These tables support the <a href="../../projects/mailroom-ml.html"><span translate="no">Mailroom-ML</span> case study</a>. Every number below comes from the held-out test report for run <code translate="no">m9c-20261014-113614</code>, or from the trainer configuration recorded in it. They are copied, not re-run here.</p>
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#evaluation-protocol">Evaluation protocol</a></li><li><a href="#headline-metrics">Headline metrics</a></li><li><a href="#release-gates">Release gates</a></li><li><a href="#per-head-results">Per-head results</a></li><li><a href="#cohorts-and-selective-risk">Cohorts and selective risk</a></li><li><a href="#test-split-composition">Test-split composition</a></li><li><a href="#sources">Sources</a></li><li><a href="#scope">Scope</a></li></ul></nav>
 <h2 id="evaluation-protocol">Evaluation protocol</h2>
 <table class="caption-top stack" role="table">
@@ -147,11 +147,11 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd" role="row">
 <td role="cell" data-label="Setting">Run tag</td>
-<td role="cell" data-label="Value"><code>m9c-</code><wbr><code>20261014-</code><wbr><code>113614</code></td>
+<td role="cell" data-label="Value"><code translate="no">m9c-</code><wbr><code translate="no">20261014-</code><wbr><code translate="no">113614</code></td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Setting">Model</td>
-<td role="cell" data-label="Value"><code>answerdotai/</code><wbr><code>ModernBERT-</code><wbr><code>base</code>, hierarchical heads</td>
+<td role="cell" data-label="Value"><code translate="no">answerdotai/</code><wbr><code translate="no">ModernBERT-</code><wbr><code translate="no">base</code>, hierarchical heads</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Setting">Documents</td>
@@ -167,11 +167,11 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Setting">Reported by</td>
-<td role="cell" data-label="Value"><code>training/</code><wbr><code>eval/</code><wbr><code>eval_</code><wbr><code>modernbert.</code><wbr><code>py</code></td>
+<td role="cell" data-label="Value"><code translate="no">training/</code><wbr><code translate="no">eval/</code><wbr><code translate="no">eval_</code><wbr><code translate="no">modernbert.</code><wbr><code translate="no">py</code></td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Setting">Flags</td>
-<td role="cell" data-label="Value"><code>--subset test --sample 0</code></td>
+<td role="cell" data-label="Value"><code translate="no">--subset test --sample 0</code></td>
 </tr>
 </tbody>
 </table>
@@ -407,15 +407,15 @@ ul.task-list li input[type="checkbox"] {
 <div class="caveat">
 <p><strong>One checkpoint, one test pool.</strong> These tables describe a single release, not a production service level. The test split informed run comparisons, the selective-risk sweep and the decode sweep, so the coverage figures are optimistic. Contract and correspondence stay off the fast path by checkpoint policy.</p>
 </div>
-<nav class="project-pager" aria-label="Project navigation"><a class="pager-prev" href="../../projects/digital-mailroom.html" rel="prev"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg><span class="pager-text"><span class="pager-label">Previous project</span><span class="pager-name">Digital-Mailroom</span></span></a><a class="pager-next" href="../../projects/mailroom-reloaded.html" rel="next"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-right"></use></svg><span class="pager-text"><span class="pager-label">Next project</span><span class="pager-name">Mailroom Reloaded</span></span></a></nav>
+<nav class="project-pager" aria-label="Project navigation"><a class="pager-prev" href="../../projects/digital-mailroom.html" rel="prev"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg><span class="pager-text"><span class="pager-label">Previous project</span><span class="pager-name"><span translate="no">Digital-Mailroom</span></span></span></a><a class="pager-next" href="../../projects/mailroom-reloaded.html" rel="next"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-right"></use></svg><span class="pager-text"><span class="pager-label">Next project</span><span class="pager-name"><span translate="no">Mailroom Reloaded</span></span></span></a></nav>
 </div>
 
 </main>
 <footer class="site-footer">
   <p class="footer-links"><a href="https://github.com/Exios66">GitHub</a> <a href="https://www.linkedin.com/in/jackjburleson">LinkedIn</a> <a href="mailto:jackjburleson@proton.me">Email</a></p>
-  <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
+  <p>© 2026 <span translate="no">Jack J. Burleson</span> · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="../../assets/js/site.js?v=83a152c7b0" defer=""></script>
+<script src="../../assets/js/site.js?v=d6c56fb63a" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-arrow-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></symbol><symbol id="i-arrow-up-right" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol></svg>
 
 <script>

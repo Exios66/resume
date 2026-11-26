@@ -123,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 
 
-<link rel="stylesheet" href="../../styles.css?v=cbf04186ab">
+<link rel="stylesheet" href="../../styles.css?v=68555abf19">
 <meta property="og:title" content="The Mandalay Bay: technical report — Jack J. Burleson">
 <meta property="og:description" content="Architecture, shared-screen rule, save format, randomness, exact slot return calculation, test counts, bugs fixed and limitations for The Mandalay Bay.">
 <meta property="og:image" content="https://exios66.github.io/resume/assets/og/degen-llms.png">
@@ -147,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header class="site-header">
   <nav class="site-nav" aria-label="Main">
-    <a class="site-title" href="../../index.html">Jack J. Burleson</a>
+    <a class="site-title" href="../../index.html"><span translate="no">Jack J. Burleson</span></a>
     <ul class="nav-list">
       <li><a class="nav-link" href="../../index.html">Home</a></li>
       <li><a class="nav-link" href="../../about.html">About</a></li>
@@ -155,7 +155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <li><a class="nav-link" href="../../research.html">Research</a></li>
       <li><a class="nav-link" href="../../writing/index.html">Writing</a></li>
       <li><a class="nav-link" href="../../resume.html">Résumé</a></li>
-      <li><a class="nav-link" href="../../search.html" data-search-shortcut="/">Search <kbd class="key-hint" aria-hidden="true" hidden="">/</kbd></a></li>
+      <li><a class="nav-link" href="../../search.html" data-search-shortcut="/">Search <kbd translate="no" class="key-hint" aria-hidden="true" hidden="">/</kbd></a></li>
       <li hidden=""><button type="button" class="theme-toggle" aria-label="Switch theme"><span class="i-sun" hidden=""><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-sun"></use></svg></span><span class="i-moon"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-moon"></use></svg></span></button></li>
     </ul>
   </nav>
@@ -165,15 +165,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="project-nav">
 <p><a href="../../projects/degen-llms.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-book-open"></use></svg>Case study</a> <a href="../../projects/degen-llms/report.html" aria-current="page"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Technical report</a> <a href="../../projects/degen-llms/appendix.html"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-file-text"></use></svg>Appendix</a> <a href="https://github.com/Exios66/degen-llms"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-code"></use></svg>Code</a> <a href="https://exios66.github.io/degen-llms/"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-play"></use></svg>Live demo</a></p>
 </div>
-<h1 class="page-title" id="the-mandalay-bay-technical-report">The Mandalay Bay: technical report</h1>
+<h1 class="page-title" id="the-mandalay-bay-technical-report"><span translate="no">The Mandalay Bay</span>: technical report</h1>
 <p><span class="kicker segs"><span class="seg-line"><span class="seg-run"><span class="seg">Side project</span><span class="seg"> <span class="sep">·</span> game systems &amp; simulation</span></span></span></span></p>
 <div class="actions">
 <p><a href="https://exios66.github.io/degen-llms/" class="btn primary">Open the terminal</a> <a href="https://exios66.github.io/degen-llms/rpg/" class="btn">Walk the RPG</a></p>
 </div>
 <nav class="page-toc" aria-label="On this page"><p class="toc-label">On this page</p><ul><li><a href="#summary">Summary</a></li><li><a href="#system-and-data">System and data</a></li><li><a href="#iteration-history">Iteration history</a></li><li><a href="#results">Results</a></li><li><a href="#figures">Figures</a></li><li><a href="#reproducibility">Reproducibility</a></li><li><a href="#engineering-quality">Engineering quality</a></li><li><a href="#limitations-and-next-steps">Limitations and next steps</a></li></ul></nav>
 <h2 id="summary">Summary</h2>
-<p>The Mandalay Bay is a satirical choose-your-adventure resort and casino simulator with one chip wallet. It runs as a Python command-line program, as a browser terminal and as a Phaser pixel-art overworld. The repository is named degen-llms as a joke. There is no language model in it. It is a systems project: one economy, three front ends, a save format that crosses them, and tests around the parts most likely to drift.</p>
-<p>It is satire. Chips are fictional, no real money is involved, and it is not affiliated with MGM Resorts International or the real Mandalay Bay.</p>
+<p><span translate="no">The Mandalay Bay</span> is a satirical choose-your-adventure resort and casino simulator with one chip wallet. It runs as a Python command-line program, as a browser terminal and as a Phaser pixel-art overworld. The repository is named degen-llms as a joke. There is no language model in it. It is a systems project: one economy, three front ends, a save format that crosses them, and tests around the parts most likely to drift.</p>
+<p>It is satire. Chips are fictional, no real money is involved, and it is not affiliated with MGM Resorts International or the real <span translate="no">Mandalay Bay</span>.</p>
 <h2 id="system-and-data">System and data</h2>
 <h3 id="surfaces">Surfaces</h3>
 <table class="caption-top stack" role="table">
@@ -192,22 +192,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd" role="row">
 <td role="cell" data-label="Surface">Python CLI</td>
-<td role="cell" data-label="Entry"><code>python3 -m mandalay_bay</code></td>
+<td role="cell" data-label="Entry"><code translate="no">python3 -m mandalay_bay</code></td>
 <td role="cell" data-label="Role">Reference rules. Standard library only at runtime, Python 3.11 or later</td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Surface">Browser terminal</td>
-<td role="cell" data-label="Entry"><code>docs/</code><wbr><code>index.</code><wbr><code>html</code></td>
-<td role="cell" data-label="Role">Hand-written vanilla JavaScript ES modules under <code>docs/js/</code>. Not Python compiled for the browser</td>
+<td role="cell" data-label="Entry"><code translate="no">docs/</code><wbr><code translate="no">index.</code><wbr><code translate="no">html</code></td>
+<td role="cell" data-label="Role">Hand-written vanilla JavaScript ES modules under <code translate="no">docs/js/</code>. Not Python compiled for the browser</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Surface">Pixel RPG</td>
-<td role="cell" data-label="Entry"><code>docs/</code><wbr><code>rpg/</code><wbr><code>index.</code><wbr><code>html</code></td>
+<td role="cell" data-label="Entry"><code translate="no">docs/</code><wbr><code translate="no">rpg/</code><wbr><code translate="no">index.</code><wbr><code translate="no">html</code></td>
 <td role="cell" data-label="Role">Phaser overworld over the same modules</td>
 </tr>
 </tbody>
 </table>
-<p>By line count (<code>wc</code>, blank lines included) <code>docs/js</code> holds about 33k lines of JavaScript, and about 44k with <code>docs/rpg/js</code> added (the RPG layer is about 10k). The repository has about 27.4k lines of Python in all, including about 5.2k in tests and 6.8k in scripts. The runtime package itself is much smaller.</p>
+<p>By line count (<code translate="no">wc</code>, blank lines included) <code translate="no">docs/js</code> holds about 33k lines of JavaScript, and about 44k with <code translate="no">docs/rpg/js</code> added (the RPG layer is about 10k). The repository has about 27.4k lines of Python in all, including about 5.2k in tests and 6.8k in scripts. The runtime package itself is much smaller.</p>
 <h3 id="content-as-data">Content as data</h3>
 <table class="caption-top">
 <thead>
@@ -222,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>8</td>
 </tr>
 <tr class="even">
-<td>Slot machines (<code>slots_catalog.json</code>)</td>
+<td>Slot machines (<code translate="no">slots_catalog.json</code>)</td>
 <td>37</td>
 </tr>
 <tr class="odd">
@@ -240,36 +240,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <h3 id="architecture">Architecture</h3>
-<figure class="diagram" role="img" aria-labelledby="degen-cap" tabindex="0"><svg viewbox="0 0 800 380" aria-hidden="true" focusable="false"><defs><marker id="degen-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="16" y="30" width="200" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="116" y="60" text-anchor="middle" font-weight="600">Python CLI</text><text x="116" y="77" text-anchor="middle">mandalay_bay package</text><text x="116" y="94" text-anchor="middle">stdlib only</text><rect class="d-box" x="300" y="30" width="200" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="400" y="60" text-anchor="middle" font-weight="600">Browser terminal</text><text x="400" y="77" text-anchor="middle">app.js RENDERERS</text><text x="400" y="94" text-anchor="middle">vanilla ES modules</text><rect class="d-box" x="584" y="30" width="200" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="684" y="60" text-anchor="middle" font-weight="600">Phaser RPG /rpg/</text><text x="684" y="77" text-anchor="middle">TerminalHostOverlay</text><text x="684" y="94" text-anchor="middle">+ 4 bespoke screens</text><rect class="d-box d-accent" x="300" y="160" width="200" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="400" y="190" text-anchor="middle" font-weight="600">buildXRenderers(ctx)</text><text x="400" y="207" text-anchor="middle">shared UI factories</text><text x="400" y="224" text-anchor="middle">in docs/js/ui/</text><rect class="d-box" x="300" y="290" width="200" height="70" rx="8" fill="none" stroke="currentColor"></rect><text x="400" y="318" text-anchor="middle" font-weight="600">ChipWallet</text><text x="400" y="336" text-anchor="middle">one balance, 5 slots</text><path class="d-arrow" d="M400 160V116" marker-end="url(#degen-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M500 202H684V116" marker-end="url(#degen-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M400 244V288" marker-end="url(#degen-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M116 114V325H298" marker-end="url(#degen-ah)" fill="none" stroke="currentColor"></path><text class="d-muted" x="130" y="196" font-size="13">same save schema,</text><text class="d-muted" x="130" y="213" font-size="13">separate port</text><text class="d-muted" x="130" y="230" font-size="13">of the rules</text><text class="d-accent" x="595" y="190" text-anchor="middle" font-size="12">same renderers</text></svg><figcaption id="degen-cap">The Mandalay Bay architecture: a Python CLI and a browser terminal each implement the rules; shared UI factories feed both the terminal and the Phaser RPG overlay; each surface reads and writes the same five-slot wallet schema, kept in the CLI's per-user directory or the browser's localStorage.</figcaption></figure>
-<p><strong>The delegation rule.</strong> The RPG never reimplements a game screen. Casino, hotel, pool, shops, sportsbook, racing, cashier and the meta screens are each written once in <code>docs/js/ui/</code> as a <code>buildXRenderers(ctx)</code> factory. It returns a map from view name to render function. The terminal spreads those maps into its <code>RENDERERS</code> table. The RPG’s <code>TerminalHostOverlay</code> builds the same <code>ctx</code> and mounts the same functions inside an encounter panel. Four screens are drawn by the RPG itself because they read better in the world: blackjack, hold’em, roulette and the House of Blues rhythm game. They still use the shared stake picker for bet entry. The architecture note adds a direction: new logic goes in <code>docs/js/</code> first and the RPG consumes it, never the reverse.</p>
-<p><strong>One wallet and the save format.</strong> A single <code>ChipWallet</code> is the source of truth. There are five save slots. The CLI keeps them in a per-user directory and the browser keeps a library in <code>localStorage</code>. They use the same schema but are not one live store, so a save moves between them only if someone copies it. The web save is version 8, and it carries an <code>rpg</code> block with map, position and flags. The CLI reads the version field tolerantly.</p>
-<p><strong>The resort clock.</strong> <code>world-cycle.js</code> is the single clock for the resort. Two real hours equal one in-game day, which it divides into four named phases.</p>
+<figure class="diagram" role="img" aria-labelledby="degen-cap" tabindex="0"><svg translate="no" viewbox="0 0 800 380" aria-hidden="true" focusable="false"><defs><marker id="degen-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="8" markerheight="8" orient="auto"><path d="M0 0L10 5L0 10z"></path></marker></defs><rect class="d-box" x="16" y="30" width="200" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="116" y="60" text-anchor="middle" font-weight="600">Python CLI</text><text x="116" y="77" text-anchor="middle">mandalay_bay package</text><text x="116" y="94" text-anchor="middle">stdlib only</text><rect class="d-box" x="300" y="30" width="200" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="400" y="60" text-anchor="middle" font-weight="600">Browser terminal</text><text x="400" y="77" text-anchor="middle">app.js RENDERERS</text><text x="400" y="94" text-anchor="middle">vanilla ES modules</text><rect class="d-box" x="584" y="30" width="200" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="684" y="60" text-anchor="middle" font-weight="600">Phaser RPG /rpg/</text><text x="684" y="77" text-anchor="middle">TerminalHostOverlay</text><text x="684" y="94" text-anchor="middle">+ 4 bespoke screens</text><rect class="d-box d-accent" x="300" y="160" width="200" height="84" rx="8" fill="none" stroke="currentColor"></rect><text x="400" y="190" text-anchor="middle" font-weight="600">buildXRenderers(ctx)</text><text x="400" y="207" text-anchor="middle">shared UI factories</text><text x="400" y="224" text-anchor="middle">in docs/js/ui/</text><rect class="d-box" x="300" y="290" width="200" height="70" rx="8" fill="none" stroke="currentColor"></rect><text x="400" y="318" text-anchor="middle" font-weight="600">ChipWallet</text><text x="400" y="336" text-anchor="middle">one balance, 5 slots</text><path class="d-arrow" d="M400 160V116" marker-end="url(#degen-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M500 202H684V116" marker-end="url(#degen-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M400 244V288" marker-end="url(#degen-ah)" fill="none" stroke="currentColor"></path><path class="d-arrow" d="M116 114V325H298" marker-end="url(#degen-ah)" fill="none" stroke="currentColor"></path><text class="d-muted" x="130" y="196" font-size="13">same save schema,</text><text class="d-muted" x="130" y="213" font-size="13">separate port</text><text class="d-muted" x="130" y="230" font-size="13">of the rules</text><text class="d-accent" x="595" y="190" text-anchor="middle" font-size="12">same renderers</text></svg><figcaption id="degen-cap"><span class="scroll-hint">Scroll sideways to see the whole diagram. </span><span translate="no">The Mandalay Bay</span> architecture: a Python CLI and a browser terminal each implement the rules; shared UI factories feed both the terminal and the Phaser RPG overlay; each surface reads and writes the same five-slot wallet schema, kept in the CLI's per-user directory or the browser's localStorage.</figcaption></figure>
+<p><strong>The delegation rule.</strong> The RPG never reimplements a game screen. Casino, hotel, pool, shops, sportsbook, racing, cashier and the meta screens are each written once in <code translate="no">docs/js/ui/</code> as a <code translate="no">buildXRenderers(ctx)</code> factory. It returns a map from view name to render function. The terminal spreads those maps into its <code translate="no">RENDERERS</code> table. The RPG’s <code translate="no">TerminalHostOverlay</code> builds the same <code translate="no">ctx</code> and mounts the same functions inside an encounter panel. Four screens are drawn by the RPG itself because they read better in the world: blackjack, hold’em, roulette and the House of Blues rhythm game. They still use the shared stake picker for bet entry. The architecture note adds a direction: new logic goes in <code translate="no">docs/js/</code> first and the RPG consumes it, never the reverse.</p>
+<p><strong>One wallet and the save format.</strong> A single <code translate="no">ChipWallet</code> is the source of truth. There are five save slots. The CLI keeps them in a per-user directory and the browser keeps a library in <code translate="no">localStorage</code>. They use the same schema but are not one live store, so a save moves between them only if someone copies it. The web save is version 8, and it carries an <code translate="no">rpg</code> block with map, position and flags. The CLI reads the version field tolerantly.</p>
+<p><strong>The resort clock.</strong> <code translate="no">world-cycle.js</code> is the single clock for the resort. Two real hours equal one in-game day, which it divides into four named phases.</p>
 <h3 id="randomness">Randomness</h3>
-<p>The core table games and slots use a cryptographically secure generator. In Python that is a <code>secrets.SystemRandom</code> singleton, with Fisher–Yates shuffles for decks. In the browser the game modules draw from <code>crypto.getRandomValues</code>. A seeded generator is injected only in tests, so those tests are repeatable.</p>
-<p>One gap: the repository documentation says gameplay never uses <code>Math.random</code>, and that is not true. I grepped <code>docs/js</code> and <code>docs/rpg/js</code> and found 30 calls in 14 files. Several side-venue rolls that change chips or rewards still use it: the tip-back roll and amounts in the Gentleman’s Club (<code>gentlemans-club.js</code>), the bar encounter roll (<code>bar.js</code>), dining encounters (<code>dining.js</code>) and the pit top-up perk (<code>rewards-perks.js</code>). The arcade cabinets, the Strip Drive game and the rhythm overlay use it for spawns and sequences. The rest is cosmetic: dealer quips, message ids, effects and animation timing. The claim is wrong as written.</p>
+<p>The core table games and slots use a cryptographically secure generator. In Python that is a <code translate="no">secrets.SystemRandom</code> singleton, with Fisher–Yates shuffles for decks. In the browser the game modules draw from <code translate="no">crypto.getRandomValues</code>. A seeded generator is injected only in tests, so those tests are repeatable.</p>
+<p>One gap: the repository documentation says gameplay never uses <code translate="no">Math.random</code>, and that is not true. I grepped <code translate="no">docs/js</code> and <code translate="no">docs/rpg/js</code> and found 30 calls in 14 files. Several side-venue rolls that change chips or rewards still use it: the tip-back roll and amounts in the Gentleman’s Club (<code translate="no">gentlemans-club.js</code>), the bar encounter roll (<code translate="no">bar.js</code>), dining encounters (<code translate="no">dining.js</code>) and the pit top-up perk (<code translate="no">rewards-perks.js</code>). The arcade cabinets, the Strip Drive game and the rhythm overlay use it for spawns and sequences. The rest is cosmetic: dealer quips, message ids, effects and animation timing. The claim is wrong as written.</p>
 <h3 id="exact-slot-returns">Exact slot returns</h3>
-<p><code>estimate_base_game_rtp</code> in <code>mandalay_bay/activities/slots.py</code> does not simulate spins. It loops over every combination of symbols on the three reels. It multiplies the three symbol probabilities, runs the real payout function on that combination and sums probability times win. It returns the return to player and the hit frequency, excluding progressives. The result is exact, so a test can assert on it with no tolerance for sampling noise.</p>
-<p>The numbers are not realistic. A test named for the parody machine <code>fortune</code> pins its return between 155% and 185%, with a hit frequency of at least 28%. I also ran the estimator over all 37 machines in the catalog. Every one returns more than 100% in the base game: the lowest are <code>fortune</code> and <code>high_roller</code> at about 168%, and the highest is a salon machine at about 1,049%. Hit frequency ranges from about 4% to about 36%. These machines pay the player on average. That is the satire. Nothing here models real casino odds.</p>
+<p><code translate="no">estimate_base_game_rtp</code> in <code translate="no">mandalay_bay/activities/slots.py</code> does not simulate spins. It loops over every combination of symbols on the three reels. It multiplies the three symbol probabilities, runs the real payout function on that combination and sums probability times win. It returns the return to player and the hit frequency, excluding progressives. The result is exact, so a test can assert on it with no tolerance for sampling noise.</p>
+<p>The numbers are not realistic. A test named for the parody machine <code translate="no">fortune</code> pins its return between 155% and 185%, with a hit frequency of at least 28%. I also ran the estimator over all 37 machines in the catalog. Every one returns more than 100% in the base game: the lowest are <code translate="no">fortune</code> and <code translate="no">high_roller</code> at about 168%, and the highest is a salon machine at about 1,049%. Hit frequency ranges from about 4% to about 36%. These machines pay the player on average. That is the satire. Nothing here models real casino odds.</p>
 <h2 id="iteration-history">Iteration history</h2>
 <p>The changelog runs from 1.1.0 (2026-07-26) to 1.2.2 (2026-08-26). Merge history at the 30 October 2026 snapshot reaches the 160s, and the source changelog does not yet describe the later merges. I did not count commits.</p>
 <div class="timeline">
 <ul>
 <li><strong>1.1.0, 2026-07-26</strong> — Trading Floor with 744 stored contracts, 337 sports events and 204 prediction scenarios, Arcade Alley cabinets, Vegas Strip Drive, craps and a lottery counter, and the walkable Strip overworld in the RPG. Rewards tier thresholds aligned to the docs: saves keep their lifetime totals and the tier is recomputed, so a player who had maxed the old ladder can drop until they wager more. Valet garage exit softlock fixed.</li>
-<li><strong>1.2.0, 2026-07-27</strong> — Gentleman’s Club, resort dining and first-person bar overlays, the Mandalay Beach pool overlay, Strip Ride to away casinos, Rewards Phone audio and the Shoppes expansion. Fixes include the module cache bug, the slot redraw bug, tier gate syncing and a Strip Ride blank-screen crash (missing <code>menuBtn</code> helper).</li>
+<li><strong>1.2.0, 2026-07-27</strong> — Gentleman’s Club, resort dining and first-person bar overlays, the Mandalay Beach pool overlay, Strip Ride to away casinos, Rewards Phone audio and the Shoppes expansion. Fixes include the module cache bug, the slot redraw bug, tier gate syncing and a Strip Ride blank-screen crash (missing <code translate="no">menuBtn</code> helper).</li>
 <li><strong>1.2.1, 2026-07-27</strong> — Distinct accent colours and table skins for the away-casino menus (Luxor, Excalibur, Bellagio, Circa), plus documentation parity.</li>
-<li><strong>1.2.2, 2026-08-26</strong> — Python CLI parity for gambling, including text-mode Arcade Alley and the 37-machine slots catalog, and an Arcade Alley redeem shop whose perks feed the casino (a free-spin voucher, a welcome-drink refill). Fixes from a web-terminal casino audit (pending refunds on leave, in-flight slot and roulette spins) and from a pass over RPG hosted games and overlays, and a second <code>menuBtn</code> crash fix in the strip-limo screen.</li>
+<li><strong>1.2.2, 2026-08-26</strong> — Python CLI parity for gambling, including text-mode Arcade Alley and the 37-machine slots catalog, and an Arcade Alley redeem shop whose perks feed the casino (a free-spin voucher, a welcome-drink refill). Fixes from a web-terminal casino audit (pending refunds on leave, in-flight slot and roulette spins) and from a pass over RPG hosted games and overlays, and a second <code translate="no">menuBtn</code> crash fix in the strip-limo screen.</li>
 </ul>
 </div>
 <h3 id="bugs-worth-naming">Bugs worth naming</h3>
 <ul>
-<li><strong>Module cache skew.</strong> The casino boot path loaded <code>venues.js</code> more than once because of ES-module cache skew, which duplicated its instances. The changelog lists it as fixed. I did not trace the fix itself.</li>
+<li><strong>Module cache skew.</strong> The casino boot path loaded <code translate="no">venues.js</code> more than once because of ES-module cache skew, which duplicated its instances. The changelog lists it as fixed. I did not trace the fix itself.</li>
 <li><strong>Slot redraw.</strong> The slot screen replaced the whole page every 90 ms while the reels spun, which glitched the spin. It now updates the reels in place.</li>
 <li><strong>Valet garage softlock.</strong> The changelog describes a softlock when leaving the valet garage. It was fixed with wayfinding signs, path ramps and an interactive keys desk.</li>
 </ul>
 <h2 id="results">Results</h2>
 <p>There are no performance benchmarks. The evidence is the test suite, the CI run list and the screenshots below.</p>
 <h3 id="test-counts">Test counts</h3>
-<p>I ran pytest and the Node scripts on <code>main</code> at <code>80399bf</code> on 26 November 2026; every test passed. The browser smoke test was not run.</p>
+<p>I ran pytest and the Node scripts on <code translate="no">main</code> at <code translate="no">80399bf</code> on 26 November 2026; every test passed. The browser smoke test was not run.</p>
 <table class="caption-top stack" role="table">
 <colgroup>
 <col style="width: 33%">
@@ -287,55 +287,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd" role="row">
 <td role="cell" data-label="Suite">pytest</td>
 <td class="num" role="cell" data-label="Count">419 passed</td>
-<td role="cell" data-label="Source"><code>tests/</code>, re-run on <code>main</code> at <code>80399bf</code> on 26 November 2026</td>
+<td role="cell" data-label="Source"><code translate="no">tests/</code>, re-run on <code translate="no">main</code> at <code translate="no">80399bf</code> on 26 November 2026</td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Suite">Node smoke and regression scripts</td>
 <td class="num" role="cell" data-label="Count">18 passed (13 smoke, 5 regression)</td>
-<td role="cell" data-label="Source"><code>scripts/</code><wbr><code>smoke-</code><wbr><code>test-</code><wbr><code>*.</code><wbr><code>mjs</code>, <code>scripts/</code><wbr><code>test-</code><wbr><code>*-</code><wbr><code>regressions.</code><wbr><code>mjs</code>, same run</td>
+<td role="cell" data-label="Source"><code translate="no">scripts/</code><wbr><code translate="no">smoke-</code><wbr><code translate="no">test-</code><wbr><code translate="no">*.</code><wbr><code translate="no">mjs</code>, <code translate="no">scripts/</code><wbr><code translate="no">test-</code><wbr><code translate="no">*-</code><wbr><code translate="no">regressions.</code><wbr><code translate="no">mjs</code>, same run</td>
 </tr>
 <tr class="odd" role="row">
 <td role="cell" data-label="Suite">Browser smoke test</td>
 <td role="cell" data-label="Count">1 script, not run here</td>
-<td role="cell" data-label="Source"><code>scripts/</code><wbr><code>smoke-</code><wbr><code>test-</code><wbr><code>web.</code><wbr><code>py</code></td>
+<td role="cell" data-label="Source"><code translate="no">scripts/</code><wbr><code translate="no">smoke-</code><wbr><code translate="no">test-</code><wbr><code translate="no">web.</code><wbr><code translate="no">py</code></td>
 </tr>
 </tbody>
 </table>
-<p>CI (<code>.github/workflows/checks.yml</code>) runs pytest on Python 3.11. A second job runs on Node 22: a validation that every import under <code>docs/js</code> resolves, the browser smoke test, and all 18 Node scripts (13 smoke, 5 regression).</p>
-<p><code>tests/test_save_version_migration.py</code> covers a version 3 save with no rewards state, version 7 tier fields, and a version 8 web save with an <code>rpg</code> block loading in the CLI.</p>
+<p>CI (<code translate="no">.github/workflows/checks.yml</code>) runs pytest on Python 3.11. A second job runs on Node 22: a validation that every import under <code translate="no">docs/js</code> resolves, the browser smoke test, and all 18 Node scripts (13 smoke, 5 regression).</p>
+<p><code translate="no">tests/test_save_version_migration.py</code> covers a version 3 save with no rewards state, version 7 tier fields, and a version 8 web save with an <code translate="no">rpg</code> block loading in the CLI.</p>
 <h2 id="figures">Figures</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a class="fig-zoom" href="figures/casino-floor.jpg" title="Open full size"><img src="figures/casino-floor.jpg" class="fig" loading="lazy" decoding="async" alt="A dark browser terminal page titled The Mandalay Bay with a floor chip balance, a list of five venues and a numbered Choose your adventure menu." width="660" height="660"></a></p>
+<p><a class="fig-zoom" href="figures/casino-floor.jpg" title="Open full size"><img src="figures/casino-floor.jpg" class="fig" loading="lazy" decoding="async" alt="A dark browser terminal page titled The Mandalay Bay with a floor chip balance, a list of five venues and a numbered Choose your adventure menu." width="660" height="660"><span class="zoom-hint">Tap to open full size</span></a></p>
 <figcaption>The terminal front page with floor chips and a numbered menu.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a class="fig-zoom" href="figures/table-games.jpg" title="Open full size"><img src="figures/table-games.jpg" class="fig" loading="lazy" decoding="async" alt="A terminal menu headed Table Games listing Blackjack, Texas Hold'em and Mandalay Roulette, each with a minimum bet and a one-line description." width="660" height="338"></a></p>
+<p><a class="fig-zoom" href="figures/table-games.jpg" title="Open full size"><img src="figures/table-games.jpg" class="fig" loading="lazy" decoding="async" alt="A terminal menu headed Table Games listing Blackjack, Texas Hold'em and Mandalay Roulette, each with a minimum bet and a one-line description." width="660" height="338"><span class="zoom-hint">Tap to open full size</span></a></p>
 <figcaption>The table games menu.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a class="fig-zoom" href="figures/slot-machines.jpg" title="Open full size"><img src="figures/slot-machines.jpg" class="fig" loading="lazy" decoding="async" alt="A terminal menu headed Slot Machines with one entry, Mandalay Bay Slots, minimum 1 chip, and a Back option." width="660" height="258"></a></p>
+<p><a class="fig-zoom" href="figures/slot-machines.jpg" title="Open full size"><img src="figures/slot-machines.jpg" class="fig" loading="lazy" decoding="async" alt="A terminal menu headed Slot Machines with one entry, Mandalay Bay Slots, minimum 1 chip, and a Back option." width="660" height="258"><span class="zoom-hint">Tap to open full size</span></a></p>
 <figcaption>The slot machines menu.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a class="fig-zoom" href="figures/sportsbook.jpg" title="Open full size"><img src="figures/sportsbook.jpg" class="fig" loading="lazy" decoding="async" alt="A terminal menu headed Sports Book with one entry, Mandalay Sports Book, minimum 10 chips, described as spreads, totals, props and yes or no contracts, and a Back option." width="660" height="258"></a></p>
+<p><a class="fig-zoom" href="figures/sportsbook.jpg" title="Open full size"><img src="figures/sportsbook.jpg" class="fig" loading="lazy" decoding="async" alt="A terminal menu headed Sports Book with one entry, Mandalay Sports Book, minimum 10 chips, described as spreads, totals, props and yes or no contracts, and a Back option." width="660" height="258"><span class="zoom-hint">Tap to open full size</span></a></p>
 <figcaption>The sports book menu.</figcaption>
 </figure>
 </div>
 <p>These screenshots come from an earlier build. The slot screen’s text there (“nearly 1,000 reel games”) does not match the 37-machine catalog in the current data.</p>
 <h2 id="reproducibility">Reproducibility</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> mandalay_bay                   <span class="co"># play the CLI</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre translate="no" class="sourceCode sh code-with-copy"><code translate="no" class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> mandalay_bay                   <span class="co"># play the CLI</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> mandalay_bay <span class="at">--list-saves</span>      <span class="co"># list save slots</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> pytest                         <span class="co"># Python tests</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/validate-docs-imports.mjs    <span class="co"># check browser module imports</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/smoke-test-rpg.mjs           <span class="co"># RPG world data check</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The browser terminal is static files in <code>docs/</code>, so any static host can serve it. Playing cards in the games use the Kenney Playing Cards Pack (kenney.nl), released under CC0.</p>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> scripts/smoke-test-rpg.mjs           <span class="co"># RPG world data check</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><span class="cc-copy">Copy</span><span class="cc-done">Copied</span></button></div>
+<p>The browser terminal is static files in <code translate="no">docs/</code>, so any static host can serve it. Playing cards in the games use the Kenney Playing Cards Pack (kenney.nl), released under CC0.</p>
 <h2 id="engineering-quality">Engineering quality</h2>
 <ul>
 <li><strong>Tests near the economy.</strong> Wallet, rewards, saves, hotel, sportsbook, lottery and slots each have their own test file.</li>
@@ -347,10 +347,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>The README lags the code: it still says “200+ tests”, while the 30 October snapshot declares 379 pytest tests. The data files and the test tree are the authority.</li>
 <li>Package metadata says version 1.0.0 while the changelog is at 1.2.2.</li>
-<li>The Pages deploy is manual from the <code>gh-pages</code> branch, so the live demo can lag <code>main</code>.</li>
-<li>Blackjack rule tests are small: <code>test_rules.py</code> has 9 tests and <code>test_hand.py</code> has 8.</li>
+<li>The Pages deploy is manual from the <code translate="no">gh-pages</code> branch, so the live demo can lag <code translate="no">main</code>.</li>
+<li>Blackjack rule tests are small: <code translate="no">test_rules.py</code> has 9 tests and <code translate="no">test_hand.py</code> has 8.</li>
 <li>Slot returns are parody numbers, not realistic odds.</li>
-<li>The <code>Math.random</code> calls in side-venue code (tips, bar, dining, rewards perk), described above, are a known gap against the project’s own claim.</li>
+<li>The <code translate="no">Math.random</code> calls in side-venue code (tips, bar, dining, rewards perk), described above, are a known gap against the project’s own claim.</li>
 <li>Python and the browser each implement the rules, so they can drift. The shared save schema and tests reduce that risk but do not remove it.</li>
 </ul>
 <nav class="project-pager" aria-label="Project navigation"><a class="pager-prev" href="../../projects/langtons-ant.html" rel="prev"><svg class="icon" width="1em" height="1em" aria-hidden="true" focusable="false"><use href="#i-arrow-left"></use></svg><span class="pager-text"><span class="pager-label">Previous project</span><span class="pager-name">Langton's Ant</span></span></a></nav>
@@ -359,9 +359,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </main>
 <footer class="site-footer">
   <p class="footer-links"><a href="https://github.com/Exios66">GitHub</a> <a href="https://www.linkedin.com/in/jackjburleson">LinkedIn</a> <a href="mailto:jackjburleson@proton.me">Email</a></p>
-  <p>© 2026 Jack J. Burleson · Built with <a href="https://quarto.org">Quarto</a></p>
+  <p>© 2026 <span translate="no">Jack J. Burleson</span> · Built with <a href="https://quarto.org">Quarto</a></p>
 </footer>
-<script src="../../assets/js/site.js?v=83a152c7b0" defer=""></script>
+<script src="../../assets/js/site.js?v=d6c56fb63a" defer=""></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-file-text" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></symbol><symbol id="i-book-open" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></symbol><symbol id="i-code" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol><symbol id="i-play" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></symbol><symbol id="i-arrow-left" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></symbol><symbol id="i-sun" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></symbol><symbol id="i-moon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"></path></symbol></svg>
 
 <script>

@@ -180,5 +180,42 @@ class RenderingIntegrityTests(unittest.TestCase):
                 self.assertNotIn(marker, text, f"{checks.rel(page)}: {marker}")
 
 
+class TranslationReadinessTests(unittest.TestCase):
+    """The site is one English source that browser translators translate in place."""
+
+    def test_every_page_declares_english(self):
+        for page in pages():
+            self.assertRegex(page.read_text(encoding="utf-8"), r'<html[^>]*\slang="en"', checks.rel(page))
+
+    def test_code_and_drawn_text_are_marked_untranslatable(self):
+        for page in pages():
+            body = page.read_text(encoding="utf-8").split("<body", 1)[1]
+            for tag in re.findall(r"<(?:code|pre|kbd|samp)(?=[\s>])[^>]*>", body):
+                self.assertIn('translate="no"', tag, f"{checks.rel(page)}: {tag}")
+            for figure in re.findall(r'<figure class="(?:chart|diagram)[\s"].*?</figure>', body, re.S):
+                for svg in re.findall(r"<svg\b[^>]*>", figure):
+                    self.assertIn('translate="no"', svg, f"{checks.rel(page)}: {svg[:80]}")
+
+    def test_project_titles_are_kept_as_written(self):
+        for page in sorted((checks.DOCS / "projects").glob("*.html")):
+            # A thesis title and Langton's Ant have names in other languages, so they translate.
+            if page.stem in {"index", "natd", "langtons-ant"}:
+                continue
+            title = re.search(r'<h1 class="page-title"[^>]*>(.*?)</h1>', page.read_text(encoding="utf-8"), re.S)
+            self.assertIsNotNone(title, checks.rel(page))
+            self.assertRegex(title.group(1), r'^<span translate="no">[^<]+</span>$', checks.rel(page))
+
+    def test_stylesheet_writes_no_words(self):
+        # Translators never see CSS-generated text, so every label must be real text.
+        css = (checks.DOCS / "styles.css").read_text(encoding="utf-8")
+        values = re.findall(r"(?<![\w-])content:\s*([^;}]+)", css)
+        self.assertTrue(values)
+        for value in values:
+            # Stacked-table labels read an attribute that site.js keeps equal to the
+            # (translated) column header; nothing else may carry words.
+            if value.strip() not in {"none", "normal", 'attr(data-label) / ""'}:
+                self.assertNotRegex(value, r"[A-Za-z]{2,}", value)
+
+
 if __name__ == "__main__":
     unittest.main()
