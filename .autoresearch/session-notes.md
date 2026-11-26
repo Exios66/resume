@@ -259,3 +259,25 @@ Segment 19 starts with audit commit `ca18fe4`: `inspectMapReduceEvidence` pinned
 - Run 95 keep: Degen 419 pytest + 18 node scripts all pass (80399bf); projects-index disclaimer to one line.
 - Run 96 keep: Mailroom-ML 384 passed/55 skipped core suite (01c2272); Corpus EDA 1,114 tests: 1,046 passed, 67 skipped, 1 failed (aed8481, labeling review portal); Wave appendix and Reloaded report updated.
 Langton's ant 108 re-run and matches. Source repos for NATD, PDT, Personas, RVL-CDIP, Digital-Mailroom have no commits after the cited revisions.
+
+## Segment 20: visual craft (26 Nov 2026, runs 97–104)
+
+Metric `experience_gaps` with gate `polish_defects=0`; every run stayed 0 / 5. All keeps are judged L2 craft
+keeps with screenshots in `.hillclimb-shots/run-NN-*` and records in `.hillclimb-evidence/`.
+
+- 98 Hero: removed the wireframe "constellation" masks (and their drift animation) beside the name; the lede
+  is darker, 1.12rem in a 54ch measure with `text-wrap: pretty` (1.02rem on phones). CSS −5.8 KB raw.
+- 99 About: 28px above the closing résumé button.
+- 100 Explore tiles: the site arrow at the end of each title (mask of the same path as `icon-go`), nudges on
+  hover; descriptions in sentence case.
+- 101 AeroGlobe card: route search, time-zone overlay and logbook stated as live (the case study already
+  said so); 8 lines instead of 11, so the Corpus-EDA neighbour no longer has a gap.
+- 102 Projects: category jump links are pills drawn inside unchanged 44px tap areas; `.project-jump a`
+  joined the underline exclusion list.
+- 103 `.actions` is left-aligned by default; only `.hero .actions` centres (case studies, reports, 404).
+- 104 Footer: GitHub · LinkedIn · Email text pills on every page. The icon version pushed the MapReduce
+  case study to 20,087 gz bytes (experience_gaps 6) and was replaced before the keep.
+
+Learnings: the MapReduce case study has ~230 gz bytes of headroom; anything added to every page's chrome
+must be measured against it. Footer screenshots need a short page (404) because `--at` cannot scroll past
+the document end.

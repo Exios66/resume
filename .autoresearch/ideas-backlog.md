@@ -112,3 +112,9 @@ Open (segments must be re-baselined per issue 106's contract before adding check
 - mailroom-ml: `ruff check .` reports one fixable issue at 01c2272 upstream.
 - Wave Lab live demo (14 Nov) predates clouds/sun shafts; refresh the captures after a redeploy.
 - MapReduce: an E7 chart would be welcome but the case study sits at 19,697 / 20,000 gzip.
+
+### After segment 20 (visual craft)
+- Hover/focus states of the new pills and Explore arrows are not screenshotted (shot.cjs has no hover option); add one.
+- Single-card project rows: the cover panel could crop its motif (preserveAspectRatio slice) to fill the panel.
+- Featured card kickers on Neuron Atlas wrap to two lines on desktop; a shorter kicker would align the row.
+- Page weight: MapReduce case study at 19,768 / 20,000 gz; trim before adding more chrome.
