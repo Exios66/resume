@@ -222,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>The GPU and CPU read the same amplitudes; the app compares one texel with the CPU result on each new sea and fails the browser tests if they disagree.</p>
 <h2 id="validation-scope">Validation scope</h2>
-<table class="caption-top stack" role="table">
+<table class="caption-top stack" role="table" data-prose-rows="true">
 <colgroup>
 <col style="width: 42%">
 <col style="width: 57%">
@@ -230,25 +230,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <thead>
 <tr class="header" role="row">
 <th role="columnheader">Suite</th>
-<th style="text-align: right;" role="columnheader">Count at the snapshot</th>
+<th style="text-align: right;" role="columnheader">Result</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd" role="row">
-<td role="cell" data-label="Suite">Long-running validation tests</td>
-<td style="text-align: right;" role="cell" data-label="Count at the snapshot">25 in 9 files</td>
+<td role="cell" data-label="Suite">Physics validation tests</td>
+<td style="text-align: right;" role="cell" data-label="Result">40 passed in 9 files</td>
 </tr>
 <tr class="even" role="row">
 <td role="cell" data-label="Suite">Unit and component tests</td>
-<td style="text-align: right;" role="cell" data-label="Count at the snapshot">Several hundred declarations; not re-counted here</td>
+<td style="text-align: right;" role="cell" data-label="Result">932 passed in 97 files</td>
 </tr>
 <tr class="odd" role="row">
-<td role="cell" data-label="Suite">Browser tests</td>
-<td style="text-align: right;" role="cell" data-label="Count at the snapshot">Desktop and mobile Playwright, including axe</td>
+<td role="cell" data-label="Suite">Browser tests (desktop and mobile Playwright, with axe)</td>
+<td style="text-align: right;" role="cell" data-label="Result">51 defined; not run here</td>
 </tr>
 </tbody>
 </table>
-<p>Unit-test declarations are not a passing-test total. The repository’s own README badge and the local grep count use different methods, so this appendix reports the validation suite only.</p>
+<p>Unit and validation counts are from <code>pnpm test</code> on <code>main</code> at <code>3211918</code>, run on 26 November 2026. The browser suite was not run.</p>
 <h2 id="reference-case">Reference case</h2>
 <p>The Draupner crest is the reference: 18.5 m in a sea with 11.9 m significant wave height. The rogue-wave preset targets that shape on purpose.</p>
 <h2 id="what-is-not-modelled">What is not modelled</h2>

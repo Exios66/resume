@@ -14,7 +14,7 @@ CASES = {
     "mailroom-corpus-eda": ("3,302", "1,100", "22,591", "2,530", "323"),
     "langtons-ant": ("6219b3fb", "9,977", "20"),
     "rvl-cdip-classifier": ("82.6%", "99.4%", "29"),
-    "wave-laboratory": ("25 in 9 files", "18.5 m", "11.9 m"),
+    "wave-laboratory": ("40 passed in 9 files", "18.5 m", "11.9 m"),
     "natd": ("nine-participant", "withheld", "#80"),
     "llm-personas": ("13", "12", "not internally consistent"),
 }

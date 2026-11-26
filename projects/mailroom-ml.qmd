@@ -72,7 +72,7 @@ I trained one ModernBERT encoder with a document-type head and one subclass head
 - **Data lineage.** Every training set is pinned to a revision. A provenance module writes a byte-reproducible manifest with sha256 hashes and no timestamps, so a rebuild on the same inputs gives the same bytes.
 - **A leak audit.** Early on, the model's insurance subclass score looked too good. The audit showed that titles fell back to filenames, and 42.8% of filenames contained the subclass name. I removed the fallback and added a build-time check that fails if a filename-shaped title returns.
 - **ONNX export for CPU serving.** An exported model is checked against the PyTorch one before promotion; the Modal serving app is a fallback. In the historical Apple M2 test with the earlier Run 3 checkpoint, fp32 matched PyTorch to within 4.25e-06 per head and int8 did not. That check is not evidence of M9c export parity.
-- **A test suite.** The earlier audit counted 485 test functions in 33 files, not a current passing-test total. CI runs ruff and pytest; heavy-dependency tests can skip when torch or Modal is absent.
+- **A test suite.** CI runs ruff and the core pytest suite on every pull request. Re-run on `main` on 26 November 2026, 384 tests passed and 55 skipped; the skipped ones need torch, ONNX or Modal, which the core suite does not install.
 
 ## Earlier results: M9b
 

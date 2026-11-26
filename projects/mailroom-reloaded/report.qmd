@@ -162,7 +162,7 @@ uv run mailroom eval --per-class 20 --seed 42 --split test
 
 ## Engineering quality
 
-- **Test suite.** The 1 November 2026 revision declares 1,276 `def test_` functions across 89 test files, counted by grep. The 1,597 in the 11 October verification run is higher because of parametrisation and because the Node suites are also wired into pytest.
+- **Test suite.** 1,844 Python tests and 397 replay-viewer tests pass on `main` (re-run above). Live-provider and Docker tests need a configured provider or a Docker daemon and were not run.
 - **Tiers.** Agents, pipeline, eval, observability, API, deploy, intake, ingest, LLM, scoring, schemas, storage, TUI and `/ui`.
 - **Dependency fence.** A test fails if any `langgraph`, `langchain*`, `langfuse`, `braintrust` or `litellm` import appears under `src/` or in any dependency.
 - **Prompt lock.** A test checks the sha256 of every vendored prompt against its lineage file, so frozen prompts cannot drift silently.

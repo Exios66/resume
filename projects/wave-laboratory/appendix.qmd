@@ -36,13 +36,13 @@ The GPU and CPU read the same amplitudes; the app compares one texel with the CP
 
 ## Validation scope
 
-| Suite | Count at the snapshot |
+| Suite | Result |
 | --- | ---: |
-| Long-running validation tests | 25 in 9 files |
-| Unit and component tests | Several hundred declarations; not re-counted here |
-| Browser tests | Desktop and mobile Playwright, including axe |
+| Physics validation tests | 40 passed in 9 files |
+| Unit and component tests | 932 passed in 97 files |
+| Browser tests (desktop and mobile Playwright, with axe) | 51 defined; not run here |
 
-Unit-test declarations are not a passing-test total. The repository's own README badge and the local grep count use different methods, so this appendix reports the validation suite only.
+Unit and validation counts are from `pnpm test` on `main` at `3211918`, run on 26 November 2026. The browser suite was not run.
 
 ## Reference case
 
