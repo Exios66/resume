@@ -144,19 +144,20 @@ class PortfolioAdditionTests(unittest.TestCase):
         self.assertIn("In active development", parser.text(kickers[0]))
         caveat = self.one(parser, "div", **{"class": "caveat"})
         self.assertIn("Work in progress", parser.text(caveat))
-        self.assertIn("23 October 2026", parser.text(caveat))
-        self.assertIn("30 October 2026 recount", parser.text(caveat))
-        self.assertNotIn("counts describe the code on 23 October", parser.text(caveat))
+        # The live build is the 8 November gh-pages deploy of a011ff7; its controls were
+        # checked on 26 November 2026 (Timeline, Time zones, Logbook, Search flights).
+        self.assertIn("last deployed on 8 November 2026", parser.text(caveat))
+        self.assertIn("not a live feed", parser.text(caveat))
         self.assertIn("no real historical day is published yet", parser.text(caveat))
         caveat_links = [checks.attr(attrs, "href") for tag, attrs in parser.children(caveat) if tag == "a"]
         self.assertEqual(caveat_links, [
-            "https://github.com/Exios66/aeroglobe/blob/a011ff7b46c0/README.md",
-            "https://github.com/Exios66/aeroglobe/blob/935bd07515b6fd857f0ff449618c6f244fb49353/README.md",
-            "https://exios66.github.io/aeroglobe/"])
+            "https://exios66.github.io/aeroglobe/",
+            "https://github.com/Exios66/aeroglobe/blob/a011ff7b46c0/README.md"])
         planned = self.one(parser, "h2", id="what-is-planned")
         self.assertEqual(parser.text(planned), "What is planned")
         body = self.one(parser, "div", **{"class": "page"})
-        self.assertIn("in-browser logbook", parser.text(body))
+        self.assertIn("personal logbook", parser.text(body))
+        self.assertIn("451 tests passed in 54 of 56 files", parser.text(body))
         self.assertIn("WIP", parser.text(body))
         self.assertNotIn("None of these is built yet", parser.text(body))
         self.assertFalse(any(tag == "img" for tag, _, _ in parser.elements), "No unverified screenshot")
