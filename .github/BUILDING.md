@@ -66,7 +66,7 @@ The site has one English source (`lang="en"`) and no translated copies. Readers 
 - Interface hints that the stylesheet used to write with `content:` (Copy, Tap to open full size, Scroll sideways …) are real text, because translators never see CSS-generated text. Stacked phone tables still label cells with `attr(data-label)`; `site.js` copies each translated column header into those attributes.
 - `styles.css` takes each text block's direction from its own text (`unicode-bidi: plaintext`), sets prose right to left when Chrome marks the page as translated into Arabic, Persian, Hebrew or Urdu, drops letter-spacing for those scripts, wraps long words (German compounds) and lets the phone header wrap longer labels.
 
-`tests/browser/pseudo_translate.js` simulates in-place translation with language-shaped pseudo-text (German, French, Spanish, Chinese, Arabic); it is not a real translator. `scripts/hillclimb/translation-sweep.cjs` runs it on every page in Chromium, Firefox and WebKit at 320, 375 and 1280 px, and `test_translated_pages_keep_layout_names_and_code` runs it on four representative pages in the browser suite.
+`tests/browser/pseudo_translate.js` simulates in-place translation with language-shaped pseudo-text (German, French, Spanish, Chinese, Arabic); it is not a real translator. `scripts/hillclimb/translation-sweep.cjs` runs it on every page in Chromium, Firefox and WebKit at 320, 375 and 1280 px and checks each page with `scripts/hillclimb/translation-checks.js`, and `test_translated_pages_keep_layout_names_and_code` runs it on four representative pages in the browser suite.
 
 ## Adding a project
 

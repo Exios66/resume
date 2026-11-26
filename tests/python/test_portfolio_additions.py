@@ -53,15 +53,25 @@ def assert_diagram_matches_partial(test, published, diagram, source, original):
     test.assertEqual(diagram, original)
     children = published.children(diagram)
     test.assertEqual([attrs.get("translate") for tag, attrs in children if tag == "svg"], ["no"])
-    hints = [(tag, attrs) for tag, attrs in children if checks.attr(attrs, "class") == "scroll-hint"]
+    hints = [child for child in children if checks.attr(child[1], "class") == "scroll-hint"]
     test.assertEqual(len(hints), 1)
-    drawn = [(tag, {k: v for k, v in attrs.items() if not (tag == "svg" and k == "translate")})
-             for tag, attrs in children if (tag, attrs) not in hints and (tag, attrs) != ("span", {"translate": "no"})]
+    drawn = [without_translation_marks(child) for child in children
+             if child not in hints and child != ("span", {"translate": "no"})]
     test.assertEqual(drawn, source.children(original))
-    caption = published.text(next(attrs for tag, attrs in children if tag == "figcaption"))
-    original_caption = source.text(next(attrs for tag, attrs in source.children(original) if tag == "figcaption"))
+    caption = figcaption_text(published, children)
     test.assertTrue(caption.startswith(SCROLL_HINT), caption)
-    test.assertEqual(caption[len(SCROLL_HINT):].strip(), original_caption)
+    test.assertEqual(caption[len(SCROLL_HINT):].strip(), figcaption_text(source, source.children(original)))
+
+
+def without_translation_marks(child):
+    """A (tag, attributes) pair without the translate="no" that post-render adds to a drawing."""
+    tag, attrs = child
+    return tag, {k: v for k, v in attrs.items() if not (tag == "svg" and k == "translate")}
+
+
+def figcaption_text(page, children):
+    """The text of the figcaption among a figure's children."""
+    return page.text(next(attrs for tag, attrs in children if tag == "figcaption"))
 
 
 def destination(page, attributes):

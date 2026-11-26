@@ -369,22 +369,35 @@ def protect_names(text):
     """
     out, skip, last = [], [], 0
     for tag in TAG.finditer(text):
-        chunk = text[last:tag.start()]
-        out.append(chunk if skip else NAME.sub(r'<span translate="no">\1</span>', chunk))
+        out.append(_wrap_names(text[last:tag.start()], skip))
         out.append(tag.group(0))
         last = tag.end()
-        closing, name, attrs, self_closing = tag.group(1), tag.group(2).lower(), tag.group(3), tag.group(4)
-        if skip:
-            if name == skip[-1][0] and name not in VOID and not self_closing:
-                skip[-1][1] += -1 if closing else 1
-                if skip[-1][1] == 0:
-                    skip.pop()
-        elif not closing and not self_closing and name not in VOID and (
-                name in NAME_SKIP or re.search(r'\stranslate="no"', attrs)):
-            skip.append([name, 1])
-    tail = text[last:]
-    out.append(tail if skip else NAME.sub(r'<span translate="no">\1</span>', tail))
+        _track_skipped(tag, skip)
+    out.append(_wrap_names(text[last:], skip))
     return "".join(out)
+
+
+def _wrap_names(chunk, skip):
+    """Wrap protected names in a run of text, unless it is inside a skipped element."""
+    return chunk if skip else NAME.sub(r'<span translate="no">\1</span>', chunk)
+
+
+def _track_skipped(tag, skip):
+    """Update the stack of open elements whose text keeps its names as written.
+
+    skip holds [name, depth] for the outermost skipped element; nested elements of the
+    same name change its depth, and any other tag inside it is ignored.
+    """
+    closing, name, attrs, self_closing = tag.group(1), tag.group(2).lower(), tag.group(3), tag.group(4)
+    if self_closing or name in VOID:
+        return
+    if skip:
+        if name == skip[-1][0]:
+            skip[-1][1] += -1 if closing else 1
+            if skip[-1][1] == 0:
+                skip.pop()
+    elif not closing and (name in NAME_SKIP or re.search(r'\stranslate="no"', attrs)):
+        skip.append([name, 1])
 
 
 def prepare_translation(text):
