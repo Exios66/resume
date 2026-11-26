@@ -148,9 +148,14 @@ server.listen(0, '127.0.0.1', async () => {
             // A thesis title and Langton's Ant have names in other languages, so they translate.
             const project = /^projects\/[^/]+\.html$/.test(rel) && !/\/(index|natd|langtons-ant)\.html$/.test(rel);
             const before = project ? await page.evaluate(() => (document.querySelector('h1.page-title') || {}).textContent?.trim() || null) : null;
-            await page.evaluate(l => window.pseudoTranslate(l), lang);
-            await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
-            const problems = await page.evaluate(inspect, before);
+            let problems;
+            try {
+              await page.evaluate(l => window.pseudoTranslate(l), lang);
+              await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
+              problems = await page.evaluate(inspect, before);
+            } catch (error) {
+              problems = [`error: ${error.message.split('\n')[0]}`];
+            }
             loads++;
             if (problems.length) { failures++; console.log(`FAIL ${engine} ${width} ${lang} ${rel}\n  ${problems.join('\n  ')}`); }
             if ((problems.length || shots.has(rel)) && engine === 'chromium' && width !== 320) {
