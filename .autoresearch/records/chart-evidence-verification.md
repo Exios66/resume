@@ -43,8 +43,8 @@ scripts/hillclimb/hc.sh checks
 scripts/hillclimb/hc.sh experiment 'Restore reading width for stacked table captions' styles.css tests/test_browser.py
 scripts/hillclimb/hc.sh checks
 python3 -m http.server 8769 --bind 127.0.0.1 --directory docs
-.venv/bin/python .autoresearch/capture-chart-evidence.py
-.venv/bin/python .autoresearch/inventory-site-evidence.py
+.venv/bin/python .autoresearch/records/capture-chart-evidence.py
+.venv/bin/python .autoresearch/records/inventory-site-evidence.py
 ```
 
 Capture workflow is the run 65 workflow, originally run from /tmp against its candidate build. Re-run on that revision to reproduce its historical screenshots. hc.sh shot commands captured the baseline, run 64 and run 67 with --at figure.chart or --at table.chart-source and --height 1000/1100. Per-run evidence records list exact image paths, finding removals/additions and check results. All 35 archived screenshots were opened and checked for private data. They show public portfolio content only.

@@ -305,5 +305,63 @@ class CacheBustTests(unittest.TestCase):
                              f'<link rel="stylesheet" href="../styles.css?v={version}">')
 
 
+class TranslationReadyTests(unittest.TestCase):
+    prepare = staticmethod(POST["prepare_translation"])
+    names = staticmethod(POST["protect_names"])
+
+    def test_code_and_drawn_text_are_kept_as_written(self):
+        page = ('<html><head><title>x</title></head><body><main><p>Run <code>uv sync</code></p>'
+                '<pre class="sourceCode"><code>make</code></pre><kbd>/</kbd>'
+                '<figure class="chart chart-bars"><div class="chart-body"><svg viewbox="0 0 1 1"><text>Sort</text></svg></div>'
+                '<template class="chart-narrow"><svg viewbox="0 0 1 1"></svg></template></figure>'
+                '<figure class="diagram diagram-x" role="img"><svg aria-hidden="true"></svg><figcaption id="c">How</figcaption></figure>'
+                '<svg class="icon"><use href="#i"></use></svg></main></body></html>')
+        out = self.prepare(page)
+        self.assertIn('<code translate="no">uv sync</code>', out)
+        self.assertIn('<pre translate="no" class="sourceCode">', out)
+        self.assertIn('<kbd translate="no">', out)
+        self.assertEqual(out.count('<svg translate="no"'), 3)
+        # Icons are not drawn text; only chart and diagram drawings are marked.
+        self.assertIn('<svg class="icon">', out)
+        self.assertEqual(self.prepare(out), out)
+
+    def test_names_in_prose_are_wrapped_but_attributes_and_code_are_not(self):
+        text = ('<body><h1>Wave Laboratory</h1><p>The Mandalay Bay and Mailroom-ML.</p>'
+                '<img alt="Wave Laboratory screenshot"><code>Mailroom-ML</code>'
+                '<script>var x = "AeroGlobe";</script><a href="/aeroglobe">AeroGlobe</a>'
+                '<p>Mailroom-ML-v2 and RVL-CDIP-Classifier stay whole.</p></body>')
+        out = self.names(text)
+        self.assertIn('<h1><span translate="no">Wave Laboratory</span></h1>', out)
+        self.assertIn('<span translate="no">The Mandalay Bay</span> and <span translate="no">Mailroom-ML</span>.', out)
+        self.assertIn('alt="Wave Laboratory screenshot"', out)
+        self.assertIn('<code>Mailroom-ML</code>', out)
+        self.assertIn('var x = "AeroGlobe";', out)
+        self.assertIn('<a href="/aeroglobe"><span translate="no">AeroGlobe</span></a>', out)
+        # A longer hyphenated token is not a name; the longest name wins.
+        self.assertIn('Mailroom-ML-v2 and <span translate="no">RVL-CDIP-Classifier</span>', out)
+        self.assertEqual(self.names(out), out)
+
+    def test_names_inside_a_kept_element_are_not_wrapped_again(self):
+        text = '<body><div translate="no"><div>Neuron Atlas</div></div><p>Neuron Atlas</p></body>'
+        self.assertEqual(self.names(text),
+                         '<body><div translate="no"><div>Neuron Atlas</div></div><p><span translate="no">Neuron Atlas</span></p></body>')
+
+    def test_generated_labels_become_text_once(self):
+        page = ('<body><div class="code-copy-outer-scaffold"><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>'
+                '<a class="fig-zoom" href="a.jpg" title="Open full size"><img src="a.jpg" class="fig"></a>'
+                '<figure class="diagram"><svg></svg><figcaption>How it fits.</figcaption></figure>'
+                '<figure class="chart chart-dots"><p class="chart-tools"></p></figure></body>')
+        out = self.prepare(page)
+        self.assertIn('<span class="cc-copy">Copy</span><span class="cc-done">Copied</span></button>', out)
+        self.assertIn('<img src="a.jpg" class="fig"><span class="zoom-hint">Tap to open full size</span></a>', out)
+        self.assertIn('<figcaption><span class="scroll-hint" aria-hidden="true">Scroll sideways to see the whole diagram. </span>How it fits.</figcaption>', out)
+        self.assertIn('<p class="chart-tools"></p><p class="scroll-hint">Scroll sideways to see the whole chart.</p></figure>', out)
+        self.assertEqual(self.prepare(out), out)
+
+    def test_head_is_left_alone(self):
+        page = '<html><head><title>Wave Laboratory</title><style>pre{}</style></head><body></body></html>'
+        self.assertEqual(self.prepare(page), page)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -32,7 +32,7 @@ scripts/hillclimb/hc.sh checks
 scripts/hillclimb/hc.sh experiment 'Give essay titles and summaries room on tablets' styles.css writing/index.qmd
 ```
 
-Every experiment also ran `scripts/hillclimb/hc.sh checks` (which invokes `bash autoresearch.checks.sh`: Lua through bundled Pandoc, Node, Python and real Chromium). Exact experiment commits and results are in [the per-run records](evidence/).
+Every experiment also ran `scripts/hillclimb/hc.sh checks` (which invokes `bash autoresearch.checks.sh`: Lua through bundled Pandoc, Node, Python and real Chromium). Exact experiment commits and results are in [the per-run records](../evidence/).
 
 The first run-48 version failed `test_chart_tooltip_hides_on_sideways_scroll_and_stays_on_screen` (1 failed, 22 passed, 2 deselected); it was not kept. Adaptive bar-label gutters and full desktop diagram margins fixed the candidate before re-auditing and passing the full gate on `daf4899`. The Lua negative-label collision assertion now compares to the intentionally changed category-label coordinate, preserving the no-collision requirement.
 
@@ -61,7 +61,7 @@ scripts/hillclimb/hc.sh shot projects/index.html 375 dark segment-6-before-ecosy
 scripts/hillclimb/hc.sh shot writing/index.html 768 light run-49-before-writing-768-light --at .card --text 'The Ship of Theseus'
 ```
 
-Run-48 screenshots were recaptured after refinement. Earlier unkept images remain only in the ignored local `.hillclimb-shots/refinement-48-initial-*` files. Final evidence is copied to [screenshots/](screenshots/), outside the published site. An additional collaborative-browser screenshot records the chart at scrollLeft 327 with its focused tooltip visible (375 CSS px, 2× pixel density).
+Run-48 screenshots were recaptured after refinement. Earlier unkept images remain only in the ignored local `.hillclimb-shots/refinement-48-initial-*` files. Final evidence is copied to [screenshots/](../screenshots/), outside the published site. An additional collaborative-browser screenshot records the chart at scrollLeft 327 with its focused tooltip visible (375 CSS px, 2× pixel density).
 
 ## Browser interaction and coverage limits
 

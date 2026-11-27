@@ -10,11 +10,11 @@ Commands (sourced `. .autoresearch-tools/env.sh`): `scripts/hillclimb/hc.sh doct
 
 Actual capture commands: `hc.sh shot projects/natd/report.html WIDTH THEME pr108-final-citations-WIDTH-THEME --at '#humans-presume-honesty-and-detect-lies-at-about-chance'`; the Research counterpart uses `research.html --at '#graduate-research-at-uwmadison'`. Both at 375/1280 light/dark. Notes use `--at '#fn1'` at 375 light and 1280 dark.
 
-- [Citation text, phone](screenshots/pr108-final-citations-375-light.png)
-- [Citation text, desktop dark](screenshots/pr108-final-citations-1280-dark.png)
-- [Source notes, phone](screenshots/pr108-final-notes-375-light.png)
-- [Source notes, desktop dark](screenshots/pr108-final-notes-1280-dark.png)
-- [Research heading, phone](screenshots/pr108-final-research-375-light.png)
-- [Research heading, desktop dark](screenshots/pr108-final-research-1280-dark.png)
+- [Citation text, phone](../screenshots/pr108-final-citations-375-light.png)
+- [Citation text, desktop dark](../screenshots/pr108-final-citations-1280-dark.png)
+- [Source notes, phone](../screenshots/pr108-final-notes-375-light.png)
+- [Source notes, desktop dark](../screenshots/pr108-final-notes-1280-dark.png)
+- [Research heading, phone](../screenshots/pr108-final-research-375-light.png)
+- [Research heading, desktop dark](../screenshots/pr108-final-research-1280-dark.png)
 
 Run58: segment10 140→1, numbered sources and accessible note boxes/landmark placement, readable snippets. Run59: 1→0, heading ends in two words while retaining the institution and meaning. Both candidates retain their original ledger records. Existing bibliography verification labels are preserved, not newly authenticated. Screenshots supplement the browser suite and do not prove every interaction.

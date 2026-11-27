@@ -152,7 +152,7 @@ Run 48 kept: 174 → 2 after refinement, full checks and reviewed screenshots. R
 
 
 ## Current hand-off: runs 44–49
-Four kept candidates completed this batch. PR #107 includes actual screenshots, metrics, validation and reasons each proceeded. Durable images are in `.autoresearch/screenshots/`; the exact verification commands and limits are in `.autoresearch/verification-2026-11-08.md`.
+Four kept candidates completed this batch. PR #107 includes actual screenshots, metrics, validation and reasons each proceeded. Durable images are in `.autoresearch/screenshots/`; the exact verification commands and limits are in `.autoresearch/records/verification-2026-11-08.md`.
 
 | Run | Segment | Candidate | Score | Decision |
 |---|---|---|---|---|

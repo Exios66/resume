@@ -19,8 +19,8 @@ scripts/hillclimb/hc.sh checks
 scripts/hillclimb/hc.sh experiment 'Keep screen navigation out of printed reading surfaces' styles.css
 scripts/hillclimb/hc.sh checks
 python3 -m http.server 8769 --bind 127.0.0.1 --directory docs
-.venv/bin/python .autoresearch/print-capture-workflow.py before
-.venv/bin/python .autoresearch/print-capture-workflow.py after
+.venv/bin/python .autoresearch/records/print-capture-workflow.py before
+.venv/bin/python .autoresearch/records/print-capture-workflow.py after
 ```
 
 Capture phases were run against the corresponding baseline/candidate builds, not sequentially against the same build. The scratch capture script was archived after use. It asserts navigation visibility/primary heading visibility, applies Chromium CSS print media and saves actual viewport images. Raw results: print-before-observations.json and print-after-observations.json. All 16 images in screenshots/segment-12-before-* and screenshots/run-62-print-* were opened and checked for private data. Project figures, captions, lessons and stack remain; navigation boxes disappear. Search title and description remain while screen-only suggestions disappear. Both theme preferences use the intended white print surface. These viewport images do not establish paginated PDF layout.

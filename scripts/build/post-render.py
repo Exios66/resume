@@ -15,6 +15,9 @@
    browser or the Pages CDN never pairs new HTML with a stale cached copy.
 6. Drops Pandoc's empty `div.sourceCode` placeholder. The highlight sheet
    already sets that selector, and the empty copy is a duplicate rule.
+7. Prepares every page for browser translators (prepare_translation): code,
+   chart and diagram drawings, and project names are marked translate="no",
+   and interface hints become real text instead of CSS-generated content.
 """
 import hashlib
 import html
@@ -118,7 +121,7 @@ def cache_bust_pages():
 
 
 SVG_SHAPE = re.compile(r"<(rect|circle|ellipse|path|line|polygon|polyline)(\s[^<>]*?)?(/?)>")
-DIAGRAM = re.compile(r'<figure class="diagram".*?</figure>', re.S)
+DIAGRAM = re.compile(r'<figure class="diagram(?=[\s"]).*?</figure>', re.S)
 SEARCH_TAGS = re.compile(r"<[^>]+>")
 
 
@@ -131,7 +134,8 @@ class SearchBodyParser(HTMLParser):
     """Extract page content without navigation, decorative SVGs, or scripts."""
 
     VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
-    EXCLUDED = {"back", "project-nav", "project-pager", "page-toc"}
+    # Interface hints and button labels (prepare_translation) are not page content.
+    EXCLUDED = {"back", "project-nav", "project-pager", "page-toc", "scroll-hint", "zoom-hint", "code-copy-button"}
     BLOCKS = {"p", "div", "section", "article", "h1", "h2", "h3", "h4", "h5", "h6", "li", "tr", "td", "th", "br", "pre"}
 
     def __init__(self):
@@ -334,6 +338,108 @@ def prune_sprite_pages():
             page.write_text(fixed, encoding="utf-8")
 
 
+# Browser translators (Chrome, Edge, Safari, Google Translate) skip any element
+# marked translate="no". These names stay as written in every language.
+PROTECTED_NAMES = (
+    "Jack J. Burleson", "AeroGlobe", "Digital-Mailroom", "MORNINGSTAR", "Mailroom Reloaded",
+    "Mailroom-Corpus-EDA", "Mailroom-ML", "MapReduce-Reloaded", "Neuron Atlas",
+    "Psychometric Digital Twin", "RVL-CDIP-Classifier", "RVL-CDIP", "The Mandalay Bay",
+    "Mandalay Bay", "Wave Laboratory",
+)
+NAME = re.compile(r"(?<![\w-])(" + "|".join(re.escape(n) for n in sorted(PROTECTED_NAMES, key=len, reverse=True)) + r")(?![\w-])")
+# Text inside these is not prose, or is already kept as written.
+NAME_SKIP = {"script", "style", "svg", "code", "pre", "kbd", "samp", "title", "textarea", "template"}
+TAG = re.compile(r"<(/?)([a-zA-Z][\w-]*)([^<>]*?)(/?)>")
+VOID = SearchBodyParser.VOID
+LITERAL = re.compile(r"<(code|pre|kbd|samp)(?=[\s>])(?![^>]*\stranslate=)")
+FIGURE_SVG = re.compile(r'<figure class="(?:chart|diagram)(?=[\s"]).*?</figure>', re.S)
+COPY_ICON = '<i class="bi"></i></button>'
+COPY_LABELS = '<span class="cc-copy">Copy</span><span class="cc-done">Copied</span></button>'
+ZOOM_LINK = re.compile(r'(<a class="fig-zoom"[^>]*><img\b[^>]*>)(</a>)')
+CHART = re.compile(r'<figure class="chart(?=[\s"]).*?</figure>', re.S)
+# The diagram's figure is role="img" named by its caption, so the hint is aria-hidden: it
+# instructs sighted readers and would otherwise start every diagram's accessible name.
+DIAGRAM_HINT = '<span class="scroll-hint" aria-hidden="true">Scroll sideways to see the whole diagram. </span>'
+CHART_HINT = '<p class="scroll-hint">Scroll sideways to see the whole chart.</p>'
+
+
+def protect_names(text):
+    """Wrap each protected name in prose in <span translate="no">.
+
+    Only text between tags changes; attributes, scripts, code and SVG are left
+    alone, as is text already inside a translate="no" element.
+    """
+    out, skip, last = [], [], 0
+    for tag in TAG.finditer(text):
+        out.append(_wrap_names(text[last:tag.start()], skip))
+        out.append(tag.group(0))
+        last = tag.end()
+        _track_skipped(tag, skip)
+    out.append(_wrap_names(text[last:], skip))
+    return "".join(out)
+
+
+def _wrap_names(chunk, skip):
+    """Wrap protected names in a run of text, unless it is inside a skipped element."""
+    return chunk if skip else NAME.sub(r'<span translate="no">\1</span>', chunk)
+
+
+def _track_skipped(tag, skip):
+    """Update the stack of open elements whose text keeps its names as written.
+
+    skip holds [name, depth] for the outermost skipped element; nested elements of the
+    same name change its depth, and any other tag inside it is ignored.
+    """
+    closing, name, attrs, self_closing = tag.group(1), tag.group(2).lower(), tag.group(3), tag.group(4)
+    if self_closing or name in VOID:
+        return
+    if skip:
+        if name == skip[-1][0]:
+            skip[-1][1] += -1 if closing else 1
+            if skip[-1][1] == 0:
+                skip.pop()
+    elif not closing and (name in NAME_SKIP or re.search(r'\stranslate="no"', attrs)):
+        skip.append([name, 1])
+
+
+def prepare_translation(text):
+    """Make a rendered page translate cleanly in a browser translator.
+
+    Code and other literal text, and the drawn text in charts and diagrams, are
+    marked translate="no": a translator would garble commands, and it replaces
+    SVG text line by line, so a phrase split over two lines comes back as two
+    fragments that overflow their box. Each chart's data table and each
+    diagram's caption carry the same information as translatable prose.
+    Project names and the author's name stay as written. Labels the stylesheet
+    used to write with `content:` become real text, because translators never
+    see generated content; styles.css decides where each one shows.
+    """
+    body = text.find("<body")
+    if body < 0:
+        return text
+    head, rest = text[:body], text[body:]
+    rest = LITERAL.sub(r'<\1 translate="no"', rest)
+    rest = FIGURE_SVG.sub(lambda f: re.sub(r"<svg(?=[\s>])(?![^>]*\stranslate=)", '<svg translate="no"', f.group(0)), rest)
+    rest = rest.replace(COPY_ICON, COPY_LABELS)
+    rest = ZOOM_LINK.sub(r'\1<span class="zoom-hint">Tap to open full size</span>\2', rest)
+    rest = DIAGRAM.sub(lambda f: f.group(0) if DIAGRAM_HINT in f.group(0)
+                       else re.sub(r"(<figcaption[^>]*>)", lambda c: c.group(1) + DIAGRAM_HINT, f.group(0), count=1), rest)
+    rest = CHART.sub(lambda f: f.group(0) if CHART_HINT in f.group(0)
+                     else f.group(0)[:-len("</figure>")] + CHART_HINT + "</figure>", rest)
+    return head + protect_names(rest)
+
+
+def prepare_translation_pages():
+    """Apply prepare_translation to every rendered page."""
+    for page in DOCS.rglob("*.html"):
+        if "site_libs" in page.parts:
+            continue
+        text = page.read_text(encoding="utf-8")
+        fixed = prepare_translation(text)
+        if fixed != text:
+            page.write_text(fixed, encoding="utf-8")
+
+
 def main():
     """Prepare docs for GitHub Pages, remove the search index, and publish the PDF."""
     DOCS.mkdir(exist_ok=True)
@@ -345,6 +451,7 @@ def main():
     link_raster_figure_pages()
     prune_sprite_pages()
     drop_empty_highlight_pages()
+    prepare_translation_pages()
     cache_bust_pages()
     build_search_index()
     publish_pdf()

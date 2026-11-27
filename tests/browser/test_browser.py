@@ -162,6 +162,9 @@ def test_ecosystem_text_padding_and_code_font(site):
         assert not failures, failures
         page.set_viewport_size({"width": 375, "height": 812})
         diagram = page.locator(".diagram-ecosystem")
+        # The visible scroll hint sits in the caption that names the drawing, but not in its name.
+        expect(diagram.locator(".scroll-hint")).to_be_visible()
+        expect(diagram).to_have_accessible_name(re.compile(r"^(?!Scroll sideways)\S"))
         diagram.focus()
         expect(diagram).to_be_focused()
         assert diagram.evaluate("el => el.scrollWidth > el.clientWidth")
@@ -650,7 +653,8 @@ def test_charts_fit_a_phone_and_scroll_only_without_scripts(site):
         page.goto(base + "projects/natd.html")
         body = page.locator(".chart-body").first
         assert body.evaluate("el => el.scrollWidth > el.clientWidth")
-        assert "Scroll sideways" in page.locator("figure.chart").first.evaluate("el => getComputedStyle(el, '::after').content")
+        expect(page.locator("figure.chart").first.locator(".scroll-hint")).to_have_text("Scroll sideways to see the whole chart.")
+        expect(page.locator("figure.chart").first.locator(".scroll-hint")).to_be_visible()
     finally:
         context.close()
 
@@ -1207,8 +1211,9 @@ def test_screenshots_open_full_size_and_say_so_on_phones(site):
             link = page.locator("a.fig-zoom").first
             src = link.locator("img").get_attribute("src")
             assert link.get_attribute("href") == src and src.endswith(".jpg")
-            content = link.evaluate("el => getComputedStyle(el, '::after').content")
-            assert ("full size" in content) == hint, content
+            # The hint is real text, so a browser translator can translate it.
+            expect(link.locator(".zoom-hint")).to_have_text("Tap to open full size")
+            assert link.locator(".zoom-hint").is_visible() == hint
             response = page.request.get(base + "projects/" + src)
             assert response.ok and response.headers["content-type"].startswith("image/")
             expect(page.locator('a.fig-zoom img[src$=".svg"]')).to_have_count(0)
@@ -1269,3 +1274,111 @@ def test_lead_capture_reserves_space_before_image_download(site, slug, width, th
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
     finally:
         context.close()
+
+
+TRANSLATE = (ROOT / "tests/browser/pseudo_translate.js").read_text(encoding="utf-8")
+TRANSLATED_CHECKS = """() => {
+    const vw = document.documentElement.clientWidth;
+    const box = el => el.getBoundingClientRect();
+    const shown = el => { const s = getComputedStyle(el); return s.display !== 'none' && s.visibility !== 'hidden' && box(el).width > 0; };
+    const controls = [...document.querySelectorAll('.nav-list li')].filter(shown).map(li => li.querySelector('a, button')).filter(Boolean);
+    const title = document.createRange(); title.selectNodeContents(document.querySelector('.site-title'));
+    const t = title.getBoundingClientRect();
+    const covered = [...document.querySelectorAll('div.code-copy-outer-scaffold')].filter(block => {
+        const b = box(block.querySelector('.code-copy-button')); const code = document.createRange();
+        code.selectNodeContents(block.querySelector('code'));
+        return [...code.getClientRects()].some(r => r.width && r.right > b.left && r.left < b.right && r.bottom > b.top && r.top < b.bottom);
+    }).length;
+    const stacked = [...document.querySelectorAll('table.stack')].filter(shown).flatMap(table => {
+        const heads = [...table.tHead.rows[table.tHead.rows.length - 1].cells].map(c => c.textContent.trim());
+        return [...table.tBodies[0].rows[0].cells].map((cell, i) => [cell.getAttribute('data-label'), heads[i]]).filter(([label]) => label !== null);
+    });
+    return {
+        overflow: document.documentElement.scrollWidth - vw,
+        small: controls.filter(c => box(c).height < 44 || box(c).width < 40).length,
+        overlap: controls.filter(c => { const r = box(c); return t.right > r.left + 1 && t.left < r.right - 1 && t.bottom > r.top + 1 && t.top < r.bottom - 1; }).length,
+        covered,
+        stale: stacked.filter(([label, head]) => label !== head).length,
+        h1: (document.querySelector('h1') || {}).textContent,
+        code: [...document.querySelectorAll('main code')].map(c => c.textContent).join('|'),
+        drawn: [...document.querySelectorAll('figure.chart svg text, figure.diagram svg text')].map(c => c.textContent).join('|'),
+    };
+}"""
+
+
+@pytest.mark.parametrize("engine", ["chromium", "firefox", "webkit"])
+@pytest.mark.parametrize("lang", ["de", "ar", "zh"])
+@pytest.mark.parametrize("width", [320, 1280])
+def test_translated_pages_keep_layout_names_and_code(site, playwright, engine, lang, width):
+    """A browser translator rewrites text in place; layout, names, code and drawings must survive.
+
+    Simulated translation (tests/browser/pseudo_translate.js): language-shaped pseudo-text,
+    not a real translator. German is long with compounds, Chinese is short, Arabic is RTL.
+    """
+    _, base = site
+    browser = getattr(playwright, engine).launch()
+    context = browser.new_context(viewport={"width": width, "height": 900}, reduced_motion="reduce")
+    context.add_init_script(TRANSLATE)
+    page = context.new_page()
+    try:
+        for path in ("index.html", "projects/index.html", "projects/mapreduce-reloaded.html", "projects/mailroom-ml/report.html"):
+            page.goto(base + path)
+            before = page.evaluate(TRANSLATED_CHECKS)
+            summary = page.evaluate("lang => window.pseudoTranslate(lang)", lang)
+            assert summary["translated"] > 20, summary
+            page.evaluate("() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))")
+            after = page.evaluate(TRANSLATED_CHECKS)
+            assert after["overflow"] <= 0, (path, after)
+            assert after["small"] == 0 and after["overlap"] == 0, (path, after)
+            assert after["covered"] == 0, (path, after)
+            # Phone table labels follow the translated column headers.
+            assert after["stale"] == 0, (path, after)
+            assert after["code"] == before["code"] and after["drawn"] == before["drawn"], path
+            if path == "projects/mapreduce-reloaded.html":
+                assert after["h1"] == before["h1"] == "MapReduce-Reloaded"
+            elif before["h1"]:
+                assert after["h1"] != before["h1"], path
+        # The report is last: printed, its code keeps the print spacing, as the Copy button is not printed.
+        page.emulate_media(media="print")
+        pads = page.evaluate("() => [...document.querySelectorAll('div.code-copy-outer-scaffold div.sourceCode pre')].map(p => getComputedStyle(p).paddingTop)")
+        assert pads and set(pads) == {"12px"}, pads
+        page.emulate_media(media="screen")
+        if lang == "ar":
+            # Translated prose reads right to left: its first line starts at the right edge.
+            edge = page.evaluate("""() => {
+                const p = [...document.querySelectorAll('main p')].find(p => p.textContent.trim().length > 200 && !p.firstElementChild);
+                const r = document.createRange(); r.selectNodeContents(p);
+                const boxes = [...r.getClientRects()].filter(b => b.width);
+                const first = Math.max(...boxes.filter(b => Math.abs(b.top - boxes[0].top) < 2).map(b => b.right));
+                return p.getBoundingClientRect().right - first;
+            }""")
+            assert abs(edge) <= 3, edge
+    finally:
+        context.close()
+        browser.close()
+
+
+CLIP_FIXTURE = """<html lang="de"><body style="margin:8px;font:16px sans-serif"><main>
+<p><a class="btn" style="display:inline-block;width:80px;white-space:nowrap;overflow:hidden">Own box cut</a></p>
+<div style="width:100px;overflow:hidden"><a class="btn" style="display:inline-block;white-space:nowrap">Cut by a narrower ancestor</a></div>
+<div style="width:250px;overflow-x:auto"><div style="width:90px;overflow:hidden"><a class="btn" style="display:inline-block;white-space:nowrap">Cut inside a scroller</a></div></div>
+<div style="width:300px;overflow:hidden"><a class="btn" style="display:inline-block;white-space:nowrap">Fits</a></div>
+<div style="width:150px;overflow-x:auto"><a class="btn" style="display:inline-block;white-space:nowrap">Wide but scrollable sideways</a></div>
+<div style="position:absolute;width:1px;height:1px;overflow:hidden"><a class="btn" style="display:inline-block;white-space:nowrap">Screen reader only</a></div>
+</main></body></html>"""
+
+
+def test_translation_sweep_reports_labels_cut_off_by_hidden_overflow(site):
+    """The sweep's clipped check finds labels cut off by their own box or a hidden-overflow ancestor
+    below the first sideways scroller, and ignores scrollable and screen-reader-only labels."""
+    browser, _ = site
+    page = browser.new_page(viewport={"width": 320, "height": 600})
+    try:
+        page.set_content(CLIP_FIXTURE)
+        page.add_script_tag(path=str(ROOT / "scripts/hillclimb/translation-checks.js"))
+        found = [line for line in page.evaluate("() => window.translationChecks(null)") if line.startswith("clipped:")]
+        labels = [re.search(r'"([^"]*)"', line).group(1) for line in found]
+        assert labels == ["Own box cut", "Cut by a narrower ancestor", "Cut inside a scroller"], found
+        assert "in a 80px box" in found[0] and "cut off by div (100px)" in found[1] and "cut off by div (90px)" in found[2], found
+    finally:
+        page.close()

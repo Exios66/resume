@@ -68,10 +68,10 @@ done
 
 All four actual screenshots were opened and checked for private data. The column scope is readable in both desktop headers and phone row labels, the v0 control-slice exception is explicit, and surrounding content remains readable.
 
-- [Phone light](screenshots/pr107-review-result-375-light.png)
-- [Phone dark](screenshots/pr107-review-result-375-dark.png)
-- [Desktop light](screenshots/pr107-review-result-1280-light.png)
-- [Desktop dark](screenshots/pr107-review-result-1280-dark.png)
+- [Phone light](../screenshots/pr107-review-result-375-light.png)
+- [Phone dark](../screenshots/pr107-review-result-375-dark.png)
+- [Desktop light](../screenshots/pr107-review-result-1280-light.png)
+- [Desktop dark](../screenshots/pr107-review-result-1280-dark.png)
 
 ## Limits
 

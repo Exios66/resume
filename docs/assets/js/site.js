@@ -315,6 +315,28 @@
     window.addEventListener("resize", function () { clearTimeout(timer); timer = setTimeout(update, 150); });
   })();
 
+  // Stacked phone tables label each cell from its column header (data-label, drawn by
+  // styles.css). A browser translator rewrites the header's text but never attributes,
+  // so the labels follow the header whenever its text changes.
+  (function () {
+    if (!window.MutationObserver) return;
+    doc.querySelectorAll("table.stack").forEach(function (table) {
+      var head = table.tHead;
+      if (!head || !head.rows.length) return;
+      function sync() {
+        var labels = Array.from(head.rows[head.rows.length - 1].cells).map(function (cell) { return cell.textContent.trim(); });
+        Array.from(table.tBodies).forEach(function (body) {
+          Array.from(body.rows).forEach(function (row) {
+            Array.from(row.cells).forEach(function (cell, at) {
+              if (labels[at] && cell.hasAttribute("data-label") && cell.getAttribute("data-label") !== labels[at]) cell.setAttribute("data-label", labels[at]);
+            });
+          });
+        });
+      }
+      new MutationObserver(sync).observe(head, { subtree: true, childList: true, characterData: true });
+    });
+  })();
+
   // Site search: filter the generated page index and render results in place.
   (function () {
     var input = doc.getElementById("site-search-input");
