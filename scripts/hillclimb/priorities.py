@@ -85,6 +85,23 @@ EXPERIENCE_GAPS = ("cards_without_cover", "projects_without_own_social_card", "p
                    "pages_over_budget", "repo_style_titles")
 
 
+def current_run(ledger_rows):
+    """Measurements of the site as it stands: the last kept run, with its scored metric put back.
+
+    A discarded, crashed or failed run is reverted, so its measurements describe a site that no longer exists;
+    it still counts in the outcome tally. ``ledger.py`` moves the scored value out of ``metrics`` into
+    ``metric``; it goes back under its segment's ``metricName`` (``polish_defects`` when none is set).
+    """
+    kept = [r for r in ledger_rows if "run" in r and r.get("status") == "keep"]
+    if not kept:
+        return None
+    run = dict(kept[-1], metrics=dict(kept[-1].get("metrics") or {}))
+    if run.get("metric") is not None:
+        names = {c.get("segment"): c.get("metricName") for c in ledger_rows if c.get("type") == "config"}
+        run["metrics"].setdefault(names.get(run.get("segment")) or "polish_defects", run["metric"])
+    return run
+
+
 def read_jsonl(path):
     if not path.exists():
         return []
@@ -316,11 +333,12 @@ def main(argv=None):
     parser.add_argument("--draws", type=positive_int, default=4000)
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
-    runs = [r for r in read_jsonl(LEDGER) if "run" in r]
+    ledger_rows = read_jsonl(LEDGER)
+    runs = [r for r in ledger_rows if "run" in r]
     probe_rows = comparable([r for r in read_jsonl(PROBES) if r.get("type") == "probe"])
     tally = outcomes(runs)
     ideas = IDEAS.read_text(encoding="utf-8") if IDEAS.exists() else ""
-    need = needs(runs[-1] if runs else None, probe_rows, judged(ideas), waivers(ideas))
+    need = needs(current_run(ledger_rows), probe_rows, judged(ideas), waivers(ideas))
     rows = rank(tally, need, args.draws, args.seed)
     promote, retire = proposals(tally, probe_rows, runs)
     if args.json:

@@ -153,6 +153,29 @@ class Need(unittest.TestCase):
         priorities.OWNER_BLOCKED = set()
         self.assertGreater(priorities.needs(latest, [], {})["experience"][0], 0)
 
+    def test_a_discarded_run_does_not_describe_the_live_site(self):
+        css_budget = priorities.page_budgets.SHARED["styles.css"][1]
+        rows = [{"type": "config", "segment": 1, "metricName": "experience_gaps"},
+                dict(run(1, "keep", "baseline", gz_styles_css=int(css_budget * 0.96)), segment=1, metric=5),
+                dict(run(2, "discard", "slimmer css", gz_styles_css=int(css_budget * 0.5)), segment=1, metric=5)]
+        live = priorities.current_run(rows)
+        self.assertEqual(live["run"], 1)
+        self.assertEqual(priorities.needs(live, [], {})["weight"][1], ["styles.css 96%"])
+        rows.append(dict(run(3, "keep", "slimmer css", gz_styles_css=int(css_budget * 0.5)), segment=1, metric=5))
+        self.assertEqual(priorities.needs(priorities.current_run(rows), [], {})["weight"][0], 0)
+
+    def test_scored_metric_is_restored_under_its_segment_name(self):
+        # ledger.py stores the scored value in "metric" and drops it from "metrics".
+        polish = [{"type": "config", "segment": 1, "name": "polish"},
+                  dict(run(1, "keep", "baseline"), segment=1, metric=8)]
+        experience = [{"type": "config", "segment": 2, "metricName": "experience_gaps"},
+                      dict(run(1, "keep", "baseline", polish_defects=0), segment=2, metric=5)]
+        self.assertGreater(priorities.needs(priorities.current_run(polish), [], {})["audit"][0], 0)
+        live = priorities.current_run(experience)
+        self.assertEqual(live["metrics"], {"polish_defects": 0, "experience_gaps": 5})
+        self.assertEqual(priorities.needs(live, [], {})["audit"][0], 0)
+        self.assertNotIn("metric", experience[1]["metrics"])  # the ledger row itself is not changed
+
     def test_judged_backlog_tags_count_only_open_items(self):
         text = "- [ ] cover crop #area/alignment\n- [x] done #area/alignment\n- [ ] odd #area/unknown\n"
         self.assertEqual(priorities.judged(text), {"alignment": 1})
