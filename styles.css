@@ -664,7 +664,7 @@ pre:focus-visible, .page table:focus-visible, div.sourceCode:focus-visible, figu
 
 /* Copy button on code blocks. Quarto draws it with an icon font this site does not load,
    so it gets a text label and the site's own button styling. */
-div.code-copy-outer-scaffold { position: relative; } /* the pre rules below must outrank div.sourceCode pre.sourceCode */
+div.code-copy-outer-scaffold { position: relative; --copy-row: 40px; } /* the pre rules below must outrank div.sourceCode pre.sourceCode */
 div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
 .page .code-copy-button {
   position: absolute; top: 7px; right: 7px; margin: 0;
@@ -678,7 +678,11 @@ div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
 .page .code-copy-button:hover, .page .code-copy-button-checked { color: var(--accent); border-color: var(--accent); }
 .page .code-copy-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 /* On phones a long first line would run under the button, so the button gets its own row. */
-@media (max-width: 720px) { div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 40px; padding-right: 14px; } }
+@media (max-width: 720px) {
+  div.code-copy-outer-scaffold { --copy-row: 58px; }
+  div.code-copy-outer-scaffold div.sourceCode pre { padding-top: var(--copy-row); padding-right: 14px; }
+  .page .code-copy-button { min-height: 44px; padding: 6px 16px; } /* a thumb-sized target */
+}
 @media print { .page .code-copy-button { display: none; } div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 12px; padding-right: 14px; } }
 
 /* Prose tables also need the full column at tablet widths. */
@@ -1339,6 +1343,7 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
   .page table.chart-source:not(.stack) :is(th, td) { padding-inline: 6px; }
   :root[data-measured] .page table.chart-source:not(.stack):not([data-scrolls]) :is(th, td):first-child { position: static; }
   :root[data-measured] .page table.chart-source:not(.stack):not([data-scrolls]) td:first-child { background: none; }
+  .page table.chart-source:not(.stack) tbody tr { height: 44px; } /* each row links to a mark: a thumb-sized target */
 }
 @media (max-width: 800px) { .page table.chart-source.stack tr { padding-inline: 10px; } }
 .chart .mark.is-linked .hit { fill: color-mix(in srgb, var(--accent) 8%, transparent); stroke: var(--accent); stroke-width: 1.5; }
@@ -1492,4 +1497,4 @@ span[translate="no"] { display: contents; }
 :root:is(:lang(ar), :lang(fa), :lang(he), :lang(ur), .translated-rtl) main li { list-style-position: inside; text-align: start; }
 :root:is(:lang(ar), :lang(fa), :lang(he), :lang(ur), .translated-rtl) :is(pre, code, kbd, samp) { direction: ltr; unicode-bidi: isolate; }
 /* A translated Copy label can be wider than the space kept for it, so the button gets its own row. */
-@media screen { :root:is(.translated-ltr, .translated-rtl, :not(:lang(en))) div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 40px; padding-right: 14px; } }
+@media screen { :root:is(.translated-ltr, .translated-rtl, :not(:lang(en))) div.code-copy-outer-scaffold div.sourceCode pre { padding-top: var(--copy-row); padding-right: 14px; } }
