@@ -274,6 +274,8 @@ p { margin: 0 0 12px; }
   /* A page that carries its own id (about.html#about) must clear the sticky header too:
      the rule above only matches descendants, so without this the card top lands under it. */
   .page[id] { scroll-margin-top: 84px; }
+  /* Reading size: 15.5px held about 90 characters a line in the 752px column; 17px holds about 80. */
+  body { font-size: 17px; line-height: 1.65; }
 }
 .site-footer { max-width: 880px; margin: 28px auto 36px; padding: 0 4px; text-align: center; color: var(--muted); font-size: .8rem; }
 .site-footer p { margin: 0; }
