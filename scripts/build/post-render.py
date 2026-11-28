@@ -85,6 +85,31 @@ def dedupe_titles():
 
 
 CACHE_BUSTED = ("styles.css", "assets/js/site.js")
+CSS_COMMENT = re.compile(r"/\*.*?\*/", re.S)
+# site.js comments each start their own line (and the file has no template literals), so only whole-line
+# comments are dropped; a "//" inside a string or regular expression is never at the start of a line.
+JS_COMMENT = re.compile(r"^[ \t]*(?://[^\n]*|/\*.*?\*/[ \t]*)\n", re.S | re.M)
+
+
+def strip_comments(text, kind):
+    """Return a published asset without comments, trailing spaces or blank lines.
+
+    The sources keep their comments for maintainers; visitors download about a quarter less.
+    """
+    text = CSS_COMMENT.sub("", text) if kind == "css" else JS_COMMENT.sub("", text)
+    lines = (line.rstrip() for line in text.splitlines())
+    return "\n".join(line for line in lines if line) + "\n"
+
+
+def strip_published_comments():
+    """Strip comments from the copies of styles.css and site.js in docs/ (before their hashes are taken)."""
+    for rel in CACHE_BUSTED:
+        path = DOCS / rel
+        if path.is_file():
+            text = path.read_text(encoding="utf-8")
+            stripped = strip_comments(text, "css" if rel.endswith(".css") else "js")
+            if stripped != text:
+                path.write_text(stripped, encoding="utf-8")
 
 
 def asset_versions():
@@ -452,6 +477,7 @@ def main():
     prune_sprite_pages()
     drop_empty_highlight_pages()
     prepare_translation_pages()
+    strip_published_comments()
     cache_bust_pages()
     build_search_index()
     publish_pdf()
