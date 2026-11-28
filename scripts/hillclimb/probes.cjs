@@ -10,7 +10,7 @@
 //   layout_shift     pages whose cumulative layout shift at 375 px exceeds 0.05 after load and fonts
 //   motion_reduced   animations still running under prefers-reduced-motion: reduce
 //   centered_prose   centred text blocks of more than three lines (hard to read) at 375 and 1280 px
-//   measure          paragraphs in main longer than 90 or shorter than 30 characters per line at 1280 px
+//   measure          paragraphs in main (over 160 characters) longer than 90 or shorter than 30 characters per line at 1280 px
 //   row_misalign     cards in one grid row whose titles start at different heights (1280 px)
 //   cover_empty      card cover drawings that fill under 55% of their panel's width (1280 px)
 //   svg_contrast     SVG text below 4.5:1 against the colour behind it (light and dark, 1280 px)
@@ -153,7 +153,7 @@ const PROBES_PHONE = `(() => {
     const host = el.closest('.card, li, section'); const r = host && host.getBoundingClientRect();
     return !!r && Math.min(r.width, r.height) >= 44; };
   out.tap_near_miss = [...document.querySelectorAll('a[href], button, select, input:not([type=hidden]), summary, [role=button], [tabindex="0"]')]
-    .filter(el => P.shown(el) && !el.closest('.skip-link') && el.getBoundingClientRect().bottom > 0 && el.getBoundingClientRect().right > 0 && !el.closest('p, li p, td, .footnote, .footnotes, figcaption, .caption, svg, .sr-only, .visually-hidden')
+    .filter(el => P.shown(el) && !el.closest('.skip-link') && el.getBoundingClientRect().bottom > 0 && el.getBoundingClientRect().right > 0 && !el.closest('td, .footnote, .footnotes, figcaption, .caption, svg, .sr-only, .visually-hidden')
       && !inText(el) && !stretched(el))
     .filter(el => { const r = el.getBoundingClientRect(); const s = Math.min(r.width, r.height); return s >= 24 && s < 44; })
     .map(el => { const r = el.getBoundingClientRect(); return P.name(el) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height); });
@@ -243,11 +243,16 @@ async function focusUnseen(p) {
   const probes = {};
   for (const k of ['focus_unseen', 'tap_near_miss', 'layout_shift', 'motion_reduced', 'centered_prose', 'measure',
     'row_misalign', 'cover_empty', 'svg_contrast', 'type_sprawl', 'colour_sprawl']) {
-    const items = [...new Set(found[k] || [])];
-    probes[k] = { count: items.length, examples: items.slice(0, 5) };
+    // Count every occurrence: two identical Copy buttons on one page are two controls to fix.
+    const items = found[k] || [];
+    probes[k] = { count: items.length, examples: [...new Set(items)].slice(0, 5) };
   }
   let commit = ''; try { commit = require('child_process').execSync('git rev-parse --short=7 HEAD', { cwd: ROOT }).toString().trim(); } catch { /* not a repo */ }
-  const record = { type: 'probe', commit, timestamp: Math.floor(Date.now() / 1000), pages: list.length, probes, errors };
+  // version 2: occurrences, not distinct descriptions, are counted; controls inside paragraphs are no longer skipped.
+  // full and inventory let the ranker compare only whole-site runs over the same pages.
+  const inventory = require('crypto').createHash('sha1').update([...list].sort().join('\n')).digest('hex').slice(0, 12);
+  const record = { type: 'probe', version: 2, commit, timestamp: Math.floor(Date.now() / 1000), pages: list.length,
+    full: !opt.pages, inventory, probes, errors };
   for (const [k, v] of Object.entries(probes)) console.log(`PROBE ${k}=${v.count}${v.examples.length ? '  e.g. ' + v.examples[0] : ''}`);
   if (errors.length) console.log('ERRORS', errors.length, errors.slice(0, 3).join('; '));
   if (opt.out) fs.writeFileSync(opt.out, JSON.stringify(record, null, 2));

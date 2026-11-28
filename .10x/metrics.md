@@ -188,13 +188,16 @@ unscored tools let new weak points in:
 
 1. **Discovery probes** (`hc.sh probe`, `scripts/hillclimb/probes.cjs`) measure what the audit does not: focus
    that changes nothing visible, phone controls between 24 and 44 px, layout shift, motion under reduced motion,
-   centred prose over three lines, paragraphs over 90 or under 30 characters per line, card rows whose titles or
+   centred prose over three lines, paragraphs of more than 160 characters that run over 90 or under 30 characters per line, card rows whose titles or
    descriptions start at different heights, cover drawings that fill under 55% of their panel, SVG text contrast,
-   and type and colour sprawl. Each run appends one record to `autoresearch.probes.jsonl`.
+   and type and colour sprawl. Each run appends one record to `autoresearch.probes.jsonl`, marked `full` (no
+   `--pages`), with its page `inventory` and probe `version`; a record with capture `errors` is kept for diagnosis
+   but never ranked.
 2. **The prioritizer** (`hc.sh next`, `scripts/hillclimb/priorities.py`) keeps a Beta posterior of "an experiment
    here is kept" for each area (weight, focus, touch, alignment, readability, type, colour, motion, audit,
-   experience, content), with an empirical-Bayes prior from the whole ledger. It sizes each area's need from the
-   latest probes (log-scaled; a signal that grew since the last record counts 1.5×), page weight against the
+   experience, content), with an empirical-Bayes prior from every ledger run that classifies into an area. It sizes each area's need from the
+   newest full, error-free probe record (log-scaled; a signal that grew since the last record over the same pages
+   and probe version counts 1.5×), page weight against the
    budgets above, polish findings, open experience gaps that are not owner-blocked, and open backlog items tagged
    `#area/<name>` in `autoresearch.ideas.md` (judged findings from screenshot reviews). Thompson sampling gives
    each area's chance of being the best next bet, `P(best)`. Areas that keep failing cool off; areas that were
@@ -206,8 +209,8 @@ keywords. A person (or a reviewing agent with screenshots) can judge a probe sig
 regression still resurfaces. Write the reason on the same line. The ranking chooses work; it never scores it and never rescues a run.
 
 **Changing what is scored (the recursive step).** `hc.sh next` prints `PROMOTE` for a probe signal seen in three
-or more records that kept experiments have already moved, and `RETIRE` for an area kept under 20% of the time
-after six or more tries. A promotion becomes a scored metric only at a segment boundary, in its own reviewed
+or more records whose count fell between two records while a kept run in its area was logged, and `RETIRE` for
+an area whose posterior keep rate, (keeps + 1) / (tries + 2), is under 20% after six or more tries. A promotion becomes a scored metric only at a segment boundary, in its own reviewed
 commit to `kpi.py` or the audit with a recorded baseline (the rule under "Metrics worth adding next" still
 holds: never in the same pull request that improves it). A probe that proves noisy is fixed or dropped in its own
 commit, never to rescue a run.

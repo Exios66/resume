@@ -12,13 +12,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts" / "hillcl
 import priorities  # noqa: E402
 
 
-def run(n, status, description, area=None, **metrics):
+def run(n, status, description, area=None, timestamp=0, **metrics):
     asi = {"area": area} if area else {}
-    return {"run": n, "status": status, "description": description, "asi": asi, "metrics": metrics}
+    return {"run": n, "status": status, "description": description, "asi": asi, "metrics": metrics,
+            "timestamp": timestamp}
 
 
-def probe(**counts):
-    return {"type": "probe", "probes": {k: {"count": v, "examples": [f"{k} example"]} for k, v in counts.items()}}
+def probe(timestamp=0, **counts):
+    return {"type": "probe", "timestamp": timestamp,
+            "probes": {k: {"count": v, "examples": [f"{k} example"]} for k, v in counts.items()}}
+
+
+def full(row, pages=43, inventory="a", errors=()):
+    return dict(row, version=2, full=True, pages=pages, inventory=inventory, errors=list(errors))
 
 
 class Classify(unittest.TestCase):
@@ -95,8 +101,27 @@ class Need(unittest.TestCase):
         self.assertGreater(priorities.needs(None, [probe(cover_empty=12)], {}, waived)["alignment"][0], 0)
 
     def test_spot_checks_are_not_compared_with_full_runs(self):
-        full, spot = dict(probe(measure=300), pages=43), dict(probe(measure=0), pages=1)
-        self.assertEqual(priorities.comparable([full, spot, full]), [full, full])
+        whole, spot = dict(probe(measure=300), pages=43), dict(probe(measure=0), pages=1)
+        self.assertEqual(priorities.comparable([whole, spot, whole]), [whole, whole])
+
+    def test_a_smaller_full_site_run_still_becomes_latest(self):
+        old, new = full(probe(measure=300), pages=43), full(probe(measure=20), pages=42, inventory="b")
+        spot = dict(probe(measure=0), version=2, full=False, pages=1, inventory="c", errors=[])
+        rows = priorities.comparable([old, new, spot])
+        self.assertEqual(rows, [old, new])
+        self.assertEqual(priorities.needs(None, rows, {})["readability"][1], ["measure=20: measure example"])
+
+    def test_failed_captures_are_not_evidence(self):
+        good, failed = full(probe(measure=30)), full(probe(measure=0), errors=["about.html HTTP 500"])
+        self.assertEqual(priorities.comparable([good, failed]), [good])
+        self.assertGreater(priorities.needs(None, priorities.comparable([good, failed]), {})["readability"][0], 0)
+
+    def test_growth_compares_only_the_same_pages(self):
+        small, large = full(probe(measure=5), inventory="a"), full(probe(measure=10), pages=44, inventory="b")
+        across = priorities.needs(None, [small, large], {})["readability"]
+        self.assertNotIn("(grew)", across[1][0])
+        within = priorities.needs(None, [small, full(probe(measure=10), inventory="a")], {})["readability"]
+        self.assertIn("(grew)", within[1][0])
 
     def test_weight_pressure_uses_page_budgets(self):
         css_budget = priorities.page_budgets.SHARED["styles.css"][1]
@@ -110,23 +135,39 @@ class Need(unittest.TestCase):
         latest = run(9, "keep", "x", repo_style_titles=5)
         self.assertEqual(priorities.needs(latest, [], {})["experience"][0], 0)
 
+    def test_owner_blocked_set_decides_which_gaps_count(self):
+        latest = run(9, "keep", "x", repo_style_titles=5, figures_without_alt=2)
+        saved = priorities.OWNER_BLOCKED
+        self.addCleanup(setattr, priorities, "OWNER_BLOCKED", saved)
+        priorities.OWNER_BLOCKED = {"repo_style_titles", "figures_without_alt"}
+        self.assertEqual(priorities.needs(latest, [], {})["experience"][0], 0)
+        priorities.OWNER_BLOCKED = set()
+        self.assertGreater(priorities.needs(latest, [], {})["experience"][0], 0)
+
     def test_judged_backlog_tags_count_only_open_items(self):
         text = "- [ ] cover crop #area/alignment\n- [x] done #area/alignment\n- [ ] odd #area/unknown\n"
         self.assertEqual(priorities.judged(text), {"alignment": 1})
 
 
 class Proposals(unittest.TestCase):
-    def test_persistent_movable_signal_with_a_keep_is_promoted(self):
+    def test_persistent_signal_lowered_by_a_keep_in_its_area_is_promoted(self):
         tally = {name: [0, 0] for name in priorities.AREAS}
         tally["touch"] = [1, 0]
-        rows = [probe(tap_near_miss=9), probe(tap_near_miss=5), probe(tap_near_miss=5)]
-        promote, _ = priorities.proposals(tally, rows)
+        rows = [probe(10, tap_near_miss=9), probe(20, tap_near_miss=5), probe(30, tap_near_miss=5)]
+        promote, _ = priorities.proposals(tally, rows, [run(5, "keep", "bigger buttons", area="touch", timestamp=15)])
         self.assertTrue(any(p.startswith("tap_near_miss") for p in promote))
+
+    def test_drop_without_a_keep_in_that_area_between_records_is_not_promoted(self):
+        tally = {name: [0, 0] for name in priorities.AREAS}
+        rows = [probe(10, tap_near_miss=9), probe(20, tap_near_miss=5), probe(30, tap_near_miss=5)]
+        elsewhere = [run(5, "keep", "x", area="weight", timestamp=15), run(6, "keep", "y", area="touch", timestamp=25)]
+        self.assertEqual(priorities.proposals(tally, rows, elsewhere)[0], [])
 
     def test_signal_that_never_moved_is_not_promoted(self):
         tally = {name: [0, 0] for name in priorities.AREAS}
         tally["touch"] = [1, 0]
-        promote, _ = priorities.proposals(tally, [probe(tap_near_miss=5)] * 3)
+        rows = [probe(10, tap_near_miss=5), probe(20, tap_near_miss=5), probe(30, tap_near_miss=5)]
+        promote, _ = priorities.proposals(tally, rows, [run(5, "keep", "x", area="touch", timestamp=15)])
         self.assertEqual(promote, [])
 
     def test_cold_area_is_flagged_for_retirement(self):
@@ -153,6 +194,12 @@ class Command(unittest.TestCase):
             self.assertEqual(priorities.main(["--json", "--draws", "200"]), 0)
         data = json.loads(out.getvalue())
         self.assertEqual({r["area"] for r in data["areas"]}, set(priorities.AREAS))
+
+    def test_zero_draws_is_refused(self):
+        with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            priorities.main(["--draws", "0"])
+        with self.assertRaises(ValueError):
+            priorities.rank({n: [0, 0] for n in priorities.AREAS}, {n: (1.0, []) for n in priorities.AREAS}, draws=0)
 
     def test_text_output_names_the_next_area(self):
         out = io.StringIO()

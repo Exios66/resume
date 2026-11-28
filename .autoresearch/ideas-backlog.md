@@ -57,10 +57,10 @@ Initial validation (review only, no code fixes or commits): `scripts/hillclimb/h
 Review baseline before patches: 14 unresolved threads, 2 already resolved. The omitted Writing heading-widow and pending run-46 comments are superseded by runs 49 and 46 respectively; do not reintroduce the resolved widow. The RVL result-column heading remains a low-risk clarification of a pre-existing mixed-slice column. CodeAnt skipped the large PR; CodeRabbit's latest check is neutral/rate-limited, not a fresh approval. GitGuardian passed. No pending reviewer assignments.
 
 
-Patch validation supersedes that initial review: all confirmed code/documentation findings are patched, including the RVL result-column heading clarification. Bootstrap/table regressions and deployment compatibility checks are now automated. Full gate: **220 passed, 2 deselected, 611 subtests passed** (100.63s); fixed audit remains **1**, with zero new findings. See [review-patches-2026-11-08.md](.autoresearch/records/review-patches-2026-11-08.md) for commands, evidence and limits. Native Linux setup remains unchecked; archive/architecture paths were tested with fixtures and the real tar extractor. Live deployment remains pending an authorized merge.
+Patch validation supersedes that initial review: all confirmed code/documentation findings are patched, including the RVL result-column heading clarification. Bootstrap/table regressions and deployment compatibility checks are now automated. Full gate: **220 passed, 2 deselected, 611 subtests passed** (100.63s); fixed audit remains **1**, with zero new findings. See [review-patches-2026-11-08.md](records/review-patches-2026-11-08.md) for commands, evidence and limits. Native Linux setup remains unchecked; archive/architecture paths were tested with fixtures and the real tar extractor. Live deployment remains pending an authorized merge.
 
 ## Next batch after runs 50–52
-- See [project-improvement-plan.md](project-improvement-plan.md) for eight brainstormed experiments with visitor benefits, evaluation criteria, scope and risks.
+- See [project-improvement-plan.md](records/project-improvement-plan.md) for eight brainstormed experiments with visitor benefits, evaluation criteria, scope and risks.
 - Priority: report opening finding/evidence/constraint structure, project artifact labels, search page-type labels (completed in run 54; filtering in run 55), reproducibility panel, chart-to-table navigation. Optional category filters need evidence that jump links are insufficient, plus no-JavaScript/reset/history behavior.
 - Keep historical M9b/M9c distinctions and reused-test-split caveats, RVL tuning/control slices and usable-row denominators. No new project claims or numbers without source verification.
 - Segment 7 complete: 211 → 127 → 1, two keeps, no discards, no new findings. Both candidates passed 220 tests and 611 subtests; screenshots archived with evidence. Only the accepted research UW–Madison widow remains.
@@ -130,6 +130,7 @@ Tag open items with `#area/<name>` so `hc.sh next` counts them (areas: weight fo
 - [ ] Tablet (721-880 px) header: title sits 4 px from the edge with its diamond touching it, nav on a second row #area/alignment
 - [ ] Type sprawl: run 116 folded .76–.87rem onto .75/.84; next the .88–.93rem cluster (nav, tables, card text) #area/type
 - [x] (run 113) Card title links and chart source rows are 43 px / 37 px tall on phones (tap_near_miss=53) #area/touch
+- [ ] Probe v2 (PR #170 review) stopped skipping controls inside paragraphs: tap_near_miss=150 on phones. Footer profile pills are 32 px tall (3 on every page, 129), `.back` links 24 px (14), chips 28 px (6), one `.more` 24 px. Standalone controls, not running text #area/touch
 - [ ] Hero separators: "•" in the hero tagline, "·" everywhere else #area/type
 - [ ] Explore tile titles use the serif face, card titles the sans #area/type
 - [ ] Projects-index diagram is a card inside a card #area/alignment

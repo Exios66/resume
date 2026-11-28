@@ -80,6 +80,9 @@ AREAS = {
 }
 FAIL = {"discard", "crash", "checks_failed"}
 OWNER_BLOCKED = {"repo_style_titles"}  # .10x/metrics.md: only the owner can close these
+EXPERIENCE_GAPS = ("cards_without_cover", "projects_without_own_social_card", "projects_without_structured_data",
+                   "images_without_size", "later_images_not_lazy", "charts_without_title", "figures_without_alt",
+                   "pages_over_budget", "repo_style_titles")
 
 
 def read_jsonl(path):
@@ -165,9 +168,30 @@ def judged(ideas_text):
 
 
 def comparable(probe_rows):
-    """Probe records that cover the most pages: a spot check with --pages must not read as a site-wide drop."""
-    most = max((r.get("pages", 0) for r in probe_rows), default=0)
-    return [r for r in probe_rows if r.get("pages", 0) == most]
+    """Probe records that can stand for the whole site: full-site runs whose every page was measured.
+
+    A spot check with ``--pages`` must not read as a site-wide drop, and a run with capture errors would read
+    missing measurements as zero signals. Both stay in the log for diagnosis. Records written before the probe
+    runner marked ``full`` count as full when they cover the most pages among such records.
+    """
+    clean = [r for r in probe_rows if not r.get("errors")]
+    legacy = max((r.get("pages", 0) for r in clean if "full" not in r), default=0)
+    return [r for r in clean if r.get("full", r.get("pages", 0) == legacy)]
+
+
+def basis(row):
+    """Records with the same probe version and page inventory measure the same thing, so counts compare."""
+    return row.get("version", 1), row.get("inventory") or row.get("pages")
+
+
+def same_basis_pairs(probe_rows):
+    """Consecutive (earlier, later) records on the same basis: the only pairs where a count change means anything."""
+    last, pairs = {}, []
+    for row in probe_rows:
+        if basis(row) in last:
+            pairs.append((last[basis(row)], row))
+        last[basis(row)] = row
+    return pairs
 
 
 def waivers(ideas_text):
@@ -181,7 +205,9 @@ def waivers(ideas_text):
 def needs(latest_run, probe_rows, judged_counts, waived=None):
     """Need per area (log-scaled so one huge count cannot drown every other area) plus its evidence."""
     latest = probe_rows[-1]["probes"] if probe_rows else {}
-    previous = probe_rows[-2]["probes"] if len(probe_rows) > 1 else {}
+    # Growth only counts against an earlier record of the same pages and probe version.
+    earlier = [r for r in probe_rows[:-1] if basis(r) == basis(probe_rows[-1])]
+    previous = earlier[-1]["probes"] if earlier else {}
     metrics = (latest_run or {}).get("metrics", {})
     out = {}
     for name, area in AREAS.items():
@@ -205,10 +231,7 @@ def needs(latest_run, probe_rows, judged_counts, waived=None):
             need += math.log1p(metrics["polish_defects"])
             notes.append(f"polish_defects={metrics['polish_defects']}")
         if name == "experience":
-            open_gaps = {k: v for k, v in metrics.items() if k in (
-                "cards_without_cover", "projects_without_own_social_card", "projects_without_structured_data",
-                "images_without_size", "later_images_not_lazy", "charts_without_title", "figures_without_alt",
-                "pages_over_budget") and v}
+            open_gaps = {k: v for k, v in metrics.items() if k in EXPERIENCE_GAPS and k not in OWNER_BLOCKED and v}
             for key, value in open_gaps.items():
                 need += math.log1p(value)
                 notes.append(f"{key}={value}")
@@ -221,6 +244,8 @@ def needs(latest_run, probe_rows, judged_counts, waived=None):
 
 def rank(tally, need, draws=4000, seed=0):
     """Thompson sampling: how often each area has the highest sampled keep-rate x need."""
+    if draws < 1:
+        raise ValueError("draws must be at least 1")
     rng = random.Random(seed)
     a0, b0 = prior(tally)
     names = [n for n in AREAS if need[n][0] > 0]
@@ -232,31 +257,51 @@ def rank(tally, need, draws=4000, seed=0):
     for n in AREAS:
         k, f = tally[n]
         rows.append({"area": n, "keeps": k, "fails": f, "keep_rate": (a0 + k) / (a0 + b0 + k + f),
-                     "need": round(need[n][0], 2), "p_best": wins.get(n, 0) / draws if names else 0.0,
+                     "need": round(need[n][0], 2), "p_best": wins.get(n, 0) / draws,
                      "evidence": need[n][1], "summary": AREAS[n]["summary"]})
     rows.sort(key=lambda r: (-r["p_best"], -r["need"]))
     return rows
 
 
-def proposals(tally, probe_rows):
-    """Segment-level suggestions: promote persistent, movable probe signals; retire cold areas."""
+def probe_count(row, key):
+    return row["probes"].get(key, {}).get("count", 0)
+
+
+def proposals(tally, probe_rows, runs=()):
+    """Segment-level suggestions: promote persistent signals that kept work moved; retire cold areas.
+
+    A drop counts as moved by a keep only when a kept run in the signal's area was logged between the two
+    records (same pages and probe version) that show the drop.
+    """
     promote, retire = [], []
+    keeps = [r for r in runs if r.get("status") == "keep" and "run" in r
+             and r.get("description", "").strip().lower() != "baseline"]
     for name, area in AREAS.items():
+        stamps = [r.get("timestamp", 0) for r in keeps if classify(r) == name]
         for key in area["probes"]:
-            seen = [r["probes"].get(key, {}).get("count", 0) for r in probe_rows]
-            moved = any(b < a for a, b in zip(seen, seen[1:]))
-            if len([c for c in seen if c]) >= 3 and moved and tally[name][0] >= 1:
-                promote.append(f"{key} ({name}): seen in {len([c for c in seen if c])} probe records and moved by keeps")
+            seen = len([r for r in probe_rows if probe_count(r, key)])
+            moved = any(probe_count(b, key) < probe_count(a, key)
+                        and any(a.get("timestamp", 0) < t <= b.get("timestamp", 0) for t in stamps)
+                        for a, b in same_basis_pairs(probe_rows))
+            if seen >= 3 and moved:
+                promote.append(f"{key} ({name}): seen in {seen} probe records and lowered by a kept {name} run")
         k, f = tally[name]
         if k + f >= 6 and (k + 1) / (k + f + 2) < 0.2:
-            retire.append(f"{name}: {k} kept of {k + f}; change approach or ask the owner")
+            retire.append(f"{name}: {k} kept of {k + f} (posterior keep rate under 20%); change approach or ask the owner")
     return promote, retire
+
+
+def positive_int(text):
+    value = int(text)
+    if value < 1:
+        raise argparse.ArgumentTypeError("must be at least 1")
+    return value
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--draws", type=int, default=4000)
+    parser.add_argument("--draws", type=positive_int, default=4000)
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
     runs = [r for r in read_jsonl(LEDGER) if "run" in r]
@@ -265,7 +310,7 @@ def main(argv=None):
     ideas = IDEAS.read_text(encoding="utf-8") if IDEAS.exists() else ""
     need = needs(runs[-1] if runs else None, probe_rows, judged(ideas), waivers(ideas))
     rows = rank(tally, need, args.draws, args.seed)
-    promote, retire = proposals(tally, probe_rows)
+    promote, retire = proposals(tally, probe_rows, runs)
     if args.json:
         print(json.dumps({"areas": rows, "promote": promote, "retire": retire}, indent=2))
         return 0
