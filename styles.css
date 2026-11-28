@@ -99,6 +99,8 @@ body {
   font: 400 15.5px/1.6 var(--sans);
   -webkit-font-smoothing: antialiased;
 }
+/* Desktop reading size: the 752px column held about 90 characters a line at 15.5px; 17px brings it to about 80. */
+@media (min-width: 721px) { body { font-size: 17px; line-height: 1.65; } }
 
 /* Neutralise Quarto page chrome for a clean, centered paper */
 #quarto-content, #quarto-document-content, main.content { padding: 0; margin: 0; max-width: none; }
