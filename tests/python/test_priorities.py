@@ -86,6 +86,14 @@ class Need(unittest.TestCase):
         self.assertGreater(steady, 0)
         self.assertGreater(grown, steady)
 
+    def test_waived_signal_adds_no_need_until_it_grows(self):
+        waived = priorities.waivers("cover drawings are framed on purpose #waive/cover_empty=10")
+        self.assertEqual(waived, {"cover_empty": 10})
+        held = priorities.needs(None, [probe(cover_empty=10)], {}, waived)["alignment"]
+        self.assertEqual(held[0], 0)
+        self.assertIn("waived", held[1][0])
+        self.assertGreater(priorities.needs(None, [probe(cover_empty=12)], {}, waived)["alignment"][0], 0)
+
     def test_spot_checks_are_not_compared_with_full_runs(self):
         full, spot = dict(probe(measure=300), pages=43), dict(probe(measure=0), pages=1)
         self.assertEqual(priorities.comparable([full, spot, full]), [full, full])

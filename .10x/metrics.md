@@ -201,7 +201,9 @@ unscored tools let new weak points in:
    never tried keep a wide posterior and win their share of near-ties.
 
 Log each run with `"area": "<name>"` in its ASI so the posterior learns from it; untagged runs are classified by
-keywords. The ranking chooses work; it never scores it and never rescues a run.
+keywords. A person (or a reviewing agent with screenshots) can judge a probe signal acceptable with
+`#waive/<probe>=<count>` in the backlog: the signal adds no need until its count rises above that number, so a
+regression still resurfaces. Write the reason on the same line. The ranking chooses work; it never scores it and never rescues a run.
 
 **Changing what is scored (the recursive step).** `hc.sh next` prints `PROMOTE` for a probe signal seen in three
 or more records that kept experiments have already moved, and `RETIRE` for an area kept under 20% of the time

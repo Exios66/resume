@@ -170,7 +170,15 @@ def comparable(probe_rows):
     return [r for r in probe_rows if r.get("pages", 0) == most]
 
 
-def needs(latest_run, probe_rows, judged_counts):
+def waivers(ideas_text):
+    """Probe counts a person judged acceptable: ``#waive/<probe>=<count>`` anywhere in the backlog.
+
+    A waived signal adds no need until its count rises above the waived count, so a regression still shows.
+    """
+    return {k: int(v) for k, v in re.findall(r"#waive/([a-z_]+)=(\d+)", ideas_text)}
+
+
+def needs(latest_run, probe_rows, judged_counts, waived=None):
     """Need per area (log-scaled so one huge count cannot drown every other area) plus its evidence."""
     latest = probe_rows[-1]["probes"] if probe_rows else {}
     previous = probe_rows[-2]["probes"] if len(probe_rows) > 1 else {}
@@ -181,6 +189,9 @@ def needs(latest_run, probe_rows, judged_counts):
         for key in area["probes"]:
             count = latest.get(key, {}).get("count", 0)
             if not count:
+                continue
+            if waived and key in waived and count <= waived[key]:
+                notes.append(f"{key}={count} (waived up to {waived[key]})")
                 continue
             grown = previous and count > previous.get(key, {}).get("count", 0)
             need += math.log1p(count) * (1.5 if grown else 1.0)
@@ -251,7 +262,8 @@ def main(argv=None):
     runs = [r for r in read_jsonl(LEDGER) if "run" in r]
     probe_rows = comparable([r for r in read_jsonl(PROBES) if r.get("type") == "probe"])
     tally = outcomes(runs)
-    need = needs(runs[-1] if runs else None, probe_rows, judged(IDEAS.read_text(encoding="utf-8") if IDEAS.exists() else ""))
+    ideas = IDEAS.read_text(encoding="utf-8") if IDEAS.exists() else ""
+    need = needs(runs[-1] if runs else None, probe_rows, judged(ideas), waivers(ideas))
     rows = rank(tally, need, args.draws, args.seed)
     promote, retire = proposals(tally, probe_rows)
     if args.json:
