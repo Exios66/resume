@@ -678,7 +678,10 @@ div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
 .page .code-copy-button:hover, .page .code-copy-button-checked { color: var(--accent); border-color: var(--accent); }
 .page .code-copy-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 /* On phones a long first line would run under the button, so the button gets its own row. */
-@media (max-width: 720px) { div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 40px; padding-right: 14px; } }
+@media (max-width: 720px) {
+  div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 58px; padding-right: 14px; }
+  .page .code-copy-button { min-height: 44px; padding: 6px 16px; } /* a thumb-sized target */
+}
 @media print { .page .code-copy-button { display: none; } div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 12px; padding-right: 14px; } }
 
 /* Prose tables also need the full column at tablet widths. */
@@ -1339,6 +1342,7 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
   .page table.chart-source:not(.stack) :is(th, td) { padding-inline: 6px; }
   :root[data-measured] .page table.chart-source:not(.stack):not([data-scrolls]) :is(th, td):first-child { position: static; }
   :root[data-measured] .page table.chart-source:not(.stack):not([data-scrolls]) td:first-child { background: none; }
+  .page table.chart-source:not(.stack) tbody tr { height: 44px; } /* each row links to a mark: a thumb-sized target */
 }
 @media (max-width: 800px) { .page table.chart-source.stack tr { padding-inline: 10px; } }
 .chart .mark.is-linked .hit { fill: color-mix(in srgb, var(--accent) 8%, transparent); stroke: var(--accent); stroke-width: 1.5; }
