@@ -180,17 +180,24 @@ def comparable(probe_rows):
 
 
 def basis(row):
-    """Records with the same probe version and page inventory measure the same thing, so counts compare."""
-    return row.get("version", 1), row.get("inventory") or row.get("pages")
+    """Records with the same probe version and page inventory measure the same thing, so counts compare.
+
+    A record written before inventories were kept has no basis: an equal page count does not prove the same
+    pages, so it is never compared for growth or promotion. A fresh full-site capture starts the history.
+    """
+    return (row.get("version", 1), row["inventory"]) if row.get("inventory") else None
 
 
 def same_basis_pairs(probe_rows):
     """Consecutive (earlier, later) records on the same basis: the only pairs where a count change means anything."""
     last, pairs = {}, []
     for row in probe_rows:
-        if basis(row) in last:
-            pairs.append((last[basis(row)], row))
-        last[basis(row)] = row
+        key = basis(row)
+        if key is None:
+            continue
+        if key in last:
+            pairs.append((last[key], row))
+        last[key] = row
     return pairs
 
 
@@ -206,7 +213,8 @@ def needs(latest_run, probe_rows, judged_counts, waived=None):
     """Need per area (log-scaled so one huge count cannot drown every other area) plus its evidence."""
     latest = probe_rows[-1]["probes"] if probe_rows else {}
     # Growth only counts against an earlier record of the same pages and probe version.
-    earlier = [r for r in probe_rows[:-1] if basis(r) == basis(probe_rows[-1])]
+    key = basis(probe_rows[-1]) if probe_rows else None
+    earlier = [r for r in probe_rows[:-1] if key is not None and basis(r) == key]
     previous = earlier[-1]["probes"] if earlier else {}
     metrics = (latest_run or {}).get("metrics", {})
     out = {}

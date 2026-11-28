@@ -192,7 +192,8 @@ unscored tools let new weak points in:
    descriptions start at different heights, cover drawings that fill under 55% of their panel, SVG text contrast,
    and type and colour sprawl. Each run appends one record to `autoresearch.probes.jsonl`, marked `full` (no
    `--pages`), with its page `inventory` and probe `version`; a record with capture `errors` is kept for diagnosis
-   but never ranked.
+   but never ranked. Records from before inventories were kept are never compared for growth or promotion;
+   history restarts with the first full-site capture that has one.
 2. **The prioritizer** (`hc.sh next`, `scripts/hillclimb/priorities.py`) keeps a Beta posterior of "an experiment
    here is kept" for each area (weight, focus, touch, alignment, readability, type, colour, motion, audit,
    experience, content), with an empirical-Bayes prior from every ledger run that classifies into an area. It sizes each area's need from the

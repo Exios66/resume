@@ -87,8 +87,8 @@ class Posterior(unittest.TestCase):
 
 class Need(unittest.TestCase):
     def test_probe_counts_and_growth_size_need(self):
-        steady = priorities.needs(None, [probe(measure=10), probe(measure=10)], {})["readability"][0]
-        grown = priorities.needs(None, [probe(measure=5), probe(measure=10)], {})["readability"][0]
+        steady = priorities.needs(None, [full(probe(measure=10)), full(probe(measure=10))], {})["readability"][0]
+        grown = priorities.needs(None, [full(probe(measure=5)), full(probe(measure=10))], {})["readability"][0]
         self.assertGreater(steady, 0)
         self.assertGreater(grown, steady)
 
@@ -123,6 +123,15 @@ class Need(unittest.TestCase):
         within = priorities.needs(None, [small, full(probe(measure=10), inventory="a")], {})["readability"]
         self.assertIn("(grew)", within[1][0])
 
+    def test_records_without_an_inventory_are_never_compared(self):
+        # Equal page counts do not prove the same pages, so legacy records start no growth or promotion history.
+        legacy = [dict(probe(10, tap_near_miss=n), pages=43) for n in (9, 5, 5)]
+        self.assertNotIn("(grew)", priorities.needs(None, [legacy[1], dict(legacy[0], timestamp=20)], {})["touch"][1][0])
+        self.assertEqual(priorities.same_basis_pairs(legacy), [])
+        tally = {name: [0, 0] for name in priorities.AREAS}
+        keep = [run(5, "keep", "bigger buttons", area="touch", timestamp=15)]
+        self.assertEqual(priorities.proposals(tally, legacy, keep)[0], [])
+
     def test_weight_pressure_uses_page_budgets(self):
         css_budget = priorities.page_budgets.SHARED["styles.css"][1]
         points, notes = priorities.weight_pressure({"gz_styles_css": int(css_budget * 0.96)})
@@ -153,20 +162,20 @@ class Proposals(unittest.TestCase):
     def test_persistent_signal_lowered_by_a_keep_in_its_area_is_promoted(self):
         tally = {name: [0, 0] for name in priorities.AREAS}
         tally["touch"] = [1, 0]
-        rows = [probe(10, tap_near_miss=9), probe(20, tap_near_miss=5), probe(30, tap_near_miss=5)]
+        rows = [full(probe(10, tap_near_miss=9)), full(probe(20, tap_near_miss=5)), full(probe(30, tap_near_miss=5))]
         promote, _ = priorities.proposals(tally, rows, [run(5, "keep", "bigger buttons", area="touch", timestamp=15)])
         self.assertTrue(any(p.startswith("tap_near_miss") for p in promote))
 
     def test_drop_without_a_keep_in_that_area_between_records_is_not_promoted(self):
         tally = {name: [0, 0] for name in priorities.AREAS}
-        rows = [probe(10, tap_near_miss=9), probe(20, tap_near_miss=5), probe(30, tap_near_miss=5)]
+        rows = [full(probe(10, tap_near_miss=9)), full(probe(20, tap_near_miss=5)), full(probe(30, tap_near_miss=5))]
         elsewhere = [run(5, "keep", "x", area="weight", timestamp=15), run(6, "keep", "y", area="touch", timestamp=25)]
         self.assertEqual(priorities.proposals(tally, rows, elsewhere)[0], [])
 
     def test_signal_that_never_moved_is_not_promoted(self):
         tally = {name: [0, 0] for name in priorities.AREAS}
         tally["touch"] = [1, 0]
-        rows = [probe(10, tap_near_miss=5), probe(20, tap_near_miss=5), probe(30, tap_near_miss=5)]
+        rows = [full(probe(10, tap_near_miss=5)), full(probe(20, tap_near_miss=5)), full(probe(30, tap_near_miss=5))]
         promote, _ = priorities.proposals(tally, rows, [run(5, "keep", "x", area="touch", timestamp=15)])
         self.assertEqual(promote, [])
 
