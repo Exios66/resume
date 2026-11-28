@@ -143,9 +143,18 @@ const PROBES_PHONE = `(() => {
       return P.lines(el) > 3; })
     .map(el => P.name(el));
   // tap_near_miss: controls outside running text between 24 and 44 px on the short side
+  // A link inside running text (its block holds other words) is exempt, as in WCAG 2.5.8.
+  const inText = el => { if (el.tagName !== 'A' || getComputedStyle(el).display !== 'inline') return false;
+    let b = el.parentElement; while (b && getComputedStyle(b).display.startsWith('inline')) b = b.parentElement;
+    return !!b && b.textContent.trim().length > el.textContent.trim().length + 2; };
+  // A card title link whose ::after covers the card: the card is the target.
+  const stretched = el => { const a = getComputedStyle(el, '::after');
+    if (a.position !== 'absolute' || a.content === 'none') return false;
+    const host = el.closest('.card, li, section'); const r = host && host.getBoundingClientRect();
+    return !!r && Math.min(r.width, r.height) >= 44; };
   out.tap_near_miss = [...document.querySelectorAll('a[href], button, select, input:not([type=hidden]), summary, [role=button], [tabindex="0"]')]
     .filter(el => P.shown(el) && !el.closest('.skip-link') && el.getBoundingClientRect().bottom > 0 && el.getBoundingClientRect().right > 0 && !el.closest('p, li p, td, .footnote, .footnotes, figcaption, .caption, svg, .sr-only, .visually-hidden')
-      && !(el.tagName === 'A' && getComputedStyle(el).display === 'inline' && el.parentElement && el.parentElement.tagName === 'P'))
+      && !inText(el) && !stretched(el))
     .filter(el => { const r = el.getBoundingClientRect(); const s = Math.min(r.width, r.height); return s >= 24 && s < 44; })
     .map(el => { const r = el.getBoundingClientRect(); return P.name(el) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height); });
   return out;
