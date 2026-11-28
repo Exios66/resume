@@ -246,8 +246,8 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 .page > h1 + p, .page > .kicker + p { margin-top: 0; }
 .kicker { display: block; margin-bottom: 14px; color: var(--accent); font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
 .back { display: inline-flex; align-items: center; gap: .4em; min-height: 24px; margin-bottom: 14px; font-size: .88rem; font-weight: 600; }
-.lede { max-width: 54ch; margin: 22px auto 0; }
-.lede p { margin: 0; color: color-mix(in srgb, var(--ink) 78%, var(--muted)); font-size: 1.12rem; line-height: 1.65; text-wrap: pretty; }
+.lede { max-width: 40em; margin: 22px auto 0; }
+.lede p { margin: 0; color: color-mix(in srgb, var(--ink) 78%, var(--muted)); font-size: 1.24rem; line-height: 1.6; text-wrap: pretty; }
 @media (max-width: 560px) { .lede p { font-size: 1.02rem; line-height: 1.6; } }
 .more { display: inline-flex; align-items: center; font-weight: 600; }
 .page :is(p, li) a:not(.btn, .chip, .back, .more, .project-nav a, .project-jump a, .explore-card) { text-decoration: underline; text-decoration-thickness: 1px; }
