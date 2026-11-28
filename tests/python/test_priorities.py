@@ -172,6 +172,15 @@ class Proposals(unittest.TestCase):
         elsewhere = [run(5, "keep", "x", area="weight", timestamp=15), run(6, "keep", "y", area="touch", timestamp=25)]
         self.assertEqual(priorities.proposals(tally, rows, elsewhere)[0], [])
 
+    def test_legacy_record_does_not_count_toward_persistence(self):
+        tally = {name: [0, 0] for name in priorities.AREAS}
+        legacy = dict(probe(5, tap_near_miss=9), pages=43)
+        rows = [legacy, full(probe(10, tap_near_miss=9)), full(probe(20, tap_near_miss=5))]
+        keep = [run(5, "keep", "bigger buttons", area="touch", timestamp=15)]
+        self.assertEqual(priorities.proposals(tally, rows, keep)[0], [])
+        rows.append(full(probe(30, tap_near_miss=5)))
+        self.assertEqual(len(priorities.proposals(tally, rows, keep)[0]), 1)
+
     def test_signal_that_never_moved_is_not_promoted(self):
         tally = {name: [0, 0] for name in priorities.AREAS}
         tally["touch"] = [1, 0]

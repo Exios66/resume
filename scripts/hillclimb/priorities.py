@@ -188,17 +188,18 @@ def basis(row):
     return (row.get("version", 1), row["inventory"]) if row.get("inventory") else None
 
 
+def by_basis(probe_rows):
+    """Records grouped by basis, in log order; records with no basis belong to no group."""
+    groups = {}
+    for row in probe_rows:
+        if basis(row) is not None:
+            groups.setdefault(basis(row), []).append(row)
+    return list(groups.values())
+
+
 def same_basis_pairs(probe_rows):
     """Consecutive (earlier, later) records on the same basis: the only pairs where a count change means anything."""
-    last, pairs = {}, []
-    for row in probe_rows:
-        key = basis(row)
-        if key is None:
-            continue
-        if key in last:
-            pairs.append((last[key], row))
-        last[key] = row
-    return pairs
+    return [pair for group in by_basis(probe_rows) for pair in zip(group, group[1:])]
 
 
 def waivers(ideas_text):
@@ -278,8 +279,9 @@ def probe_count(row, key):
 def proposals(tally, probe_rows, runs=()):
     """Segment-level suggestions: promote persistent signals that kept work moved; retire cold areas.
 
-    A drop counts as moved by a keep only when a kept run in the signal's area was logged between the two
-    records (same pages and probe version) that show the drop.
+    Persistence and the drop are both judged within one basis (same pages and probe version): the signal must
+    show in three records of that basis, and a kept run in its area must be logged between two of them whose
+    count fell. Records with no inventory never count toward either.
     """
     promote, retire = [], []
     keeps = [r for r in runs if r.get("status") == "keep" and "run" in r
@@ -287,12 +289,14 @@ def proposals(tally, probe_rows, runs=()):
     for name, area in AREAS.items():
         stamps = [r.get("timestamp", 0) for r in keeps if classify(r) == name]
         for key in area["probes"]:
-            seen = len([r for r in probe_rows if probe_count(r, key)])
-            moved = any(probe_count(b, key) < probe_count(a, key)
-                        and any(a.get("timestamp", 0) < t <= b.get("timestamp", 0) for t in stamps)
-                        for a, b in same_basis_pairs(probe_rows))
-            if seen >= 3 and moved:
-                promote.append(f"{key} ({name}): seen in {seen} probe records and lowered by a kept {name} run")
+            for group in by_basis(probe_rows):
+                seen = len([r for r in group if probe_count(r, key)])
+                moved = any(probe_count(b, key) < probe_count(a, key)
+                            and any(a.get("timestamp", 0) < t <= b.get("timestamp", 0) for t in stamps)
+                            for a, b in zip(group, group[1:]))
+                if seen >= 3 and moved:
+                    promote.append(f"{key} ({name}): seen in {seen} comparable probe records and lowered by a kept {name} run")
+                    break
         k, f = tally[name]
         if k + f >= 6 and (k + 1) / (k + f + 2) < 0.2:
             retire.append(f"{name}: {k} kept of {k + f} (posterior keep rate under 20%); change approach or ask the owner")
