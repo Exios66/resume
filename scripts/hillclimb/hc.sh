@@ -16,6 +16,8 @@
 #   hc.sh segment "<name>" [--metric name --gate name=limit]
 #                                             start a new segment; --metric scores that metric, --gate refuses
 #                                             keeps that exceed the limit (for example polish_defects=0)
+#   hc.sh probe [--pages a,b]                 discovery probes beyond the audit; appends to autoresearch.probes.jsonl
+#   hc.sh next [--json]                       rank improvement areas from outcomes, probes and weight (Bayesian)
 #   hc.sh snapshot                            copy session files and evidence records into .autoresearch/ to commit
 #   hc.sh restore                             copy .autoresearch/ back to the living files (fresh clone)
 #
@@ -196,16 +198,18 @@ case "${1:-}" in
     cut -f4 "$out" | sort | uniq -c | sort -rn
     echo "every finding (width, theme, page, kind, where): $out" ;;
   segment) shift; ledger segment "$@" ;;
+  probe) shift; node "$HERE/probes.cjs" --append autoresearch.probes.jsonl "$@" ;;
+  next) shift; python3 "$HERE/priorities.py" "$@" ;;
   snapshot)
     mkdir -p "$SNAP/evidence"
-    for pair in autoresearch.md:session-notes.md autoresearch.ideas.md:ideas-backlog.md autoresearch.jsonl:session-log.jsonl; do
+    for pair in autoresearch.md:session-notes.md autoresearch.ideas.md:ideas-backlog.md autoresearch.jsonl:session-log.jsonl autoresearch.probes.jsonl:probe-log.jsonl; do
       [ -f "${pair%%:*}" ] && cp "${pair%%:*}" "$SNAP/${pair##*:}"
     done
     cp "$EVID"/*.md "$SNAP/evidence/" 2>/dev/null || true
     ls -R "$SNAP" ;;
   restore)
-    for pair in autoresearch.md:session-notes.md autoresearch.ideas.md:ideas-backlog.md autoresearch.jsonl:session-log.jsonl; do
+    for pair in autoresearch.md:session-notes.md autoresearch.ideas.md:ideas-backlog.md autoresearch.jsonl:session-log.jsonl autoresearch.probes.jsonl:probe-log.jsonl; do
       if [ -f "$SNAP/${pair##*:}" ] && [ ! -f "${pair%%:*}" ]; then cp "$SNAP/${pair##*:}" "${pair%%:*}"; echo "restored ${pair%%:*}"; fi
     done ;;
-  *) sed -n '2,21p' "$0"; exit 2 ;;
+  *) sed -n '2,23p' "$0"; exit 2 ;;
 esac

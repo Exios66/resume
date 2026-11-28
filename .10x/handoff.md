@@ -2,6 +2,10 @@
 
 Read `AGENTS.md`, `.github/BUILDING.md`, `scripts/hillclimb/README.md`, this file, `.10x/status.md`, and the live issue before editing. Run `bash scripts/setup-agent.sh` once per worktree and source `.autoresearch-tools/env.sh` in every render/audit shell. Doctor must end with `All tools present.`
 
+## Current state (2026-11-28)
+
+Branch `claude/magical-babbage-0xtnx7`, segment 21 (runs 106–116), pushed, no PR yet. Start a session with `hc.sh restore`, `hc.sh status`, then `hc.sh next`: it ranks improvement areas from the ledger, the latest full `hc.sh probe` record, page weight and tagged backlog items. Re-run `hc.sh probe` every few keeps and at a segment start; log runs with `"area"` in the ASI. Current ranking after run 116: type 79% (next: fold the .88–.93rem cluster; hero "•" vs "·" separators; Explore tile title face), focus 16% (`focus_unseen=13`: a chart's first mark is pre-highlighted, so focusing it shows nothing new), weight 4% (case study 99.5%, projects index 94%). Open probe refinement for its own commit: `row_misalign` should compare where a title meets its kicker. Owner call: the phone home hero is seven centred lines; only a shorter lede fixes it.
+
 ## Current state (2026-11-26)
 
 Branch `claude/magical-babbage-0xtnx7`, runs 90–96 (segments 18–19), pushed, no PR yet. Content-truth pass: each project page was checked against its repository and stale snapshot/grep counts were replaced by test runs made on 26 November (see `.10x/status.md`). MapReduce-Reloaded is now presented as core complete with the `8f0ddb9` rerun; the audit commit `ca18fe4` moved `inspectMapReduceEvidence` to those values. Hedging walls were cut on AeroGlobe, the projects index, Neuron Atlas (no internal issue numbers) and Degen. Upstream issues for the owner: one failing Corpus EDA test, one ruff finding in mailroom-ml. MapReduce case study is 19,697 / 20,000 gzip, so an E7 chart needs a weight trade.

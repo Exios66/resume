@@ -305,6 +305,33 @@ class CacheBustTests(unittest.TestCase):
                              f'<link rel="stylesheet" href="../styles.css?v={version}">')
 
 
+class StripCommentsTests(unittest.TestCase):
+    strip = staticmethod(POST["strip_comments"])
+
+    def test_css_comments_and_blank_lines_go(self):
+        css = "/* head */\n.a { color: red; } /* why */\n\n/* two\n   lines */\n.b::after { content: \"\"; }\n"
+        self.assertEqual(self.strip(css, "css"), ".a { color: red; }\n.b::after { content: \"\"; }\n")
+
+    def test_js_keeps_strings_regexes_and_urls(self):
+        js = ('/* Header. */\n(() => {\n  // a note\n  /** Doc. */\n  const u = "https://x.org/a"; // trailing\n'
+              '  const r = /\\/docs\\//;\n})();\n')
+        self.assertEqual(self.strip(js, "js"),
+                         '(() => {\n  const u = "https://x.org/a"; // trailing\n  const r = /\\/docs\\//;\n})();\n')
+
+    def test_published_copies_are_stripped_before_hashing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            docs = Path(tmp)
+            (docs / "assets/js").mkdir(parents=True)
+            (docs / "styles.css").write_text("/* c */\nbody{}\n", encoding="utf-8")
+            (docs / "assets/js/site.js").write_text("// c\nrun();\n", encoding="utf-8")
+            with patch.dict(GLOBALS, {"DOCS": docs}):
+                POST["strip_published_comments"]()
+            self.assertEqual((docs / "styles.css").read_text(encoding="utf-8"), "body{}\n")
+            self.assertEqual((docs / "assets/js/site.js").read_text(encoding="utf-8"), "run();\n")
+        source = (ROOT / "scripts/build/post-render.py").read_text(encoding="utf-8")
+        self.assertLess(source.index("    strip_published_comments()"), source.index("    cache_bust_pages()"))
+
+
 class TranslationReadyTests(unittest.TestCase):
     prepare = staticmethod(POST["prepare_translation"])
     names = staticmethod(POST["protect_names"])

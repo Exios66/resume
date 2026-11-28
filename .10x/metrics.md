@@ -176,10 +176,52 @@ flattens to `5 → 5`.
 | Candidate | Why | How to count |
 | --- | --- | --- |
 | `motion_matrix_gaps` | Track 2 “done when” is still manual | Count of #122 checklist items without a passing browser assertion (reduced motion / print / forced colours) |
-| `layout_shift` | `images_without_size` is a proxy; this measures the effect | Playwright `PerformanceObserver('layout-shift')` on the five heaviest pages at 375 px; report the worst page |
+| `layout_shift` | `images_without_size` is a proxy; this measures the effect (probed now; 0 at 375 px on 2026-11-28) | Playwright `PerformanceObserver('layout-shift')` on the five heaviest pages at 375 px; report the worst page |
 | `largest_paint_ms` | Real speed, not only bytes | Playwright LCP on the home and projects index pages, median of 3 runs; report it, do not gate on it, because CI timing is noisy |
 | `wip_pages_without_status` | Portfolio expansion adds WIP tracks; stale claims confuse visitors | Project pages whose front matter or body marks WIP but lack a visible status callout the audit already expects |
-| `weight_pressure` | Soft yellow/red bands above are easy to ignore | Count of page/asset rows at ≥90% of budget; report beside `pages_over_budget` |
+| `weight_pressure` | Soft yellow/red bands above are easy to ignore (`hc.sh next` already weighs them) | Count of page/asset rows at ≥90% of budget; report beside `pages_over_budget` |
+
+## Adaptive priorities (choose the next area from the evidence)
+
+The scored metric is fixed within a segment, so on its own the loop only chases yesterday's benchmark. Two
+unscored tools let new weak points in:
+
+1. **Discovery probes** (`hc.sh probe`, `scripts/hillclimb/probes.cjs`) measure what the audit does not: focus
+   that changes nothing visible, phone controls between 24 and 44 px, layout shift, motion under reduced motion,
+   centred prose over three lines, paragraphs of more than 160 characters that run over 90 or under 30 characters per line, card rows whose titles or
+   descriptions start at different heights, cover drawings that fill under 55% of their panel, SVG text contrast,
+   and type and colour sprawl. Each run appends one record to `autoresearch.probes.jsonl`, marked `full` (no
+   `--pages`), with its page `inventory` and probe `version`; a record with capture `errors` is kept for diagnosis
+   but never ranked. Records from before inventories were kept are never compared for growth or promotion;
+   history restarts with the first full-site capture that has one.
+2. **The prioritizer** (`hc.sh next`, `scripts/hillclimb/priorities.py`) keeps a Beta posterior of "an experiment
+   here is kept" for each area (weight, focus, touch, alignment, readability, type, colour, motion, audit,
+   experience, content), with an empirical-Bayes prior from every ledger run that classifies into an area. It sizes each area's need from the
+   newest full, error-free probe record (log-scaled; a signal that grew since the last record over the same pages
+   and probe version counts 1.5×), page weight against the
+   budgets above, polish findings, open experience gaps that are not owner-blocked, and open backlog items tagged
+   `#area/<name>` in `autoresearch.ideas.md` (judged findings from screenshot reviews). Thompson sampling gives
+   each area's chance of being the best next bet, `P(best)`. Areas that keep failing cool off; areas that were
+   never tried keep a wide posterior and win their share of near-ties.
+
+Log each run with `"area": "<name>"` in its ASI so the posterior learns from it; untagged runs are classified by
+keywords. A person (or a reviewing agent with screenshots) can judge a probe signal acceptable with
+`#waive/<probe>=<count>` in the backlog: the signal adds no need until its count rises above that number, so a
+regression still resurfaces. Write the reason on the same line. The ranking chooses work; it never scores it and never rescues a run.
+
+**Changing what is scored (the recursive step).** `hc.sh next` prints `PROMOTE` for a probe signal seen in three
+or more records whose count fell between two records while a kept run in its area was logged, and `RETIRE` for
+an area whose posterior keep rate, (keeps + 1) / (tries + 2), is under 20% after six or more tries. A promotion becomes a scored metric only at a segment boundary, in its own reviewed
+commit to `kpi.py` or the audit with a recorded baseline (the rule under "Metrics worth adding next" still
+holds: never in the same pull request that improves it). A probe that proves noisy is fixed or dropped in its own
+commit, never to rescue a run.
+
+Baseline on 2026-11-28 (`e5c0424`, 43 pages): `measure=304` (the reading column is 752 px of 15.5 px text, about
+85–96 characters per line on desktop), `tap_near_miss=53` (card title links at 43 px, Copy buttons at 26 px),
+`focus_unseen=13` (the first mark of a chart is already highlighted, so its focus adds nothing), `cover_empty=10`
+(single-card rows on the projects index), `row_misalign=4`, `centered_prose=3` (the home hero), `type_sprawl=9`
+(17 distinct sizes), and 0 for layout shift, reduced-motion animation, SVG contrast and colour sprawl.
+First ranking: readability 70%, weight 29% (CSS 96%, case study 99.5% of budget), touch 1%.
 
 ## Making the loop score experience (#126)
 

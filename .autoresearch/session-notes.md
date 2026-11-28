@@ -281,3 +281,33 @@ keeps with screenshots in `.hillclimb-shots/run-NN-*` and records in `.hillclimb
 Learnings: the MapReduce case study has ~230 gz bytes of headroom; anything added to every page's chrome
 must be measured against it. Footer screenshots need a short page (404) because `--at` cannot scroll past
 the document end.
+
+## Segment 21: adaptive priorities and craft (28 Nov 2026, runs 106–116)
+
+Metric `experience_gaps` with gate `polish_defects=0`; every run stayed 0 / 5. New tooling (not experiments):
+`scripts/hillclimb/probes.cjs` (`hc.sh probe`) and `scripts/hillclimb/priorities.py` (`hc.sh next`), described
+in `.10x/metrics.md` "Adaptive priorities". Each pick below came from `hc.sh next`, re-run after every keep.
+
+| Run | Area | Result |
+|---|---|---|
+| 107 | readability | checks_failed: a second `@media (min-width: 721px)` block hid the first from a test helper |
+| 108 | readability | keep: desktop body 17px/1.65 inside the existing wide-screen block; probe measure 304 → 36 |
+| 109 | alignment | discard: shorter Neuron Atlas kicker aligned 1280 but broke 768 and dropped information |
+| 110 | alignment | keep: four-card grid cards share row tracks (subgrid); home row_misalign fixed at every width |
+| 111 | weight | keep (override of a 75% alignment pick: CSS at 97% of budget): comments stripped from published CSS/JS in post-render; gz CSS 19,431 → 13,024, JS 8,250 → 6,343 |
+| 112 | touch | checks_failed: translated pages keep their own Copy row rule; 44px button covered code at 320px German |
+| 113 | touch | keep: 44px phone Copy and chart source rows, Copy row height shared through `--copy-row`; tap_near_miss 41 → 0 |
+| 114 | type | keep: hero lede 1.24rem in 40em (desktop); phone left-align prototyped and rejected |
+| 115 | alignment | keep: writing cards share row tracks; titles bottom-aligned onto their kicker |
+| 116 | type | keep: .76–.87rem folded onto .75/.84rem; 30 → 23 distinct sizes at 1280 |
+
+Learnings:
+- Push only after a keep. A pushed failed experiment cannot be amended; it costs a revert and a new run number.
+- `block(CSS, "@media (min-width: 721px)")` in tests reads the first such block: add to existing media blocks.
+- Translated pages have their own rules (end of styles.css) that outrank phone rules; share values through a
+  custom property rather than duplicating numbers.
+- Subgrid is the right fix for card-row alignment; copy edits that align one width break another.
+- Probe signals are evidence, not goals. Three were judged and waived in the backlog with reasons
+  (`cover_empty=10` framed covers, `centered_prose=3` phone hero (owner call), `row_misalign=2` title tops
+  differ by design). A waived signal resurfaces if it grows.
+- Probe fixes go in their own commits (ed6bbe3: running-text and stretched links), with a fresh full baseline.

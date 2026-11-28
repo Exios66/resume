@@ -118,3 +118,22 @@ Open (segments must be re-baselined per issue 106's contract before adding check
 - Single-card project rows: the cover panel could crop its motif (preserveAspectRatio slice) to fill the panel.
 - Featured card kickers on Neuron Atlas wrap to two lines on desktop; a shorter kicker would align the row.
 - Page weight: MapReduce case study at 19,768 / 20,000 gz; trim before adding more chrome.
+
+### Segment 21: adaptive priorities (28 Nov 2026)
+Tag open items with `#area/<name>` so `hc.sh next` counts them (areas: weight focus touch alignment readability type colour motion audit experience content).
+- [x] (run 111) Strip comments from the published styles.css and site.js in post-render (CSS 96%, JS 92% of budget; ~6 KB gz of headroom) #area/weight
+- [x] (run 110, subgrid) Home Featured row: Neuron Atlas kicker wraps, so its description starts lower than Wave Laboratory's (row_misalign) #area/alignment
+- [x] Projects index single-card rows: cover drawing fills under 55% of its panel. Judged 28 Nov: the 8:3 motif centred in its panel reads as a framed illustration; slice-cropping to fill would cut MapReduce's inputs/output. Waived: #waive/cover_empty=10
+- [x] (run 114) Home hero lede (1.12rem) now barely above 17px desktop body; give it more size or weight
+- [ ] Phone home hero: seven centred lines of lede. Left-align prototyped 28 Nov and rejected (clashes with the centred hero); only a shorter lede (owner's words) would fix it. Owner call. #waive/centered_prose=3
+- [ ] Report tabs wrap 2+2(+1) on phones; consider a scrollable single row #area/alignment
+- [ ] Tablet (721-880 px) header: title sits 4 px from the edge with its diamond touching it, nav on a second row #area/alignment
+- [ ] Type sprawl: run 116 folded .76–.87rem onto .75/.84; next the .88–.93rem cluster (nav, tables, card text) #area/type
+- [x] (run 113) Card title links and chart source rows are 43 px / 37 px tall on phones (tap_near_miss=53) #area/touch
+- [ ] Probe v2 (PR #170 review) stopped skipping controls inside paragraphs: tap_near_miss=150 on phones. Footer profile pills are 32 px tall (3 on every page, 129), `.back` links 24 px (14), chips 28 px (6), one `.more` 24 px. Standalone controls, not running text #area/touch
+- [ ] Hero separators: "•" in the hero tagline, "·" everywhere else #area/type
+- [ ] Explore tile titles use the serif face, card titles the sans #area/type
+- [ ] Projects-index diagram is a card inside a card #area/alignment
+- [ ] Case-study "View the code" button duplicates the Code tab (owner call)
+- [x] (run 115) Writing index: essay card descriptions start at different heights. Now aligned; the probe still reports the two titles' tops, which differ by design (bottom-aligned titles). #waive/row_misalign=2
+- [ ] Probe refinement (own commit): row_misalign should compare where a title meets its kicker, not title tops

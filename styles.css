@@ -132,7 +132,7 @@ a:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-
   display: block;
   margin-top: 8px;
   font-weight: 600;
-  font-size: .85rem;
+  font-size: .84rem;
   letter-spacing: .18em;
   text-transform: uppercase;
   color: var(--accent);
@@ -143,7 +143,7 @@ a:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-
 .chip {
   display: inline-flex; align-items: center; gap: .4em;
   padding: 3px 12px;
-  font-size: .82rem;
+  font-size: .84rem;
   color: var(--muted);
   background: var(--accent-soft);
   border-radius: 999px;
@@ -201,7 +201,7 @@ p { margin: 0 0 12px; }
 .head-main .sub { margin-left: .4em; white-space: nowrap; }
 .sub { color: var(--muted); font-size: .9rem; }
 .sub:first-of-type { font-style: italic; }
-.date { margin-left: auto; color: var(--muted); font-size: .85rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.date { margin-left: auto; color: var(--muted); font-size: .84rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .degree { color: var(--muted); font-size: .93rem; margin: 2px 0 4px; }
 .degree p { margin: 0; }
 .degree strong { color: var(--ink); }
@@ -213,7 +213,7 @@ p { margin: 0 0 12px; }
 .training li { padding: 0; }
 .training .date { margin-left: 6px; }
 
-.footer { margin-top: 36px; padding-top: 14px; border-top: 1px solid var(--rule); text-align: center; color: var(--muted); font-size: .8rem; }
+.footer { margin-top: 36px; padding-top: 14px; border-top: 1px solid var(--rule); text-align: center; color: var(--muted); font-size: .84rem; }
 .footer p { margin: 0; }
 
 /* ---------- Site chrome ---------- */
@@ -274,8 +274,10 @@ p { margin: 0 0 12px; }
   /* A page that carries its own id (about.html#about) must clear the sticky header too:
      the rule above only matches descendants, so without this the card top lands under it. */
   .page[id] { scroll-margin-top: 84px; }
+  /* Reading size: 15.5px held about 90 characters a line in the 752px column; 17px holds about 80. */
+  body { font-size: 17px; line-height: 1.65; }
 }
-.site-footer { max-width: 880px; margin: 28px auto 36px; padding: 0 4px; text-align: center; color: var(--muted); font-size: .8rem; }
+.site-footer { max-width: 880px; margin: 28px auto 36px; padding: 0 4px; text-align: center; color: var(--muted); font-size: .84rem; }
 .site-footer p { margin: 0; }
 .site-footer a { color: var(--muted); text-decoration: underline; }
 .print-only { display: none; }
@@ -283,10 +285,10 @@ p { margin: 0 0 12px; }
 /* ---------- Page content ---------- */
 h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var(--serif); font-optical-sizing: auto; letter-spacing: -.01em; }
 .page > h1 + p, .page > .kicker + p { margin-top: 0; }
-.kicker { display: block; margin-bottom: 14px; color: var(--accent); font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.kicker { display: block; margin-bottom: 14px; color: var(--accent); font-size: .75rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
 .back { display: inline-flex; align-items: center; gap: .4em; min-height: 24px; margin-bottom: 14px; font-size: .88rem; font-weight: 600; }
-.lede { max-width: 54ch; margin: 22px auto 0; }
-.lede p { margin: 0; color: color-mix(in srgb, var(--ink) 78%, var(--muted)); font-size: 1.12rem; line-height: 1.65; text-wrap: pretty; }
+.lede { max-width: 40em; margin: 22px auto 0; }
+.lede p { margin: 0; color: color-mix(in srgb, var(--ink) 78%, var(--muted)); font-size: 1.24rem; line-height: 1.6; text-wrap: pretty; }
 @media (max-width: 560px) { .lede p { font-size: 1.02rem; line-height: 1.6; } }
 .more { display: inline-flex; align-items: center; font-weight: 600; }
 /* Links inside running text must not rely on color alone */
@@ -303,6 +305,11 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 /* Exactly four cards sit in a 2x2 grid instead of leaving one alone on a third row. */
 @media (min-width: 560px) {
   .cards:not(.cards-wide):has(> .card:nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* The cards of a row share its row tracks, so titles, kickers and descriptions line up across it. */
+  @supports (grid-template-rows: subgrid) {
+    :is(.cards:not(.cards-wide):has(> .card:nth-child(4):last-child), .writing-cards) > .card { display: grid; grid-row: span 5; grid-template-rows: subgrid; row-gap: 0; align-content: start; }
+    :is(.cards:not(.cards-wide):has(> .card:nth-child(4):last-child), .writing-cards) > .card > h3 { align-self: end; } /* a short title stays on its kicker */
+  }
 }
 .card {
   position: relative; display: flex; flex-direction: column;
@@ -345,7 +352,7 @@ h1.page-title { margin: 0 0 8px; font: 600 clamp(1.7rem, 4.5vw, 2.2rem)/1.15 var
 
 .tag {
   display: inline-block; margin: 0 4px 4px 0; padding: 2px 10px;
-  font-size: .76rem; font-weight: 600; color: var(--accent);
+  font-size: .75rem; font-weight: 600; color: var(--accent);
   background: var(--accent-soft); border-radius: 999px;
 }
 h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
@@ -464,7 +471,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 }
 .stat p { display: contents; }
 .stat-value { display: block; font: 600 clamp(1.6rem, 4vw, 2.1rem)/1.1 var(--serif); font-optical-sizing: auto; color: var(--accent); font-variant-numeric: tabular-nums; }
-.stat-label { display: block; font-size: .82rem; line-height: 1.4; color: var(--muted); }
+.stat-label { display: block; font-size: .84rem; line-height: 1.4; color: var(--muted); }
 
 /* Figures (Quarto: div.quarto-figure > figure.figure > p > img.fig.figure-img + figcaption) */
 .page figure { margin: 22px 0; padding: 0; break-inside: avoid; }
@@ -480,7 +487,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .zoom-hint, .scroll-hint { display: none; }
 @media print { .page :is(.zoom-hint, .scroll-hint) { display: none !important; } }
 @media (max-width: 720px) {
-  .page a.fig-zoom .zoom-hint { display: block; margin-top: 6px; font-size: .78rem; text-align: center; }
+  .page a.fig-zoom .zoom-hint { display: block; margin-top: 6px; font-size: .75rem; text-align: center; }
 }
 .page img.fig, .page figure img { display: block; width: 100%; max-width: 100%; height: auto; margin: 0 auto; border-radius: 8px; }
 .page figcaption, .page .figure-caption {
@@ -576,7 +583,7 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 /* Group heading on the projects index */
 .project-jump p { display: flex; flex-wrap: wrap; gap: 0 8px; align-items: center; isolation: isolate; }
 /* Category pills: the link keeps a 44px tap area and the pill is drawn inside it. */
-.project-jump a { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; font-size: .86rem; font-weight: 600; }
+.project-jump a { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; font-size: .84rem; font-weight: 600; }
 .project-jump a::before {
   content: ""; position: absolute; inset: 6px 0; z-index: -1; border-radius: 999px;
   background: var(--accent-soft); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 16%, transparent);
@@ -631,13 +638,13 @@ h1.page-title + p .kicker, h1.page-title + .kicker { margin-top: 0; }
 .search-suggest a.chip { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; }
 .search-results { list-style: none; margin: 14px 0 0; padding: 0; }
 .search-results li { padding: 12px 0; border-bottom: 1px solid var(--rule); }
-.search-results li > span { display: block; font-size: .78rem; color: var(--muted); }
+.search-results li > span { display: block; font-size: .75rem; color: var(--muted); }
 .search-results li > .result-type { display: table; margin-bottom: 4px; padding: 2px 8px; border: 1px solid var(--rule); border-radius: 5px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 600; }
 .search-results .result-title { font-weight: 600; }
 .search-results p { margin: 4px 0 0; color: var(--muted); font-size: .9rem; }
 h2.group-title, .group-title { display: flex; align-items: baseline; gap: 10px; }
 .group-title > .icon { align-self: center; width: 1.1em; height: 1.1em; color: var(--accent); }
-.group-title .count, .group-title small { font-size: .78rem; font-weight: 600; letter-spacing: .04em; text-transform: none; color: var(--muted); }
+.group-title .count, .group-title small { font-size: .75rem; font-weight: 600; letter-spacing: .04em; text-transform: none; color: var(--muted); }
 
 /* Code */
 code { font: 400 .88em/1.4 var(--mono); }
@@ -658,7 +665,7 @@ pre:focus-visible, .page table:focus-visible, div.sourceCode:focus-visible, figu
 
 /* Copy button on code blocks. Quarto draws it with an icon font this site does not load,
    so it gets a text label and the site's own button styling. */
-div.code-copy-outer-scaffold { position: relative; } /* the pre rules below must outrank div.sourceCode pre.sourceCode */
+div.code-copy-outer-scaffold { position: relative; --copy-row: 40px; } /* the pre rules below must outrank div.sourceCode pre.sourceCode */
 div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
 .page .code-copy-button {
   position: absolute; top: 7px; right: 7px; margin: 0;
@@ -672,7 +679,11 @@ div.code-copy-outer-scaffold div.sourceCode pre { padding-right: 76px; }
 .page .code-copy-button:hover, .page .code-copy-button-checked { color: var(--accent); border-color: var(--accent); }
 .page .code-copy-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 /* On phones a long first line would run under the button, so the button gets its own row. */
-@media (max-width: 720px) { div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 40px; padding-right: 14px; } }
+@media (max-width: 720px) {
+  div.code-copy-outer-scaffold { --copy-row: 58px; }
+  div.code-copy-outer-scaffold div.sourceCode pre { padding-top: var(--copy-row); padding-right: 14px; }
+  .page .code-copy-button { min-height: 44px; padding: 6px 16px; } /* a thumb-sized target */
+}
 @media print { .page .code-copy-button { display: none; } div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 12px; padding-right: 14px; } }
 
 /* Prose tables also need the full column at tablet widths. */
@@ -1191,7 +1202,7 @@ h2:has(+ .explore) { margin-bottom: 0; }
    ========================================================================== */
 .page figure.chart { margin: 22px 0 10px; padding: 16px 16px 10px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); break-inside: avoid; }
 .page .chart figcaption.chart-title { margin: 0 0 8px; font-size: .95rem; font-weight: 600; line-height: 1.35; color: var(--ink); }
-.chart-legend { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0 0 6px; padding: 0; list-style: none; font-size: .82rem; color: var(--muted); }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0 0 6px; padding: 0; list-style: none; font-size: .84rem; color: var(--muted); }
 .page .chart-legend li { display: inline-flex; align-items: center; gap: .45em; margin: 0; }
 .chart-legend .key { width: 12px; height: 12px; flex: none; border-radius: 3px; background: var(--chart-1); }
 .chart-legend .key.c2 { background: var(--chart-2); }
@@ -1263,7 +1274,7 @@ h2:has(+ .explore) { margin-bottom: 0; }
 .chart-body:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 .chart-tooltip {
   position: fixed; z-index: 50; max-width: 260px; padding: 6px 10px; pointer-events: none;
-  font-size: .82rem; line-height: 1.35; color: var(--muted);
+  font-size: .84rem; line-height: 1.35; color: var(--muted);
   background: var(--paper); border: 1px solid var(--rule); border-radius: 8px; box-shadow: var(--shadow);
 }
 .chart-tooltip strong { display: block; color: var(--ink); font-size: .95rem; font-variant-numeric: tabular-nums; }
@@ -1271,7 +1282,7 @@ h2:has(+ .explore) { margin-bottom: 0; }
   .page figure.chart { padding: 12px 10px 8px; }
 }
 @media (max-width: 800px) {
-  .page figure.chart .scroll-hint { display: block; margin: 6px 0 0; font-size: .78rem; font-style: italic; color: var(--muted); }
+  .page figure.chart .scroll-hint { display: block; margin: 6px 0 0; font-size: .75rem; font-style: italic; color: var(--muted); }
 }
 @media (forced-colors: active) {
   /* As specific as the series rules and later in the file, so it wins in every browser. */
@@ -1306,7 +1317,7 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
 }
 
 /* Chart and exact evidence form one reading path, including without scripting. */
-.chart-tools, .page .chart-return { margin: 8px 0 0; font-size: .82rem; }
+.chart-tools, .page .chart-return { margin: 8px 0 0; font-size: .84rem; }
 .page .chart-return { margin-bottom: 18px; }
 .chart-tools a, .chart-return a { display: inline-flex; align-items: center; min-height: 44px; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 6px; }
 .chart-title[tabindex], table.chart-source { scroll-margin-top: 110px; }
@@ -1322,7 +1333,7 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
 .chart-readout-name { display: block; margin: 3px 0 9px; font-size: .95rem; }
 .chart-readout dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 20px; margin: 0; }
 .chart-readout dt { color: var(--muted); font-size: .75rem; line-height: 1.45; overflow-wrap: anywhere; }
-.chart-readout dd { margin: 2px 0 0; color: var(--ink); font-size: .87rem; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.chart-readout dd { margin: 2px 0 0; color: var(--ink); font-size: .84rem; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .page .chart-readout-hint { margin: 10px 0 0; color: var(--muted); font-size: .75rem; }
 .chart-source tr.is-linked { outline: 2px solid var(--accent); outline-offset: -2px; background: color-mix(in srgb, var(--accent) 8%, var(--paper)); }
 .chart-source tr:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
@@ -1333,6 +1344,7 @@ a.footnote-ref + a.footnote-ref { margin-inline-start: .3em; }
   .page table.chart-source:not(.stack) :is(th, td) { padding-inline: 6px; }
   :root[data-measured] .page table.chart-source:not(.stack):not([data-scrolls]) :is(th, td):first-child { position: static; }
   :root[data-measured] .page table.chart-source:not(.stack):not([data-scrolls]) td:first-child { background: none; }
+  .page table.chart-source:not(.stack) tbody tr { height: 44px; } /* each row links to a mark: a thumb-sized target */
 }
 @media (max-width: 800px) { .page table.chart-source.stack tr { padding-inline: 10px; } }
 .chart .mark.is-linked .hit { fill: color-mix(in srgb, var(--accent) 8%, transparent); stroke: var(--accent); stroke-width: 1.5; }
@@ -1486,4 +1498,4 @@ span[translate="no"] { display: contents; }
 :root:is(:lang(ar), :lang(fa), :lang(he), :lang(ur), .translated-rtl) main li { list-style-position: inside; text-align: start; }
 :root:is(:lang(ar), :lang(fa), :lang(he), :lang(ur), .translated-rtl) :is(pre, code, kbd, samp) { direction: ltr; unicode-bidi: isolate; }
 /* A translated Copy label can be wider than the space kept for it, so the button gets its own row. */
-@media screen { :root:is(.translated-ltr, .translated-rtl, :not(:lang(en))) div.code-copy-outer-scaffold div.sourceCode pre { padding-top: 40px; padding-right: 14px; } }
+@media screen { :root:is(.translated-ltr, .translated-rtl, :not(:lang(en))) div.code-copy-outer-scaffold div.sourceCode pre { padding-top: var(--copy-row); padding-right: 14px; } }

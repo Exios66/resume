@@ -36,6 +36,8 @@ suite, review screenshots for visual changes, and report exact commands, results
 | `.autoresearch/` | Committed snapshot of the living files, for hand-off and fresh clones | At hand-off points |
 | `findings.tsv`, `findings.best.tsv`, `checks.ok`, `checks.log`, `run.log` | Latest findings, best kept findings, checks stamp and logs (gitignored) | Written by `hc.sh` |
 | `.hillclimb-evidence/run-N.md`, `.hillclimb-shots/` | Evidence records and screenshots, outside the site (gitignored) | Written by `hc.sh` |
+| `scripts/hillclimb/probes.cjs`, `scripts/hillclimb/priorities.py` | Discovery probes beyond the audit (unscored) and the Bayesian area ranking that reads them | Fix bugs; add a probe at a segment boundary |
+| `autoresearch.probes.jsonl` | Probe record per `hc.sh probe` run (gitignored, snapshotted) | Written by `hc.sh probe` |
 
 In scope for experiments: `styles.css`, `assets/js/site.js`, `scripts/filters/*.lua`, `scripts/build/post-render.py`,
 `partials/**`, `_quarto.yml`, `*.qmd`, and the rendered `docs/` (always via Quarto). Tests may change only
@@ -99,7 +101,7 @@ ask whether to continue. Every step names its command and what you must see befo
 | # | Step | Command | Pass condition |
 |---|---|---|---|
 | 1 | Status | `hc.sh status` | `VERDICT=continue`. `rethink`: change approach and read the backlog. `wall` (more than 8 failures in a row): stop and report. `concluded`: ask the owner. |
-| 2 | Choose | `hc.sh findings` (lists every scored finding in `findings.tsv`) | One idea that removes real defects with little code. Write the hypothesis down. |
+| 2 | Choose | `hc.sh findings`; every few keeps and at each segment start `hc.sh probe`, then `hc.sh next` | Scored findings first. With none left, take the area `hc.sh next` names (it weighs past keeps and failures, probe signals and page weight; see "Adaptive priorities" in `.10x/metrics.md`). One idea, little code. Write the hypothesis down and put `"area": "<name>"` in the ASI. |
 | 3 | Edit | your editor | Only in-scope source files. Never `docs/` by hand. |
 | 4 | Experiment | `hc.sh experiment "<what>" <source paths>` | It prints `run N committed as ...` and the metric line. Note N. |
 | 5 | Look | `hc.sh shot <page> <width> <light\|dark> run-N-<page>-<width>-<theme> [--at css --text words]` | For any visible change: 375 and 1280 px, light and dark, at the changed spot. Open every image. |

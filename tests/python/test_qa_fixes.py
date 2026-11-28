@@ -104,8 +104,10 @@ class SmallCssFixTests(unittest.TestCase):
         self.assertNotRegex(CSS, r"\.cards:has\(> \.card:nth-child\(4\)")
 
     def test_published_stylesheet_is_the_source_stylesheet(self):
+        # Post-render drops comments and blank lines from the published copy; every rule is the source's.
         published = (DOCS / "styles.css").read_text(encoding="utf-8")
-        self.assertEqual(published, CSS)
+        self.assertEqual(published, POST["strip_comments"](CSS, "css"))
+        self.assertNotIn("/*", published)
 
     def test_resume_action_buttons_stack_primary_on_phones(self):
         # At 375px a single edge-to-edge trio felt cramped; primary takes the first
