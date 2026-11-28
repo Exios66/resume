@@ -164,6 +164,12 @@ def judged(ideas_text):
     return counts
 
 
+def comparable(probe_rows):
+    """Probe records that cover the most pages: a spot check with --pages must not read as a site-wide drop."""
+    most = max((r.get("pages", 0) for r in probe_rows), default=0)
+    return [r for r in probe_rows if r.get("pages", 0) == most]
+
+
 def needs(latest_run, probe_rows, judged_counts):
     """Need per area (log-scaled so one huge count cannot drown every other area) plus its evidence."""
     latest = probe_rows[-1]["probes"] if probe_rows else {}
@@ -243,7 +249,7 @@ def main(argv=None):
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
     runs = [r for r in read_jsonl(LEDGER) if "run" in r]
-    probe_rows = [r for r in read_jsonl(PROBES) if r.get("type") == "probe"]
+    probe_rows = comparable([r for r in read_jsonl(PROBES) if r.get("type") == "probe"])
     tally = outcomes(runs)
     need = needs(runs[-1] if runs else None, probe_rows, judged(IDEAS.read_text(encoding="utf-8") if IDEAS.exists() else ""))
     rows = rank(tally, need, args.draws, args.seed)

@@ -86,6 +86,10 @@ class Need(unittest.TestCase):
         self.assertGreater(steady, 0)
         self.assertGreater(grown, steady)
 
+    def test_spot_checks_are_not_compared_with_full_runs(self):
+        full, spot = dict(probe(measure=300), pages=43), dict(probe(measure=0), pages=1)
+        self.assertEqual(priorities.comparable([full, spot, full]), [full, full])
+
     def test_weight_pressure_uses_page_budgets(self):
         css_budget = priorities.page_budgets.SHARED["styles.css"][1]
         points, notes = priorities.weight_pressure({"gz_styles_css": int(css_budget * 0.96)})
