@@ -50,7 +50,7 @@ A ModernBERT classifier that calibrates its own confidence, answers the easy doc
 
 ::: {.card cover="neuron-atlas"}
 ### [Neuron Atlas](projects/neuron-atlas.qmd)
-[Mechanistic interpretability]{.kicker}
+[Mechanistic interpretability · live browser model]{.kicker}
 
 Explore and steer all 8,192 neurons of TinyStories-8M in the browser, with random-direction controls and replayable findings. Larger Qwen studies are recorded offline.
 :::
